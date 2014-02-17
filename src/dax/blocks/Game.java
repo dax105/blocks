@@ -25,6 +25,7 @@ import org.lwjgl.util.glu.GLU;
 import org.newdawn.slick.TrueTypeFont;
 
 public class Game implements Runnable {
+	
 	public int width = 800;
 	public int height = 480;
 	
@@ -80,7 +81,6 @@ public class Game implements Runnable {
 		getDelta();
 		lastFPS = getTime();
 		openGuiScreen(new GuiScreenMainMenu(this));
-		//makeNewWorld();
 	}
 	
 	public void makeNewWorld() {
@@ -125,7 +125,7 @@ public class Game implements Runnable {
 				}
 			}
 		}
-		 //Display.sync(50);
+		//Display.sync(50);
 		updateFPS();
 	}
 
