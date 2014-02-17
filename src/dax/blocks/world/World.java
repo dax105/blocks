@@ -1,11 +1,8 @@
 package dax.blocks.world;
 
-import java.util.Random;
-
 import dax.blocks.Player;
 import dax.blocks.world.chunk.ChunkMesh;
 import dax.blocks.world.chunk.Chunk;
-import dax.blocks.world.generator.SimplexNoise;
 import static org.lwjgl.opengl.GL11.*;
 
 import org.lwjgl.opengl.GL11;

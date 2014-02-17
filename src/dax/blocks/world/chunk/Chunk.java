@@ -1,6 +1,5 @@
 package dax.blocks.world.chunk;
 
-import dax.blocks.block.Block;
 import dax.blocks.world.World;
 
 public class Chunk {
