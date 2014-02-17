@@ -13,7 +13,7 @@ public class Chunk {
 	public World world;
 
 	public ChunkMesh cm = new ChunkMesh();
-	private byte[][][] blocks;
+	public byte[][][] blocks;
 
 	public void setBlock(int x, int y, int z, byte id, boolean rebuild) {
 		blocks[x][z][y] = id;
@@ -56,27 +56,14 @@ public class Chunk {
 		cm.generateMesh(this);
 	}
 
+	public Chunk(byte[][][] blocks) {
+		this.blocks = blocks;
+		
+	}
+	
 	public Chunk(int cX, int cZ, World world) {
-		this.world = world;
 		blocks = new byte[CHUNK_SIZE][CHUNK_SIZE][CHUNK_HEIGHT];
-		for (int x = 0; x < CHUNK_SIZE; x++) {
-			for (int z = 0; z < CHUNK_SIZE; z++) {
-				int h = world.heightMap[cX * CHUNK_SIZE + x][cZ * CHUNK_SIZE + z];
-				for (int y = 0; y < CHUNK_HEIGHT; y++) {
-					if (y <= h || y == 0) {
-						if (y == h) {
-							setBlock(x, y, z, Block.grass.getId(), false);
-						} else {
-							if (y < h-4) {
-								setBlock(x, y, z, Block.stone.getId(), false);
-							} else {
-								setBlock(x, y, z, Block.dirt.getId(), false);
-							}
-						}
-					}
-				}
-			}
-		}
+		this.world = world;
 		x = cX;
 		z = cZ;
 	}

@@ -14,7 +14,7 @@ public class World {
 
 	public int size;
 	public Player player;
-	public int[][] heightMap;
+	ChunkProvider chunkProvider;
 	Chunk[][] chunks;
 
 	float multipler;
@@ -23,17 +23,18 @@ public class World {
 		this.size = size;
 		player = new Player(this);
 		chunks = new Chunk[size][size];
+		
+		chunkProvider = new ChunkProvider(this);
 
 		this.multipler = multipler;
-
-		generateHeightMap();
 
 		long start = System.nanoTime();
 		for (int x = 0; x < size; x++) {
 			for (int z = 0; z < size; z++) {
-				chunks[x][z] = new Chunk(x, z, this);
+				chunks[x][z] = chunkProvider.getChunk(x, z);
 			}
 		}
+		
 		System.out.println("Chunks created in " + (System.nanoTime() - start) / 1000000 + "ms");
 
 		start = System.nanoTime();
@@ -42,34 +43,8 @@ public class World {
 				chunks[x][z].rebuild();
 			}
 		}
+		
 		System.out.println("World geometry built in " + (System.nanoTime() - start) / 1000000 + "ms");
-	}
-
-	public void generateHeightMap() {
-		long start = System.nanoTime();
-
-		Random rand = new Random();
-
-		SimplexNoise simplexNoise = new SimplexNoise(1024, 0.5, rand.nextInt(Integer.MAX_VALUE));
-
-		this.heightMap = new int[size * Chunk.CHUNK_SIZE][size * Chunk.CHUNK_SIZE];
-
-		for (int x = 0; x < size * Chunk.CHUNK_SIZE; x++) {
-			for (int z = 0; z < size * Chunk.CHUNK_SIZE; z++) {
-				int precalc = (int) (Math.round((1 + simplexNoise.getNoise(x, z)) * multipler));
-				if (precalc > Chunk.CHUNK_HEIGHT - 1) {
-					precalc = Chunk.CHUNK_HEIGHT - 1;
-				}
-
-				if (precalc < 0) {
-					precalc = 0;
-				}
-
-				heightMap[x][z] = precalc;
-			}
-		}
-
-		System.out.println("World generated in " + (System.nanoTime() - start) / 1000000 + "ms");
 	}
 
 	public void update(float delta) {
