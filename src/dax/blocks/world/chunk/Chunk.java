@@ -12,7 +12,7 @@ public class Chunk {
 
 	public World world;
 
-	public BufferedChunk bc = new BufferedChunk();
+	public ChunkMesh cm = new ChunkMesh();
 	private byte[][][] blocks;
 
 	public void setBlock(int x, int y, int z, byte id, boolean rebuild) {
@@ -53,7 +53,7 @@ public class Chunk {
 	}
 
 	public void rebuild() {
-		bc.bufferChunk(this);
+		cm.bufferChunk(this);
 	}
 
 	public Chunk(int cX, int cZ, World world) {

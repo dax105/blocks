@@ -1,7 +1,7 @@
 package dax.blocks.world;
 
 import dax.blocks.Player;
-import dax.blocks.world.chunk.BufferedChunk;
+import dax.blocks.world.chunk.ChunkMesh;
 import dax.blocks.world.chunk.Chunk;
 import static org.lwjgl.opengl.GL11.*;
 
@@ -110,27 +110,27 @@ public class World {
 	    glEnableClientState(GL_TEXTURE_COORD_ARRAY);
 	    glEnableClientState(GL_NORMAL_ARRAY);
 	    
-	    BufferedChunk bc;
+	    ChunkMesh cm;
 
 		GL11.glEnable(GL11.GL_LIGHTING);
 		
 		for (int x = 0; x < size; x++) {
 			for (int z = 0; z < size; z++) {						
-				bc = chunks[x][z].bc;
+				cm = chunks[x][z].cm;
 				
 				glPushMatrix();
 				glTranslatef(x*Chunk.CHUNK_SIZE, 0, z*Chunk.CHUNK_SIZE);
 				
-				glVertexPointer(3, 12, bc.vBufferOpaque);
-				glTexCoordPointer(2, 8, bc.tBufferOpaque);
-				glNormalPointer(0, bc.nBufferOpaque);
-				glDrawArrays(GL_QUADS, 0, bc.vBufferOpaque.capacity() / 3);	
+				glVertexPointer(3, 12, cm.vBufferOpaque);
+				glTexCoordPointer(2, 8, cm.tBufferOpaque);
+				glNormalPointer(0, cm.nBufferOpaque);
+				glDrawArrays(GL_QUADS, 0, cm.vBufferOpaque.capacity() / 3);	
 				
 				GL11.glEnable(GL11.GL_ALPHA_TEST);
-				glVertexPointer(3, 12, bc.vBufferTransparent);
-				glTexCoordPointer(2, 8, bc.tBufferTransparent);
-				glNormalPointer(0, bc.nBufferTransparent);
-				glDrawArrays(GL_QUADS, 0, bc.vBufferTransparent.capacity() / 3);
+				glVertexPointer(3, 12, cm.vBufferTransparent);
+				glTexCoordPointer(2, 8, cm.tBufferTransparent);
+				glNormalPointer(0, cm.nBufferTransparent);
+				glDrawArrays(GL_QUADS, 0, cm.vBufferTransparent.capacity() / 3);
 				GL11.glDisable(GL11.GL_ALPHA_TEST);
 				
 				glPopMatrix();

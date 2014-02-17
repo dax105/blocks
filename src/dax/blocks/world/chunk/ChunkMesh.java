@@ -5,8 +5,8 @@ import dax.blocks.block.Block;
 import java.nio.FloatBuffer;
 import org.lwjgl.BufferUtils;
 
-public class BufferedChunk {
-	
+public class ChunkMesh {
+
 	public FloatBuffer tBufferOpaque;
 	public FloatBuffer nBufferOpaque;
 	public FloatBuffer vBufferOpaque;
@@ -17,17 +17,18 @@ public class BufferedChunk {
 
 	/**
 	 * Generates geometry for specified chunk
-	 * @param chunk Chunk for geometry regeneration
+	 * 
+	 * @param chunk
 	 */
-	public void bufferChunk(Chunk chunk) {
-		
+	public void generateMesh(Chunk chunk) {
+
 		int opaqueCount = 0;
 		int transparentCount = 0;
 
 		for (int x = 0; x < Chunk.CHUNK_SIZE; x++) {
 			for (int z = 0; z < Chunk.CHUNK_SIZE; z++) {
 				for (int y = 0; y < Chunk.CHUNK_HEIGHT; y++) {
-					
+
 					byte blockID = chunk.getBlock(x, y, z);
 					Block block = Block.getBlock(blockID);
 
@@ -89,7 +90,7 @@ public class BufferedChunk {
 
 			}
 		}
-		
+
 		vBufferOpaque = BufferUtils.createFloatBuffer(opaqueCount * 12);
 		tBufferOpaque = BufferUtils.createFloatBuffer(opaqueCount * 8);
 		nBufferOpaque = BufferUtils.createFloatBuffer(opaqueCount * 12);
@@ -108,11 +109,11 @@ public class BufferedChunk {
 					int wz = z + chunk.z * Chunk.CHUNK_SIZE;
 
 					if (blockID > 0) {
-						if (!(chunk.world.getBlock(wx, y + 1, wz) != 0 && Block.getBlock(chunk.world.getBlock(wx, y + 1, wz)).isOpaque())) {							
+						if (!(chunk.world.getBlock(wx, y + 1, wz) != 0 && Block.getBlock(chunk.world.getBlock(wx, y + 1, wz)).isOpaque())) {
 							float[] vT = block.getVTop(x, y, z);
 							float[] tT = block.getTTop();
 							float[] nT = block.getNTop();
-							
+
 							if (block.isOpaque()) {
 								vBufferOpaque.put(vT);
 								tBufferOpaque.put(tT);
@@ -128,7 +129,7 @@ public class BufferedChunk {
 							float[] vT = block.getVBottom(x, y, z);
 							float[] tT = block.getTBottom();
 							float[] nT = block.getNBottom();
-							
+
 							if (block.isOpaque()) {
 								vBufferOpaque.put(vT);
 								tBufferOpaque.put(tT);
@@ -144,7 +145,7 @@ public class BufferedChunk {
 							float[] vT = block.getVLeft(x, y, z);
 							float[] tT = block.getTLeft();
 							float[] nT = block.getNLeft();
-							
+
 							if (block.isOpaque()) {
 								vBufferOpaque.put(vT);
 								tBufferOpaque.put(tT);
@@ -160,7 +161,7 @@ public class BufferedChunk {
 							float[] vT = block.getVRight(x, y, z);
 							float[] tT = block.getTRight();
 							float[] nT = block.getNRight();
-							
+
 							if (block.isOpaque()) {
 								vBufferOpaque.put(vT);
 								tBufferOpaque.put(tT);
@@ -176,7 +177,7 @@ public class BufferedChunk {
 							float[] vT = block.getVFront(x, y, z);
 							float[] tT = block.getTFront();
 							float[] nT = block.getNFront();
-							
+
 							if (block.isOpaque()) {
 								vBufferOpaque.put(vT);
 								tBufferOpaque.put(tT);
@@ -192,7 +193,7 @@ public class BufferedChunk {
 							float[] vT = block.getVBack(x, y, z);
 							float[] tT = block.getTBack();
 							float[] nT = block.getNBack();
-							
+
 							if (block.isOpaque()) {
 								vBufferOpaque.put(vT);
 								tBufferOpaque.put(tT);
