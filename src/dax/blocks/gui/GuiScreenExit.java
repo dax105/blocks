@@ -9,12 +9,12 @@ public class GuiScreenExit extends GuiScreen {
 	
 	public GuiScreenExit(GuiScreen parent) {
 		super(parent);
-		objects.add(new GuiObjectRectangle((base.width-width-overflow)/2, (base.height-height-overflow)/2, (base.width+width+overflow)/2, (base.height+height+overflow)/2, 0xA0000000));
+		objects.add(new GuiObjectRectangle((game.width-width-overflow)/2, (game.height-height-overflow)/2, (game.width+width+overflow)/2, (game.height+height+overflow)/2, 0xA0000000));
 		
-		objects.add(new GuiObjectTitleBar((base.width-width)/2, (base.height-height)/2, (base.width+width)/2, ((base.height-height)/2)+30, this.f, "Do you really want to exit?"));
+		objects.add(new GuiObjectTitleBar((game.width-width)/2, (game.height-height)/2, (game.width+width)/2, ((game.height-height)/2)+30, this.f, "Do you really want to exit?"));
 		
-		objects.add(new GuiObjectButton((base.width-width)/2, (base.height+height)/2-24, (base.width)/2, ((base.height+height)/2), this.f, "No", 0, this));
-		objects.add(new GuiObjectButton((base.width+8)/2, (base.height+height)/2-24, (base.width+width)/2, ((base.height+height)/2), this.f, "Yes", 1, this));
+		objects.add(new GuiObjectButton((game.width-width)/2, (game.height+height)/2-24, (game.width)/2, ((game.height+height)/2), this.f, "No", 0, this));
+		objects.add(new GuiObjectButton((game.width+8)/2, (game.height+height)/2-24, (game.width+width)/2, ((game.height+height)/2), this.f, "Yes", 1, this));
 	}
 
 	@Override

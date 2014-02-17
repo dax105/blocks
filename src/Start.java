@@ -1,9 +1,9 @@
-package dax.blocks;
+import dax.blocks.Game;
 
 public class Start {
 	public static void main(String[] args) {
-		Base base = new Base();
-		Thread t = new Thread(base);
+		Game game = new Game();
+		Thread t = new Thread(game);
 		t.start();
 	}
 }

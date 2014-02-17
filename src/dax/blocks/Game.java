@@ -24,7 +24,7 @@ import org.lwjgl.opengl.GL11;
 import org.lwjgl.util.glu.GLU;
 import org.newdawn.slick.TrueTypeFont;
 
-public class Base implements Runnable {
+public class Game implements Runnable {
 	public int width = 800;
 	public int height = 480;
 	

@@ -1,6 +1,6 @@
 package dax.blocks.gui;
 
-import dax.blocks.Base;
+import dax.blocks.Game;
 
 public class GuiScreenLoading extends GuiScreen {
 
@@ -9,11 +9,11 @@ public class GuiScreenLoading extends GuiScreen {
 	
 	int overflow = 8;
 	
-	public GuiScreenLoading(Base base) {
-		super(base);
-		objects.add(new GuiObjectRectangle((base.width-width-overflow)/2, (base.height-height-overflow)/2, (base.width+width+overflow)/2, (base.height+height+overflow)/2, 0xA0000000));
+	public GuiScreenLoading(Game game) {
+		super(game);
+		objects.add(new GuiObjectRectangle((game.width-width-overflow)/2, (game.height-height-overflow)/2, (game.width+width+overflow)/2, (game.height+height+overflow)/2, 0xA0000000));
 		
-		objects.add(new GuiObjectTitleBar((base.width-width)/2, (base.height-height)/2, (base.width+width)/2, ((base.height-height)/2)+30, this.f, "Loading..."));
+		objects.add(new GuiObjectTitleBar((game.width-width)/2, (game.height-height)/2, (game.width+width)/2, ((game.height-height)/2)+30, this.f, "Loading..."));
 	}
 
 	@Override

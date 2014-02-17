@@ -1,6 +1,6 @@
 package dax.blocks.gui;
 
-import dax.blocks.Base;
+import dax.blocks.Game;
 
 import java.util.ArrayList;
 
@@ -8,26 +8,26 @@ import org.lwjgl.input.Mouse;
 import org.newdawn.slick.Font;
 
 public abstract class GuiScreen {
-	Base base;
+	Game game;
 	GuiScreen parent;
 	Font f;
 
-	public GuiScreen(Base base) {
-        if (base.isIngame) {
-        	objects.add(new GuiObjectRectangle(0, 0, base.width, base.height, 0xA0000000));
+	public GuiScreen(Game game) {
+        if (game.isIngame) {
+        	objects.add(new GuiObjectRectangle(0, 0, game.width, game.height, 0xA0000000));
         }
-		this.base = base;
+		this.game = game;
 		parent = null;
-		f = base.font;
+		f = game.font;
 	}
 	
 	public GuiScreen(GuiScreen parent) {
-        if (parent.base.isIngame) {
-        	objects.add(new GuiObjectRectangle(0, 0, parent.base.width, parent.base.height, 0xA0000000));
+        if (parent.game.isIngame) {
+        	objects.add(new GuiObjectRectangle(0, 0, parent.game.width, parent.game.height, 0xA0000000));
         }
-		this.base = parent.base;
+		this.game = parent.game;
 		this.parent = parent;
-		f = base.font;
+		f = game.font;
 	}
 	
 	ArrayList<GuiObject> objects = new ArrayList<GuiObject>();
@@ -48,9 +48,9 @@ public abstract class GuiScreen {
 	
 	public void close() {
 		if (parent != null) {
-			base.openGuiScreen(parent);
+			game.openGuiScreen(parent);
 		} else {
-			base.closeGuiScreen();
+			game.closeGuiScreen();
 		}
 	}
 	
