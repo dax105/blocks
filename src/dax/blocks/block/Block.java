@@ -21,13 +21,13 @@ public abstract class Block {
 	
 	public static final Block grass = new BlockBasic(1, 4, 5, 3);
 	public static final Block dirt = new BlockBasic(2, 3);
-	public static final Block stoneMossy = new BlockBasic(3, 1);
+	public static final Block stone = new BlockBasic(3, 0);
 	public static final Block wood = new BlockBasic(4, 2);
-	public static final Block stone = new BlockBasic(5, 0);
-	public static final Block glass = new BlockBasic(6, 9, false);
+	public static final Block stoneMossy = new BlockBasic(5, 1);
+	public static final Block bricks = new BlockBasic(6, 8, false);
 	public static final Block sand = new BlockBasic(7, 6);
 	public static final Block wool = new BlockBasic(8, 7);
-	public static final Block bricks = new BlockBasic(9, 8);
+	public static final Block glass = new BlockBasic(9, 9, false);
 	public static final Block leaves = new BlockBasic(10, 10, false);
 
 	public byte getId() {
