@@ -24,7 +24,7 @@ public abstract class Block {
 	public static final Block stone = new BlockBasic(3, 0);
 	public static final Block wood = new BlockBasic(4, 2);
 	public static final Block stoneMossy = new BlockBasic(5, 1);
-	public static final Block bricks = new BlockBasic(6, 8, false);
+	public static final Block bricks = new BlockBasic(6, 8);
 	public static final Block sand = new BlockBasic(7, 6);
 	public static final Block wool = new BlockBasic(8, 7);
 	public static final Block glass = new BlockBasic(9, 9, false);
