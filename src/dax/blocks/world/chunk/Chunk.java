@@ -53,7 +53,7 @@ public class Chunk {
 	}
 
 	public void rebuild() {
-		cm.bufferChunk(this);
+		cm.generateMesh(this);
 	}
 
 	public Chunk(int cX, int cZ, World world) {
