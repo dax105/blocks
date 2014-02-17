@@ -33,7 +33,7 @@ public class ChunkProvider {
 		
 		for (int x = xStart; x < xEnd; x++) {
 			for (int z = zStart; z < zEnd; z++) {
-				int precalc = (int) (Math.round((50.0f + simplex.getNoise(x, z)*world.multipler)));
+				int precalc = (int) (Math.round((40.0f + simplex.getNoise(x, z)*world.multipler)));
 				if (precalc > Chunk.CHUNK_HEIGHT - 1) {
 					precalc = Chunk.CHUNK_HEIGHT - 1;
 				}
