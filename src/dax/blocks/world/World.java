@@ -20,7 +20,7 @@ public class World {
 		this.size = size;
 		player = new Player(this);
 		chunks = new Chunk[size][size];
-		
+
 		chunkProvider = new ChunkProvider(this);
 
 		this.multipler = multipler;
@@ -31,7 +31,7 @@ public class World {
 				chunks[x][z] = chunkProvider.getChunk(x, z);
 			}
 		}
-		
+
 		System.out.println("Chunks created in " + (System.nanoTime() - start) / 1000000 + "ms");
 
 		start = System.nanoTime();
@@ -40,7 +40,7 @@ public class World {
 				chunks[x][z].rebuild();
 			}
 		}
-		
+
 		System.out.println("World geometry built in " + (System.nanoTime() - start) / 1000000 + "ms");
 	}
 
@@ -79,7 +79,7 @@ public class World {
 		int cx = x / Chunk.CHUNK_SIZE;
 		int cz = z / Chunk.CHUNK_SIZE;
 
-		chunks[cx][cz].setBlock(icx, y, icz, (byte) id, true);
+		chunks[cx][cz].setBlock(icx, y, icz, id, true);
 	}
 
 	public void render() {

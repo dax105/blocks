@@ -57,9 +57,9 @@ public class Chunk {
 
 	public Chunk(byte[][][] blocks) {
 		this.blocks = blocks;
-		
+
 	}
-	
+
 	public Chunk(int cX, int cZ, World world) {
 		blocks = new byte[CHUNK_SIZE][CHUNK_SIZE][CHUNK_HEIGHT];
 		this.world = world;

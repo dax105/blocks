@@ -188,7 +188,7 @@ public class Player {
 			double toMoveZ = (posZ + Math.cos(-heading / 180 * Math.PI) * delta * move) + (Math.cos((-heading + 90) / 180 * Math.PI) * delta * moveStrafe);
 			double toMoveX = (posX + Math.sin(-heading / 180 * Math.PI) * delta * move) + (Math.sin((-heading + 90) / 180 * Math.PI) * delta * moveStrafe);
 			double toMoveY = posY + moveY;
-			
+
 			posX = toMoveX;
 			posY = toMoveY;
 			posZ = toMoveZ;
