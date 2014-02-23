@@ -1,10 +1,12 @@
 package dax.blocks.world;
 
 import java.nio.IntBuffer;
+import java.util.Random;
 
 import dax.blocks.Player;
 import dax.blocks.world.chunk.ChunkMesh;
 import dax.blocks.world.chunk.Chunk;
+import dax.blocks.world.generator.TreeGenerator;
 
 import org.lwjgl.BufferUtils;
 import org.lwjgl.opengl.GL11;
@@ -13,16 +15,21 @@ import org.lwjgl.opengl.GL15;
 public class World {
 
 	public int size;
+	public int sizeBlocks;
 	public Player player;
 	ChunkProvider chunkProvider;
 	Chunk[][] chunks;
 
 	float multipler;
+	
+	TreeGenerator treeGen;
 
 	public World(int size, float multipler) {
 		this.size = size;
+		this.sizeBlocks = size * Chunk.CHUNK_SIZE;
 		player = new Player(this);
 		chunks = new Chunk[size][size];
+		this.treeGen = new TreeGenerator(this);
 
 		chunkProvider = new ChunkProvider(this);
 
@@ -33,6 +40,26 @@ public class World {
 			for (int z = 0; z < size; z++) {
 				chunks[x][z] = chunkProvider.getChunk(x, z);
 			}
+		}
+		
+		Random rand = new Random();
+		
+		int maxTrees = size*size-(rand.nextInt(size*size)/2);
+		
+		for (int i = 0; i < maxTrees; i++) {
+			
+			int sy = 0;
+			int x = 1+rand.nextInt(sizeBlocks-1);
+			int z = 1+rand.nextInt(sizeBlocks-1);
+			
+			for (int y = 0; y < Chunk.CHUNK_HEIGHT; y++) {
+				sy = y;
+				if (getBlock(x, sy+1, z) == 0) {
+					break;
+				}
+			}
+			
+			treeGen.generateTree(x, sy, z);
 		}
 
 		System.out.println("Chunks created in " + (System.nanoTime() - start) / 1000000 + "ms");
@@ -83,6 +110,20 @@ public class World {
 		int cz = z / Chunk.CHUNK_SIZE;
 
 		chunks[cx][cz].setBlock(icx, y, icz, id, true);
+	}
+	
+	public void setBlockNoRebuild(int x, int y, int z, byte id) {
+		if (x < 0 || y < 0 || z < 0 || x >= size * Chunk.CHUNK_SIZE || z >= size * Chunk.CHUNK_SIZE || y >= Chunk.CHUNK_HEIGHT) {
+			return;
+		}
+
+		int icx = x % Chunk.CHUNK_SIZE;
+		int icz = z % Chunk.CHUNK_SIZE;
+
+		int cx = x / Chunk.CHUNK_SIZE;
+		int cz = z / Chunk.CHUNK_SIZE;
+
+		chunks[cx][cz].setBlock(icx, y, icz, id, false);
 	}
 
 	public void render() {
