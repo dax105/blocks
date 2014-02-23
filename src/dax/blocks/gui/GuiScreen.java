@@ -13,41 +13,39 @@ public abstract class GuiScreen {
 	Font f;
 
 	public GuiScreen(Game game) {
-		if (game.isIngame) {
-			objects.add(new GuiObjectRectangle(0, 0, game.width, game.height, 0xA0000000));
-		}
+        if (game.isIngame) {
+        	objects.add(new GuiObjectRectangle(0, 0, game.width, game.height, 0xA0000000));
+        }
 		this.game = game;
 		parent = null;
 		f = game.font;
 	}
-
+	
 	public GuiScreen(GuiScreen parent) {
-		if (parent.game.isIngame) {
-			objects.add(new GuiObjectRectangle(0, 0, parent.game.width, parent.game.height, 0xA0000000));
-		}
+        if (parent.game.isIngame) {
+        	objects.add(new GuiObjectRectangle(0, 0, parent.game.width, parent.game.height, 0xA0000000));
+        }
 		this.game = parent.game;
 		this.parent = parent;
 		f = game.font;
 	}
-
+	
 	ArrayList<GuiObject> objects = new ArrayList<GuiObject>();
-
+	
 	public void render() {
-		for (GuiObject object : objects) {
+		for(GuiObject object : objects) {
 			object.render();
 		}
 	}
-
+	
 	public void update() {
-		for (GuiObject object : objects) {
+		for(GuiObject object : objects) {
 			object.update();
-		}
-
-		while (Mouse.next()) {
-			;
-		}
+		}	
+		
+		while (Mouse.next());
 	}
-
+	
 	public void close() {
 		if (parent != null) {
 			game.openGuiScreen(parent);
@@ -55,6 +53,6 @@ public abstract class GuiScreen {
 			game.closeGuiScreen();
 		}
 	}
-
+	
 	public abstract void buttonPress(GuiObjectButton button);
 }

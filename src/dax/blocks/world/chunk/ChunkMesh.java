@@ -14,6 +14,14 @@ public class ChunkMesh {
 	public FloatBuffer tBufferTransparent;
 	public FloatBuffer nBufferTransparent;
 	public FloatBuffer vBufferTransparent;
+	
+	public int vHandleOpaque;
+	public int tHandleOpaque;
+	public int nHandleOpaque;
+	
+	public int vHandleTransparent;
+	public int tHandleTransparent;
+	public int nHandleTransparent;
 
 	/**
 	 * Generates geometry for specified chunk

@@ -1,8 +1,15 @@
 package dax.blocks.world.chunk;
 
+import java.nio.IntBuffer;
+
+import org.lwjgl.BufferUtils;
+import org.lwjgl.opengl.GL15;
+
 import dax.blocks.world.World;
 
 public class Chunk {
+	public boolean hasVBO = false;
+	
 	public static final int CHUNK_SIZE = 16;
 	public static final int CHUNK_HEIGHT = 128;
 
@@ -14,10 +21,18 @@ public class Chunk {
 	public ChunkMesh cm = new ChunkMesh();
 	public byte[][][] blocks;
 
+	public int getDisplayListID() {
+		return x * world.size + z+1;
+	}
+	
 	public void setBlock(int x, int y, int z, byte id, boolean rebuild) {
 		blocks[x][z][y] = id;
 		if (rebuild) {
 			long start = System.nanoTime();
+			hasVBO = false;
+			IntBuffer ib = BufferUtils.createIntBuffer(3);
+			ib.put(cm.vHandleOpaque).put(cm.tHandleOpaque).put(cm.nHandleOpaque);
+			GL15.glDeleteBuffers(ib);
 			rebuild();
 
 			if (x == CHUNK_SIZE - 1) {
@@ -57,9 +72,9 @@ public class Chunk {
 
 	public Chunk(byte[][][] blocks) {
 		this.blocks = blocks;
-
+		
 	}
-
+	
 	public Chunk(int cX, int cZ, World world) {
 		blocks = new byte[CHUNK_SIZE][CHUNK_SIZE][CHUNK_HEIGHT];
 		this.world = world;

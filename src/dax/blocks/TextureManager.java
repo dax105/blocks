@@ -9,9 +9,9 @@ import org.newdawn.slick.util.ResourceLoader;
 public class TextureManager {
 
 	public static final int ATLAS_SIZE = 4;
-	public static final float TEXTURE_SIZE = 1.0f / ATLAS_SIZE;
+	public static final float TEXTURE_SIZE = 1.0f/(float)ATLAS_SIZE;
 	public static float texel_offset;
-
+	
 	public static Texture atlas;
 	public static Texture logo;
 	public static Texture menuBg;
@@ -34,32 +34,32 @@ public class TextureManager {
 		menuBg = loadTex("dax/blocks/res/textures/menubg.png");
 		calculateTexOffset();
 	}
-
+	
 	public static void calculateTexOffset() {
-		texel_offset = (1.0f / atlas.getImageWidth()) / 2;
+		texel_offset = (1.0f/atlas.getImageWidth())/2;
 	}
-
+	
 	public static float getX1(int texid) {
-		return (texid % ATLAS_SIZE) * (1.0f / ATLAS_SIZE) + texel_offset;
+		return (texid % ATLAS_SIZE) * (1.0f/(float)ATLAS_SIZE)+texel_offset;
 	}
-
+	
 	public static float getX2(int texid) {
-		return (texid % ATLAS_SIZE) * (1.0f / ATLAS_SIZE) + TEXTURE_SIZE - texel_offset;
+		return (texid % ATLAS_SIZE) * (1.0f/(float)ATLAS_SIZE)+TEXTURE_SIZE-texel_offset;
 	}
-
+	
 	public static float getY1(int texid) {
-		return (texid / ATLAS_SIZE) * (1.0f / ATLAS_SIZE) + texel_offset;
+		return (texid / ATLAS_SIZE) * (1.0f/(float)ATLAS_SIZE)+texel_offset;
 	}
-
+	
 	public static float getY2(int texid) {
-		return (texid / ATLAS_SIZE) * (1.0f / ATLAS_SIZE) + TEXTURE_SIZE - texel_offset;
+		return (texid / ATLAS_SIZE) * (1.0f/(float)ATLAS_SIZE)+TEXTURE_SIZE-texel_offset;
 	}
-
+	
 	public static float getU(float x, float texW) {
 		float u = (x + 0.5f) / texW;
 		return u;
 	}
-
+	
 	public static float getV(float y, float texH) {
 		float v = (y + 0.5f) / texH;
 		return v;
