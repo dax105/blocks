@@ -7,7 +7,7 @@ import org.newdawn.slick.Font;
 
 public class GuiObjectSlider extends GuiObject {
 
-	public static final int SLIDER_WIDTH = 20;
+	public static final int SLIDER_WIDTH = 40;
 
 	public int id;
 	private GuiScreen parent;
@@ -26,6 +26,7 @@ public class GuiObjectSlider extends GuiObject {
 	private int maxVal;
 	public int val;
 
+	private boolean lockup = false;
 	private boolean hover = false;
 
 	public GuiObjectSlider(int x1, int y1, int x2, int y2, Font font, String text, int id, GuiScreen parent, int minVal, int maxVal, int val, String unit) {
@@ -48,18 +49,7 @@ public class GuiObjectSlider extends GuiObject {
 		drawRect(x1, y1, x2, y2, 0xFF8C8C8C);
 		drawRect(x1 + 2, y1 + 2, x2 - 2, y2 - 2, 0xFF404040);
 		
-		
-		
 		int x = x1 + SLIDER_WIDTH/2 +2 + (int)Math.round(((float)(val-minVal) / (maxVal-minVal))*((x2-x1)-SLIDER_WIDTH-4));
-		
-		
-		
-		//int width = x2 - x1 - SLIDER_WIDTH+2;
-		
-		//int x = (SLIDER_WIDTH/2 + x1 + minVal*Math.round((((float)(val) / (float)(x2-x1)*maxVal))));
-		
-		//int x = x1+(2+SLIDER_WIDTH/2 + Math.round(((float) val / (maxVal - minVal)*maxVal))) + SLIDER_WIDTH;
-		//drawRect(x - SLIDER_WIDTH / 2, y1 + 2, x + SLIDER_WIDTH / 2, y2 - 2, 0xFF8C8C8C);
 		
 		drawRect(x - SLIDER_WIDTH / 2 , y1 + 2, x + SLIDER_WIDTH / 2 , y2 - 2, 0xFF6E6E6E);
 		
@@ -75,9 +65,14 @@ public class GuiObjectSlider extends GuiObject {
 	@Override
 	public void update() {
 		if (Mouse.getX() >= x1 && Mouse.getX() <= x2 && Display.getHeight() - Mouse.getY() >= y1 && Display.getHeight() - Mouse.getY() <= y2) {
-			hover = true;
+			
+			if (Mouse.isButtonDown(0) && !hover) {
+				lockup = true;
+			} else {
+				hover = true;
+			}
 
-			if (Mouse.isButtonDown(0)) {
+			if (Mouse.isButtonDown(0) && hover) {
 				int width = x2 - x1 - SLIDER_WIDTH+2;
 				int clickedX = Mouse.getX() - this.x1 - SLIDER_WIDTH/2+1;
 				val = Math.round(((float)(clickedX) / (float)width)*(maxVal-minVal)+minVal);
