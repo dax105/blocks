@@ -9,7 +9,7 @@ import dax.blocks.world.World;
 
 public class Chunk {
 	public boolean hasVBO = false;
-	
+
 	public static final int CHUNK_SIZE = 16;
 	public static final int CHUNK_HEIGHT = 128;
 
@@ -22,9 +22,9 @@ public class Chunk {
 	public byte[][][] blocks;
 
 	public int getDisplayListID() {
-		return x * world.size + z+1;
+		return x * world.size + z + 1;
 	}
-	
+
 	public void setBlock(int x, int y, int z, byte id, boolean rebuild) {
 		blocks[x][z][y] = id;
 		if (rebuild) {
@@ -72,9 +72,9 @@ public class Chunk {
 
 	public Chunk(byte[][][] blocks) {
 		this.blocks = blocks;
-		
+
 	}
-	
+
 	public Chunk(int cX, int cZ, World world) {
 		blocks = new byte[CHUNK_SIZE][CHUNK_SIZE][CHUNK_HEIGHT];
 		this.world = world;
