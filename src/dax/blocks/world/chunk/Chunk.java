@@ -29,10 +29,6 @@ public class Chunk {
 		blocks[x][z][y] = id;
 		if (rebuild) {
 			long start = System.nanoTime();
-			hasVBO = false;
-			IntBuffer ib = BufferUtils.createIntBuffer(3);
-			ib.put(cm.vHandleOpaque).put(cm.tHandleOpaque).put(cm.nHandleOpaque);
-			GL15.glDeleteBuffers(ib);
 			rebuild();
 
 			if (x == CHUNK_SIZE - 1) {
@@ -67,6 +63,10 @@ public class Chunk {
 	}
 
 	public void rebuild() {
+		hasVBO = false;
+		IntBuffer ib = BufferUtils.createIntBuffer(6);
+		ib.put(cm.vHandleOpaque).put(cm.tHandleOpaque).put(cm.nHandleOpaque).put(cm.vHandleTransparent).put(cm.tHandleTransparent).put(cm.nHandleTransparent);
+		GL15.glDeleteBuffers(ib);
 		cm.generateMesh(this);
 	}
 
