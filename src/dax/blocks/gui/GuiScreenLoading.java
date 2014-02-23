@@ -20,4 +20,9 @@ public class GuiScreenLoading extends GuiScreen {
 	public void buttonPress(GuiObjectButton button) {
 
 	}
+	
+	@Override
+	public void sliderUpdate(GuiObjectSlider slider) {
+
+	}
 }

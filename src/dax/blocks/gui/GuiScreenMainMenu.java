@@ -31,5 +31,10 @@ public class GuiScreenMainMenu extends GuiScreen {
 			game.openGuiScreen(new GuiScreenExit(this));
 		}
 	}
+	
+	@Override
+	public void sliderUpdate(GuiObjectSlider slider) {
+
+	}
 
 }

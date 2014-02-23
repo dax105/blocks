@@ -36,5 +36,10 @@ public class GuiScreenMenu extends GuiScreen {
 		}
 
 	}
+	
+	@Override
+	public void sliderUpdate(GuiObjectSlider slider) {
+
+	}
 
 }

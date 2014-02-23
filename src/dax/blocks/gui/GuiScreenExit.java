@@ -28,4 +28,9 @@ public class GuiScreenExit extends GuiScreen {
 		}
 	}
 
+	@Override
+	public void sliderUpdate(GuiObjectSlider slider) {
+
+	}
+
 }
