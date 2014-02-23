@@ -44,7 +44,7 @@ public class World {
 		
 		Random rand = new Random();
 		
-		int maxTrees = size*size-(rand.nextInt(size*size)/2);
+		int maxTrees = size*size-(rand.nextInt((size*size)-5));
 		
 		for (int i = 0; i < maxTrees; i++) {
 			

@@ -18,8 +18,8 @@ public class TreeGenerator {
 		
 		y += 1;
 		
-		int stemHeight = 5 + rand.nextInt(4);
-		int leavesStart = stemHeight - 2 - rand.nextInt(3);
+		int stemHeight = 5 + rand.nextInt(3);
+		int leavesStart = stemHeight - 1 - rand.nextInt(2);
 		int leavesEnd = stemHeight + 1 + rand.nextInt(2);
 		
 		fill(x-1, y+leavesStart, z-1, x+1, y+leavesEnd, z+1, Block.leaves.getId());
