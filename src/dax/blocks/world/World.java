@@ -5,7 +5,6 @@ import java.nio.IntBuffer;
 import dax.blocks.Player;
 import dax.blocks.world.chunk.ChunkMesh;
 import dax.blocks.world.chunk.Chunk;
-import static org.lwjgl.opengl.GL11.*;
 
 import org.lwjgl.BufferUtils;
 import org.lwjgl.opengl.GL11;
@@ -87,21 +86,21 @@ public class World {
 	}
 
 	public void render() {
-		glEnableClientState(GL_VERTEX_ARRAY);
-		glEnableClientState(GL_TEXTURE_COORD_ARRAY);
-		glEnableClientState(GL_NORMAL_ARRAY);
-
 		Chunk c;
-
+		
 		GL11.glEnable(GL11.GL_LIGHTING);
+		
+		GL11.glEnableClientState(GL11.GL_VERTEX_ARRAY);
+		GL11.glEnableClientState(GL11.GL_TEXTURE_COORD_ARRAY);
+		GL11.glEnableClientState(GL11.GL_NORMAL_ARRAY);
 
 		for (int x = 0; x < size; x++) {
 			for (int z = 0; z < size; z++) {
 				c = chunks[x][z];
 				ChunkMesh cm = c.cm;
 
-				glPushMatrix();
-				glTranslatef(x * Chunk.CHUNK_SIZE, 0, z * Chunk.CHUNK_SIZE);
+				GL11.glPushMatrix();
+				GL11.glTranslatef(x * Chunk.CHUNK_SIZE, 0, z * Chunk.CHUNK_SIZE);
 
 				if (!c.hasVBO) {
 				    IntBuffer ib = BufferUtils.createIntBuffer(6);
@@ -145,94 +144,94 @@ public class World {
 				}
 				
 				GL15.glBindBuffer(GL15.GL_ARRAY_BUFFER, cm.vHandleOpaque);
-				GL11.glVertexPointer(3, GL_FLOAT, 12, 0L);
+				GL11.glVertexPointer(3, GL11.GL_FLOAT, 12, 0L);
 				GL15.glBindBuffer(GL15.GL_ARRAY_BUFFER, cm.tHandleOpaque);
-				GL11.glTexCoordPointer(2, GL_FLOAT, 8, 0L);
+				GL11.glTexCoordPointer(2, GL11.GL_FLOAT, 8, 0L);
 			    GL15.glBindBuffer(GL15.GL_ARRAY_BUFFER, cm.nHandleOpaque);
-				GL11.glNormalPointer(GL_FLOAT, 12, 0L);
-				glDrawArrays(GL_QUADS, 0, cm.vBufferOpaque.capacity() / 3);
+				GL11.glNormalPointer(GL11.GL_FLOAT, 12, 0L);
+				GL11.glDrawArrays(GL11.GL_QUADS, 0, cm.vBufferOpaque.capacity() / 3);
 				
 				GL11.glEnable(GL11.GL_ALPHA_TEST);
 				GL15.glBindBuffer(GL15.GL_ARRAY_BUFFER, cm.vHandleTransparent);
-				GL11.glVertexPointer(3, GL_FLOAT, 12, 0L);
+				GL11.glVertexPointer(3, GL11.GL_FLOAT, 12, 0L);
 				GL15.glBindBuffer(GL15.GL_ARRAY_BUFFER, cm.tHandleTransparent);
-				GL11.glTexCoordPointer(2, GL_FLOAT, 8, 0L);
+				GL11.glTexCoordPointer(2, GL11.GL_FLOAT, 8, 0L);
 			    GL15.glBindBuffer(GL15.GL_ARRAY_BUFFER, cm.nHandleTransparent);
-				GL11.glNormalPointer(GL_FLOAT, 12, 0L);
-				glDrawArrays(GL_QUADS, 0, cm.vBufferTransparent.capacity() / 3);
+				GL11.glNormalPointer(GL11.GL_FLOAT, 12, 0L);
+				GL11.glDrawArrays(GL11.GL_QUADS, 0, cm.vBufferTransparent.capacity() / 3);
 				GL11.glDisable(GL11.GL_ALPHA_TEST);
 		
-				glPopMatrix();
+				GL11.glPopMatrix();
 			}
 		}
 
-		glDisableClientState(GL_TEXTURE_COORD_ARRAY);
-		glDisableClientState(GL_VERTEX_ARRAY);
-		glDisableClientState(GL_NORMAL_ARRAY);
+		GL11.glDisableClientState(GL11.GL_TEXTURE_COORD_ARRAY);
+		GL11.glDisableClientState(GL11.GL_VERTEX_ARRAY);
+		GL11.glDisableClientState(GL11.GL_NORMAL_ARRAY);
 
 		if (player.hasSelected) {
 			GL11.glPushMatrix();
 			GL11.glTranslatef(player.lookingAtX, player.lookingAtY, player.lookingAtZ);
 			GL11.glDisable(GL11.GL_LIGHTING);
-			renderCube();
+			renderSelectionBox();
 			GL11.glPopMatrix();
 		}
 
 	}
 
-	public void renderCube() {
-		glDisable(GL_TEXTURE_2D);
+	public void renderSelectionBox() {
+		GL11.glDisable(GL11.GL_TEXTURE_2D);
 
 		GL11.glLineWidth(4);
 		GL11.glColor4f(0, 1, 0, 0.8f);
 
 		GL11.glPushMatrix();
-		glBegin(GL_LINES);
+		GL11.glBegin(GL11.GL_LINES);
 
 		// front
-		glVertex3f(-0.005f, 1.005f, 1.005f);
-		glVertex3f(1.005f, 1.005f, 1.005f);
+		GL11.glVertex3f(-0.005f, 1.005f, 1.005f);
+		GL11.glVertex3f(1.005f, 1.005f, 1.005f);
 
-		glVertex3f(1.005f, 1.005f, 1.005f);
-		glVertex3f(1.005f, -0.005f, 1.005f);
+		GL11.glVertex3f(1.005f, 1.005f, 1.005f);
+		GL11.glVertex3f(1.005f, -0.005f, 1.005f);
 
-		glVertex3f(1.005f, -0.005f, 1.005f);
-		glVertex3f(-0.005f, -0.005f, 1.005f);
+		GL11.glVertex3f(1.005f, -0.005f, 1.005f);
+		GL11.glVertex3f(-0.005f, -0.005f, 1.005f);
 
-		glVertex3f(-0.005f, -0.005f, 1.005f);
-		glVertex3f(-0.005f, 1.005f, 1.005f);
+		GL11.glVertex3f(-0.005f, -0.005f, 1.005f);
+		GL11.glVertex3f(-0.005f, 1.005f, 1.005f);
 
 		// right
-		glVertex3f(1.005f, 1.005f, 1.005f);
-		glVertex3f(1.005f, 1.005f, -0.005f);
+		GL11.glVertex3f(1.005f, 1.005f, 1.005f);
+		GL11.glVertex3f(1.005f, 1.005f, -0.005f);
 
-		glVertex3f(1.005f, 1.005f, -0.005f);
-		glVertex3f(1.005f, -0.005f, -0.005f);
+		GL11.glVertex3f(1.005f, 1.005f, -0.005f);
+		GL11.glVertex3f(1.005f, -0.005f, -0.005f);
 
-		glVertex3f(1.005f, -0.005f, -0.005f);
-		glVertex3f(1.005f, -0.005f, 1.005f);
+		GL11.glVertex3f(1.005f, -0.005f, -0.005f);
+		GL11.glVertex3f(1.005f, -0.005f, 1.005f);
 
 		// back
-		glVertex3f(1.005f, 1.005f, -0.005f);
-		glVertex3f(-0.005f, 1.005f, -0.005f);
+		GL11.glVertex3f(1.005f, 1.005f, -0.005f);
+		GL11.glVertex3f(-0.005f, 1.005f, -0.005f);
 
-		glVertex3f(-0.005f, -0.005f, -0.005f);
-		glVertex3f(1.005f, -0.005f, -0.005f);
+		GL11.glVertex3f(-0.005f, -0.005f, -0.005f);
+		GL11.glVertex3f(1.005f, -0.005f, -0.005f);
 
-		glVertex3f(-0.005f, -0.005f, -0.005f);
-		glVertex3f(-0.005f, 1.005f, -0.005f);
+		GL11.glVertex3f(-0.005f, -0.005f, -0.005f);
+		GL11.glVertex3f(-0.005f, 1.005f, -0.005f);
 
 		// left
-		glVertex3f(-0.005f, 1.005f, -0.005f);
-		glVertex3f(-0.005f, 1.005f, 1.005f);
+		GL11.glVertex3f(-0.005f, 1.005f, -0.005f);
+		GL11.glVertex3f(-0.005f, 1.005f, 1.005f);
 
-		glVertex3f(-0.005f, -0.005f, 1.005f);
-		glVertex3f(-0.005f, -0.005f, -0.005f);
-		glEnd();
+		GL11.glVertex3f(-0.005f, -0.005f, 1.005f);
+		GL11.glVertex3f(-0.005f, -0.005f, -0.005f);
+		GL11.glEnd();
 
 		GL11.glPopMatrix();
 
-		glEnable(GL_TEXTURE_2D);
+		GL11.glEnable(GL11.GL_TEXTURE_2D);
 
 	}
 
