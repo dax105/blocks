@@ -20,7 +20,7 @@ public class ChunkProvider {
 	public ChunkProvider(int seed, World world) {
 		this.seed = seed;
 		this.world = world;
-		this.simplex = new SimplexNoise(1024, 0.5, seed);
+		this.simplex = new SimplexNoise(256, 0.3, seed);
 	}
 
 	public Chunk getChunk(int xc, int zc) {

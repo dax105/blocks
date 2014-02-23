@@ -61,7 +61,7 @@ public class World {
 			
 			treeGen.generateTree(x, sy, z);
 		}
-
+		
 		System.out.println("Chunks created in " + (System.nanoTime() - start) / 1000000 + "ms");
 
 		start = System.nanoTime();
