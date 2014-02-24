@@ -11,12 +11,14 @@ public class GuiScreenSettings extends GuiScreen {
 	boolean filter;
 
 	int width = 400;
-	int height = 172;
+	int height = 200;
 	int fov;
 
 	int overflow = 8;
 
 	boolean ingame;
+	
+	boolean trees;
 
 	public GuiScreenSettings(GuiScreen parent) {
 		super(parent);
@@ -25,12 +27,20 @@ public class GuiScreenSettings extends GuiScreen {
 		filter = game.shouldFilter;
 		mult = game.heightMultipler;
 		fov = game.fov;
+		trees = game.treeGen;
 
 		String filteringText;
 		if (filter) {
 			filteringText = "Texture filtering: Linear";
 		} else {
 			filteringText = "Texture filtering: Nearest";
+		}
+		
+		String treeText;
+		if (trees) {
+			treeText = "Tree generator: ON";
+		} else {
+			treeText = "Tree generator: OFF";
 		}
 
 		//TODO SROVNAT
@@ -43,9 +53,11 @@ public class GuiScreenSettings extends GuiScreen {
 		
 		objects.add(new GuiObjectSlider((game.width - width) / 2, (game.height - height) / 2 + 62, (game.width + width) / 2, ((game.height - height) / 2) + 86, this.f, "World height multipler: ", 1, this, 0, 100, (int) mult, ""));
 
-		objects.add(new GuiObjectButton((game.width - width) / 2, (game.height - height) / 2 + 90, (game.width + width) / 2, ((game.height - height) / 2) + 114, this.f, filteringText, 3, this));
+		objects.add(new GuiObjectButton((game.width - width) / 2, (game.height - height) / 2 + 118, (game.width + width) / 2, ((game.height - height) / 2) + 144, this.f, filteringText, 3, this));
 		
-		objects.add(new GuiObjectSlider((game.width - width) / 2, (game.height - height) / 2 + 118, (game.width + width) / 2, ((game.height - height) / 2) + 144, this.f, "FOV: ", 2, this, 30, 160, fov, ""));
+		objects.add(new GuiObjectButton((game.width - width) / 2, (game.height - height) / 2 + 148, (game.width + width) / 2, ((game.height - height) / 2) + 172, this.f, treeText, 4, this));
+		
+		objects.add(new GuiObjectSlider((game.width - width) / 2, (game.height - height) / 2 + 90, (game.width + width) / 2, ((game.height - height) / 2) + 114, this.f, "FOV: ", 2, this, 30, 160, fov, ""));
 
 		objects.add(new GuiObjectButton((game.width - width) / 2, (game.height + height) / 2 - 24, (game.width) / 2, ((game.height + height) / 2), this.f, "Cancel", 1, this));
 		
@@ -66,6 +78,7 @@ public class GuiScreenSettings extends GuiScreen {
 
 			game.heightMultipler = mult;
 			game.shouldFilter = filter;
+			game.treeGen = trees;
 
 			TextureManager.atlas.bind();
 			if (game.shouldFilter) {
@@ -98,6 +111,17 @@ public class GuiScreenSettings extends GuiScreen {
 				filter = true;
 			}
 		}
+		
+		if (button.id == 4) {
+			if (!trees) {
+				button.text = "Tree generator: ON";
+				trees = true;
+			} else {
+				button.text = "Tree generator: OFF";
+				trees = false;
+			}
+		}
+
 	}
 	
 	@Override

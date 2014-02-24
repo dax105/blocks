@@ -7,7 +7,7 @@ import java.nio.*;
 import static org.lwjgl.opengl.GL11.*;
 
 /**
- * @author Unknown, modified by dax105. Found by user from java-gaming
+ * @author Unknown, found by user from java-gaming, modified by dax105
  */
 public class Frustum
 {

@@ -38,6 +38,8 @@ public class Game implements Runnable {
 
 	public int fov = 50;
 	public static final String TITLE = "Order of the stone";
+	
+	public boolean treeGen;
 
 	boolean isFullscreen = false;
 
@@ -86,7 +88,7 @@ public class Game implements Runnable {
 	}
 
 	public void makeNewWorld() {
-		world = new World(this.worldSize, this.heightMultipler);
+		world = new World(this.worldSize, this.heightMultipler, treeGen);
 		closeGuiScreen();
 		isIngame = true;
 	}
@@ -273,16 +275,16 @@ public class Game implements Runnable {
 					GL11.glBegin(GL11.GL_QUADS);
 
 					GL11.glTexCoord2f(0, 0);
-					GL11.glVertex2f((width - TextureManager.logo.getImageWidth()) / 2, height / 2 - 170);
+					GL11.glVertex2f((width - TextureManager.logo.getImageWidth()) / 2, height / 2 - 180);
 
 					GL11.glTexCoord2f(TextureManager.logo.getWidth(), 0);
-					GL11.glVertex2f((width + TextureManager.logo.getImageWidth()) / 2, height / 2 - 170);
+					GL11.glVertex2f((width + TextureManager.logo.getImageWidth()) / 2, height / 2 - 180);
 
 					GL11.glTexCoord2f(TextureManager.logo.getWidth(), TextureManager.logo.getHeight());
-					GL11.glVertex2f((width + TextureManager.logo.getImageWidth()) / 2, height / 2 - 170 + TextureManager.logo.getImageHeight());
+					GL11.glVertex2f((width + TextureManager.logo.getImageWidth()) / 2, height / 2 - 180 + TextureManager.logo.getImageHeight());
 
 					GL11.glTexCoord2f(0, TextureManager.logo.getHeight());
-					GL11.glVertex2f((width - TextureManager.logo.getImageWidth()) / 2, height / 2 - 170 + TextureManager.logo.getImageHeight());
+					GL11.glVertex2f((width - TextureManager.logo.getImageWidth()) / 2, height / 2 - 180 + TextureManager.logo.getImageHeight());
 
 					GL11.glEnd();
 

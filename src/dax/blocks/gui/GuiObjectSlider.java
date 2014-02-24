@@ -26,7 +26,6 @@ public class GuiObjectSlider extends GuiObject {
 	private int maxVal;
 	public int val;
 
-	private boolean lockup = false;
 	private boolean hover = false;
 
 	public GuiObjectSlider(int x1, int y1, int x2, int y2, Font font, String text, int id, GuiScreen parent, int minVal, int maxVal, int val, String unit) {
@@ -66,9 +65,7 @@ public class GuiObjectSlider extends GuiObject {
 	public void update() {
 		if (Mouse.getX() >= x1 && Mouse.getX() <= x2 && Display.getHeight() - Mouse.getY() >= y1 && Display.getHeight() - Mouse.getY() <= y2) {
 			
-			if (Mouse.isButtonDown(0) && !hover) {
-				lockup = true;
-			} else {
+			if (!(Mouse.isButtonDown(0) && !hover)) {
 				hover = true;
 			}
 
@@ -82,7 +79,7 @@ public class GuiObjectSlider extends GuiObject {
 		} else {
 			hover = false;
 		}
-
+		
 		if (val < minVal) {
 			val = minVal;
 		}
@@ -91,6 +88,6 @@ public class GuiObjectSlider extends GuiObject {
 			val = maxVal;
 		}	
 		
-	}
+	}	
 
 }

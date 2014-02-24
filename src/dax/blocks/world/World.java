@@ -30,11 +30,13 @@ public class World {
 
 	public int chunksDrawn;
 
+	boolean trees;
+
 	public int getVertices() {
 		return this.vertices;
 	}
 
-	public World(int size, float multipler) {
+	public World(int size, float multipler, boolean trees) {
 		this.size = size;
 		this.sizeBlocks = size * Chunk.CHUNK_SIZE;
 		player = new Player(this);
@@ -54,9 +56,22 @@ public class World {
 			}
 		}
 
-		/*
-		 * Random rand = new Random(); int maxTrees = size*size-(rand.nextInt((size*size)-5)); for (int i = 0; i < maxTrees; i++) { int sy = 0; int x = 1+rand.nextInt(sizeBlocks-1); int z = 1+rand.nextInt(sizeBlocks-1); for (int y = 0; y < Chunk.CHUNK_HEIGHT; y++) { sy = y; if (getBlock(x, sy+1, z) == 0) { break; } } treeGen.generateTree(x, sy, z); }
-		 */
+		if (trees) {
+			Random rand = new Random();
+			int maxTrees = size * size - (rand.nextInt((size * size) - 5));
+			for (int i = 0; i < maxTrees; i++) {
+				int sy = 0;
+				int x = 1 + rand.nextInt(sizeBlocks - 1);
+				int z = 1 + rand.nextInt(sizeBlocks - 1);
+				for (int y = 0; y < Chunk.CHUNK_HEIGHT; y++) {
+					sy = y;
+					if (getBlock(x, sy + 1, z) == 0) {
+						break;
+					}
+				}
+				treeGen.generateTree(x, sy, z);
+			}
+		}
 
 		System.out.println("Chunks created in " + (System.nanoTime() - start) / 1000000 + "ms");
 
