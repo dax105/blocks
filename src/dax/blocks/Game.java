@@ -36,7 +36,7 @@ public class Game implements Runnable {
 
 	GuiScreen guiScreen;
 
-	public static final int FOV = 50;
+	public int fov = 50;
 	public static final String TITLE = "Order of the stone";
 
 	boolean isFullscreen = false;
@@ -193,7 +193,7 @@ public class Game implements Runnable {
 	public void setPerspective() {
 		GL11.glMatrixMode(GL11.GL_PROJECTION);
 		GL11.glLoadIdentity();
-		GLU.gluPerspective(FOV, (float) width / (float) height, 0.05F, 1000F);
+		GLU.gluPerspective(fov, (float) width / (float) height, 0.05F, 1000F);
 		GL11.glViewport(0, 0, width, height);
 		GL11.glMatrixMode(GL11.GL_MODELVIEW);
 

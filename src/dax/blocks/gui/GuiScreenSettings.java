@@ -11,7 +11,8 @@ public class GuiScreenSettings extends GuiScreen {
 	boolean filter;
 
 	int width = 400;
-	int height = 142;
+	int height = 172;
+	int fov;
 
 	int overflow = 8;
 
@@ -23,6 +24,7 @@ public class GuiScreenSettings extends GuiScreen {
 		worldSize = game.worldSize;
 		filter = game.shouldFilter;
 		mult = game.heightMultipler;
+		fov = game.fov;
 
 		String filteringText;
 		if (filter) {
@@ -31,6 +33,8 @@ public class GuiScreenSettings extends GuiScreen {
 			filteringText = "Texture filtering: Nearest";
 		}
 
+		//TODO SROVNAT
+		
 		objects.add(new GuiObjectRectangle((game.width - width - overflow) / 2, (game.height - height - overflow) / 2, (game.width + width + overflow) / 2, (game.height + height + overflow) / 2, 0xA0000000));
 
 		objects.add(new GuiObjectTitleBar((game.width - width) / 2, (game.height - height) / 2, (game.width + width) / 2, ((game.height - height) / 2) + 30, this.f, "Options"));
@@ -40,6 +44,8 @@ public class GuiScreenSettings extends GuiScreen {
 		objects.add(new GuiObjectSlider((game.width - width) / 2, (game.height - height) / 2 + 62, (game.width + width) / 2, ((game.height - height) / 2) + 86, this.f, "World height multipler: ", 1, this, 0, 100, (int) mult, ""));
 
 		objects.add(new GuiObjectButton((game.width - width) / 2, (game.height - height) / 2 + 90, (game.width + width) / 2, ((game.height - height) / 2) + 114, this.f, filteringText, 3, this));
+		
+		objects.add(new GuiObjectSlider((game.width - width) / 2, (game.height - height) / 2 + 118, (game.width + width) / 2, ((game.height - height) / 2) + 144, this.f, "FOV: ", 2, this, 30, 110, fov, ""));
 
 		objects.add(new GuiObjectButton((game.width - width) / 2, (game.height + height) / 2 - 24, (game.width) / 2, ((game.height + height) / 2), this.f, "Cancel", 1, this));
 		
@@ -71,6 +77,7 @@ public class GuiScreenSettings extends GuiScreen {
 			}
 
 			game.worldSize = worldSize;
+			game.fov = fov;
 
 			if (ingame) {
 				game.displayLoadingScreen();
@@ -101,6 +108,10 @@ public class GuiScreenSettings extends GuiScreen {
 		
 		if (slider.id == 1) {
 			this.mult = slider.val;
+		}
+		
+		if (slider.id == 2) {
+			this.fov = slider.val;
 		}
 	}
 
