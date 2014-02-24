@@ -86,7 +86,9 @@ public class GuiObjectSlider extends GuiObject {
 		
 		if (val > maxVal) {
 			val = maxVal;
-		}	
+		}
+		
+		parent.sliderUpdate(this);
 		
 	}	
 
