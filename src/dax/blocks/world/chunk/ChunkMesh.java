@@ -7,6 +7,8 @@ import org.lwjgl.BufferUtils;
 
 public class ChunkMesh {
 
+	public int vertices;
+	
 	public FloatBuffer tBufferOpaque;
 	public FloatBuffer nBufferOpaque;
 	public FloatBuffer vBufferOpaque;
@@ -223,5 +225,7 @@ public class ChunkMesh {
 		vBufferTransparent.flip();
 		tBufferTransparent.flip();
 		nBufferTransparent.flip();
+		
+		this.vertices = (opaqueCount + transparentCount)*4;
 	}
 }

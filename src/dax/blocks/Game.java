@@ -51,6 +51,8 @@ public class Game implements Runnable {
 	public World world;
 
 	public boolean isIngame = false;
+	
+	public int vertices = 0;
 
 	@Override
 	public void run() {
@@ -329,9 +331,9 @@ public class Game implements Runnable {
 		long allocatedMemory = runtime.totalMemory();
 		long freeMemory = runtime.freeMemory();
 
-		String fpsString = "FPS: " + fps;
+		String fpsString = "FPS: " + fps + ", " + world.getVertices() + " vertices";
 		int stringWidth = font.getWidth(fpsString);
-		font.drawString(width - stringWidth - 2, font.getHeight(), "FPS: " + fps);
+		font.drawString(width - stringWidth - 2, font.getHeight(), fpsString);
 
 		font.drawString(2, 0, "X Position: " + world.player.posX);
 		font.drawString(2, font.getHeight(), "Y Position: " + world.player.posY);
@@ -340,6 +342,9 @@ public class Game implements Runnable {
 		String memory = "Used memory: " + (allocatedMemory / (1024 * 1024) - freeMemory / (1024 * 1024)) + "MB" + "/" + allocatedMemory / (1024 * 1024) + "MB";
 		int memoryWidth = font.getWidth(memory);
 		font.drawString(width - memoryWidth - 2, 0, memory);
+		
+		String chunks = "Chunks drawn: " + world.chunksDrawn + "/" + worldSize*worldSize;
+		font.drawString(width - font.getWidth(chunks) - 2, font.getHeight()*2, chunks);
 
 		GL11.glDisable(GL11.GL_TEXTURE_2D);
 		GL11.glLineWidth(2);
