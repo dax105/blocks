@@ -57,7 +57,7 @@ public class ChunkProvider {
 			for (int z = 0; z < Chunk.CHUNK_SIZE; z++) {
 				int h = heightMap[x][z];
 				for (int y = 0; y < Chunk.CHUNK_HEIGHT; y++) {
-					if ((y <= h || y == 0) && !(simplex3D.getNoise(x + (xc * Chunk.CHUNK_SIZE), y, z + (zc * Chunk.CHUNK_SIZE)) < -0.2D * (y / 80.0D))) {
+					if ((y <= h) && !(simplex3D.getNoise(x + (xc * Chunk.CHUNK_SIZE), y, z + (zc * Chunk.CHUNK_SIZE)) < -0.2D * (y / 80.0D))) {
 						if (y == h) {
 							chunk.setBlock(x, y, z, Block.grass.getId(), false);
 						} else {
@@ -69,6 +69,10 @@ public class ChunkProvider {
 
 						}
 
+					}
+					
+					if (y == 0) {
+						chunk.setBlock(x, y, z, Block.bedrock.getId(), false);
 					}
 				}
 			}

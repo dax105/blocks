@@ -130,7 +130,7 @@ public class Game implements Runnable {
 				}
 			}
 		}
-		// Display.sync(50);
+		//Display.sync(60);
 		updateFPS();
 	}
 

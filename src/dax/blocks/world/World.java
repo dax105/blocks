@@ -1,10 +1,12 @@
 package dax.blocks.world;
 
 import java.nio.IntBuffer;
+import java.util.ArrayList;
 import java.util.Random;
 
 import dax.blocks.Frustum;
 import dax.blocks.Player;
+import dax.blocks.collisions.AABB;
 import dax.blocks.world.chunk.ChunkMesh;
 import dax.blocks.world.chunk.Chunk;
 import dax.blocks.world.generator.TreeGenerator;
@@ -311,5 +313,27 @@ public class World {
 		GL11.glEnable(GL11.GL_TEXTURE_2D);
 
 	}
+	
+	public ArrayList<AABB> getBBs(AABB aABB) {
+	      ArrayList<AABB> aABBs = new ArrayList<AABB>();
+	      int x0 = (int)aABB.x0;
+	      int x1 = (int)(aABB.x1 + 1.0F);
+	      int y0 = (int)aABB.y0;
+	      int y1 = (int)(aABB.y1 + 1.0F);
+	      int z0 = (int)aABB.z0;
+	      int z1 = (int)(aABB.z1 + 1.0F);
+
+	      for(int x = x0; x < x1; ++x) {
+	         for(int y = y0; y < y1; ++y) {
+	            for(int z = z0; z < z1; ++z) {
+	               if(getBlock(x, y, z) > 0) {
+	                  aABBs.add(new AABB((float)x, (float)y, (float)z, (float)(x + 1), (float)(y + 1), (float)(z + 1)));
+	               }
+	            }
+	         }
+	      }
+
+	      return aABBs;
+	   }
 
 }

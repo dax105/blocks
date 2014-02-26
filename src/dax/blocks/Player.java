@@ -1,8 +1,11 @@
 package dax.blocks;
 
+import java.util.ArrayList;
+
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
 
+import dax.blocks.collisions.AABB;
 import dax.blocks.world.World;
 
 public class Player {
@@ -15,11 +18,9 @@ public class Player {
 
 	byte selectedBlockID = 3;
 
-	double posX = 0.0D;
-	double posZ = 0.0D;
-	double posY = 32D;
-
-	double lastPosY = 0D;
+	float posX = 0.0F;
+	float posZ = 0.0F;
+	float posY = 128F;
 
 	public int lookingAtX = -1;
 	public int lookingAtY = -1;
@@ -32,12 +33,17 @@ public class Player {
 	public boolean hasSelected = false;
 
 	float heading = 140.0F;
-	float tilt = -10.0F;
+	float tilt = -60.0F;
 
 	boolean reload = false;
+	
+	AABB bb;
+
+	private boolean onGround;
 
 	public Player(World world) {
 		this.world = world;
+		this.bb = new AABB(posX-PLAYER_SIZE/2, posY, posZ-PLAYER_SIZE/2, posX+PLAYER_SIZE/2, posY+PLAYER_HEIGHT, posZ+PLAYER_SIZE/2);
 	}
 
 	private void updateLookingAt() {
@@ -184,14 +190,52 @@ public class Player {
 			tilt = 90;
 		}
 
-		if (move != 0.0D || moveStrafe != 0.0D || moveY != 0) {
+		if (move != 0 || moveStrafe != 0 || moveY != 0) {
 			double toMoveZ = (posZ + Math.cos(-heading / 180 * Math.PI) * delta * move) + (Math.cos((-heading + 90) / 180 * Math.PI) * delta * moveStrafe);
 			double toMoveX = (posX + Math.sin(-heading / 180 * Math.PI) * delta * move) + (Math.sin((-heading + 90) / 180 * Math.PI) * delta * moveStrafe);
 			double toMoveY = posY + moveY;
 
-			posX = toMoveX;
-			posY = toMoveY;
-			posZ = toMoveZ;
+		    float xa = (float) -(posX - toMoveX);
+		    float ya = (float) -(posY - toMoveY);
+		    float za = (float) -(posZ - toMoveZ);
+		    float yab = ya;
+			
+		      ArrayList<AABB> aABBs = this.world.getBBs(this.bb.expand(xa, ya, za));
+		      for(int i = 0; i < aABBs.size(); ++i) {
+		         ya = ((AABB)aABBs.get(i)).clipYCollide(this.bb, ya);
+		      }
+
+		      this.bb.move(0.0F, ya, 0.0F);
+
+		      for(int i = 0; i < aABBs.size(); ++i) {
+		         xa = ((AABB)aABBs.get(i)).clipXCollide(this.bb, xa);
+		      }
+
+		      this.bb.move(xa, 0.0F, 0.0F);
+
+		      for(int i = 0; i < aABBs.size(); ++i) {
+		          za = ((AABB)aABBs.get(i)).clipZCollide(this.bb, za);
+		       }
+
+		       this.bb.move(0.0F, 0.0F, za);
+		       
+		       this.onGround = yab != ya && yab < 0.0F;
+		       /*if(xaOrg != xa) {
+		          this.xd = 0.0F;
+		       }
+
+		       if(yaOrg != ya) {
+		          this.yd = 0.0F;
+		       }
+
+		       if(zaOrg != za) {
+		          this.zd = 0.0F;
+		       }*/
+
+		       this.posX = (this.bb.x0 + this.bb.x1) / 2.0F;
+		       this.posY = this.bb.y0;
+		       this.posZ = (this.bb.z0 + this.bb.z1) / 2.0F;
+		  
 		}
 
 		while (Mouse.next()) {

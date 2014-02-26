@@ -29,6 +29,7 @@ public abstract class Block {
 	public static final Block log = new BlockBasic(8, 11, 7, 11);
 	public static final Block glass = new BlockBasic(9, 9, false);
 	public static final Block leaves = new BlockBasic(10, 10, false);
+	public static final Block bedrock = new BlockBasic(11, 12);
 
 	public byte getId() {
 		return this.id;
