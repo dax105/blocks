@@ -38,6 +38,11 @@ public class Player {
 	boolean reload = false;
 	
 	AABB bb;
+	
+	public float yv = 0.0f;
+	public float jumpForce = 0.0f;
+	
+	public static final float JUMP_STRENGTH = 0.0035f;
 
 	private boolean onGround;
 
@@ -120,12 +125,13 @@ public class Player {
 			moveStrafe += 0.005D * multi;
 		}
 
-		if (Keyboard.isKeyDown(Keyboard.KEY_SPACE)) {
-			moveY += 0.005D * multi * delta;
+		if (Keyboard.isKeyDown(Keyboard.KEY_SPACE) && onGround) {
+			//moveY += 0.005D * multi;
+			yv += JUMP_STRENGTH * multi;
 		}
 
 		if (Keyboard.isKeyDown(Keyboard.KEY_LMENU) || Keyboard.isKeyDown(Keyboard.KEY_LCONTROL)) {
-			moveY -= 0.005D * multi * delta;
+			//moveY -= 0.005D * multi;
 		}
 
 		if (Keyboard.isKeyDown(Keyboard.KEY_1) || Keyboard.isKeyDown(Keyboard.KEY_NUMPAD1)) {
@@ -190,10 +196,12 @@ public class Player {
 			tilt = 90;
 		}
 
-		if (move != 0 || moveStrafe != 0 || moveY != 0) {
+		yv -= 0.00001f * delta;
+		moveY += yv;
+		
 			double toMoveZ = (posZ + Math.cos(-heading / 180 * Math.PI) * delta * move) + (Math.cos((-heading + 90) / 180 * Math.PI) * delta * moveStrafe);
 			double toMoveX = (posX + Math.sin(-heading / 180 * Math.PI) * delta * move) + (Math.sin((-heading + 90) / 180 * Math.PI) * delta * moveStrafe);
-			double toMoveY = posY + moveY;
+			double toMoveY = (posY + (moveY + yv)*delta);
 
 		    float xa = (float) -(posX - toMoveX);
 		    float ya = (float) -(posY - toMoveY);
@@ -220,13 +228,20 @@ public class Player {
 		       this.bb.move(0.0F, 0.0F, za);
 		       
 		       this.onGround = yab != ya && yab < 0.0F;
+		       
+		       if (this.onGround) {
+		    	   yv = 0;
+		       }
+		       
+		       if(yab != ya) {
+			          this.yv = 0.0F;
+		       }
+		       
 		       /*if(xaOrg != xa) {
 		          this.xd = 0.0F;
 		       }
 
-		       if(yaOrg != ya) {
-		          this.yd = 0.0F;
-		       }
+
 
 		       if(zaOrg != za) {
 		          this.zd = 0.0F;
@@ -236,7 +251,6 @@ public class Player {
 		       this.posY = this.bb.y0;
 		       this.posZ = (this.bb.z0 + this.bb.z1) / 2.0F;
 		  
-		}
 
 		while (Mouse.next()) {
 			if (Mouse.getEventButtonState()) {
