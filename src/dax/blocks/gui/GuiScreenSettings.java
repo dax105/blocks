@@ -49,7 +49,7 @@ public class GuiScreenSettings extends GuiScreen {
 
 		objects.add(new GuiObjectTitleBar((game.width - width) / 2, (game.height - height) / 2, (game.width + width) / 2, ((game.height - height) / 2) + 30, this.f, "Options"));
 
-		objects.add(new GuiObjectSlider((game.width - width) / 2, (game.height - height) / 2 + 34, (game.width + width) / 2, ((game.height - height) / 2) + 58, this.f, "World size: ", 0, this, 4, 40, worldSize, " chunks"));
+		objects.add(new GuiObjectSlider((game.width - width) / 2, (game.height - height) / 2 + 34, (game.width + width) / 2, ((game.height - height) / 2) + 58, this.f, "World size: ", 0, this, 4, 80, worldSize, " chunks"));
 		
 		objects.add(new GuiObjectSlider((game.width - width) / 2, (game.height - height) / 2 + 62, (game.width + width) / 2, ((game.height - height) / 2) + 86, this.f, "World height multipler: ", 1, this, 0, 100, (int) mult, ""));
 

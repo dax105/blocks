@@ -8,6 +8,9 @@ import org.lwjgl.BufferUtils;
 public class ChunkMesh {
 
 	public int vertices;
+	public boolean hasTransparent;
+	
+	public boolean hasVBO = false;
 	
 	public FloatBuffer tBufferOpaque;
 	public FloatBuffer nBufferOpaque;
@@ -30,14 +33,16 @@ public class ChunkMesh {
 	 * 
 	 * @param chunk
 	 */
-	public void generateMesh(Chunk chunk) {
+	public void generateMesh(Chunk chunk, int cy) {
 
 		int opaqueCount = 0;
 		int transparentCount = 0;
+		
+		int yStart = cy*Chunk.CHUNK_SIZE;
 
 		for (int x = 0; x < Chunk.CHUNK_SIZE; x++) {
 			for (int z = 0; z < Chunk.CHUNK_SIZE; z++) {
-				for (int y = 0; y < Chunk.CHUNK_HEIGHT; y++) {
+				for (int y = yStart; y < yStart + Chunk.CHUNK_SIZE; y++) {
 
 					byte blockID = chunk.getBlock(x, y, z);
 					Block block = Block.getBlock(blockID);
@@ -111,7 +116,7 @@ public class ChunkMesh {
 
 		for (int x = 0; x < Chunk.CHUNK_SIZE; x++) {
 			for (int z = 0; z < Chunk.CHUNK_SIZE; z++) {
-				for (int y = 0; y < Chunk.CHUNK_HEIGHT; y++) {
+				for (int y = yStart; y < yStart + Chunk.CHUNK_SIZE; y++) {
 					byte blockID = chunk.getBlock(x, y, z);
 					Block block = Block.getBlock(blockID);
 
@@ -225,6 +230,12 @@ public class ChunkMesh {
 		vBufferTransparent.flip();
 		tBufferTransparent.flip();
 		nBufferTransparent.flip();
+		
+		if (transparentCount > 0) {
+			hasTransparent = true;
+		} else {
+			hasTransparent = false;
+		}
 		
 		this.vertices = (opaqueCount + transparentCount)*4;
 	}

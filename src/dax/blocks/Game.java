@@ -7,6 +7,7 @@ import dax.blocks.gui.GuiScreenLoading;
 import dax.blocks.gui.GuiScreenMainMenu;
 import dax.blocks.gui.GuiScreenMenu;
 import dax.blocks.world.World;
+import dax.blocks.world.chunk.Chunk;
 
 import java.awt.Dimension;
 import java.awt.Font;
@@ -345,7 +346,7 @@ public class Game implements Runnable {
 		int memoryWidth = font.getWidth(memory);
 		font.drawString(width - memoryWidth - 2, 0, memory);
 		
-		String chunks = "Chunks drawn: " + world.chunksDrawn + "/" + worldSize*worldSize;
+		String chunks = "Chunks drawn: " + world.chunksDrawn + "/" + worldSize*worldSize*(Chunk.CHUNK_HEIGHT/Chunk.CHUNK_SIZE);
 		font.drawString(width - font.getWidth(chunks) - 2, font.getHeight()*2, chunks);
 
 		GL11.glDisable(GL11.GL_TEXTURE_2D);

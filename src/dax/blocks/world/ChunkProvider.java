@@ -8,7 +8,8 @@ import dax.blocks.world.generator.SimplexNoise;
 
 public class ChunkProvider {
 
-	SimplexNoise simplex;
+	SimplexNoise simplex2D;
+	SimplexNoise simplex3D;
 
 	World world;
 	int seed;
@@ -20,7 +21,12 @@ public class ChunkProvider {
 	public ChunkProvider(int seed, World world) {
 		this.seed = seed;
 		this.world = world;
-		this.simplex = new SimplexNoise(256, 0.3, seed);
+		this.simplex2D = new SimplexNoise(256, 0.3, seed);
+		this.simplex3D = new SimplexNoise(32, 0.1, seed);
+	}
+
+	public static float lerp(float x, float x1, float x2, float q00, float q01) {
+		return ((x2 - x) / (x2 - x1)) * q00 + ((x - x1) / (x2 - x1)) * q01;
 	}
 
 	public Chunk getChunk(int xc, int zc) {
@@ -33,7 +39,7 @@ public class ChunkProvider {
 
 		for (int x = xStart; x < xEnd; x++) {
 			for (int z = zStart; z < zEnd; z++) {
-				int precalc = (int) (Math.round((40.0f + simplex.getNoise(x, z) * world.multipler)));
+				int precalc = (int) (Math.round((40.0f + simplex2D.getNoise(x, z) * world.multipler)));
 				if (precalc > Chunk.CHUNK_HEIGHT - 1) {
 					precalc = Chunk.CHUNK_HEIGHT - 1;
 				}
@@ -51,7 +57,7 @@ public class ChunkProvider {
 			for (int z = 0; z < Chunk.CHUNK_SIZE; z++) {
 				int h = heightMap[x][z];
 				for (int y = 0; y < Chunk.CHUNK_HEIGHT; y++) {
-					if (y <= h || y == 0) {
+					if ((y <= h || y == 0) && !(simplex3D.getNoise(x + (xc * Chunk.CHUNK_SIZE), y, z + (zc * Chunk.CHUNK_SIZE)) < -0.2D * (y / 80.0D))) {
 						if (y == h) {
 							chunk.setBlock(x, y, z, Block.grass.getId(), false);
 						} else {
@@ -60,7 +66,9 @@ public class ChunkProvider {
 							} else {
 								chunk.setBlock(x, y, z, Block.dirt.getId(), false);
 							}
+
 						}
+
 					}
 				}
 			}

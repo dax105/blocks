@@ -78,7 +78,7 @@ public class World {
 		start = System.nanoTime();
 		for (int x = 0; x < size; x++) {
 			for (int z = 0; z < size; z++) {
-				chunks[x][z].rebuild();
+				chunks[x][z].rebuildEntireChunk();
 			}
 		}
 
@@ -89,9 +89,15 @@ public class World {
 		player.update(delta);
 	}
 
-	public void updateChunk(int x, int z) {
+	public void rebuildEntireChunk(int x, int z) {
 		if (!(x < 0 || x >= size || z < 0 || z >= size)) {
-			chunks[x][z].rebuild();
+			chunks[x][z].rebuildEntireChunk();
+		}
+	}
+	
+	public void rebuild(int x, int y, int z) {
+		if (!(x < 0 || x >= size || z < 0 || z >= size)) {
+			chunks[x][z].rebuild(y);
 		}
 	}
 
@@ -152,75 +158,83 @@ public class World {
 
 		for (int x = 0; x < size; x++) {
 			for (int z = 0; z < size; z++) {
-				if (frustum.cuboidInFrustum(x * Chunk.CHUNK_SIZE, 0, z * Chunk.CHUNK_SIZE, (x + 1) * Chunk.CHUNK_SIZE, Chunk.CHUNK_HEIGHT, (z + 1) * Chunk.CHUNK_SIZE)) {
-					cd++;
-					c = chunks[x][z];
-					ChunkMesh cm = c.cm;
-					vertices += cm.vertices;
+				c = chunks[x][z];
 
-					GL11.glPushMatrix();
-					GL11.glTranslatef(x * Chunk.CHUNK_SIZE, 0, z * Chunk.CHUNK_SIZE);
+				for (int y = 0; y < Chunk.CHUNK_HEIGHT / Chunk.CHUNK_SIZE; y++) {
+					
+					ChunkMesh cm = c.meshes[y];
+					
+					if (frustum.cuboidInFrustum(x * Chunk.CHUNK_SIZE, y * Chunk.CHUNK_SIZE, z * Chunk.CHUNK_SIZE, (x + 1) * Chunk.CHUNK_SIZE, (y + 1) * Chunk.CHUNK_SIZE, (z + 1) * Chunk.CHUNK_SIZE) && cm.vertices > 0) {
+						cd++;
 
-					if (!c.hasVBO) {
-						IntBuffer ib = BufferUtils.createIntBuffer(6);
-						GL15.glGenBuffers(ib);
+						vertices += cm.vertices;
+						
+						GL11.glPushMatrix();
+						GL11.glTranslatef(x * Chunk.CHUNK_SIZE, 0, z * Chunk.CHUNK_SIZE);
 
-						int vHandleOpaque = ib.get(0);
-						int tHandleOpaque = ib.get(1);
-						int nHandleOpaque = ib.get(2);
+						if (!cm.hasVBO) {
+							IntBuffer ib = BufferUtils.createIntBuffer(6);
+							GL15.glGenBuffers(ib);
 
-						int vHandleTransparent = ib.get(3);
-						int tHandleTransparent = ib.get(4);
-						int nHandleTransparent = ib.get(5);
+							int vHandleOpaque = ib.get(0);
+							int tHandleOpaque = ib.get(1);
+							int nHandleOpaque = ib.get(2);
 
-						cm.vHandleOpaque = vHandleOpaque;
-						cm.tHandleOpaque = tHandleOpaque;
-						cm.nHandleOpaque = nHandleOpaque;
+							int vHandleTransparent = ib.get(3);
+							int tHandleTransparent = ib.get(4);
+							int nHandleTransparent = ib.get(5);
 
-						cm.vHandleTransparent = vHandleTransparent;
-						cm.tHandleTransparent = tHandleTransparent;
-						cm.nHandleTransparent = nHandleTransparent;
+							cm.vHandleOpaque = vHandleOpaque;
+							cm.tHandleOpaque = tHandleOpaque;
+							cm.nHandleOpaque = nHandleOpaque;
 
-						GL15.glBindBuffer(GL15.GL_ARRAY_BUFFER, vHandleOpaque);
-						GL15.glBufferData(GL15.GL_ARRAY_BUFFER, cm.vBufferOpaque, GL15.GL_STATIC_DRAW);
+							cm.vHandleTransparent = vHandleTransparent;
+							cm.tHandleTransparent = tHandleTransparent;
+							cm.nHandleTransparent = nHandleTransparent;
 
-						GL15.glBindBuffer(GL15.GL_ARRAY_BUFFER, tHandleOpaque);
-						GL15.glBufferData(GL15.GL_ARRAY_BUFFER, cm.tBufferOpaque, GL15.GL_STATIC_DRAW);
+							GL15.glBindBuffer(GL15.GL_ARRAY_BUFFER, vHandleOpaque);
+							GL15.glBufferData(GL15.GL_ARRAY_BUFFER, cm.vBufferOpaque, GL15.GL_STATIC_DRAW);
 
-						GL15.glBindBuffer(GL15.GL_ARRAY_BUFFER, nHandleOpaque);
-						GL15.glBufferData(GL15.GL_ARRAY_BUFFER, cm.nBufferOpaque, GL15.GL_STATIC_DRAW);
+							GL15.glBindBuffer(GL15.GL_ARRAY_BUFFER, tHandleOpaque);
+							GL15.glBufferData(GL15.GL_ARRAY_BUFFER, cm.tBufferOpaque, GL15.GL_STATIC_DRAW);
 
-						GL15.glBindBuffer(GL15.GL_ARRAY_BUFFER, vHandleTransparent);
-						GL15.glBufferData(GL15.GL_ARRAY_BUFFER, cm.vBufferTransparent, GL15.GL_STATIC_DRAW);
+							GL15.glBindBuffer(GL15.GL_ARRAY_BUFFER, nHandleOpaque);
+							GL15.glBufferData(GL15.GL_ARRAY_BUFFER, cm.nBufferOpaque, GL15.GL_STATIC_DRAW);
 
-						GL15.glBindBuffer(GL15.GL_ARRAY_BUFFER, tHandleTransparent);
-						GL15.glBufferData(GL15.GL_ARRAY_BUFFER, cm.tBufferTransparent, GL15.GL_STATIC_DRAW);
+							GL15.glBindBuffer(GL15.GL_ARRAY_BUFFER, vHandleTransparent);
+							GL15.glBufferData(GL15.GL_ARRAY_BUFFER, cm.vBufferTransparent, GL15.GL_STATIC_DRAW);
 
-						GL15.glBindBuffer(GL15.GL_ARRAY_BUFFER, nHandleTransparent);
-						GL15.glBufferData(GL15.GL_ARRAY_BUFFER, cm.nBufferTransparent, GL15.GL_STATIC_DRAW);
+							GL15.glBindBuffer(GL15.GL_ARRAY_BUFFER, tHandleTransparent);
+							GL15.glBufferData(GL15.GL_ARRAY_BUFFER, cm.tBufferTransparent, GL15.GL_STATIC_DRAW);
 
-						c.hasVBO = true;
+							GL15.glBindBuffer(GL15.GL_ARRAY_BUFFER, nHandleTransparent);
+							GL15.glBufferData(GL15.GL_ARRAY_BUFFER, cm.nBufferTransparent, GL15.GL_STATIC_DRAW);
+
+							cm.hasVBO = true;
+						}
+
+						GL15.glBindBuffer(GL15.GL_ARRAY_BUFFER, cm.vHandleOpaque);
+						GL11.glVertexPointer(3, GL11.GL_FLOAT, 12, 0L);
+						GL15.glBindBuffer(GL15.GL_ARRAY_BUFFER, cm.tHandleOpaque);
+						GL11.glTexCoordPointer(2, GL11.GL_FLOAT, 8, 0L);
+						GL15.glBindBuffer(GL15.GL_ARRAY_BUFFER, cm.nHandleOpaque);
+						GL11.glNormalPointer(GL11.GL_FLOAT, 12, 0L);
+						GL11.glDrawArrays(GL11.GL_QUADS, 0, cm.vBufferOpaque.capacity() / 3);
+
+						if (cm.hasTransparent){
+							GL11.glEnable(GL11.GL_ALPHA_TEST);
+							GL15.glBindBuffer(GL15.GL_ARRAY_BUFFER, cm.vHandleTransparent);
+							GL11.glVertexPointer(3, GL11.GL_FLOAT, 12, 0L);
+							GL15.glBindBuffer(GL15.GL_ARRAY_BUFFER, cm.tHandleTransparent);
+							GL11.glTexCoordPointer(2, GL11.GL_FLOAT, 8, 0L);
+							GL15.glBindBuffer(GL15.GL_ARRAY_BUFFER, cm.nHandleTransparent);
+							GL11.glNormalPointer(GL11.GL_FLOAT, 12, 0L);
+							GL11.glDrawArrays(GL11.GL_QUADS, 0, cm.vBufferTransparent.capacity() / 3);
+							GL11.glDisable(GL11.GL_ALPHA_TEST);
+						}
+
+						GL11.glPopMatrix();
 					}
-
-					GL15.glBindBuffer(GL15.GL_ARRAY_BUFFER, cm.vHandleOpaque);
-					GL11.glVertexPointer(3, GL11.GL_FLOAT, 12, 0L);
-					GL15.glBindBuffer(GL15.GL_ARRAY_BUFFER, cm.tHandleOpaque);
-					GL11.glTexCoordPointer(2, GL11.GL_FLOAT, 8, 0L);
-					GL15.glBindBuffer(GL15.GL_ARRAY_BUFFER, cm.nHandleOpaque);
-					GL11.glNormalPointer(GL11.GL_FLOAT, 12, 0L);
-					GL11.glDrawArrays(GL11.GL_QUADS, 0, cm.vBufferOpaque.capacity() / 3);
-
-					GL11.glEnable(GL11.GL_ALPHA_TEST);
-					GL15.glBindBuffer(GL15.GL_ARRAY_BUFFER, cm.vHandleTransparent);
-					GL11.glVertexPointer(3, GL11.GL_FLOAT, 12, 0L);
-					GL15.glBindBuffer(GL15.GL_ARRAY_BUFFER, cm.tHandleTransparent);
-					GL11.glTexCoordPointer(2, GL11.GL_FLOAT, 8, 0L);
-					GL15.glBindBuffer(GL15.GL_ARRAY_BUFFER, cm.nHandleTransparent);
-					GL11.glNormalPointer(GL11.GL_FLOAT, 12, 0L);
-					GL11.glDrawArrays(GL11.GL_QUADS, 0, cm.vBufferTransparent.capacity() / 3);
-					GL11.glDisable(GL11.GL_ALPHA_TEST);
-
-					GL11.glPopMatrix();
 				}
 			}
 		}
