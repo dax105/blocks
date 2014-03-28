@@ -17,6 +17,11 @@ public class BlockBasic extends Block {
 		super(id, opaque);
 		setTexture(texture);
 	}
+	
+	public BlockBasic(int id, int texture, boolean opaque, boolean cullSame) {
+		super(id, opaque, cullSame);
+		setTexture(texture);
+	}
 
 	public BlockBasic(int id, int topTexture, int sideTexture, int bottomTexture) {
 		super(id);

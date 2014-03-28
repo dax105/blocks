@@ -1,28 +1,47 @@
 package dax.blocks.world;
 
+import dax.blocks.collisions.AABB;
+
+import java.nio.FloatBuffer;
 import java.nio.IntBuffer;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.Iterator;
+import java.util.List;
 import java.util.Random;
 
-import dax.blocks.Frustum;
+import dax.blocks.Coord2D;
+import dax.blocks.Game;
+import dax.blocks.Particle;
 import dax.blocks.Player;
-import dax.blocks.collisions.AABB;
-import dax.blocks.world.chunk.ChunkMesh;
+import dax.blocks.block.Block;
+import dax.blocks.render.ChunkMesh;
+import dax.blocks.render.Frustum;
 import dax.blocks.world.chunk.Chunk;
 import dax.blocks.world.generator.TreeGenerator;
 
 import org.lwjgl.BufferUtils;
+import org.lwjgl.input.Keyboard;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL15;
 
 public class World {
 
+	private Coord2D c2d;
+	
 	public int size;
 	public int sizeBlocks;
 	public Player player;
-	ChunkProvider chunkProvider;
-	Chunk[][] chunks;
+	public ChunkProvider chunkProvider;
+	
+    float[] rightMod = new float[3];
+    float[] upMod = new float[3];
+	
+	Random rand = new Random();
 
+	public static final int DRAW_DISTANCE = 12;
+	
 	float multipler;
 	private int vertices;
 
@@ -33,28 +52,38 @@ public class World {
 	public int chunksDrawn;
 
 	boolean trees;
+	
+	float emitterX = 0;
+	float emitterY = 40;
+	float emitterZ = 0;
 
 	public int getVertices() {
 		return this.vertices;
 	}
-
-	public World(int size, float multipler, boolean trees) {
+	
+	public World(int size, float multipler, boolean trees, Game game, boolean load) {
 		this.size = size;
 		this.sizeBlocks = size * Chunk.CHUNK_SIZE;
 		player = new Player(this);
-		chunks = new Chunk[size][size];
+		//chunks = new Chunk[size][size];
 		this.treeGen = new TreeGenerator(this);
 
+		this.multipler = multipler;
+		
 		chunkProvider = new ChunkProvider(this);
 
-		this.multipler = multipler;
-
 		this.frustum = new Frustum();
+		this.c2d = new Coord2D(-1, -1);
 
-		long start = System.nanoTime();
-		for (int x = 0; x < size; x++) {
+		//long start = System.nanoTime();
+		/*for (int x = 0; x < size; x++) {
 			for (int z = 0; z < size; z++) {
-				chunks[x][z] = chunkProvider.getChunk(x, z);
+				chunks[x][z] = chunkProvider.getChunk(x, z, load);
+				if (System.nanoTime() - lastTime > 100000000 && game.guiScreen instanceof GuiScreenLoading) {
+					GuiScreenLoading scr = (GuiScreenLoading) game.guiScreen;
+					scr.update("Generating chunk " + (x*size+z) + "/" + (size*size));
+					lastTime = System.nanoTime();
+				}
 			}
 		}
 
@@ -71,68 +100,138 @@ public class World {
 						break;
 					}
 				}
-				treeGen.generateTree(x, sy, z);
+				if (getBlock(x,sy,z) == Block.grass.getId()) {
+					treeGen.generateTree(x, sy, z);
+				}	
 			}
-		}
+		}*/
 
-		System.out.println("Chunks created in " + (System.nanoTime() - start) / 1000000 + "ms");
+		//System.out.println("Chunks created in " + (System.nanoTime() - start) / 1000000 + "ms");
 
-		start = System.nanoTime();
+		/*start = System.nanoTime();
 		for (int x = 0; x < size; x++) {
 			for (int z = 0; z < size; z++) {
 				chunks[x][z].rebuildEntireChunk();
+				if (System.nanoTime() - lastTime > 100000000 && game.guiScreen instanceof GuiScreenLoading) {
+					GuiScreenLoading scr = (GuiScreenLoading) game.guiScreen;
+					scr.update("Building chunk " + (x*size+z) + "/" + (size*size));
+					lastTime = System.nanoTime();
+				}
 			}
-		}
+		}*/
 
-		System.out.println("World geometry built in " + (System.nanoTime() - start) / 1000000 + "ms");
+		//System.out.println("World geometry built in " + (System.nanoTime() - start) / 1000000 + "ms");
+		
+		game.isIngame = true;
+	}
+	
+	public Coord2D getCoord2D(int x, int y) {
+		this.c2d.set(x, y);
+		return this.c2d;
 	}
 
-	public void update(float delta) {
-		player.update(delta);
+	public List<Particle> particles = new ArrayList<Particle>();
+	
+	public void update() {
+		player.update();
+		
+		for(int i = 0; i < 20; i++) {
+
+			
+			float velocity = 0.15f + rand.nextFloat()*0.15f;
+			float heading = 180 - rand.nextFloat()*360f;
+			float tilt = 180 - rand.nextFloat()*360f;
+			
+			float velY = (float) (Math.cos(tilt)*velocity);
+			float mult = (float) (Math.sin(tilt));
+			
+			float velX = (float) (Math.cos(heading)*velocity*mult);
+			float velZ = (float) (Math.sin(heading)*velocity*mult);
+			
+			
+			Particle p = new Particle(emitterX, emitterY, emitterZ, velX, velY, velZ, 200, rand.nextFloat(), rand.nextFloat(), rand.nextFloat());
+			particles.add(p);
+		}	
+		
+		for (Iterator<Particle> iter = particles.iterator(); iter.hasNext(); ) {
+		    Particle pt = iter.next();
+		    pt.update(getBBs(pt.aabb));
+		    if (pt.dead) {
+				iter.remove();
+			}
+		}
+		
+		if (Keyboard.isKeyDown(Keyboard.KEY_Q)) {
+			emitterX = player.posX;
+			emitterY = player.posY;
+			emitterZ = player.posZ;
+		}
+		
+		chunkProvider.updateLoadedChunksInRadius(((int)player.posX) / 16, ((int)player.posZ) / 16, DRAW_DISTANCE+1);
 	}
 
 	public void rebuildEntireChunk(int x, int z) {
-		if (!(x < 0 || x >= size || z < 0 || z >= size)) {
-			chunks[x][z].rebuildEntireChunk();
-		}
+		//TODO
+			
+			int cx = x / Chunk.CHUNK_SIZE;
+			int cz = z / Chunk.CHUNK_SIZE;
+			
+			Coord2D coord = getCoord2D(cx, cz);
+			
+			if (chunkProvider.isChunkLoaded(coord)) {
+				//chunkProvider.getChunk(coord).blocks;
+			}
+			
+			//chunks[x][z].rebuild(y);
+		
 	}
-	
+
 	public void rebuild(int x, int y, int z) {
-		if (!(x < 0 || x >= size || z < 0 || z >= size)) {
-			chunks[x][z].rebuild(y);
-		}
+			Coord2D coord = getCoord2D(x, z);
+			
+			if (chunkProvider.isChunkLoaded(coord)) {
+				chunkProvider.getChunk(coord).setDirty(y);
+			}
+			
+			//chunks[x][z].rebuild(y);
 	}
+
 
 	public byte getBlock(int x, int y, int z) {
-		if (x < 0 || y < 0 || z < 0 || x >= size * Chunk.CHUNK_SIZE || z >= size * Chunk.CHUNK_SIZE || y >= Chunk.CHUNK_HEIGHT) {
-			return 0;
-		}
+		int icx = x & 15;
+		int icz = z & 15;
 
-		int icx = x % Chunk.CHUNK_SIZE;
-		int icz = z % Chunk.CHUNK_SIZE;
+		int cx = x >> 4;
+		int cz = z >> 4;
+		
+		Coord2D coord = getCoord2D(cx, cz);
+		
+		Chunk c = chunkProvider.getChunk(coord);
+		return c != null ? c.getBlock(icx, y, icz) : 0;
 
-		int cx = x / Chunk.CHUNK_SIZE;
-		int cz = z / Chunk.CHUNK_SIZE;
-
-		return chunks[cx][cz].getBlock(icx, y, icz);
+		//return chunks[cx][cz].getBlock(icx, y, icz);
 	}
 
 	public void setBlock(int x, int y, int z, byte id) {
-		if (x < 0 || y < 0 || z < 0 || x >= size * Chunk.CHUNK_SIZE || z >= size * Chunk.CHUNK_SIZE || y >= Chunk.CHUNK_HEIGHT) {
-			return;
+		int icx = x & 15;
+		int icz = z & 15;
+
+		int cx = x >> 4;
+		int cz = z >> 4;
+		
+		Coord2D coord = getCoord2D(cx, cz);
+		
+		if (chunkProvider.isChunkLoaded(coord)) {
+			chunkProvider.getChunk(coord).setBlock(icx, y, icz, id, true);
 		}
 
-		int icx = x % Chunk.CHUNK_SIZE;
-		int icz = z % Chunk.CHUNK_SIZE;
-
-		int cx = x / Chunk.CHUNK_SIZE;
-		int cz = z / Chunk.CHUNK_SIZE;
-
-		chunks[cx][cz].setBlock(icx, y, icz, id, true);
+		//chunks[cx][cz].setBlock(icx, y, icz, id, true);
 	}
 
 	public void setBlockNoRebuild(int x, int y, int z, byte id) {
-		if (x < 0 || y < 0 || z < 0 || x >= size * Chunk.CHUNK_SIZE || z >= size * Chunk.CHUNK_SIZE || y >= Chunk.CHUNK_HEIGHT) {
+		//TODO
+		
+		if (x < 0 || y < 0 || z < 0) {
 			return;
 		}
 
@@ -142,120 +241,39 @@ public class World {
 		int cx = x / Chunk.CHUNK_SIZE;
 		int cz = z / Chunk.CHUNK_SIZE;
 
-		chunks[cx][cz].setBlock(icx, y, icz, id, false);
+		//chunks[cx][cz].setBlock(icx, y, icz, id, false);
 	}
 
-	public void render() {
-		Chunk c;
-		frustum.calculateFrustum();
+	public static final int MAX_GENERATED_MESHES = 1;
+	private int generatedMeshes = 0;
 
-		GL11.glEnable(GL11.GL_LIGHTING);
+	public void renderParticle(Particle p, float ptt) {
+		GL11.glColor4f(p.r, p.g, p.b, 1);
+		
+		float h = Particle.PARTICLE_SIZE/2;
+        float sizemutipler = (h/1);
+		
+		float rightup0p = (rightMod[0] + upMod[0])*sizemutipler;
+        float rightup1p = (rightMod[1] + upMod[1])*sizemutipler;
+        float rightup2p = (rightMod[2] + upMod[2])*sizemutipler;
+        float rightup0n = (rightMod[0] - upMod[0])*sizemutipler;
+        float rightup1n = (rightMod[1] - upMod[1])*sizemutipler;
+        float rightup2n = (rightMod[2] - upMod[2])*sizemutipler;
+		
+		float px = p.getPartialX(ptt);
+		float py = p.getPartialY(ptt);
+		float pz = p.getPartialZ(ptt);
+		
+		GL11.glVertex3f(px - rightup0p,py - rightup1p,pz - rightup2p);
+        GL11.glVertex3f(px + rightup0n,py + rightup1n,pz + rightup2n);
+        GL11.glVertex3f(px + rightup0p,py + rightup1p,pz + rightup2p);
+        GL11.glVertex3f(px - rightup0n,py - rightup1n,pz - rightup2n);
 
-		GL11.glEnableClientState(GL11.GL_VERTEX_ARRAY);
-		GL11.glEnableClientState(GL11.GL_TEXTURE_COORD_ARRAY);
-		GL11.glEnableClientState(GL11.GL_NORMAL_ARRAY);
 
-		int vertices = 0;
-		int cd = 0;
-
-		for (int x = 0; x < size; x++) {
-			for (int z = 0; z < size; z++) {
-				c = chunks[x][z];
-
-				for (int y = 0; y < Chunk.CHUNK_HEIGHT / Chunk.CHUNK_SIZE; y++) {
-					
-					ChunkMesh cm = c.meshes[y];
-					
-					if (frustum.cuboidInFrustum(x * Chunk.CHUNK_SIZE, y * Chunk.CHUNK_SIZE, z * Chunk.CHUNK_SIZE, (x + 1) * Chunk.CHUNK_SIZE, (y + 1) * Chunk.CHUNK_SIZE, (z + 1) * Chunk.CHUNK_SIZE) && cm.vertices > 0) {
-						cd++;
-
-						vertices += cm.vertices;
-						
-						GL11.glPushMatrix();
-						GL11.glTranslatef(x * Chunk.CHUNK_SIZE, 0, z * Chunk.CHUNK_SIZE);
-
-						if (!cm.hasVBO) {
-							IntBuffer ib = BufferUtils.createIntBuffer(6);
-							GL15.glGenBuffers(ib);
-
-							int vHandleOpaque = ib.get(0);
-							int tHandleOpaque = ib.get(1);
-							int nHandleOpaque = ib.get(2);
-
-							int vHandleTransparent = ib.get(3);
-							int tHandleTransparent = ib.get(4);
-							int nHandleTransparent = ib.get(5);
-
-							cm.vHandleOpaque = vHandleOpaque;
-							cm.tHandleOpaque = tHandleOpaque;
-							cm.nHandleOpaque = nHandleOpaque;
-
-							cm.vHandleTransparent = vHandleTransparent;
-							cm.tHandleTransparent = tHandleTransparent;
-							cm.nHandleTransparent = nHandleTransparent;
-
-							GL15.glBindBuffer(GL15.GL_ARRAY_BUFFER, vHandleOpaque);
-							GL15.glBufferData(GL15.GL_ARRAY_BUFFER, cm.vBufferOpaque, GL15.GL_STATIC_DRAW);
-
-							GL15.glBindBuffer(GL15.GL_ARRAY_BUFFER, tHandleOpaque);
-							GL15.glBufferData(GL15.GL_ARRAY_BUFFER, cm.tBufferOpaque, GL15.GL_STATIC_DRAW);
-
-							GL15.glBindBuffer(GL15.GL_ARRAY_BUFFER, nHandleOpaque);
-							GL15.glBufferData(GL15.GL_ARRAY_BUFFER, cm.nBufferOpaque, GL15.GL_STATIC_DRAW);
-
-							GL15.glBindBuffer(GL15.GL_ARRAY_BUFFER, vHandleTransparent);
-							GL15.glBufferData(GL15.GL_ARRAY_BUFFER, cm.vBufferTransparent, GL15.GL_STATIC_DRAW);
-
-							GL15.glBindBuffer(GL15.GL_ARRAY_BUFFER, tHandleTransparent);
-							GL15.glBufferData(GL15.GL_ARRAY_BUFFER, cm.tBufferTransparent, GL15.GL_STATIC_DRAW);
-
-							GL15.glBindBuffer(GL15.GL_ARRAY_BUFFER, nHandleTransparent);
-							GL15.glBufferData(GL15.GL_ARRAY_BUFFER, cm.nBufferTransparent, GL15.GL_STATIC_DRAW);
-
-							cm.hasVBO = true;
-						}
-
-						GL15.glBindBuffer(GL15.GL_ARRAY_BUFFER, cm.vHandleOpaque);
-						GL11.glVertexPointer(3, GL11.GL_FLOAT, 12, 0L);
-						GL15.glBindBuffer(GL15.GL_ARRAY_BUFFER, cm.tHandleOpaque);
-						GL11.glTexCoordPointer(2, GL11.GL_FLOAT, 8, 0L);
-						GL15.glBindBuffer(GL15.GL_ARRAY_BUFFER, cm.nHandleOpaque);
-						GL11.glNormalPointer(GL11.GL_FLOAT, 12, 0L);
-						GL11.glDrawArrays(GL11.GL_QUADS, 0, cm.vBufferOpaque.capacity() / 3);
-
-						if (cm.hasTransparent){
-							GL11.glEnable(GL11.GL_ALPHA_TEST);
-							GL15.glBindBuffer(GL15.GL_ARRAY_BUFFER, cm.vHandleTransparent);
-							GL11.glVertexPointer(3, GL11.GL_FLOAT, 12, 0L);
-							GL15.glBindBuffer(GL15.GL_ARRAY_BUFFER, cm.tHandleTransparent);
-							GL11.glTexCoordPointer(2, GL11.GL_FLOAT, 8, 0L);
-							GL15.glBindBuffer(GL15.GL_ARRAY_BUFFER, cm.nHandleTransparent);
-							GL11.glNormalPointer(GL11.GL_FLOAT, 12, 0L);
-							GL11.glDrawArrays(GL11.GL_QUADS, 0, cm.vBufferTransparent.capacity() / 3);
-							GL11.glDisable(GL11.GL_ALPHA_TEST);
-						}
-
-						GL11.glPopMatrix();
-					}
-				}
-			}
-		}
-
-		GL11.glDisableClientState(GL11.GL_TEXTURE_COORD_ARRAY);
-		GL11.glDisableClientState(GL11.GL_VERTEX_ARRAY);
-		GL11.glDisableClientState(GL11.GL_NORMAL_ARRAY);
-
-		if (player.hasSelected) {
-			GL11.glPushMatrix();
-			GL11.glTranslatef(player.lookingAtX, player.lookingAtY, player.lookingAtZ);
-			GL11.glDisable(GL11.GL_LIGHTING);
-			renderSelectionBox();
-			GL11.glPopMatrix();
-		}
-
-		this.vertices = vertices;
-		this.chunksDrawn = cd;
-
+		//GL11.glVertex3f(px, py, pz);
+		
+		//GL11.glVertex3f(px-Particle.PARTICLE_SIZE/2, py-Particle.PARTICLE_SIZE/2, pz-Particle.PARTICLE_SIZE/2);
+		//GL11.glVertex3f(px+Particle.PARTICLE_SIZE/2, py+Particle.PARTICLE_SIZE/2, pz+Particle.PARTICLE_SIZE/2);
 	}
 
 	public void renderSelectionBox() {
@@ -315,25 +333,33 @@ public class World {
 	}
 	
 	public ArrayList<AABB> getBBs(AABB aABB) {
-	      ArrayList<AABB> aABBs = new ArrayList<AABB>();
-	      int x0 = (int)aABB.x0;
-	      int x1 = (int)(aABB.x1 + 1.0F);
-	      int y0 = (int)aABB.y0;
-	      int y1 = (int)(aABB.y1 + 1.0F);
-	      int z0 = (int)aABB.z0;
-	      int z1 = (int)(aABB.z1 + 1.0F);
+		ArrayList<AABB> aABBs = new ArrayList<AABB>();
+		int x0 = (int) (aABB.x0 - 1.1F);
+		int x1 = (int) (aABB.x1 + 1.1F);
+		int y0 = (int) (aABB.y0 - 1.1F);
+		int y1 = (int) (aABB.y1 + 1.1F);
+		int z0 = (int) (aABB.z0 - 1.1F);
+		int z1 = (int) (aABB.z1 + 1.1F);
 
-	      for(int x = x0; x < x1; ++x) {
-	         for(int y = y0; y < y1; ++y) {
-	            for(int z = z0; z < z1; ++z) {
-	               if(getBlock(x, y, z) > 0) {
-	                  aABBs.add(new AABB((float)x, (float)y, (float)z, (float)(x + 1), (float)(y + 1), (float)(z + 1)));
-	               }
-	            }
-	         }
-	      }
+		for (int x = x0; x < x1; ++x) {
+			for (int y = y0; y < y1; ++y) {
+				for (int z = z0; z < z1; ++z) {
+					if (getBlock(x, y, z) > 0 && getBlock(x, y, z) != Block.water.getId()) {
+						aABBs.add(new AABB((float) x, (float) y, (float) z, (float) x + 1, (float) y + 1, (float) z + 1));
+					}
+				}
+			}
+		}
 
-	      return aABBs;
-	   }
+		return aABBs;
+	}
+
+	public void saveAllChunks() {
+		chunkProvider.saveAll();
+	}
+
+	public void onRender() {
+		player.onRender();
+	}
 
 }

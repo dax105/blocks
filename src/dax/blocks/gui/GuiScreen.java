@@ -11,7 +11,7 @@ public abstract class GuiScreen {
 	Game game;
 	GuiScreen parent;
 	Font f;
-
+	
 	public GuiScreen(Game game) {
 		if (game.isIngame) {
 			objects.add(new GuiObjectRectangle(0, 0, game.width, game.height, 0xA0000000));

@@ -27,10 +27,12 @@ public class GuiScreenMenu extends GuiScreen {
 			game.closeGuiScreen();
 		} else if (button.id == 1) {
 			game.displayLoadingScreen();
-			game.makeNewWorld();
+			game.makeNewWorld(false);
 		} else if (button.id == 2) {
 			game.openGuiScreen(new GuiScreenSettings(this));
 		} else if (button.id == 3) {
+			game.world.saveAllChunks();
+			game.world = null;
 			game.isIngame = false;
 			game.openGuiScreen(new GuiScreenMainMenu(game));
 		}

@@ -1,6 +1,5 @@
 package dax.blocks.collisions;
 
-
 public class AABB {
 
    private float epsilon = 0.0F;
@@ -94,7 +93,7 @@ public class AABB {
 
    public float clipYCollide(AABB c, float ya) {
       if(c.x1 > this.x0 && c.x0 < this.x1) {
-         if(c.z1 > this.z0 && c.z0 < this.z1) {
+    	  if(c.z1 > this.z0 && c.z0 < this.z1) {
             float max;
             if(ya > 0.0F && c.y1 <= this.y0) {
                max = this.y0 - c.y1 - this.epsilon;

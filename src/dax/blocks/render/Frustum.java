@@ -1,4 +1,4 @@
-package dax.blocks;
+package dax.blocks.render;
 
 import org.lwjgl.BufferUtils;
 

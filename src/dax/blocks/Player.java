@@ -1,11 +1,12 @@
 package dax.blocks;
 
+import dax.blocks.collisions.AABB;
+
 import java.util.ArrayList;
 
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
 
-import dax.blocks.collisions.AABB;
 import dax.blocks.world.World;
 
 public class Player {
@@ -18,9 +19,13 @@ public class Player {
 
 	byte selectedBlockID = 3;
 
-	float posX = 0.0F;
-	float posZ = 0.0F;
-	float posY = 128F;
+	public float posX = 0.0F;
+	public float posZ = 0.0F;
+	public float posY = 128F;
+	
+	public float lastPosX = 0.0F;
+	public float lastPosZ = 0.0F;
+	public float lastPosY = 128F;
 
 	public int lookingAtX = -1;
 	public int lookingAtY = -1;
@@ -32,17 +37,23 @@ public class Player {
 
 	public boolean hasSelected = false;
 
-	float heading = 140.0F;
-	float tilt = -60.0F;
+	public float heading = 140.0F;
+	public float tilt = -60.0F;
 
 	boolean reload = false;
 	
 	AABB bb;
 	
-	public float yv = 0.0f;
-	public float jumpForce = 0.0f;
+	public float speed = 0;
+	public float speedStrafe = 0;
 	
-	public static final float JUMP_STRENGTH = 0.0035f;
+	float bob = 0;
+	
+	public float xv = 0.0f;
+	public float yv = 0.0f;
+	public float zv = 0.0f;
+	
+	public static final float JUMP_STRENGTH = 0.38f;
 
 	private boolean onGround;
 
@@ -51,6 +62,21 @@ public class Player {
 		this.bb = new AABB(posX-PLAYER_SIZE/2, posY, posZ-PLAYER_SIZE/2, posX+PLAYER_SIZE/2, posY+PLAYER_HEIGHT, posZ+PLAYER_SIZE/2);
 	}
 
+	public float getPartialX(float ptt) {
+		float delta = posX - lastPosX;
+		return lastPosX + delta*ptt;
+	}
+	
+	public float getPartialY(float ptt) {
+		float delta = posY - lastPosY;
+		return lastPosY + delta*ptt;
+	}
+	
+	public float getPartialZ(float ptt) {
+		float delta = posZ - lastPosZ;
+		return lastPosZ + delta*ptt;
+	}
+	
 	private void updateLookingAt() {
 		float reach = 16.0F;
 
@@ -82,9 +108,9 @@ public class Player {
 				lookingAtY = (int) Math.floor(yn);
 				lookingAtZ = (int) Math.floor(zn);
 
-				placesAtX = (int) xl;
-				placesAtY = (int) yl;
-				placesAtZ = (int) zl;
+				placesAtX = (int) Math.floor(xl);
+				placesAtY = (int) Math.floor(yl);
+				placesAtZ = (int) Math.floor(zl);
 				hasSelected = true;
 				return;
 			}
@@ -98,7 +124,7 @@ public class Player {
 		selectedBlockID = (byte) id;
 	}
 
-	public void update(float delta) {
+	public void update() {
 		int multi = 1;
 
 		if (Keyboard.isKeyDown(Keyboard.KEY_LSHIFT) || Keyboard.isKeyDown(Keyboard.KEY_RSHIFT)) {
@@ -107,22 +133,25 @@ public class Player {
 
 		double move = 0.0D;
 		double moveStrafe = 0.0D;
-		double moveY = 0.0D;
 
 		if (Keyboard.isKeyDown(Keyboard.KEY_W)) {
-			move -= 0.005D * multi;
+			speed -= onGround ? 0.25 * multi : 0.03 * multi;
+			move -= 0.5D * multi;
 		}
 
 		if (Keyboard.isKeyDown(Keyboard.KEY_S)) {
-			move += 0.005D * multi;
+			speed += onGround ? 0.25 * multi : 0.03 * multi;
+			move += 0.5D * multi;
 		}
 
 		if (Keyboard.isKeyDown(Keyboard.KEY_A)) {
-			moveStrafe -= 0.005D * multi;
+			speedStrafe -= onGround ? 0.25 * multi : 0.03 * multi;
+			moveStrafe -= 0.5D * multi;
 		}
 
 		if (Keyboard.isKeyDown(Keyboard.KEY_D)) {
-			moveStrafe += 0.005D * multi;
+			speedStrafe += onGround ? 0.25 * multi : 0.03 * multi;
+			moveStrafe += 0.5D * multi;
 		}
 
 		if (Keyboard.isKeyDown(Keyboard.KEY_SPACE) && onGround) {
@@ -174,41 +203,26 @@ public class Player {
 			setSelectedBlock(10);
 		}
 
-		if (Mouse.isGrabbed()) {
-			float mouseDX = Mouse.getDX() * 0.8f * 0.16f;
-			float mouseDY = Mouse.getDY() * 0.8f * 0.16f;
-			heading += mouseDX;
-			tilt += mouseDY;
-		}
-
-		while (heading <= -180) {
-			heading += 360;
-		}
-		while (heading > 180) {
-			heading -= 360;
-		}
-
-		if (tilt < -90) {
-			tilt = -90;
-		}
-
-		if (tilt > 90) {
-			tilt = 90;
-		}
-
-		yv -= 0.00001f * delta;
-		moveY += yv;
+		speed *= onGround ? 0.5f : 0.9f;
+		speedStrafe *= onGround ? 0.5f : 0.9f;
 		
-			double toMoveZ = (posZ + Math.cos(-heading / 180 * Math.PI) * delta * move) + (Math.cos((-heading + 90) / 180 * Math.PI) * delta * moveStrafe);
-			double toMoveX = (posX + Math.sin(-heading / 180 * Math.PI) * delta * move) + (Math.sin((-heading + 90) / 180 * Math.PI) * delta * moveStrafe);
-			double toMoveY = (posY + (moveY + yv)*delta);
+		yv -= 0.05f;
+		
+			double toMoveZ = (posZ + Math.cos(-heading / 180 * Math.PI) * speed) + (Math.cos((-heading + 90) / 180 * Math.PI) * speedStrafe);
+			double toMoveX = (posX + Math.sin(-heading / 180 * Math.PI) * speed) + (Math.sin((-heading + 90) / 180 * Math.PI) * speedStrafe);
+			double toMoveY = (posY + (yv));
 
 		    float xa = (float) -(posX - toMoveX);
 		    float ya = (float) -(posY - toMoveY);
 		    float za = (float) -(posZ - toMoveZ);
+		    
+		    xv = xa;
+		    zv = za;
+		    
 		    float yab = ya;
 			
 		      ArrayList<AABB> aABBs = this.world.getBBs(this.bb.expand(xa, ya, za));
+		      
 		      for(int i = 0; i < aABBs.size(); ++i) {
 		         ya = ((AABB)aABBs.get(i)).clipYCollide(this.bb, ya);
 		      }
@@ -247,6 +261,12 @@ public class Player {
 		          this.zd = 0.0F;
 		       }*/
 
+		       bob += za + xa;
+		       
+		       lastPosX = posX;
+		       lastPosY = posY;
+		       lastPosZ = posZ;
+		       
 		       this.posX = (this.bb.x0 + this.bb.x1) / 2.0F;
 		       this.posY = this.bb.y0;
 		       this.posZ = (this.bb.z0 + this.bb.z1) / 2.0F;
@@ -267,8 +287,34 @@ public class Player {
 			}
 		}
 
-		updateLookingAt();
+	}
 
+	public void onRender() {
+		
+		if (Mouse.isGrabbed()) {
+			float mouseDX = Mouse.getDX() * 0.8f * 0.16f;
+			float mouseDY = Mouse.getDY() * 0.8f * 0.16f;
+			heading += mouseDX;
+			tilt += mouseDY;
+		}
+
+		while (heading <= -180) {
+			heading += 360;
+		}
+		while (heading > 180) {
+			heading -= 360;
+		}
+
+		if (tilt < -90) {
+			tilt = -90;
+		}
+
+		if (tilt > 90) {
+			tilt = 90;
+		}
+		
+		updateLookingAt();
+		
 	}
 
 }

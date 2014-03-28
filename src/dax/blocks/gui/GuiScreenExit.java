@@ -24,7 +24,7 @@ public class GuiScreenExit extends GuiScreen {
 		}
 
 		if (button.id == 1) {
-			System.exit(0);
+			game.exit();
 		}
 	}
 

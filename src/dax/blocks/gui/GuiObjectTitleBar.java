@@ -13,6 +13,10 @@ public class GuiObjectTitleBar extends GuiObject {
 
 	private Font font;
 
+	public void setText(String text) {
+		this.text = text;
+	}
+	
 	public GuiObjectTitleBar(int x1, int y1, int x2, int y2, Font font, String text) {
 		this.x1 = x1;
 		this.y1 = y1;

@@ -1,8 +1,10 @@
-package dax.blocks.world.chunk;
+package dax.blocks.render;
 
 import dax.blocks.block.Block;
+import dax.blocks.world.chunk.Chunk;
 
 import java.nio.FloatBuffer;
+
 import org.lwjgl.BufferUtils;
 
 public class ChunkMesh {
@@ -11,6 +13,8 @@ public class ChunkMesh {
 	public boolean hasTransparent;
 	
 	public boolean hasVBO = false;
+	public boolean isDirty = true;
+	public boolean needsNewVBO = true;
 	
 	public FloatBuffer tBufferOpaque;
 	public FloatBuffer nBufferOpaque;
@@ -51,7 +55,9 @@ public class ChunkMesh {
 					int wz = z + chunk.z * Chunk.CHUNK_SIZE;
 
 					if (blockID > 0) {
-						if (!(chunk.world.getBlock(wx, y + 1, wz) != 0 && Block.getBlock(chunk.world.getBlock(wx, y + 1, wz)).isOpaque())) {
+						boolean cullSame = block.shouldCullSame();
+						
+						if (!(chunk.world.getBlock(wx, y + 1, wz) != 0 && Block.getBlock(chunk.world.getBlock(wx, y + 1, wz)).isOpaque()) && (!cullSame || chunk.world.getBlock(wx, y + 1, wz) != blockID) ) {
 							if (block.isOpaque()) {
 								opaqueCount++;
 							} else {
@@ -59,7 +65,7 @@ public class ChunkMesh {
 							}
 						}
 
-						if (!(chunk.world.getBlock(wx, y - 1, wz) != 0 && Block.getBlock(chunk.world.getBlock(wx, y - 1, wz)).isOpaque())) {
+						if (!(chunk.world.getBlock(wx, y - 1, wz) != 0 && Block.getBlock(chunk.world.getBlock(wx, y - 1, wz)).isOpaque()) && (!cullSame || chunk.world.getBlock(wx, y - 1, wz) != blockID) ) {
 							if (block.isOpaque()) {
 								opaqueCount++;
 							} else {
@@ -67,7 +73,7 @@ public class ChunkMesh {
 							}
 						}
 
-						if (!(chunk.world.getBlock(wx - 1, y, wz) != 0 && Block.getBlock(chunk.world.getBlock(wx - 1, y, wz)).isOpaque())) {
+						if (!(chunk.world.getBlock(wx - 1, y, wz) != 0 && Block.getBlock(chunk.world.getBlock(wx - 1, y, wz)).isOpaque()) && (!cullSame || chunk.world.getBlock(wx - 1, y, wz) != blockID)) {
 							if (block.isOpaque()) {
 								opaqueCount++;
 							} else {
@@ -75,7 +81,7 @@ public class ChunkMesh {
 							}
 						}
 
-						if (!(chunk.world.getBlock(wx + 1, y, wz) != 0 && Block.getBlock(chunk.world.getBlock(wx + 1, y, wz)).isOpaque())) {
+						if (!(chunk.world.getBlock(wx + 1, y, wz) != 0 && Block.getBlock(chunk.world.getBlock(wx + 1, y, wz)).isOpaque()) && (!cullSame || chunk.world.getBlock(wx + 1, y, wz) != blockID)) {
 							if (block.isOpaque()) {
 								opaqueCount++;
 							} else {
@@ -83,7 +89,7 @@ public class ChunkMesh {
 							}
 						}
 
-						if (!(chunk.world.getBlock(wx, y, wz + 1) != 0 && Block.getBlock(chunk.world.getBlock(wx, y, wz + 1)).isOpaque())) {
+						if (!(chunk.world.getBlock(wx, y, wz + 1) != 0 && Block.getBlock(chunk.world.getBlock(wx, y, wz + 1)).isOpaque()) && (!cullSame || chunk.world.getBlock(wx, y, wz + 1) != blockID)) {
 							if (block.isOpaque()) {
 								opaqueCount++;
 							} else {
@@ -91,7 +97,7 @@ public class ChunkMesh {
 							}
 						}
 
-						if (!(chunk.world.getBlock(wx, y, wz - 1) != 0 && Block.getBlock(chunk.world.getBlock(wx, y, wz - 1)).isOpaque())) {
+						if (!(chunk.world.getBlock(wx, y, wz - 1) != 0 && Block.getBlock(chunk.world.getBlock(wx, y, wz - 1)).isOpaque()) && (!cullSame || chunk.world.getBlock(wx, y, wz - 1) != blockID)) {
 							if (block.isOpaque()) {
 								opaqueCount++;
 							} else {
@@ -124,7 +130,8 @@ public class ChunkMesh {
 					int wz = z + chunk.z * Chunk.CHUNK_SIZE;
 
 					if (blockID > 0) {
-						if (!(chunk.world.getBlock(wx, y + 1, wz) != 0 && Block.getBlock(chunk.world.getBlock(wx, y + 1, wz)).isOpaque())) {
+						boolean cullSame = block.shouldCullSame();
+						if (!(chunk.world.getBlock(wx, y + 1, wz) != 0 && Block.getBlock(chunk.world.getBlock(wx, y + 1, wz)).isOpaque()) && (!cullSame || chunk.world.getBlock(wx, y + 1, wz) != blockID) ) {
 							float[] vT = block.getVTop(x, y, z);
 							float[] tT = block.getTTop();
 							float[] nT = block.getNTop();
@@ -140,7 +147,7 @@ public class ChunkMesh {
 							}
 						}
 
-						if (!(chunk.world.getBlock(wx, y - 1, wz) != 0 && Block.getBlock(chunk.world.getBlock(wx, y - 1, wz)).isOpaque())) {
+						if (!(chunk.world.getBlock(wx, y - 1, wz) != 0 && Block.getBlock(chunk.world.getBlock(wx, y - 1, wz)).isOpaque()) && (!cullSame || chunk.world.getBlock(wx, y - 1, wz) != blockID)) {
 							float[] vT = block.getVBottom(x, y, z);
 							float[] tT = block.getTBottom();
 							float[] nT = block.getNBottom();
@@ -156,7 +163,7 @@ public class ChunkMesh {
 							}
 						}
 
-						if (!(chunk.world.getBlock(wx - 1, y, wz) != 0 && Block.getBlock(chunk.world.getBlock(wx - 1, y, wz)).isOpaque())) {
+						if (!(chunk.world.getBlock(wx - 1, y, wz) != 0 && Block.getBlock(chunk.world.getBlock(wx - 1, y, wz)).isOpaque()) && (!cullSame || chunk.world.getBlock(wx - 1, y, wz) != blockID)) {
 							float[] vT = block.getVLeft(x, y, z);
 							float[] tT = block.getTLeft();
 							float[] nT = block.getNLeft();
@@ -172,7 +179,7 @@ public class ChunkMesh {
 							}
 						}
 
-						if (!(chunk.world.getBlock(wx + 1, y, wz) != 0 && Block.getBlock(chunk.world.getBlock(wx + 1, y, wz)).isOpaque())) {
+						if (!(chunk.world.getBlock(wx + 1, y, wz) != 0 && Block.getBlock(chunk.world.getBlock(wx + 1, y, wz)).isOpaque()) && (!cullSame || chunk.world.getBlock(wx + 1, y, wz) != blockID)) {
 							float[] vT = block.getVRight(x, y, z);
 							float[] tT = block.getTRight();
 							float[] nT = block.getNRight();
@@ -188,7 +195,7 @@ public class ChunkMesh {
 							}
 						}
 
-						if (!(chunk.world.getBlock(wx, y, wz + 1) != 0 && Block.getBlock(chunk.world.getBlock(wx, y, wz + 1)).isOpaque())) {
+						if (!(chunk.world.getBlock(wx, y, wz + 1) != 0 && Block.getBlock(chunk.world.getBlock(wx, y, wz + 1)).isOpaque()) && (!cullSame || chunk.world.getBlock(wx, y, wz + 1) != blockID)) {
 							float[] vT = block.getVFront(x, y, z);
 							float[] tT = block.getTFront();
 							float[] nT = block.getNFront();
@@ -204,7 +211,7 @@ public class ChunkMesh {
 							}
 						}
 
-						if (!(chunk.world.getBlock(wx, y, wz - 1) != 0 && Block.getBlock(chunk.world.getBlock(wx, y, wz - 1)).isOpaque())) {
+						if (!(chunk.world.getBlock(wx, y, wz - 1) != 0 && Block.getBlock(chunk.world.getBlock(wx, y, wz - 1)).isOpaque()) && (!cullSame || chunk.world.getBlock(wx, y, wz - 1) != blockID)) {
 							float[] vT = block.getVBack(x, y, z);
 							float[] tT = block.getTBack();
 							float[] nT = block.getNBack();
@@ -237,6 +244,8 @@ public class ChunkMesh {
 			hasTransparent = false;
 		}
 		
+		this.isDirty = false;
 		this.vertices = (opaqueCount + transparentCount)*4;
 	}
+	
 }

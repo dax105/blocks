@@ -4,16 +4,30 @@ public abstract class Block {
 
 	private final byte id;
 	private final boolean opaque;
+	private final boolean cullSame;
+
+	public boolean shouldCullSame() {
+		return this.cullSame;
+	}
 
 	public Block(int id) {
 		this.id = (byte) id;
-		opaque = true;
+		this.opaque = true;
+		this.cullSame = false;
 		blocks[id] = this;
 	}
 
 	public Block(int id, boolean opaque) {
 		this.id = (byte) id;
 		this.opaque = opaque;
+		this.cullSame = false;
+		blocks[id] = this;
+	}
+	
+	public Block(int id, boolean opaque, boolean cullSame) {
+		this.id = (byte) id;
+		this.opaque = opaque;
+		this.cullSame = cullSame;
 		blocks[id] = this;
 	}
 
@@ -27,9 +41,10 @@ public abstract class Block {
 	public static final Block bricks = new BlockBasic(6, 8);
 	public static final Block sand = new BlockBasic(7, 6);
 	public static final Block log = new BlockBasic(8, 11, 7, 11);
-	public static final Block glass = new BlockBasic(9, 9, false);
+	public static final Block glass = new BlockBasic(9, 9, false, true);
 	public static final Block leaves = new BlockBasic(10, 10, false);
 	public static final Block bedrock = new BlockBasic(11, 12);
+	public static final Block water = new BlockFluid(12, 13);
 
 	public byte getId() {
 		return this.id;

@@ -15,7 +15,7 @@ public class GuiScreenMainMenu extends GuiScreen {
 
 		objects.add(new GuiObjectTitleBar((game.width - width) / 2, (game.height - height) / 2, (game.width + width) / 2, ((game.height - height) / 2) + 30, this.f, "Main menu"));
 
-		objects.add(new GuiObjectButton((game.width - width) / 2, (game.height - height) / 2 + 34, (game.width + width) / 2, ((game.height - height) / 2) + 58, this.f, "Create new world", 0, this));
+		objects.add(new GuiObjectButton((game.width - width) / 2, (game.height - height) / 2 + 34, (game.width + width) / 2, ((game.height - height) / 2) + 58, this.f, "Start game", 0, this));
 		objects.add(new GuiObjectButton((game.width - width) / 2, (game.height - height) / 2 + 62, (game.width + width) / 2, ((game.height - height) / 2) + 86, this.f, "Options", 1, this));
 		objects.add(new GuiObjectButton((game.width - width) / 2, (game.height - height) / 2 + 90, (game.width + width) / 2, ((game.height - height) / 2) + 114, this.f, "Exit", 2, this));
 	}
@@ -24,7 +24,7 @@ public class GuiScreenMainMenu extends GuiScreen {
 	public void buttonPress(GuiObjectButton button) {
 		if (button.id == 0) {
 			game.displayLoadingScreen();
-			game.makeNewWorld();
+			game.makeNewWorld(true);
 		} else if (button.id == 1) {
 			game.openGuiScreen(new GuiScreenSettings(this));
 		} else if (button.id == 2) {

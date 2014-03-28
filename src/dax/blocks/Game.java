@@ -6,6 +6,7 @@ import dax.blocks.gui.GuiScreen;
 import dax.blocks.gui.GuiScreenLoading;
 import dax.blocks.gui.GuiScreenMainMenu;
 import dax.blocks.gui.GuiScreenMenu;
+import dax.blocks.render.RenderEngine;
 import dax.blocks.world.World;
 import dax.blocks.world.chunk.Chunk;
 
@@ -27,6 +28,10 @@ import org.newdawn.slick.TrueTypeFont;
 
 public class Game implements Runnable {
 
+	public static final int TPS = 20;
+	public static final double TICK_TIME = 1.0D / TPS;
+	public int ticks = 0;
+	
 	public int width = 800;
 	public int height = 480;
 
@@ -35,11 +40,11 @@ public class Game implements Runnable {
 
 	public float heightMultipler = 20;
 
-	GuiScreen guiScreen;
+	public GuiScreen guiScreen;
 
 	public int fov = 50;
 	public static final String TITLE = "Order of the stone";
-	
+
 	public boolean treeGen;
 
 	boolean isFullscreen = false;
@@ -54,24 +59,42 @@ public class Game implements Runnable {
 	public World world;
 
 	public boolean isIngame = false;
-	
+
 	public int vertices = 0;
 
 	@Override
 	public void run() {
 		setDisplayMode(width, height, isFullscreen);
 		load();
-		while (!Display.isCloseRequested()) {
-			float delta = getDelta();
+		
+		long time = System.nanoTime();
+		long lastTime = time;
+		long lastInfo = time;
 
-			update(delta);
-			render();
+		while (!Display.isCloseRequested()) {
+				time = System.nanoTime();
+				while (time - lastTime >= TICK_TIME * 1000000000) {
+					ticks++;
+					lastTime += time - lastTime;
+					
+					onTick();
+				}
+				
+				float partialTickTime = (time - lastTime) / ((float)TICK_TIME*1000000000);
+				
+				if (time - lastInfo >= 1000000000) {
+					lastInfo = time;
+					Display.setTitle("Ticks: " + ticks);
+					ticks = 0;
+				}
+
+				onRender();
+				render(partialTickTime);
 
 			Display.update();
 		}
 
-		Display.destroy();
-		System.exit(0);
+		exit();
 	}
 
 	public void init() {
@@ -80,23 +103,32 @@ public class Game implements Runnable {
 		Mouse.setGrabbed(true);
 	}
 
+	public void exit() {
+		if (isIngame) {
+			world.saveAllChunks();
+		}
+		Display.destroy();
+		System.exit(0);
+	}
+	
 	public void load() {
 		TextureManager.load();
 		createFont();
-		getDelta();
 		lastFPS = getTime();
 		openGuiScreen(new GuiScreenMainMenu(this));
 	}
 
-	public void makeNewWorld() {
-		world = new World(this.worldSize, this.heightMultipler, treeGen);
+	public void makeNewWorld(boolean load) {
+		isIngame = false;
+		world = new World(this.worldSize, this.heightMultipler, treeGen, this, load);
 		closeGuiScreen();
 		isIngame = true;
 	}
 
 	public void displayLoadingScreen() {
+		isIngame = false;
 		openGuiScreen(new GuiScreenLoading(this));
-		render();
+		render(0);
 		Display.update();
 	}
 
@@ -105,14 +137,13 @@ public class Game implements Runnable {
 		font = new TrueTypeFont(awtFont, false);
 	}
 
-	public void update(float delta) {
-
+	public void onTick() {
 		if (!isIngame && this.guiScreen == null) {
 			openGuiScreen(new GuiScreenMainMenu(this));
 		}
 
 		if (this.guiScreen == null && isIngame) {
-			world.update(delta);
+			world.update();
 		}
 
 		while (Keyboard.next()) {
@@ -130,16 +161,14 @@ public class Game implements Runnable {
 				}
 			}
 		}
-		//Display.sync(60);
-		updateFPS();
+		// Display.sync(5);
+		// updateFPS();
 	}
-
-	public float getDelta() {
-		long time = System.nanoTime();
-		float delta = (time - lastFrame) / 1000000.0f;
-		lastFrame = time;
-
-		return delta;
+	
+	public void onRender() {
+		if (this.guiScreen == null && isIngame) {
+			world.onRender();
+		}
 	}
 
 	public long getTime() {
@@ -175,7 +204,7 @@ public class Game implements Runnable {
 
 		// Setup alpha test
 		GL11.glDisable(GL11.GL_ALPHA_TEST);
-		GL11.glAlphaFunc(GL11.GL_GEQUAL, 0.7F);
+		GL11.glAlphaFunc(GL11.GL_GEQUAL, 0.5F);
 
 		// Clear color
 		GL11.glClearColor(0.63f, 0.87f, 1.0f, 1.0f);
@@ -189,9 +218,14 @@ public class Game implements Runnable {
 		GL11.glLightModel(GL11.GL_LIGHT_MODEL_AMBIENT, ambientLight);
 
 		// Fog
-		/*
-		 * GL11.glEnable(GL11.GL_FOG); FloatBuffer fogColor = BufferUtils.createFloatBuffer(4); fogColor.put(0.63f).put(0.87f).put(1.0f).put(1.0f).flip(); GL11.glFog(GL11.GL_FOG_COLOR, fogColor); GL11.glHint(GL11.GL_FOG_HINT, GL11.GL_DONT_CARE); GL11.glFogi(GL11.GL_FOG_MODE, GL11.GL_LINEAR); GL11.glFogf(GL11.GL_FOG_START, 100.0f); GL11.glFogf(GL11.GL_FOG_END, 200.0f);
-		 */
+		//GL11.glEnable(GL11.GL_FOG);
+		FloatBuffer fogColor = BufferUtils.createFloatBuffer(4);
+		fogColor.put(0.63f).put(0.87f).put(1.0f).put(1.0f).flip();
+		GL11.glFog(GL11.GL_FOG_COLOR, fogColor);
+		GL11.glHint(GL11.GL_FOG_HINT, GL11.GL_DONT_CARE);
+		GL11.glFogi(GL11.GL_FOG_MODE, GL11.GL_LINEAR);
+		GL11.glFogf(GL11.GL_FOG_START, 60.0f);
+		GL11.glFogf(GL11.GL_FOG_END, 100.0f);
 
 	}
 
@@ -218,29 +252,27 @@ public class Game implements Runnable {
 		GL11.glDisable(GL11.GL_DEPTH_TEST);
 	}
 
-	public void render() {
+	RenderEngine renderEngine = new RenderEngine();
+	
+	public void render(float ptt) {
+		
 		// Clear old frame
-
 		GL11.glClear(GL11.GL_COLOR_BUFFER_BIT | GL11.GL_DEPTH_BUFFER_BIT);
 
 		if (isIngame) {
-			GL11.glPushMatrix();
-			GL11.glRotatef(-world.player.tilt, 1f, 0f, 0f);
-			GL11.glRotatef(world.player.heading, 0f, 1f, 0f);
-			GL11.glTranslated(-world.player.posX, -world.player.posY - Player.EYES_HEIGHT, -world.player.posZ);
 
-			FloatBuffer lp = BufferUtils.createFloatBuffer(4);
-			lp.put(-10).put(10).put(-10).put(0).flip();
 
-			GL11.glLight(GL11.GL_LIGHT0, GL11.GL_POSITION, lp);
 
 			TextureManager.atlas.bind();
 
-			world.render();
-			GL11.glPopMatrix();
+			renderEngine.renderWorld(world, ptt);
+			//world.render(ptt);
+
 
 			setOrtho();
 			renderOverlay();
+			
+			updateFPS();
 		}
 
 		setOrtho();
@@ -345,9 +377,9 @@ public class Game implements Runnable {
 		String memory = "Used memory: " + (allocatedMemory / (1024 * 1024) - freeMemory / (1024 * 1024)) + "MB" + "/" + allocatedMemory / (1024 * 1024) + "MB";
 		int memoryWidth = font.getWidth(memory);
 		font.drawString(width - memoryWidth - 2, 0, memory);
-		
-		String chunks = "Chunks drawn: " + world.chunksDrawn + "/" + worldSize*worldSize*(Chunk.CHUNK_HEIGHT/Chunk.CHUNK_SIZE);
-		font.drawString(width - font.getWidth(chunks) - 2, font.getHeight()*2, chunks);
+
+		String chunks = "Chunks drawn: " + world.chunksDrawn + "/" + worldSize * worldSize * (Chunk.CHUNK_HEIGHT / Chunk.CHUNK_SIZE);
+		font.drawString(width - font.getWidth(chunks) - 2, font.getHeight() * 2, chunks);
 
 		GL11.glDisable(GL11.GL_TEXTURE_2D);
 		GL11.glLineWidth(2);
