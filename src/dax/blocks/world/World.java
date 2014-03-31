@@ -65,7 +65,6 @@ public class World {
 		this.size = size;
 		this.sizeBlocks = size * Chunk.CHUNK_SIZE;
 		player = new Player(this);
-		//chunks = new Chunk[size][size];
 		this.treeGen = new TreeGenerator(this);
 
 		this.multipler = multipler;
@@ -149,7 +148,7 @@ public class World {
 			float velZ = (float) (Math.sin(heading)*velocity*mult);
 			
 			
-			Particle p = new Particle(emitterX, emitterY, emitterZ, velX, velY, velZ, 200, rand.nextFloat(), rand.nextFloat(), rand.nextFloat());
+			Particle p = new Particle(emitterX, emitterY, emitterZ, velX, velY, velZ, 200, 1, 0.08f, 0.5f);
 			particles.add(p);
 		}	
 		
@@ -170,30 +169,12 @@ public class World {
 		chunkProvider.updateLoadedChunksInRadius(((int)player.posX) / 16, ((int)player.posZ) / 16, DRAW_DISTANCE+1);
 	}
 
-	public void rebuildEntireChunk(int x, int z) {
-		//TODO
-			
-			int cx = x / Chunk.CHUNK_SIZE;
-			int cz = z / Chunk.CHUNK_SIZE;
-			
-			Coord2D coord = getCoord2D(cx, cz);
-			
-			if (chunkProvider.isChunkLoaded(coord)) {
-				//chunkProvider.getChunk(coord).blocks;
-			}
-			
-			//chunks[x][z].rebuild(y);
-		
-	}
-
 	public void rebuild(int x, int y, int z) {
 			Coord2D coord = getCoord2D(x, z);
 			
 			if (chunkProvider.isChunkLoaded(coord)) {
 				chunkProvider.getChunk(coord).setDirty(y);
 			}
-			
-			//chunks[x][z].rebuild(y);
 	}
 
 
@@ -208,8 +189,6 @@ public class World {
 		
 		Chunk c = chunkProvider.getChunk(coord);
 		return c != null ? c.getBlock(icx, y, icz) : 0;
-
-		//return chunks[cx][cz].getBlock(icx, y, icz);
 	}
 
 	public void setBlock(int x, int y, int z, byte id) {
@@ -224,112 +203,20 @@ public class World {
 		if (chunkProvider.isChunkLoaded(coord)) {
 			chunkProvider.getChunk(coord).setBlock(icx, y, icz, id, true);
 		}
-
-		//chunks[cx][cz].setBlock(icx, y, icz, id, true);
 	}
 
 	public void setBlockNoRebuild(int x, int y, int z, byte id) {
-		//TODO
+		int icx = x & 15;
+		int icz = z & 15;
+
+		int cx = x >> 4;
+		int cz = z >> 4;
 		
-		if (x < 0 || y < 0 || z < 0) {
-			return;
+		Coord2D coord = getCoord2D(cx, cz);
+		
+		if (chunkProvider.isChunkLoaded(coord)) {
+			chunkProvider.getChunk(coord).setBlock(icx, y, icz, id, false);
 		}
-
-		int icx = x % Chunk.CHUNK_SIZE;
-		int icz = z % Chunk.CHUNK_SIZE;
-
-		int cx = x / Chunk.CHUNK_SIZE;
-		int cz = z / Chunk.CHUNK_SIZE;
-
-		//chunks[cx][cz].setBlock(icx, y, icz, id, false);
-	}
-
-	public static final int MAX_GENERATED_MESHES = 1;
-	private int generatedMeshes = 0;
-
-	public void renderParticle(Particle p, float ptt) {
-		GL11.glColor4f(p.r, p.g, p.b, 1);
-		
-		float h = Particle.PARTICLE_SIZE/2;
-        float sizemutipler = (h/1);
-		
-		float rightup0p = (rightMod[0] + upMod[0])*sizemutipler;
-        float rightup1p = (rightMod[1] + upMod[1])*sizemutipler;
-        float rightup2p = (rightMod[2] + upMod[2])*sizemutipler;
-        float rightup0n = (rightMod[0] - upMod[0])*sizemutipler;
-        float rightup1n = (rightMod[1] - upMod[1])*sizemutipler;
-        float rightup2n = (rightMod[2] - upMod[2])*sizemutipler;
-		
-		float px = p.getPartialX(ptt);
-		float py = p.getPartialY(ptt);
-		float pz = p.getPartialZ(ptt);
-		
-		GL11.glVertex3f(px - rightup0p,py - rightup1p,pz - rightup2p);
-        GL11.glVertex3f(px + rightup0n,py + rightup1n,pz + rightup2n);
-        GL11.glVertex3f(px + rightup0p,py + rightup1p,pz + rightup2p);
-        GL11.glVertex3f(px - rightup0n,py - rightup1n,pz - rightup2n);
-
-
-		//GL11.glVertex3f(px, py, pz);
-		
-		//GL11.glVertex3f(px-Particle.PARTICLE_SIZE/2, py-Particle.PARTICLE_SIZE/2, pz-Particle.PARTICLE_SIZE/2);
-		//GL11.glVertex3f(px+Particle.PARTICLE_SIZE/2, py+Particle.PARTICLE_SIZE/2, pz+Particle.PARTICLE_SIZE/2);
-	}
-
-	public void renderSelectionBox() {
-		GL11.glDisable(GL11.GL_TEXTURE_2D);
-
-		GL11.glLineWidth(4);
-		GL11.glColor4f(0, 1, 0, 0.8f);
-
-		GL11.glPushMatrix();
-		GL11.glBegin(GL11.GL_LINES);
-
-		// front
-		GL11.glVertex3f(-0.005f, 1.005f, 1.005f);
-		GL11.glVertex3f(1.005f, 1.005f, 1.005f);
-
-		GL11.glVertex3f(1.005f, 1.005f, 1.005f);
-		GL11.glVertex3f(1.005f, -0.005f, 1.005f);
-
-		GL11.glVertex3f(1.005f, -0.005f, 1.005f);
-		GL11.glVertex3f(-0.005f, -0.005f, 1.005f);
-
-		GL11.glVertex3f(-0.005f, -0.005f, 1.005f);
-		GL11.glVertex3f(-0.005f, 1.005f, 1.005f);
-
-		// right
-		GL11.glVertex3f(1.005f, 1.005f, 1.005f);
-		GL11.glVertex3f(1.005f, 1.005f, -0.005f);
-
-		GL11.glVertex3f(1.005f, 1.005f, -0.005f);
-		GL11.glVertex3f(1.005f, -0.005f, -0.005f);
-
-		GL11.glVertex3f(1.005f, -0.005f, -0.005f);
-		GL11.glVertex3f(1.005f, -0.005f, 1.005f);
-
-		// back
-		GL11.glVertex3f(1.005f, 1.005f, -0.005f);
-		GL11.glVertex3f(-0.005f, 1.005f, -0.005f);
-
-		GL11.glVertex3f(-0.005f, -0.005f, -0.005f);
-		GL11.glVertex3f(1.005f, -0.005f, -0.005f);
-
-		GL11.glVertex3f(-0.005f, -0.005f, -0.005f);
-		GL11.glVertex3f(-0.005f, 1.005f, -0.005f);
-
-		// left
-		GL11.glVertex3f(-0.005f, 1.005f, -0.005f);
-		GL11.glVertex3f(-0.005f, 1.005f, 1.005f);
-
-		GL11.glVertex3f(-0.005f, -0.005f, 1.005f);
-		GL11.glVertex3f(-0.005f, -0.005f, -0.005f);
-		GL11.glEnd();
-
-		GL11.glPopMatrix();
-
-		GL11.glEnable(GL11.GL_TEXTURE_2D);
-
 	}
 	
 	public ArrayList<AABB> getBBs(AABB aABB) {

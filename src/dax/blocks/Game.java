@@ -223,9 +223,10 @@ public class Game implements Runnable {
 		fogColor.put(0.63f).put(0.87f).put(1.0f).put(1.0f).flip();
 		GL11.glFog(GL11.GL_FOG_COLOR, fogColor);
 		GL11.glHint(GL11.GL_FOG_HINT, GL11.GL_DONT_CARE);
-		GL11.glFogi(GL11.GL_FOG_MODE, GL11.GL_LINEAR);
-		GL11.glFogf(GL11.GL_FOG_START, 60.0f);
-		GL11.glFogf(GL11.GL_FOG_END, 100.0f);
+		GL11.glFogi(GL11.GL_FOG_MODE, GL11.GL_EXP2);
+		GL11.glFogf(GL11.GL_FOG_DENSITY, 0.01f);
+		GL11.glFogf(GL11.GL_FOG_START, 100.0f);
+		GL11.glFogf(GL11.GL_FOG_END, 160.0f);
 
 	}
 

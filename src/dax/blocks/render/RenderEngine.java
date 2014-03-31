@@ -13,6 +13,8 @@ import org.lwjgl.opengl.GL15;
 
 import dax.blocks.Particle;
 import dax.blocks.Player;
+import dax.blocks.TextureManager;
+import dax.blocks.block.Block;
 import dax.blocks.world.World;
 import dax.blocks.world.chunk.Chunk;
 
@@ -61,6 +63,8 @@ public class RenderEngine {
 		this.ptt = ptt;
 		pushPlayerMatrix(world.player);
 		updateBeforeRendering(ptt);
+		
+		TextureManager.atlas.bind();
 		
 		FloatBuffer lp = BufferUtils.createFloatBuffer(4);
 		lp.put(-10).put(10).put(-10).put(0).flip();
@@ -221,7 +225,6 @@ public class RenderEngine {
 						GL11.glDrawArrays(GL11.GL_QUADS, 0, cm.vBufferTransparent.capacity() / 3);
 						GL11.glDisable(GL11.GL_ALPHA_TEST);
 					}
-
 					GL11.glPopMatrix();
 				}
 			}
@@ -232,7 +235,80 @@ public class RenderEngine {
 		GL11.glDisableClientState(GL11.GL_TEXTURE_COORD_ARRAY);
 		GL11.glDisableClientState(GL11.GL_VERTEX_ARRAY);
 		GL11.glDisableClientState(GL11.GL_NORMAL_ARRAY);
+		
+		
+		GL11.glPushMatrix();
+		
+		GL11.glTranslatef(0.5f, 50.5f, 0.5f);
+		GL11.glRotatef(System.nanoTime()/50000000f, 1, 0, 0);
+		GL11.glRotatef(System.nanoTime()/40000000f, 0, 1, 0);
+		GL11.glRotatef(System.nanoTime()/80000000f, 0, 0, 1);
+		GL11.glTranslatef(-0.5f, -50.5f, -0.5f);
+		
+		GL11.glDisable(GL11.GL_LIGHTING);
+		
+		TextureManager.atlas.bind();
+		
+		GL11.glColor3f(1, 1, 1);
+		
+		GL11.glBegin(GL11.GL_QUADS);
+        
+		GL11.glTexCoord2f(1.0f,1.0f);          
+        GL11.glVertex3f( 1.0f, 51.0f,0f);          // Top Right Of The Quad (Top)
+        GL11.glTexCoord2f(0.0f,1.0f);    
+        GL11.glVertex3f(0f, 51.0f,0f);          // Top Left Of The Quad (Top)
+        GL11.glTexCoord2f(0.0f,0.0f);    
+        GL11.glVertex3f(0f, 51.0f, 1.0f);          // Bottom Left Of The Quad (Top)
+        GL11.glTexCoord2f(1.0f,0.0f);    
+        GL11.glVertex3f( 1.0f, 51.0f, 1.0f);          // Bottom Right Of The Quad (Top)
 
+        GL11.glTexCoord2f(1.0f,1.0f); 
+        GL11.glVertex3f( 1.0f,50.0f, 1.0f);          // Top Right Of The Quad (Bottom)
+        GL11.glTexCoord2f(0.0f,1.0f); 
+        GL11.glVertex3f(0f,50.0f, 1.0f);          // Top Left Of The Quad (Bottom)
+        GL11.glTexCoord2f(0.0f,0.0f); 
+        GL11.glVertex3f(0f,50.0f,0f);          // Bottom Left Of The Quad (Bottom)
+        GL11.glTexCoord2f(1.0f,0.0f); 
+        GL11.glVertex3f( 1.0f,50.0f,0f);          // Bottom Right Of The Quad (Bottom)
+       
+        GL11.glTexCoord2f(1.0f,1.0f); 
+        GL11.glVertex3f( 1.0f, 51.0f, 1.0f);          // Top Right Of The Quad (Front)
+        GL11.glTexCoord2f(0.0f,1.0f); 
+        GL11.glVertex3f(0f, 51.0f, 1.0f);          // Top Left Of The Quad (Front)
+        GL11.glTexCoord2f(0.0f,0.0f); 
+        GL11.glVertex3f(0f,50.0f, 1.0f);          // Bottom Left Of The Quad (Front)
+        GL11.glTexCoord2f(1.0f,0.0f); 
+        GL11.glVertex3f( 1.0f,50.0f, 1.0f);          // Bottom Right Of The Quad (Front)
+        
+        GL11.glTexCoord2f(1.0f,1.0f); 
+        GL11.glVertex3f( 1.0f,50.0f,0f);          // Bottom Left Of The Quad (Back)
+        GL11.glTexCoord2f(0.0f,1.0f); 
+        GL11.glVertex3f(0f,50.0f,0f);			// Bottom Right Of The Quad (Back)
+        GL11.glTexCoord2f(0.0f,0.0f);
+        GL11.glVertex3f(0f,51.0f,0f);          // Top Right Of The Quad (Back)
+        GL11.glTexCoord2f(1.0f,0.0f);
+        GL11.glVertex3f( 1.0f,51.0f,0f);          // Top Left Of The Quad (Back)
+        
+        GL11.glTexCoord2f(1.0f,1.0f); 
+        GL11.glVertex3f(0f,51.0f, 1.0f);          // Top Right Of The Quad (Left)
+        GL11.glTexCoord2f(0.0f,1.0f); 
+        GL11.glVertex3f(0f,51.0f,0f);          // Top Left Of The Quad (Left)
+        GL11.glTexCoord2f(0.0f,0.0f);
+        GL11.glVertex3f(0f,50.0f,0f);          // Bottom Left Of The Quad (Left)
+        GL11.glTexCoord2f(1.0f,0.0f);
+        GL11.glVertex3f(0f,50.0f, 1.0f);          // Bottom Right Of The Quad (Left)
+        
+        GL11.glTexCoord2f(1.0f,1.0f); 
+        GL11.glVertex3f( 1.0f, 51.0f,0f);          // Top Right Of The Quad (Right)
+        GL11.glTexCoord2f(0.0f,1.0f); 
+        GL11.glVertex3f( 1.0f, 51.0f, 1.0f);          // Top Left Of The Quad (Right)
+        GL11.glTexCoord2f(0.0f,0.0f);
+        GL11.glVertex3f( 1.0f,50.0f, 1.0f);          // Bottom Left Of The Quad (Right)
+        GL11.glTexCoord2f(1.0f,0.0f);
+        GL11.glVertex3f( 1.0f,50.0f,0f);          // Bottom Right Of The Quad (Right)
+		GL11.glEnd();
+		
+		GL11.glPopMatrix();
 
 		//this.vertices = vertices;
 		//this.chunksDrawn = cd;
@@ -241,6 +317,10 @@ public class RenderEngine {
 		
 	}
 
+	public void renderUnlockedBlock(float x, float y, float z, Block block) {
+		
+	}
+	
 	public void renderParticle(Particle p, float ptt) {
 		GL11.glColor4f(p.r, p.g, p.b, 1);
 
