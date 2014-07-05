@@ -47,7 +47,7 @@ public class GuiObjectButton extends GuiObject {
 	@Override
 	public void update() {
 		if (Mouse.getX() >= x1 && Mouse.getX() <= x2 && Display.getHeight() - Mouse.getY() >= y1 && Display.getHeight() - Mouse.getY() <= y2) {
-			hover = true;
+			hover = !Mouse.isButtonDown(0);
 			while (Mouse.next()) {
 				if (Mouse.getEventButtonState()) {
 					if (Mouse.getEventButton() == 0) {

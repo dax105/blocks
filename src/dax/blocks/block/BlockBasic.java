@@ -1,5 +1,7 @@
 package dax.blocks.block;
 
+import org.lwjgl.opengl.GL11;
+
 import dax.blocks.TextureManager;
 
 public class BlockBasic extends Block {
@@ -18,9 +20,10 @@ public class BlockBasic extends Block {
 		setTexture(texture);
 	}
 	
-	public BlockBasic(int id, int texture, boolean opaque, boolean cullSame) {
+	public BlockBasic(int id, int texture, boolean opaque, boolean cullSame, int renderPass) {
 		super(id, opaque, cullSame);
 		setTexture(texture);
+		setRenderPass(renderPass);
 	}
 
 	public BlockBasic(int id, int topTexture, int sideTexture, int bottomTexture) {
@@ -317,19 +320,19 @@ public class BlockBasic extends Block {
 		float[] n = new float[12];
 
 		n[0] = 0;
-		n[1] = 0;
+		n[1] = -1;
 		n[2] = 0;
 
 		n[3] = 0;
-		n[4] = 0;
+		n[4] = -1;
 		n[5] = 0;
 
 		n[6] = 0;
-		n[7] = 0;
+		n[7] = -1;
 		n[8] = 0;
 
 		n[9] = 0;
-		n[10] = 0;
+		n[10] = -1;
 		n[11] = 0;
 
 		return n;
@@ -339,21 +342,21 @@ public class BlockBasic extends Block {
 	public float[] getNLeft() {
 		float[] n = new float[12];
 
-		n[0] = 1;
+		n[0] = -1;
 		n[1] = 0;
-		n[2] = 1;
+		n[2] = 0;
 
-		n[3] = 1;
+		n[3] = -1;
 		n[4] = 0;
-		n[5] = 1;
+		n[5] = 0;
 
-		n[6] = 1;
+		n[6] = -1;
 		n[7] = 0;
-		n[8] = 1;
+		n[8] = 0;
 
-		n[9] = 1;
+		n[9] = -1;
 		n[10] = 0;
-		n[11] = 1;
+		n[11] = 0;
 
 		return n;
 	}
@@ -364,19 +367,19 @@ public class BlockBasic extends Block {
 
 		n[0] = 1;
 		n[1] = 0;
-		n[2] = 1;
+		n[2] = 0;
 
 		n[3] = 1;
 		n[4] = 0;
-		n[5] = 1;
+		n[5] = 0;
 
 		n[6] = 1;
 		n[7] = 0;
-		n[8] = 1;
+		n[8] = 0;
 
 		n[9] = 1;
 		n[10] = 0;
-		n[11] = 1;
+		n[11] = 0;
 
 		return n;
 	}
@@ -385,21 +388,21 @@ public class BlockBasic extends Block {
 	public float[] getNFront() {
 		float[] n = new float[12];
 
-		n[0] = -0.5f;
+		n[0] = 0;
 		n[1] = 0;
-		n[2] = 0;
+		n[2] = 1;
 
-		n[3] = -0.5f;
+		n[3] = 0;
 		n[4] = 0;
-		n[5] = 0;
+		n[5] = 1;
 
-		n[6] = -0.5f;
+		n[6] = 0;
 		n[7] = 0;
-		n[8] = 0;
+		n[8] = 1;
 
-		n[9] = -0.5f;
+		n[9] = 0;
 		n[10] = 0;
-		n[11] = 0;
+		n[11] = 1;
 
 		return n;
 	}
@@ -408,23 +411,130 @@ public class BlockBasic extends Block {
 	public float[] getNBack() {
 		float[] n = new float[12];
 
-		n[0] = -0.5f;
+		n[0] = 0;
 		n[1] = 0;
-		n[2] = 0;
+		n[2] = -1;
 
-		n[3] = -0.5f;
+		n[3] = 0;
 		n[4] = 0;
-		n[5] = 0;
+		n[5] = -1;
 
-		n[6] = -0.5f;
+		n[6] = 0;
 		n[7] = 0;
-		n[8] = 0;
+		n[8] = -1;
 
-		n[9] = -0.5f;
+		n[9] = 0;
 		n[10] = 0;
-		n[11] = 0;
+		n[11] = -1;
 
 		return n;
+	}
+
+	@Override
+	public void renderFront(int x, int y, int z, boolean xnzn, boolean zn, boolean xpzn, boolean xn, boolean xp, boolean xnzp, boolean zp, boolean xpzp) {
+		GL11.glNormal3f(0, 0, 1);
+		GL11.glTexCoord2f(TextureManager.getX2(sideTexture), TextureManager.getY1(sideTexture));
+		addVertexWithAO(x+1, y+1, z+1, xp, zp, xpzp);
+		//GL11.glVertex3f(x+1.0f, y+1f, z+1.0f); // Top Right Of The Quad (Front)
+		GL11.glTexCoord2f(TextureManager.getX1(sideTexture), TextureManager.getY1(sideTexture));
+		addVertexWithAO(x, y+1, z+1, xn, zp, xnzp);
+		//GL11.glVertex3f(x+0f, y+1f, z+1.0f); // Top Left Of The Quad (Front)
+		GL11.glTexCoord2f(TextureManager.getX1(sideTexture), TextureManager.getY2(sideTexture));
+		addVertexWithAO(x, y, z+1, xn, zn, xnzn);
+		//GL11.glVertex3f(x+0f, y, z+1.0f); // Bottom Left Of The Quad (Front)
+		GL11.glTexCoord2f(TextureManager.getX2(sideTexture), TextureManager.getY2(sideTexture));
+		addVertexWithAO(x+1, y, z+1, xp, zn, xpzn);
+		//GL11.glVertex3f(x+1.0f, y, z+1.0f); // Bottom Right Of The Quad (Front)
+	}
+
+	@Override
+	public void renderBack(int x, int y, int z, boolean xnzn, boolean zn, boolean xpzn, boolean xn, boolean xp, boolean xnzp, boolean zp, boolean xpzp) {
+		GL11.glNormal3f(0, 0, -1);
+		GL11.glTexCoord2f(TextureManager.getX1(sideTexture), TextureManager.getY2(sideTexture));
+		//GL11.glVertex3f(x+1.0f, y, z+0f); // Bottom Left Of The Quad (Back)
+		addVertexWithAO(x+1, y, z, xp, zn, xpzn);
+		GL11.glTexCoord2f(TextureManager.getX2(sideTexture), TextureManager.getY2(sideTexture));
+		//GL11.glVertex3f(x+0f, y, z+0f); // Bottom Right Of The Quad (Back)
+		addVertexWithAO(x, y, z, xn, zn, xnzn);
+		GL11.glTexCoord2f(TextureManager.getX2(sideTexture), TextureManager.getY1(sideTexture));
+		//GL11.glVertex3f(x+0f, y+1f, z+0f); // Top Right Of The Quad (Back)
+		addVertexWithAO(x, y+1, z, xn, zp, xnzp);
+		GL11.glTexCoord2f(TextureManager.getX1(sideTexture), TextureManager.getY1(sideTexture));
+		//GL11.glVertex3f(x+1.0f, y+1f, z+0f); // Top Left Of The Quad (Back)
+		addVertexWithAO(x+1, y+1, z, xp, zp, xpzp);
+	}
+
+	@Override
+	public void renderRight(int x, int y, int z, boolean xnzn, boolean zn, boolean xpzn, boolean xn, boolean xp, boolean xnzp, boolean zp, boolean xpzp) {
+		GL11.glNormal3f(1, 0, 0);
+		GL11.glTexCoord2f(TextureManager.getX2(sideTexture), TextureManager.getY1(sideTexture));
+		//GL11.glVertex3f(x+1.0f, y+1f, z+0f); // Top Right Of The Quad (Right)
+		addVertexWithAO(x+1, y+1, z, xn, zn, xnzn);
+		GL11.glTexCoord2f(TextureManager.getX1(sideTexture), TextureManager.getY1(sideTexture));
+		//GL11.glVertex3f(x+1.0f, y+1f, z+1.0f); // Top Left Of The Quad (Right)
+		addVertexWithAO(x+1, y+1, z+1, xp, zn, xpzn);
+		GL11.glTexCoord2f(TextureManager.getX1(sideTexture), TextureManager.getY2(sideTexture));
+		//GL11.glVertex3f(x+1.0f, y, z+1.0f); // Bottom Left Of The Quad (Right)
+		addVertexWithAO(x+1, y, z+1, xp, zp, xpzp);
+		GL11.glTexCoord2f(TextureManager.getX2(sideTexture), TextureManager.getY2(sideTexture));
+		//GL11.glVertex3f(x+1.0f, y, z+0f); // Bottom Right Of The Quad (Right)
+		addVertexWithAO(x+1, y, z, xn, zp, xnzp);
+	}
+
+	@Override
+	public void renderLeft(int x, int y, int z, boolean xnzn, boolean zn, boolean xpzn, boolean xn, boolean xp, boolean xnzp, boolean zp, boolean xpzp) {
+		GL11.glNormal3f(-1, 0, 0);
+		GL11.glTexCoord2f(TextureManager.getX2(sideTexture), TextureManager.getY1(sideTexture));
+		//GL11.glVertex3f(x+0f, y+1f, z+1.0f); // Top Right Of The Quad (Left)
+		addVertexWithAO(x, y+1, z+1, xp, zn, xpzn);
+		GL11.glTexCoord2f(TextureManager.getX1(sideTexture), TextureManager.getY1(sideTexture));
+		//GL11.glVertex3f(x+0f, y+1f, z+0f); // Top Left Of The Quad (Left)
+		addVertexWithAO(x, y+1, z, xn, zn, xnzn);
+		GL11.glTexCoord2f(TextureManager.getX1(sideTexture), TextureManager.getY2(sideTexture));
+		//GL11.glVertex3f(x+0f, y, z+0f); // Bottom Left Of The Quad (Left)
+		addVertexWithAO(x, y, z, xn, zp, xnzp);
+		GL11.glTexCoord2f(TextureManager.getX2(sideTexture), TextureManager.getY2(sideTexture));
+		//GL11.glVertex3f(x+0f, y, z+1.0f); // Bottom Right Of The Quad (Left)
+		addVertexWithAO(x, y, z+1, xp, zp, xpzp);	
+	}
+
+	@Override
+	public void renderTop(int x, int y, int z, boolean xnzn, boolean zn, boolean xpzn, boolean xn, boolean xp, boolean xnzp, boolean zp, boolean xpzp) {
+		GL11.glNormal3f(0, 1, 0);
+		GL11.glTexCoord2f(TextureManager.getX2(topTexture), TextureManager.getY1(topTexture));
+		//GL11.glVertex3f(x+1.0f, y+1f, z+0f); // Top Right Of The Quad (Top)
+		addVertexWithAO(x+1, y+1, z, xp, zn, xpzn);
+		GL11.glTexCoord2f(TextureManager.getX2(topTexture), TextureManager.getY2(topTexture));
+		//GL11.glVertex3f(x+0f, y+1f, z+0f); // Top Left Of The Quad (Top)
+		addVertexWithAO(x, y+1, z, xn, zn, xnzn);
+		GL11.glTexCoord2f(TextureManager.getX1(topTexture), TextureManager.getY2(topTexture));
+		//GL11.glVertex3f(x+0f, y+1f, z+1.0f); // Bottom Left Of The Quad (Top)
+		addVertexWithAO(x, y+1, z+1, xn, zp, xnzp);
+		GL11.glTexCoord2f(TextureManager.getX1(topTexture), TextureManager.getY1(topTexture));
+		//GL11.glVertex3f(x+1.0f, y+1f, z+1.0f); // Bottom Right Of The Quad (Top)
+		addVertexWithAO(x+1, y+1, z+1, xp, zp, xpzp);
+	}
+
+	@Override
+	public void renderBottom(int x, int y, int z, boolean xnzn, boolean zn, boolean xpzn, boolean xn, boolean xp, boolean xnzp, boolean zp, boolean xpzp) {
+		GL11.glNormal3f(0, -1, 0);
+		GL11.glTexCoord2f(TextureManager.getX1(bottomTexture), TextureManager.getY2(bottomTexture));
+		addVertexWithAO(x+1, y, z+1, xp, zp, xpzp);
+		//GL11.glVertex3f(x+1.0f, y, z+1.0f); // Top Right Of The Quad (Bottom)
+		GL11.glTexCoord2f(TextureManager.getX1(bottomTexture), TextureManager.getY1(bottomTexture));
+		addVertexWithAO(x, y, z+1, xn, zp, xnzp);
+		//GL11.glVertex3f(x+0f, y, z+1.0f); // Top Left Of The Quad (Bottom)
+		GL11.glTexCoord2f(TextureManager.getX2(bottomTexture), TextureManager.getY1(bottomTexture));
+		addVertexWithAO(x, y, z, xn, zn, xnzn);
+		//GL11.glVertex3f(x+0f, y, z+0f); // Bottom Left Of The Quad (Bottom)
+		GL11.glTexCoord2f(TextureManager.getX2(bottomTexture), TextureManager.getY2(bottomTexture));
+		addVertexWithAO(x+1, y, z, xp, zn, xpzn);
+		//GL11.glVertex3f(x+1.0f, y, z+0f); // Bottom Right Of The Quad (Bottom)	
+	}
+
+	@Override
+	public void renderIndependent(int x, int y, int z) {
+		
 	}
 
 }

@@ -4,8 +4,12 @@
 .project
 bin/
 .settings/
+.screenshots/
+.saves/
 
 # Package Files #
 *.jar
 *.war
 *.ear
+
+*.ccf

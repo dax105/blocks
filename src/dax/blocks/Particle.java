@@ -4,10 +4,10 @@ import java.util.List;
 import java.util.Random;
 
 import dax.blocks.collisions.AABB;
+import dax.blocks.world.World;
 
 public class Particle {
 
-	public static final float GRAVITY = -0.02f;
 	public static final float BOUNCE_MAX = 0.5f;
 	public static final float BOUNCE_MIN = 0.1f;
 	public static final float FRICTION_AIR = 0.985f;
@@ -49,7 +49,7 @@ public class Particle {
 		this.lifetime = lifetime;
 		this.dead = false;
 		this.ground = false;
-		this.aabb = new AABB(x-PARTICLE_SIZE/2, y-PARTICLE_SIZE/2, z-PARTICLE_SIZE/2, x+PARTICLE_SIZE/2, y+PARTICLE_SIZE/2, z+PARTICLE_SIZE/2);
+		this.aabb = new AABB(x-PARTICLE_SIZE*0.5f, y-PARTICLE_SIZE*0.5f, z-PARTICLE_SIZE*0.5f, x+PARTICLE_SIZE*0.5f, y+PARTICLE_SIZE*0.5f, z+PARTICLE_SIZE*0.5f);
 		this.r = r;
 		this.g = g;
 		this.b = b;
@@ -82,7 +82,7 @@ public class Particle {
 			return;
 		}
 		
-		this.velY += GRAVITY;
+		this.velY -= World.GRAVITY;
 		
 		float maxVelX = velX;
 		float maxVelY = velY;

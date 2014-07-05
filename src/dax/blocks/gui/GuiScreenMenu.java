@@ -1,6 +1,7 @@
 package dax.blocks.gui;
 
 import dax.blocks.Game;
+import dax.blocks.render.RenderEngine;
 
 public class GuiScreenMenu extends GuiScreen {
 
@@ -33,7 +34,8 @@ public class GuiScreenMenu extends GuiScreen {
 		} else if (button.id == 3) {
 			game.world.saveAllChunks();
 			game.world = null;
-			game.isIngame = false;
+			game.renderEngine = new RenderEngine();
+			game.ingame = false;
 			game.openGuiScreen(new GuiScreenMainMenu(game));
 		}
 

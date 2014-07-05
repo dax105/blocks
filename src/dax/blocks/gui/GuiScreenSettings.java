@@ -22,7 +22,7 @@ public class GuiScreenSettings extends GuiScreen {
 
 	public GuiScreenSettings(GuiScreen parent) {
 		super(parent);
-		ingame = game.isIngame;
+		ingame = game.ingame;
 		worldSize = game.worldSize;
 		filter = game.shouldFilter;
 		mult = game.heightMultipler;
@@ -49,23 +49,25 @@ public class GuiScreenSettings extends GuiScreen {
 
 		objects.add(new GuiObjectTitleBar((game.width - width) / 2, (game.height - height) / 2, (game.width + width) / 2, ((game.height - height) / 2) + 30, this.f, "Options"));
 
-		objects.add(new GuiObjectSlider((game.width - width) / 2, (game.height - height) / 2 + 34, (game.width + width) / 2, ((game.height - height) / 2) + 58, this.f, "World size: ", 0, this, 4, 120, worldSize, " chunks"));
+		//objects.add(new GuiObjectSlider((game.width - width) / 2, (game.height - height) / 2 + 34, (game.width + width) / 2, ((game.height - height) / 2) + 58, this.f, "World size: ", 0, this, 4, 120, worldSize, " chunks"));
 		
-		objects.add(new GuiObjectSlider((game.width - width) / 2, (game.height - height) / 2 + 62, (game.width + width) / 2, ((game.height - height) / 2) + 86, this.f, "World height multipler: ", 1, this, 0, 100, (int) mult, ""));
+		//objects.add(new GuiObjectSlider((game.width - width) / 2, (game.height - height) / 2 + 62, (game.width + width) / 2, ((game.height - height) / 2) + 86, this.f, "World height multipler: ", 1, this, 0, 100, (int) mult, ""));
 
-		objects.add(new GuiObjectButton((game.width - width) / 2, (game.height - height) / 2 + 118, (game.width + width) / 2, ((game.height - height) / 2) + 144, this.f, filteringText, 3, this));
+		//objects.add(new GuiObjectButton((game.width - width) / 2, (game.height - height) / 2 + 118, (game.width + width) / 2, ((game.height - height) / 2) + 144, this.f, filteringText, 3, this));
 		
-		objects.add(new GuiObjectButton((game.width - width) / 2, (game.height - height) / 2 + 148, (game.width + width) / 2, ((game.height - height) / 2) + 172, this.f, treeText, 4, this));
+		//objects.add(new GuiObjectButton((game.width - width) / 2, (game.height - height) / 2 + 148, (game.width + width) / 2, ((game.height - height) / 2) + 172, this.f, treeText, 4, this));
 		
-		objects.add(new GuiObjectSlider((game.width - width) / 2, (game.height - height) / 2 + 90, (game.width + width) / 2, ((game.height - height) / 2) + 114, this.f, "FOV: ", 2, this, 30, 160, fov, ""));
+		//objects.add(new GuiObjectSlider((game.width - width) / 2, (game.height - height) / 2 + 90, (game.width + width) / 2, ((game.height - height) / 2) + 114, this.f, "FOV: ", 2, this, 30, 160, fov, ""));
 
-		objects.add(new GuiObjectButton((game.width - width) / 2, (game.height + height) / 2 - 24, (game.width) / 2, ((game.height + height) / 2), this.f, "Cancel", 1, this));
+		objects.add(new GuiObjectButton((game.width - width) / 2, (game.height + height) / 2 - 24, (game.width + width) / 2, ((game.height + height) / 2), this.f, "Close", 1, this));
 		
-		if (ingame) {
+		objects.add(new GuiObjectText((game.width - width) / 2, (game.height - height) / 2 + 34, (game.width + width) / 2, (game.height + height) / 2 - 28, this.f, "Nope, nothing's here, use console"));
+		
+		/*if (ingame) {
 			objects.add(new GuiObjectButton((game.width + 8) / 2, (game.height + height) / 2 - 24, (game.width + width) / 2, ((game.height + height) / 2), this.f, "Apply (Regenerate world)", 2, this));
 		} else {
 			objects.add(new GuiObjectButton((game.width + 8) / 2, (game.height + height) / 2 - 24, (game.width + width) / 2, ((game.height + height) / 2), this.f, "Apply", 2, this));
-		}
+		}*/
 	}
 
 	@Override
@@ -103,11 +105,9 @@ public class GuiScreenSettings extends GuiScreen {
 		if (button.id == 3) {
 			if (filter) {
 				button.text = "Texture filtering: Nearest";
-				TextureManager.texel_offset = 0;
 				filter = false;
 			} else {
 				button.text = "Texture filtering: Linear";
-				TextureManager.calculateTexOffset();
 				filter = true;
 			}
 		}

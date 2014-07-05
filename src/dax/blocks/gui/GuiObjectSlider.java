@@ -27,6 +27,10 @@ public class GuiObjectSlider extends GuiObject {
 	public int val;
 
 	private boolean hover = false;
+	private boolean wasHovered = false;
+	private boolean pressed = false;
+	private boolean wasPressed = false;
+	private boolean lock = false;
 
 	public GuiObjectSlider(int x1, int y1, int x2, int y2, Font font, String text, int id, GuiScreen parent, int minVal, int maxVal, int val, String unit) {
 		this.x1 = x1;
@@ -63,21 +67,41 @@ public class GuiObjectSlider extends GuiObject {
 
 	@Override
 	public void update() {
+		wasPressed = pressed;
+		wasHovered = hover;
+		
 		if (Mouse.getX() >= x1 && Mouse.getX() <= x2 && Display.getHeight() - Mouse.getY() >= y1 && Display.getHeight() - Mouse.getY() <= y2) {
 			
-			if (!(Mouse.isButtonDown(0) && !hover)) {
-				hover = true;
+			hover = true;
+			
+			if (wasHovered && !wasPressed && !lock) {
+				pressed = Mouse.isButtonDown(0);
+			} else {
+				lock = true;
 			}
 
-			if (Mouse.isButtonDown(0) && hover) {
-				int width = x2 - x1 - SLIDER_WIDTH+2;
-				int clickedX = Mouse.getX() - this.x1 - SLIDER_WIDTH/2+1;
-				val = Math.round(((float)(clickedX) / (float)width)*(maxVal-minVal)+minVal);
-				parent.sliderUpdate(this);
-			}
+			
 
 		} else {
 			hover = false;
+		}
+
+		
+		if (!Mouse.isButtonDown(0)) {
+			pressed = false;
+			lock = false;
+		}
+		
+		if (lock) {
+			hover = false;
+		}
+		
+		if (pressed) {
+			hover = true;
+			int width = x2 - x1 - SLIDER_WIDTH+2;
+			int clickedX = Mouse.getX() - this.x1 - SLIDER_WIDTH/2+1;
+			val = Math.round(((float)(clickedX) / (float)width)*(maxVal-minVal)+minVal);
+			parent.sliderUpdate(this);
 		}
 		
 		if (val < minVal) {

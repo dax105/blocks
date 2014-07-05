@@ -1,24 +1,38 @@
 package dax.blocks;
 
+import dax.blocks.block.Block;
 import dax.blocks.collisions.AABB;
 
 import java.util.ArrayList;
+import java.util.Random;
 
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
+import org.lwjgl.util.vector.Vector2f;
 
+import dax.blocks.world.Explosion;
 import dax.blocks.world.World;
 
 public class Player {
 
+	Random rand = new Random();
+	
 	World world;
 
 	public static final float PLAYER_HEIGHT = 1.7f;
 	public static final float EYES_HEIGHT = 1.6f;
 	public static final float PLAYER_SIZE = 0.5f;
+	
+	public static final float STEP_TIMER_FULL = 2.25f;
+
+	public static final float JUMP_STRENGTH = 0.4f;
+	public static final float MAX_WALK_SPEED = 0.25f;
 
 	byte selectedBlockID = 3;
 
+	public float xBob = 0;
+	public float yBob = 0;
+	
 	public float posX = 0.0F;
 	public float posZ = 0.0F;
 	public float posY = 128F;
@@ -53,9 +67,10 @@ public class Player {
 	public float yv = 0.0f;
 	public float zv = 0.0f;
 	
-	public static final float JUMP_STRENGTH = 0.38f;
-
-	private boolean onGround;
+	private boolean onGround = false;
+	private boolean wasOnGround = false;
+	
+	public float stepTimer = STEP_TIMER_FULL;
 
 	public Player(World world) {
 		this.world = world;
@@ -77,9 +92,18 @@ public class Player {
 		return lastPosZ + delta*ptt;
 	}
 	
+	public void setPos(float x, float y, float z) {
+		this.posX = x;
+		this.posY = y;
+		this.posZ = z;
+		this.bb = new AABB(posX-PLAYER_SIZE/2, posY, posZ-PLAYER_SIZE/2, posX+PLAYER_SIZE/2, posY+PLAYER_HEIGHT, posZ+PLAYER_SIZE/2);
+	}
+	
 	private void updateLookingAt() {
-		float reach = 16.0F;
+		float reach = Game.settings.reach.getValue();
 
+		if (!Keyboard.isKeyDown(Keyboard.KEY_Q)) {
+			
 		float xn = (float) posX;
 		float yn = (float) posY + PLAYER_HEIGHT;
 		float zn = (float) posZ;
@@ -118,51 +142,62 @@ public class Player {
 			hasSelected = false;
 
 		}
+		
+		}
 	}
 
 	public void setSelectedBlock(int id) {
 		selectedBlockID = (byte) id;
 	}
-
+	
 	public void update() {
+		wasOnGround = onGround;
+		
+		float speedC = 0;
+		float speedStrafeC = 0;
+		
 		int multi = 1;
 
 		if (Keyboard.isKeyDown(Keyboard.KEY_LSHIFT) || Keyboard.isKeyDown(Keyboard.KEY_RSHIFT)) {
-			multi = 5;
+			multi = 15;
 		}
 
-		double move = 0.0D;
-		double moveStrafe = 0.0D;
-
 		if (Keyboard.isKeyDown(Keyboard.KEY_W)) {
-			speed -= onGround ? 0.25 * multi : 0.03 * multi;
-			move -= 0.5D * multi;
+			speedC -= onGround ? 0.25 * multi : 0.03 * multi;
 		}
 
 		if (Keyboard.isKeyDown(Keyboard.KEY_S)) {
-			speed += onGround ? 0.25 * multi : 0.03 * multi;
-			move += 0.5D * multi;
+			speedC += onGround ? 0.25 * multi : 0.03 * multi;
 		}
 
 		if (Keyboard.isKeyDown(Keyboard.KEY_A)) {
-			speedStrafe -= onGround ? 0.25 * multi : 0.03 * multi;
-			moveStrafe -= 0.5D * multi;
+			speedStrafeC -= onGround ? 0.25 * multi : 0.03 * multi;
 		}
 
 		if (Keyboard.isKeyDown(Keyboard.KEY_D)) {
-			speedStrafe += onGround ? 0.25 * multi : 0.03 * multi;
-			moveStrafe += 0.5D * multi;
+			speedStrafeC += onGround ? 0.25 * multi : 0.03 * multi;
 		}
 
 		if (Keyboard.isKeyDown(Keyboard.KEY_SPACE) && onGround) {
 			//moveY += 0.005D * multi;
-			yv += JUMP_STRENGTH * multi;
+			
+			if (multi == 1) {
+				yv += JUMP_STRENGTH * multi;
+			} else {
+				yv += JUMP_STRENGTH *5;
+			}
 		}
 
 		if (Keyboard.isKeyDown(Keyboard.KEY_LMENU) || Keyboard.isKeyDown(Keyboard.KEY_LCONTROL)) {
 			//moveY -= 0.005D * multi;
 		}
 
+		if (Keyboard.isKeyDown(Keyboard.KEY_E)) {
+			if (hasSelected) {
+				Explosion.explode(world, lookingAtX, lookingAtY, lookingAtZ);
+			}
+		}
+		
 		if (Keyboard.isKeyDown(Keyboard.KEY_1) || Keyboard.isKeyDown(Keyboard.KEY_NUMPAD1)) {
 			setSelectedBlock(1);
 		}
@@ -172,7 +207,7 @@ public class Player {
 		}
 
 		if (Keyboard.isKeyDown(Keyboard.KEY_3) || Keyboard.isKeyDown(Keyboard.KEY_NUMPAD3)) {
-			setSelectedBlock(3);
+			setSelectedBlock(13);
 		}
 
 		if (Keyboard.isKeyDown(Keyboard.KEY_4) || Keyboard.isKeyDown(Keyboard.KEY_NUMPAD4)) {
@@ -192,7 +227,7 @@ public class Player {
 		}
 
 		if (Keyboard.isKeyDown(Keyboard.KEY_8) || Keyboard.isKeyDown(Keyboard.KEY_NUMPAD8)) {
-			setSelectedBlock(8);
+			setSelectedBlock(14);
 		}
 
 		if (Keyboard.isKeyDown(Keyboard.KEY_9) || Keyboard.isKeyDown(Keyboard.KEY_NUMPAD9)) {
@@ -202,11 +237,31 @@ public class Player {
 		if (Keyboard.isKeyDown(Keyboard.KEY_0) || Keyboard.isKeyDown(Keyboard.KEY_NUMPAD0)) {
 			setSelectedBlock(10);
 		}
-
+		
+		float xsq = Math.abs(speedC)*Math.abs(speedC);
+		float ysq = Math.abs(speedStrafeC)*Math.abs(speedStrafeC);
+		
+		float sp = (float) Math.sqrt(xsq + ysq);
+		
+		//Game.console.out("SPD A: " + sp);
+		
+		if (sp  > MAX_WALK_SPEED*multi) {
+			float mult = (float) (MAX_WALK_SPEED*multi / sp);
+			speedC *= mult;
+			speedStrafeC *= mult;
+		}
+		
+		speed += speedC;
+		speedStrafe += speedStrafeC;
+		
 		speed *= onGround ? 0.5f : 0.9f;
 		speedStrafe *= onGround ? 0.5f : 0.9f;
 		
-		yv -= 0.05f;
+		float spf = (float) Math.sqrt(speed*speed+speedStrafe*speedStrafe);
+		
+		//Game.console.out("SPD B: " + spf);
+		
+		yv -= world.GRAVITY;
 		
 			double toMoveZ = (posZ + Math.cos(-heading / 180 * Math.PI) * speed) + (Math.cos((-heading + 90) / 180 * Math.PI) * speedStrafe);
 			double toMoveX = (posX + Math.sin(-heading / 180 * Math.PI) * speed) + (Math.sin((-heading + 90) / 180 * Math.PI) * speedStrafe);
@@ -276,17 +331,46 @@ public class Player {
 			if (Mouse.getEventButtonState()) {
 				if (Mouse.getEventButton() == 0) {
 					if (hasSelected) {
-						world.setBlock(lookingAtX, lookingAtY, lookingAtZ, (byte) 0);
+						world.setBlock(lookingAtX, lookingAtY, lookingAtZ, (byte) 0, true);
 					}
 				}
 				if (Mouse.getEventButton() == 1) {
 					if (hasSelected && (lookingAtX != placesAtX || lookingAtY != placesAtY || lookingAtZ != placesAtZ)) {
-						world.setBlock(placesAtX, placesAtY, placesAtZ, selectedBlockID);
+						world.setBlock(placesAtX, placesAtY, placesAtZ, selectedBlockID, true);
 					}
 				}
 			}
 		}
+		
+		if (!wasOnGround && onGround) {
+			int b = world.getBlock((int)Math.floor(this.posX), (int)Math.floor(this.posY-1.0f), (int)Math.floor(this.posZ));
+			Block block = Block.getBlock((byte)b);
+			if (block != null) {
+				SoundManager.play(block.getFallSound(), 0.7f+rand.nextFloat()*0.25f, 0.5f);
+			}
+			
+			//SoundManager.fall_soft.playAsSoundEffect(0.7f+rand.nextFloat()*0.25f, 0.5f, false);
+		}
+		
+		if (onGround) {
+			stepTimer -= spf;
+		} else {
+			stepTimer = 0.0f;
+		}
 
+		if (stepTimer <= 0 && onGround) {
+			//SoundManager.footstep.playAsSoundEffect(1.0f-rand.nextFloat()*0.3f, 1.0f, false);
+			
+			int b = world.getBlock((int)Math.floor(this.posX), (int)Math.floor(this.posY-1.0f), (int)Math.floor(this.posZ));
+			Block block = Block.getBlock((byte)b);
+			if (block != null) {
+				SoundManager.play(block.getStepSound(), 1.0f-(rand.nextFloat()*0.2f-0.1f), 1f);
+			}
+			
+			//SoundManager.play(SoundManager.footstep_grass, 1.0f-(rand.nextFloat()*0.2f-0.1f), 1f);
+			stepTimer += STEP_TIMER_FULL;
+		}
+		
 	}
 
 	public void onRender() {
@@ -312,6 +396,9 @@ public class Player {
 		if (tilt > 90) {
 			tilt = 90;
 		}
+		
+		xBob = (float) Math.sin(System.nanoTime()/100000000.0d)*0.5f*speed;
+		yBob = (float) Math.cos(System.nanoTime()/100000000.0d)*0.5f*speed;
 		
 		updateLookingAt();
 		

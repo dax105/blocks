@@ -2,12 +2,9 @@ package dax.blocks.world;
 
 import dax.blocks.collisions.AABB;
 
-import java.nio.FloatBuffer;
-import java.nio.IntBuffer;
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Random;
 
@@ -16,18 +13,18 @@ import dax.blocks.Game;
 import dax.blocks.Particle;
 import dax.blocks.Player;
 import dax.blocks.block.Block;
-import dax.blocks.render.ChunkMesh;
+import dax.blocks.block.BlockPlant;
 import dax.blocks.render.Frustum;
 import dax.blocks.world.chunk.Chunk;
 import dax.blocks.world.generator.TreeGenerator;
 
-import org.lwjgl.BufferUtils;
 import org.lwjgl.input.Keyboard;
-import org.lwjgl.opengl.GL11;
-import org.lwjgl.opengl.GL15;
 
 public class World {
 
+	public static final float GRAVITY = 0.06f;
+	public static final int MAX_PARTICLES = 10000;
+	
 	private Coord2D c2d;
 	
 	public int size;
@@ -39,8 +36,6 @@ public class World {
     float[] upMod = new float[3];
 	
 	Random rand = new Random();
-
-	public static final int DRAW_DISTANCE = 12;
 	
 	float multipler;
 	private int vertices;
@@ -105,7 +100,7 @@ public class World {
 			}
 		}*/
 
-		//System.out.println("Chunks created in " + (System.nanoTime() - start) / 1000000 + "ms");
+		//Game.console.out("Chunks created in " + (System.nanoTime() - start) / 1000000 + "ms");
 
 		/*start = System.nanoTime();
 		for (int x = 0; x < size; x++) {
@@ -119,9 +114,9 @@ public class World {
 			}
 		}*/
 
-		//System.out.println("World geometry built in " + (System.nanoTime() - start) / 1000000 + "ms");
+		//Game.console.out("World geometry built in " + (System.nanoTime() - start) / 1000000 + "ms");
 		
-		game.isIngame = true;
+		chunkProvider.updateLoadedChunksInRadius((int)player.posX, (int)player.posZ, Game.settings.drawDistance.getValue());
 	}
 	
 	public Coord2D getCoord2D(int x, int y) {
@@ -129,15 +124,23 @@ public class World {
 		return this.c2d;
 	}
 
-	public List<Particle> particles = new ArrayList<Particle>();
+	public List<Particle> particles = new LinkedList<Particle>();
 	
-	public void update() {
-		player.update();
+	public void spawnParticleWithRandomDirectionFast(float x, float y, float z, float vel, float velFuzziness) {
 		
-		for(int i = 0; i < 20; i++) {
-
-			
-			float velocity = 0.15f + rand.nextFloat()*0.15f;
+		float velhalf = vel*0.5f;
+		
+		float velX = velhalf - rand.nextFloat()*vel-rand.nextFloat()*velFuzziness;
+		float velY = velhalf - rand.nextFloat()*vel-rand.nextFloat()*velFuzziness;
+		float velZ = velhalf - rand.nextFloat()*vel-rand.nextFloat()*velFuzziness;
+		
+		Particle p = new Particle(x, y, z, velX, velY, velZ, 5000+rand.nextInt(20), rand.nextFloat(), rand.nextFloat(), rand.nextFloat());
+		particles.add(p);
+		
+	}
+	
+	public void spawnParticle(float x, float y, float z) {
+			float velocity = 2.0f + rand.nextFloat()*0.15f;
 			float heading = 180 - rand.nextFloat()*360f;
 			float tilt = 180 - rand.nextFloat()*360f;
 			
@@ -148,28 +151,47 @@ public class World {
 			float velZ = (float) (Math.sin(heading)*velocity*mult);
 			
 			
-			Particle p = new Particle(emitterX, emitterY, emitterZ, velX, velY, velZ, 200, 1, 0.08f, 0.5f);
+			Particle p = new Particle(x, y, z, velX, velY, velZ, 50+rand.nextInt(20), rand.nextFloat(), rand.nextFloat(), rand.nextFloat());
 			particles.add(p);
-		}	
+		
+	}
+	
+	int removedParticles = 0;
+	
+	
+	public boolean isOccluder(int x, int y, int z) {
+		int id = getBlock(x, y, z);
+		return id > 0 ? Block.getBlock((byte) id).isOccluder() : false; 
+	}
+	
+	public void update() {
+		player.update();
+		
+		int size = particles.size();
 		
 		for (Iterator<Particle> iter = particles.iterator(); iter.hasNext(); ) {
 		    Particle pt = iter.next();
-		    pt.update(getBBs(pt.aabb));
-		    if (pt.dead) {
+		    pt.update(getBBs(pt.aabb.expand(pt.velX, pt.velY, pt.velZ)));
+		    if (pt.dead || size > MAX_PARTICLES) {
 				iter.remove();
-			}
+				size--;
+			}		    
 		}
-		
+
 		if (Keyboard.isKeyDown(Keyboard.KEY_Q)) {
 			emitterX = player.posX;
 			emitterY = player.posY;
 			emitterZ = player.posZ;
 		}
 		
-		chunkProvider.updateLoadedChunksInRadius(((int)player.posX) / 16, ((int)player.posZ) / 16, DRAW_DISTANCE+1);
+		chunkProvider.updateLoadedChunksInRadius(((int)player.posX) / 16, ((int)player.posZ) / 16, Game.settings.drawDistance.getValue()+1);
+	}
+	
+	public void menuUpdate() {
+		chunkProvider.updateLoadedChunksInRadius(((int)player.posX) / 16, ((int)player.posZ) / 16, Game.settings.drawDistance.getValue()+1);
 	}
 
-	public void rebuild(int x, int y, int z) {
+	public void setChunkDirty(int x, int y, int z) {
 			Coord2D coord = getCoord2D(x, z);
 			
 			if (chunkProvider.isChunkLoaded(coord)) {
@@ -178,7 +200,7 @@ public class World {
 	}
 
 
-	public byte getBlock(int x, int y, int z) {
+	public int getBlock(int x, int y, int z) {
 		int icx = x & 15;
 		int icz = z & 15;
 
@@ -191,7 +213,7 @@ public class World {
 		return c != null ? c.getBlock(icx, y, icz) : 0;
 	}
 
-	public void setBlock(int x, int y, int z, byte id) {
+	public void setBlock(int x, int y, int z, byte id, boolean artificial) {
 		int icx = x & 15;
 		int icz = z & 15;
 
@@ -201,7 +223,9 @@ public class World {
 		Coord2D coord = getCoord2D(cx, cz);
 		
 		if (chunkProvider.isChunkLoaded(coord)) {
-			chunkProvider.getChunk(coord).setBlock(icx, y, icz, id, true);
+			Chunk c = chunkProvider.getChunk(coord);
+			c.setBlock(icx, y, icz, id, true);
+			c.changed = artificial;
 		}
 	}
 
@@ -221,17 +245,17 @@ public class World {
 	
 	public ArrayList<AABB> getBBs(AABB aABB) {
 		ArrayList<AABB> aABBs = new ArrayList<AABB>();
-		int x0 = (int) (aABB.x0 - 1.1F);
-		int x1 = (int) (aABB.x1 + 1.1F);
-		int y0 = (int) (aABB.y0 - 1.1F);
-		int y1 = (int) (aABB.y1 + 1.1F);
-		int z0 = (int) (aABB.z0 - 1.1F);
-		int z1 = (int) (aABB.z1 + 1.1F);
+		int x0 = (int) (aABB.x0 - 1.0F);
+		int x1 = (int) (aABB.x1 + 1.0F);
+		int y0 = (int) (aABB.y0 - 1.0F);
+		int y1 = (int) (aABB.y1 + 1.0F);
+		int z0 = (int) (aABB.z0 - 1.0F);
+		int z1 = (int) (aABB.z1 + 1.0F);
 
 		for (int x = x0; x < x1; ++x) {
 			for (int y = y0; y < y1; ++y) {
 				for (int z = z0; z < z1; ++z) {
-					if (getBlock(x, y, z) > 0 && getBlock(x, y, z) != Block.water.getId()) {
+					if (getBlock(x, y, z) > 0 && getBlock(x, y, z) != Block.water.getId() && !(Block.getBlock(getBlock(x, y, z)) instanceof BlockPlant) ) {
 						aABBs.add(new AABB((float) x, (float) y, (float) z, (float) x + 1, (float) y + 1, (float) z + 1));
 					}
 				}

@@ -13,7 +13,7 @@ public abstract class GuiScreen {
 	Font f;
 	
 	public GuiScreen(Game game) {
-		if (game.isIngame) {
+		if (game.ingame) {
 			objects.add(new GuiObjectRectangle(0, 0, game.width, game.height, 0xA0000000));
 		}
 		this.game = game;
@@ -22,7 +22,7 @@ public abstract class GuiScreen {
 	}
 
 	public GuiScreen(GuiScreen parent) {
-		if (parent.game.isIngame) {
+		if (parent.game.ingame) {
 			objects.add(new GuiObjectRectangle(0, 0, parent.game.width, parent.game.height, 0xA0000000));
 		}
 		this.game = parent.game;
