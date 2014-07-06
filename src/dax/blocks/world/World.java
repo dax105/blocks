@@ -56,9 +56,7 @@ public class World {
 		return this.vertices;
 	}
 	
-	public World(int size, boolean trees, Game game, boolean load, String worldName) {
-		this.size = size;
-		this.sizeBlocks = size * Chunk.CHUNK_SIZE;
+	public World(boolean trees, Game game, boolean load, String worldName) {
 		this.name = worldName;
 		player = new Player(this);
 		this.treeGen = new TreeGenerator(this);

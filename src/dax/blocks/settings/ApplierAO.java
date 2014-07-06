@@ -10,7 +10,7 @@ public class ApplierAO extends Applier {
 	public void apply() {
 		if (Game.getInstance().ingame) {
 			Game.getInstance().world.saveAllChunks();
-			Game.getInstance().world = new World(0, false, Game.getInstance(), true, Game.getInstance().world.name);
+			Game.getInstance().world = new World(false, Game.getInstance(), true, Game.getInstance().world.name);
 		}
 		
 		Game.getInstance().displayLoadingScreen();

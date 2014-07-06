@@ -26,8 +26,7 @@ public class Settings {
 	public SettingsObject<Boolean> sound = registerObjectBoolean(new SettingsObject<Boolean>("sound", true));
 	public SettingsObject<Float> ao_intensity = registerObjectFloat(new SettingsObject<Float>("ao_intensity", 0.25f, new ApplierAO()));
 	public SettingsObject<Boolean> tree_generation = registerObjectBoolean(new SettingsObject<Boolean>("tree_generation", true));
-	public SettingsObject<Integer> world_size = registerObjectInteger(new SettingsObject<Integer>("world_size", 4));
-	public SettingsObject<Boolean> linear_filtering = registerObjectBoolean(new SettingsObject<Boolean>("linear_filtering", true));
+	public SettingsObject<Boolean> linear_filtering = registerObjectBoolean(new SettingsObject<Boolean>("linear_filtering", false));
 	
 	private SettingsObject<Integer> registerObjectInteger(SettingsObject<Integer> object) {
 		objectsInteger.put(object.getName(), object);
