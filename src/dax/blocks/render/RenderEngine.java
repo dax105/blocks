@@ -370,8 +370,8 @@ public class RenderEngine {
 		for (Chunk c : visibleChunks) {		
 			if (c != null) {
 				for (int y = 0; y < 8; y++) {			
-					if (c.renderChunks[y].isGenerated() && c.renderChunks[y].getCdl().isPresent(ChunkDisplayList.PASS_OPAQUE) && frustum.cuboidInFrustum(c.x*16, y*16, c.z*16, c.x*16+16, y*16+16, c.z*16+16)) {
-						GL11.glCallList(c.renderChunks[y].getCdl().getListID(ChunkDisplayList.PASS_OPAQUE));
+					if (c.renderChunks[y].isGenerated() && c.renderChunks[y].getCdl().isPresent(RenderPass.PASS_OPAQUE) && frustum.cuboidInFrustum(c.x*16, y*16, c.z*16, c.x*16+16, y*16+16, c.z*16+16)) {
+						GL11.glCallList(c.renderChunks[y].getCdl().getListID(RenderPass.PASS_OPAQUE));
 						chunksDrawn++;
 					}
 				}
@@ -382,8 +382,8 @@ public class RenderEngine {
 		for (Chunk c : visibleChunks) {		
 			if (c != null) {
 				for (int y = 0; y < 8; y++) {			
-					if (c.renderChunks[y].isGenerated() && c.renderChunks[y].getCdl().isPresent(ChunkDisplayList.PASS_TRANSPARENT) && frustum.cuboidInFrustum(c.x*16, y*16, c.z*16, c.x*16+16, y*16+16, c.z*16+16)) {
-						GL11.glCallList(c.renderChunks[y].getCdl().getListID(ChunkDisplayList.PASS_TRANSPARENT));
+					if (c.renderChunks[y].isGenerated() && c.renderChunks[y].getCdl().isPresent(RenderPass.PASS_TRANSPARENT) && frustum.cuboidInFrustum(c.x*16, y*16, c.z*16, c.x*16+16, y*16+16, c.z*16+16)) {
+						GL11.glCallList(c.renderChunks[y].getCdl().getListID(RenderPass.PASS_TRANSPARENT));
 						chunksDrawn++;
 					}
 				}
@@ -397,8 +397,8 @@ public class RenderEngine {
 		for (Chunk c : visibleChunks) {		
 			if (c != null) {
 				for (int y = 0; y < 8; y++) {			
-					if (c.renderChunks[y].isGenerated() && c.renderChunks[y].getCdl().isPresent(ChunkDisplayList.PASS_TRANSLUCENT) && frustum.cuboidInFrustum(c.x*16, y*16, c.z*16, c.x*16+16, y*16+16, c.z*16+16)) {
-						GL11.glCallList(c.renderChunks[y].getCdl().getListID(ChunkDisplayList.PASS_TRANSLUCENT));
+					if (c.renderChunks[y].isGenerated() && c.renderChunks[y].getCdl().isPresent(RenderPass.PASS_TRANSLUCENT) && frustum.cuboidInFrustum(c.x*16, y*16, c.z*16, c.x*16+16, y*16+16, c.z*16+16)) {
+						GL11.glCallList(c.renderChunks[y].getCdl().getListID(RenderPass.PASS_TRANSLUCENT));
 						chunksDrawn++;
 					}
 				}
@@ -409,8 +409,8 @@ public class RenderEngine {
 		for (Chunk c : visibleChunks) {		
 			if (c != null) {
 				for (int y = 0; y < 8; y++) {			
-					if (c.renderChunks[y].isGenerated() && c.renderChunks[y].getCdl().isPresent(ChunkDisplayList.PASS_TRANSLUCENT) && frustum.cuboidInFrustum(c.x*16, y*16, c.z*16, c.x*16+16, y*16+16, c.z*16+16)) {
-						GL11.glCallList(c.renderChunks[y].getCdl().getListID(ChunkDisplayList.PASS_TRANSLUCENT));
+					if (c.renderChunks[y].isGenerated() && c.renderChunks[y].getCdl().isPresent(RenderPass.PASS_TRANSLUCENT) && frustum.cuboidInFrustum(c.x*16, y*16, c.z*16, c.x*16+16, y*16+16, c.z*16+16)) {
+						GL11.glCallList(c.renderChunks[y].getCdl().getListID(RenderPass.PASS_TRANSLUCENT));
 						chunksDrawn++;
 					}
 				}

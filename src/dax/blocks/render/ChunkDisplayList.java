@@ -5,15 +5,9 @@ import java.util.Arrays;
 import org.lwjgl.opengl.GL11;
 
 public class ChunkDisplayList {
-
-	public static final int TOTAL_PASSES = 3;
 	
-	public static final int PASS_OPAQUE = 0;
-	public static final int PASS_TRANSPARENT = 1;
-	public static final int PASS_TRANSLUCENT = 2;
-	
-	private int[] listIDs = new int[TOTAL_PASSES];
-	private boolean[] listsPresent = new boolean[TOTAL_PASSES];
+	private int[] listIDs = new int[RenderPass.TOTAL_PASSES];
+	private boolean[] listsPresent = new boolean[RenderPass.TOTAL_PASSES];
 	
 	public ChunkDisplayList() {
 		Arrays.fill(listsPresent, false);
@@ -33,7 +27,7 @@ public class ChunkDisplayList {
 	}
 	
 	public void delete() {
-		for (int i = 0; i < TOTAL_PASSES; i++) {
+		for (int i = 0; i < RenderPass.TOTAL_PASSES; i++) {
 			if (listsPresent[i]) {
 				GL11.glDeleteLists(listIDs[i], 1);
 			}
