@@ -16,7 +16,9 @@ import org.xerial.snappy.Snappy;
 
 import dax.blocks.Coord2D;
 import dax.blocks.Game;
+import dax.blocks.WorldsManager;
 import dax.blocks.world.World;
+import dax.blocks.world.WorldInfo;
 
 public class ChunkSaveManager {
 	World world;
@@ -40,9 +42,7 @@ public class ChunkSaveManager {
 	}
 	
 	public void tryToLoadWorld() {
-
-		try {
-			File dir = new File("saves", name);
+			File dir = new File(WorldsManager.SAVES_DIR, name);
 			
 			if (!dir.exists()) {
 				dir.mkdir();
@@ -60,43 +60,12 @@ public class ChunkSaveManager {
 				return;
 			}
 
-			Scanner s = new Scanner(file);
-
-			float x = 0;
-			float y = 200;
-			float z = 0;
-
-			while (s.hasNextLine()) {
-				String l = s.nextLine();
-				String[] words = l.split(" ");
-
-				if (words.length >= 2) {
-					if (words[0].equals("seed")) {
-						this.provider.seed = Integer.parseInt(words[1]);
-					} else if (words[0].equals("playerx")) {
-						x = Float.parseFloat(words[1]);
-					} else if (words[0].equals("playery")) {
-						y = Float.parseFloat(words[1]) + 1f;
-					} else if (words[0].equals("playerz")) {
-						z = Float.parseFloat(words[1]);
-					} else if (words[0].equals("playertilt")) {
-						this.world.player.tilt = Float.parseFloat(words[1]);
-					} else if (words[0].equals("playerheading")) {
-						this.world.player.heading = Float.parseFloat(words[1]);
-					}
-				}
-
-			}
-
-			this.world.player.setPos(x, y, z);
-
-			s.close();
+			WorldInfo i = Game.worlds.getWorld(name);
+			this.world.player.setPos(i.getPlayerX(), i.getPlayerY(), i.getPlayerZ());
+			this.world.player.tilt = i.getPlayerTilt();
+			this.world.player.heading = i.getPlayerHeading();
 
 			Game.console.out("World info sucessfully loaded!");
-
-		} catch (FileNotFoundException e) {
-			e.printStackTrace();
-		}
 	}
 	
 	public ChunkSaveManager(ChunkProvider provider, String saveName) {
@@ -106,7 +75,7 @@ public class ChunkSaveManager {
 	}
 	
 	public boolean isChunkSaved(int cx, int cz) {
-		File dir = new File("saves", name);
+		File dir = new File(WorldsManager.SAVES_DIR, name);
 
 		if (!dir.exists()) {
 			dir.mkdir();
@@ -129,42 +98,22 @@ public class ChunkSaveManager {
 			saveChunk(c);
 		}
 
-		saveProviderInfo();
+		WorldInfo i = Game.worlds.getWorld(name);
+		i.setPlayerX(this.world.player.posX);
+		i.setPlayerY(this.world.player.posY);
+		i.setPlayerZ(this.world.player.posZ);
+		i.setPlayerTilt(this.world.player.tilt);
+		i.setPlayerHeading(this.world.player.heading);
+		i.setWorldSeed(this.provider.seed);
+		
+		i.saveWorldInfo();
 		Game.getInstance().closeGuiScreen();
 	}
 
-	public void saveProviderInfo() {
-		try {
-			File dir = new File("saves", name);
-
-			if (!dir.exists()) {
-				dir.mkdir();
-			}
-
-			File file = new File(dir, "world" + ".txt");
-
-			PrintWriter pw = new PrintWriter(file);
-
-			pw.println("version " + WORLD_VERSION);
-
-			pw.println("seed " + this.provider.seed);
-
-			pw.println("playerx " + this.world.player.posX);
-			pw.println("playery " + this.world.player.posY);
-			pw.println("playerz " + this.world.player.posZ);
-
-			pw.println("playertilt " + this.world.player.tilt);
-			pw.println("playerheading " + this.world.player.heading);
-
-			pw.close();
-
-		} catch (FileNotFoundException e) {
-			e.printStackTrace();
-		}
-	}
+	
 
 	public Chunk loadChunk(int cx, int cz) {
-		File dir = new File("saves", name);
+		File dir = new File(WorldsManager.SAVES_DIR, name);
 		File file = new File(dir, "x" + cx + "z" + cz + ".ccf");
 		byte[] fileData = new byte[(int) file.length()];
 		try {
@@ -195,7 +144,7 @@ public class ChunkSaveManager {
 		}
 
 		try {
-			File dir = new File("saves", name);
+			File dir = new File(WorldsManager.SAVES_DIR, name);
 
 			if (!dir.exists()) {
 				dir.mkdir();

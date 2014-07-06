@@ -45,7 +45,7 @@ public class Game implements Runnable {
 
 	public static Settings settings = new Settings();
 	public static Console console = new Console();
-	
+	public static WorldsManager worlds = new WorldsManager();
 	//--old settings--
 	/*
 	 * public int worldSize = 4;
