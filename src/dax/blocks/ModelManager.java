@@ -122,7 +122,7 @@ public class ModelManager {
 	}
 
 	public static void load() {
-		character = loadModel("dax/blocks/res/models/head.zip");
+		character = loadModel("dax/blocks/res/models/char.zip");
 		character.generateDisplayList();
 	}
 
