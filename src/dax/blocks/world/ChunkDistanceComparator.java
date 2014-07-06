@@ -1,4 +1,4 @@
-package dax.blocks.render;
+package dax.blocks.world;
 
 import java.util.Comparator;
 

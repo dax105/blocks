@@ -26,7 +26,7 @@ import dax.blocks.Game;
 import dax.blocks.GameMath;
 import dax.blocks.block.Block;
 import dax.blocks.block.BlockPlant;
-import dax.blocks.render.ChunkDistanceComparator;
+import dax.blocks.world.ChunkDistanceComparator;
 import dax.blocks.world.CoordDistanceComparator;
 import dax.blocks.world.World;
 import dax.blocks.world.generator.SimplexNoise;
@@ -62,13 +62,11 @@ public class ChunkProvider {
 		return loadedChunks.get(coord);
 	}
 
-	@SuppressWarnings("rawtypes")
 	public void updateLoadedChunksInRadius(int x, int y, int r) {
 		int loaded = 0;
 
 		List<Coord2D> sortedCoords = new ArrayList<Coord2D>();
 
-		// (Math.sqrt(cdistX * cdistX + cdistZ * cdistZ) < r)
 		for (int ix = x - r; ix <= x + r; ix++) {
 			for (int iy = y - r; iy <= y + r; iy++) {
 				Coord2D coord = new Coord2D(ix, iy);
@@ -93,9 +91,9 @@ public class ChunkProvider {
 
 		List<Chunk> unpopulated = new LinkedList<Chunk>();
 		
-		Iterator it = loadedChunks.entrySet().iterator();
+		Iterator<Entry<Coord2D, Chunk>> it = loadedChunks.entrySet().iterator();
 		while (it.hasNext()) {
-			Map.Entry pairs = (Map.Entry) it.next();
+			Map.Entry<Coord2D, Chunk> pairs = (Map.Entry<Coord2D, Chunk>) it.next();
 
 			Chunk c = (Chunk) pairs.getValue();
 			Coord2D coord = (Coord2D) pairs.getKey();
