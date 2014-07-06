@@ -3,7 +3,7 @@ package dax.blocks.movable.entity;
 import dax.blocks.block.Block;
 import dax.blocks.world.World;
 
-public class Player extends Entity {
+public class PlayerEntity extends Entity {
 
 	public static final float PLAYER_HEIGHT = 1.7f;
 	public static final float EYES_HEIGHT = 1.6f;
@@ -24,7 +24,7 @@ public class Player extends Entity {
 	public float heading = 140.0F;
 	public float tilt = -60.0F;
 	
-	public Player(World world, float x, float y, float z) {
+	public PlayerEntity(World world, float x, float y, float z) {
 		super(world, x, y, z);
 	}
 

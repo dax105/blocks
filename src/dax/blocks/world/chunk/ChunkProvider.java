@@ -1,4 +1,4 @@
-package dax.blocks.world;
+package dax.blocks.world.chunk;
 
 import java.io.DataInputStream;
 import java.io.File;
@@ -27,7 +27,8 @@ import dax.blocks.GameMath;
 import dax.blocks.block.Block;
 import dax.blocks.block.BlockPlant;
 import dax.blocks.render.ChunkDistanceComparator;
-import dax.blocks.world.chunk.Chunk;
+import dax.blocks.world.CoordDistanceComparator;
+import dax.blocks.world.World;
 import dax.blocks.world.generator.SimplexNoise;
 
 public class ChunkProvider {
@@ -35,21 +36,21 @@ public class ChunkProvider {
 	private static final int SAMPLE_RATE_HORIZONTAL = 8;
 	private static final int SAMPLE_RATE_VERTICAL = 4;
 
-	public static final int WORLD_VERSION = 1;
+
 
 	public boolean loading = false;
-
+	//Shall I load the world from files?
+	public boolean loadingWorld = true;
 	Map<Coord2D, Chunk> loadedChunks;
 	
 	public double[] densityOffsets;
 
-	//SimplexNoise simplex2D_1;
-	//SimplexNoise simplex2D_2;
 	SimplexNoise simplex3D_1;
 	SimplexNoise simplex3D_2;
 	SimplexNoise simplex3D_caves;
 
 	World world;
+	public ChunkSaveManager loader;
 
 	int seed;
 
@@ -103,7 +104,7 @@ public class ChunkProvider {
 			int ydist = Math.abs(y - c.z);
 
 			if ((xdist > r || ydist > r) && loadedChunks.containsKey(coord)) {
-				saveChunk(c);
+				loader.saveChunk(c);
 				c.deleteAllRenderChunks();
 				it.remove();
 			} 
@@ -164,27 +165,17 @@ public class ChunkProvider {
 				
 			}
 		}
-		
-
-		/*
-		 * for (Chunk c : loadedChunks.values()) { int xdist = Math.abs(x -
-		 * c.x); int ydist = Math.abs(y - c.z); Coord2D coord = new Coord2D(c.x,
-		 * c.z); if (xdist >= r || ydist >= r &&
-		 * loadedChunks.containsKey(coord)) { saveChunk(c);
-		 * 
-		 * Game.console.out("Unloaded chunk " + coord); } }
-		 */
 	}
 
 	public void unloadChunk(Coord2D coord) {
 		Chunk c = loadedChunks.get(coord);
 		c.deleteAllRenderChunks();
-		saveChunk(c);
+		loader.saveChunk(c);
 		loadedChunks.remove(coord);
 	}
 
-	public ChunkProvider(World world) {
-		this(new Random().nextInt(), world);
+	public ChunkProvider(World world, boolean shouldLoad) {
+		this(new Random().nextInt(), world, shouldLoad);
 	}
 
 	public LinkedList<Chunk> getAllLoadedChunks() {
@@ -202,18 +193,18 @@ public class ChunkProvider {
 		}
 
 		return chunks;
-
-		// return new ArrayList<Chunk>(loadedChunks.values());
 	}
 
-	public ChunkProvider(int seed, World world) {
+	public ChunkProvider(int seed, World world, boolean shouldLoad) {
 		this.loadedChunks = new HashMap<Coord2D, Chunk>();
 		this.seed = seed;
 		this.world = world;
-		tryToLoadWorld();
-		//this.simplex2D_1 = new SimplexNoise(256, 0.25, this.seed);
-		//this.simplex2D_2 = new SimplexNoise(512, 0.35, this.seed);
-		//this.simplex3D = new SimplexNoise(256, 0.32, this.seed);
+		this.loader = new ChunkSaveManager(this, world.name);
+		
+		this.loadingWorld = shouldLoad;
+			loader.tryToLoadWorld();
+		
+
 		this.simplex3D_1 = new SimplexNoise(512, 0.425, this.seed);
 		this.simplex3D_2 = new SimplexNoise(512, 0.525, this.seed*2);
 		this.simplex3D_caves = new SimplexNoise(64, 0.55, this.seed*3);
@@ -266,7 +257,7 @@ public class ChunkProvider {
 	}
 
 	public void loadChunk(Coord2D coord) {
-		loadedChunks.put(coord, getChunk(coord.x, coord.y, true));
+		loadedChunks.put(coord, getChunk(coord.x, coord.y, loadingWorld));
 	}
 
 	public double[][][] getChunkDensityMap(int cx, int cz) {
@@ -350,91 +341,9 @@ public class ChunkProvider {
 			}
 		}
 	}
-
-	public void tryToLoadWorld() {
-
-		try {
-			File dir = new File("saves");
-
-			if (!dir.exists()) {
-				dir.mkdir();
-			}
-
-			File file = new File(dir, "world" + ".txt");
-
-			if (!file.exists()) {
-				Game.console.out("World save not found!");
-				return;
-			}
-
-			Scanner s = new Scanner(file);
-
-			float x = 0;
-			float y = 200;
-			float z = 0;
-
-			while (s.hasNextLine()) {
-				String l = s.nextLine();
-				String[] words = l.split(" ");
-
-				if (words.length >= 2) {
-					if (words[0].equals("seed")) {
-						this.seed = Integer.parseInt(words[1]);
-					} else if (words[0].equals("playerx")) {
-						x = Float.parseFloat(words[1]);
-					} else if (words[0].equals("playery")) {
-						y = Float.parseFloat(words[1]) + 1f;
-					} else if (words[0].equals("playerz")) {
-						z = Float.parseFloat(words[1]);
-					} else if (words[0].equals("playertilt")) {
-						this.world.player.tilt = Float.parseFloat(words[1]);
-					} else if (words[0].equals("playerheading")) {
-						this.world.player.heading = Float.parseFloat(words[1]);
-					}
-				}
-
-			}
-
-			this.world.player.setPos(x, y, z);
-
-			s.close();
-
-			Game.console.out("World info sucessfully loaded!");
-
-		} catch (FileNotFoundException e) {
-			e.printStackTrace();
-		}
-	}
-
-	public Chunk getChunk(int xc, int zc, boolean canLoad) {
-		if (isChunkSaved(xc, zc) && canLoad) {
-			return loadChunk(xc, zc);
-		}
+	
+	private Chunk generateChunk(int xc, int zc) {
 		Chunk chunk = new Chunk(xc, zc, world);
-
-		/*
-		 * float[][] heightMap = new float[16][16];
-		 * 
-		 * float x0y0 = (float) Math.max(simplex2D_1.getNoise(xc*16, zc*16)*40,
-		 * simplex2D_2.getNoise(xc*16, zc*16)*40); float x1y0 = (float)
-		 * Math.max(simplex2D_1.getNoise(xc*16+16, zc*16)*40,
-		 * simplex2D_2.getNoise(xc*16+16, zc*16)*40); float x1y1 = (float)
-		 * Math.max(simplex2D_1.getNoise(xc*16+16, zc*16+16)*40,
-		 * simplex2D_2.getNoise(xc*16+16, zc*16+16)*40); float x0y1 = (float)
-		 * Math.max(simplex2D_1.getNoise(xc*16, zc*16+16)*40,
-		 * simplex2D_2.getNoise(xc*16, zc*16+16)*40);
-		 * 
-		 * for (int x = 0; x < Chunk.CHUNK_SIZE; x++) { for (int z = 0; z <
-		 * Chunk.CHUNK_SIZE; z++) {
-		 * 
-		 * //heightMap[x][z] = 60 + bilerp(x0y0, x1y0, x0y1, x1y1, x*0.0625f,
-		 * x*0.0625f);
-		 * 
-		 * heightMap[x][z] = 40 + biLerp(x, z, x0y0, x0y1, x1y0, x1y1, 0, 16, 0,
-		 * 16);
-		 * 
-		 * } }
-		 */
 
 		double[][][] densityMap = getChunkDensityMap(xc, zc);
 		double[][][] caveMap = getChunkCaveMap(xc, zc);
@@ -502,120 +411,19 @@ public class ChunkProvider {
 				}
 			}
 		}
-
-		// saveChunk(chunk);
 		return chunk;
+
 	}
 
-	public boolean isChunkSaved(int cx, int cz) {
-		File dir = new File("saves");
-
-		if (!dir.exists()) {
-			dir.mkdir();
-		}
-
-		File file = new File(dir, "x" + cx + "z" + cz + ".ccf");
-
-		return file.exists();
-	}
-
-	public void saveAll() {
-		Game.getInstance().displayLoadingScreen("Saving...");
-		Iterator<Entry<Coord2D, Chunk>> it = loadedChunks.entrySet().iterator();
-		while (it.hasNext()) {
-			Entry<Coord2D, Chunk> pairs = it.next();
-			Chunk c = (Chunk) pairs.getValue();
-
-			c.deleteAllRenderChunks();
-
-			saveChunk(c);
-		}
-
-		saveProviderInfo();
-		Game.getInstance().closeGuiScreen();
-	}
-
-	public void saveProviderInfo() {
-		try {
-			File dir = new File("saves");
-
-			if (!dir.exists()) {
-				dir.mkdir();
-			}
-
-			File file = new File(dir, "world" + ".txt");
-
-			PrintWriter pw = new PrintWriter(file);
-
-			pw.println("version " + WORLD_VERSION);
-
-			pw.println("seed " + this.seed);
-
-			pw.println("playerx " + this.world.player.posX);
-			pw.println("playery " + this.world.player.posY);
-			pw.println("playerz " + this.world.player.posZ);
-
-			pw.println("playertilt " + this.world.player.tilt);
-			pw.println("playerheading " + this.world.player.heading);
-
-			pw.close();
-
-		} catch (FileNotFoundException e) {
-			e.printStackTrace();
+	public Chunk getChunk(int xc, int zc, boolean canLoad) {
+		if (loader.isChunkSaved(xc, zc) && canLoad) {
+			System.out.println("Loading " + xc + ":" + zc);
+			return loader.loadChunk(xc, zc);
+			
+		} else {
+			return generateChunk(xc, zc);
 		}
 	}
 
-	public Chunk loadChunk(int cx, int cz) {
-		File dir = new File("saves");
-		File file = new File(dir, "x" + cx + "z" + cz + ".ccf");
-		byte[] fileData = new byte[(int) file.length()];
-		try {
-			DataInputStream dis = new DataInputStream(new FileInputStream(file));
-			dis.readFully(fileData);
-			dis.close();
-		} catch (FileNotFoundException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-
-		Chunk c = new Chunk(cx, cz, world);
-		try {
-			c.blocksBuffer.put(Snappy.uncompressShortArray(fileData));
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-
-		c.changed = true;
-
-		return c;
-	}
-
-	public void saveChunk(Chunk c) {
-		if (!c.changed) {
-			return;
-		}
-
-		try {
-			// FileOutputStream stream = new FileOutputStream("x" + this.x + "z"
-			// + this.z + ".txt");
-			File dir = new File("saves");
-
-			if (!dir.exists()) {
-				dir.mkdir();
-			}
-
-			File file = new File(dir, "x" + c.x + "z" + c.z + ".ccf");
-			FileOutputStream stream = new FileOutputStream(file);
-			try {
-				stream.write(Snappy.compress(c.blocksBuffer.array()));
-			} finally {
-				stream.close();
-			}
-		} catch (FileNotFoundException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-	}
+	
 }

@@ -79,7 +79,7 @@ public class GuiScreenSettings extends GuiScreen {
 			
 			if (ingame) {
 				game.displayLoadingScreen();
-				game.makeNewWorld(false);
+				game.makeNewWorld(true, game.world.name);
 			} else {
 				game.openGuiScreen(parent);
 			}

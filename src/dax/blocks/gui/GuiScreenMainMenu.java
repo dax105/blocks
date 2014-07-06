@@ -24,7 +24,7 @@ public class GuiScreenMainMenu extends GuiScreen {
 	public void buttonPress(GuiObjectButton button) {
 		if (button.id == 0) {
 			game.displayLoadingScreen();
-			game.makeNewWorld(true);
+			game.makeNewWorld(true,"test3");
 		} else if (button.id == 1) {
 			game.openGuiScreen(new GuiScreenSettings(this));
 		} else if (button.id == 2) {

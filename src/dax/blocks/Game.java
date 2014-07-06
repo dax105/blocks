@@ -45,7 +45,7 @@ public class Game implements Runnable {
 
 	public static Settings settings = new Settings();
 	public static Console console = new Console();
-	
+	public static WorldsManager worlds = new WorldsManager();
 	//--old settings--
 	/*
 	 * public int worldSize = 4;
@@ -190,9 +190,9 @@ public class Game implements Runnable {
 		}
 	}
 
-	public void makeNewWorld(boolean load) {
+	public void makeNewWorld(boolean load, String name) {
 		ingame = false;
-		world = new World(settings.world_size.getValue(), settings.tree_generation.getValue(), this, load);
+		world = new World(settings.world_size.getValue(), settings.tree_generation.getValue(), this, load, name);
 		closeGuiScreen();
 		ingame = true;
 	}
