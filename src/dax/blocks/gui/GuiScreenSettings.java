@@ -1,5 +1,6 @@
 package dax.blocks.gui;
 
+import dax.blocks.Game;
 import dax.blocks.TextureManager;
 
 import org.lwjgl.opengl.GL11;
@@ -12,7 +13,7 @@ public class GuiScreenSettings extends GuiScreen {
 
 	int width = 400;
 	int height = 200;
-	int fov;
+	float fov;
 
 	int overflow = 8;
 
@@ -26,7 +27,8 @@ public class GuiScreenSettings extends GuiScreen {
 		worldSize = game.worldSize;
 		filter = game.shouldFilter;
 		mult = game.heightMultipler;
-		fov = game.fov;
+		//fov = game.fov;
+		fov = Game.settings.fov.getValue();
 		trees = game.treeGen;
 		
 		String filteringText[] = {"Texture filtering: Linear", "Texture filtering: Nearest"};	
@@ -49,7 +51,7 @@ public class GuiScreenSettings extends GuiScreen {
 		objects.add(new GuiObjectChangingButton((game.width - width) / 2, (game.height - height) / 2 + 148, (game.width + width) / 2, ((game.height - height) / 2) + 172, this.f, treeText, trees ? 0 : 1, 2, this));
 		
 		//FOV
-		objects.add(new GuiObjectSlider((game.width - width) / 2, (game.height - height) / 2 + 90, (game.width + width) / 2, ((game.height - height) / 2) + 114, this.f, "FOV: ", 3, this, 30, 160, fov, ""));
+		objects.add(new GuiObjectSlider((game.width - width) / 2, (game.height - height) / 2 + 90, (game.width + width) / 2, ((game.height - height) / 2) + 114, this.f, "FOV: ", 3, this, 30, 160, (int) fov, ""));
 
 		
 		objects.add(new GuiObjectButton((game.width - width) / 2, (game.height + height) / 2 - 24, ((game.width + width) / 2 - (width / 2)), ((game.height + height) / 2), this.f, "Close", 3, this));
@@ -83,7 +85,7 @@ public class GuiScreenSettings extends GuiScreen {
 			}
 
 			game.worldSize = worldSize;
-			game.fov = fov;
+			Game.settings.fov.setValue(fov);
 
 			if (ingame) {
 				game.displayLoadingScreen();
