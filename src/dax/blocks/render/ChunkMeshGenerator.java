@@ -1,9 +1,7 @@
 package dax.blocks.render;
 
 import org.lwjgl.opengl.GL11;
-import org.lwjgl.opengl.GL20;
 
-import dax.blocks.Game;
 import dax.blocks.block.Block;
 import dax.blocks.world.chunk.Chunk;
 
@@ -63,7 +61,7 @@ public class ChunkMeshGenerator {
 			int listIDs = GL11.glGenLists(listsNeeded);
 			int currentOffset = 0;
 
-			int attrib = Game.getInstance().renderEngine.blockAttributeID;
+			//int attrib = Game.getInstance().renderEngine.blockAttributeID;
 			
 			if (opaqueCount > 0) {
 				GL11.glNewList(listIDs + currentOffset, GL11.GL_COMPILE);
