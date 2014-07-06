@@ -4,7 +4,7 @@ import dax.blocks.Game;
 import dax.blocks.ModelManager;
 import dax.blocks.world.World;
 
-public class ApplyerAO extends Applyer {
+public class ApplierAO extends Applier {
 
 	@Override
 	public void apply() {
