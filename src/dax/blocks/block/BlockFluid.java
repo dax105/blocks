@@ -3,7 +3,7 @@ package dax.blocks.block;
 import org.lwjgl.opengl.GL11;
 
 import dax.blocks.TextureManager;
-import dax.blocks.render.ChunkDisplayList;
+import dax.blocks.render.RenderPass;
 
 public class BlockFluid extends BlockBasic {
 
@@ -12,7 +12,7 @@ public class BlockFluid extends BlockBasic {
 		setCullSame(true);
 		setOpaque(false);
 		setOccluder(false);
-		setRenderPass(ChunkDisplayList.PASS_TRANSLUCENT);
+		setRenderPass(RenderPass.PASS_TRANSLUCENT);
 	}
 	
 	@Override

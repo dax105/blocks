@@ -3,7 +3,7 @@ package dax.blocks.block;
 import org.lwjgl.opengl.GL11;
 
 import dax.blocks.TextureManager;
-import dax.blocks.render.ChunkDisplayList;
+import dax.blocks.render.RenderPass;
 
 public class BlockPlant extends Block {
 
@@ -11,7 +11,7 @@ public class BlockPlant extends Block {
 		super(id);
 		setOpaque(false);
 		setOccluder(false);
-		setRenderPass(ChunkDisplayList.PASS_TRANSPARENT);
+		setRenderPass(RenderPass.PASS_TRANSPARENT);
 	}
 	
 	@Override
