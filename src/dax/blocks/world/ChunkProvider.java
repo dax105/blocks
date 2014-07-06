@@ -581,7 +581,7 @@ public class ChunkProvider {
 
 		Chunk c = new Chunk(cx, cz, world);
 		try {
-			c.blocks.put(Snappy.uncompressShortArray(fileData));
+			c.blocksBuffer.put(Snappy.uncompressShortArray(fileData));
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -608,7 +608,7 @@ public class ChunkProvider {
 			File file = new File(dir, "x" + c.x + "z" + c.z + ".ccf");
 			FileOutputStream stream = new FileOutputStream(file);
 			try {
-				stream.write(Snappy.compress(c.blocks.array()));
+				stream.write(Snappy.compress(c.blocksBuffer.array()));
 			} finally {
 				stream.close();
 			}
