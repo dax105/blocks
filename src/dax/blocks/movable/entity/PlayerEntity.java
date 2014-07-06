@@ -9,7 +9,7 @@ public class PlayerEntity extends Entity {
 	public static final float EYES_HEIGHT = 1.6f;
 	public static final float PLAYER_SIZE = 0.5f;
 
-	byte selectedBlockID = Block.stoneMossy.getId();
+	int selectedBlockID = Block.stoneMossy.getId();
 	
 	public int lookingAtX;
 	public int lookingAtY;
