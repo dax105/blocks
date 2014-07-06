@@ -27,6 +27,7 @@ public abstract class Block {
 	public Block(int id) {
 		this.id = id;
 		blocks[id] = this;
+		blocksCount++;
 	}
 
 	public Block setAllTextures(int texture) {
@@ -85,6 +86,7 @@ public abstract class Block {
 	 * This array holds all the possible block instances.
 	 */
 	public static Block[] blocks = new Block[256];
+	public static int blocksCount = 0;
 	
 	public static final Block grass = new BlockBasic(1).setTopTexture(4).setSideTexture(5).setBottomTexture(3).setStepSound(SoundManager.footstep_grass).setFallSound(SoundManager.fall_soft);
 	public static final Block dirt = new BlockBasic(2).setAllTextures(3).setStepSound(SoundManager.footstep_dirt).setFallSound(SoundManager.fall_soft);

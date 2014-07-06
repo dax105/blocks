@@ -199,7 +199,7 @@ public class Player {
 		}
 
 		if (Keyboard.isKeyDown(Keyboard.KEY_3) || Keyboard.isKeyDown(Keyboard.KEY_NUMPAD3)) {
-			setSelectedBlock(13);
+			setSelectedBlock(3);
 		}
 
 		if (Keyboard.isKeyDown(Keyboard.KEY_4) || Keyboard.isKeyDown(Keyboard.KEY_NUMPAD4)) {
@@ -219,7 +219,7 @@ public class Player {
 		}
 
 		if (Keyboard.isKeyDown(Keyboard.KEY_8) || Keyboard.isKeyDown(Keyboard.KEY_NUMPAD8)) {
-			setSelectedBlock(14);
+			setSelectedBlock(8);
 		}
 
 		if (Keyboard.isKeyDown(Keyboard.KEY_9) || Keyboard.isKeyDown(Keyboard.KEY_NUMPAD9)) {
@@ -228,6 +228,26 @@ public class Player {
 
 		if (Keyboard.isKeyDown(Keyboard.KEY_0) || Keyboard.isKeyDown(Keyboard.KEY_NUMPAD0)) {
 			setSelectedBlock(10);
+		}
+		
+		int wh = Mouse.getDWheel();
+		
+		if (wh > 0) {
+			int newSelectedBlock = this.selectedBlockID + 1;
+			if(newSelectedBlock > (Block.blocksCount)) {
+				newSelectedBlock = 1;
+			}
+			
+			this.setSelectedBlock(newSelectedBlock);
+		}
+		
+		if (wh < 0) {
+			int newSelectedBlock = this.selectedBlockID - 1;
+			if(newSelectedBlock < 1) {
+				newSelectedBlock = Block.blocksCount;
+			}
+			
+			this.setSelectedBlock(newSelectedBlock);
 		}
 		
 		float xsq = Math.abs(speedC)*Math.abs(speedC);
@@ -331,6 +351,7 @@ public class Player {
 						world.setBlock(placesAtX, placesAtY, placesAtZ, selectedBlockID, true);
 					}
 				}
+				
 			}
 		}
 		

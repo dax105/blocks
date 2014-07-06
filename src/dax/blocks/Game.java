@@ -598,7 +598,7 @@ public class Game implements Runnable {
 	}
 
 	public void renderOverlay() {
-		BlockBasic b = (BlockBasic) Block.getBlock(world.player.selectedBlockID);
+		Block b = Block.getBlock(world.player.selectedBlockID);
 		int textureid = b.sideTexture;
 
 		GL11.glColor3f(1, 1, 1);
