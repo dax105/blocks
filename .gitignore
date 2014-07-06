@@ -6,6 +6,7 @@ bin/
 .settings/
 .screenshots/
 .saves/
+.saved.png
 
 # Package Files #
 *.jar

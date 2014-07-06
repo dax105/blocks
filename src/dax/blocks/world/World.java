@@ -184,11 +184,11 @@ public class World {
 			emitterZ = player.posZ;
 		}
 		
-		chunkProvider.updateLoadedChunksInRadius(((int)player.posX) / 16, ((int)player.posZ) / 16, Game.settings.drawDistance.getValue()+1);
+		chunkProvider.updateLoadedChunksInRadius(((int)Math.floor(player.posX)) >> 4, ((int)Math.floor(player.posZ)) >> 4, Game.settings.drawDistance.getValue()+1);
 	}
 	
 	public void menuUpdate() {
-		chunkProvider.updateLoadedChunksInRadius(((int)player.posX) / 16, ((int)player.posZ) / 16, Game.settings.drawDistance.getValue()+1);
+		chunkProvider.updateLoadedChunksInRadius(((int)Math.floor(player.posX)) >> 4, ((int)Math.floor(player.posZ)) >> 4, Game.settings.drawDistance.getValue()+1);
 	}
 
 	public void setChunkDirty(int x, int y, int z) {
