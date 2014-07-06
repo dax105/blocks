@@ -164,7 +164,7 @@ public class World {
 		return c != null ? c.getBlock(icx, y, icz) : 0;
 	}
 
-	public void setBlock(int x, int y, int z, byte id, boolean artificial) {
+	public void setBlock(int x, int y, int z, int id, boolean artificial) {
 		int icx = x & 15;
 		int icz = z & 15;
 
