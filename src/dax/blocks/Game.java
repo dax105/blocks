@@ -46,6 +46,14 @@ public class Game implements Runnable {
 	public static Settings settings = new Settings();
 	public static Console console = new Console();
 	
+	//--old settings--
+	/*
+	 * public int worldSize = 4;
+	 * public int fov = 85;
+	 * public boolean shouldFilter = true;
+	 * public float heightMultipler = 20;
+	 */
+	
 	public boolean showbg = false;
 
 	public RenderEngine renderEngine;
@@ -61,17 +69,10 @@ public class Game implements Runnable {
 	public int width = 800;
 	public int height = 480;
 
-	public int worldSize = 4;
-	public boolean shouldFilter = true;
-
-	public float heightMultipler = 20;
-
 	public GuiScreen guiScreen;
 
-	//public int fov = 85;
+	
 	public static final String TITLE = "Order of the stone";
-
-	public boolean treeGen;
 
 	public boolean isFullscreen = false;
 
@@ -191,7 +192,8 @@ public class Game implements Runnable {
 
 	public void makeNewWorld(boolean load) {
 		ingame = false;
-		world = new World(this.worldSize, this.heightMultipler, treeGen, this, load);
+		world = new World(settings.world_size.getValue(), 
+				settings.height_multiplier.getValue(), settings.tree_generation.getValue(), this, load);
 		closeGuiScreen();
 		ingame = true;
 	}
@@ -305,6 +307,17 @@ public class Game implements Runnable {
 		fpsCounter++;
 	}
 
+	public void updateFiltering() {
+		TextureManager.atlas.bind();
+		if (settings.linear_filtering.getValue()) {
+			GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MIN_FILTER, GL11.GL_LINEAR);
+			GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MAG_FILTER, GL11.GL_LINEAR);
+		} else {
+			GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MIN_FILTER, GL11.GL_NEAREST);
+			GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MAG_FILTER, GL11.GL_NEAREST);
+		}
+	}
+	
 	public void initGL() {
 		// Set perspective matrix
 		setPerspective();

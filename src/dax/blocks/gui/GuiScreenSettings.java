@@ -24,12 +24,12 @@ public class GuiScreenSettings extends GuiScreen {
 	public GuiScreenSettings(GuiScreen parent) {
 		super(parent);
 		ingame = game.ingame;
-		worldSize = game.worldSize;
-		filter = game.shouldFilter;
-		mult = game.heightMultipler;
-		//fov = game.fov;
+		
+		filter = Game.settings.linear_filtering.getValue();
+		mult = Game.settings.height_multiplier.getValue();
+		worldSize = Game.settings.world_size.getValue();
 		fov = Game.settings.fov.getValue();
-		trees = game.treeGen;
+		trees = Game.settings.tree_generation.getValue();
 		
 		String filteringText[] = {"Texture filtering: Linear", "Texture filtering: Nearest"};	
 		String treeText[] = {"Tree generator: ON", "Tree generator: OFF"};
@@ -71,22 +71,14 @@ public class GuiScreenSettings extends GuiScreen {
 
 		if (button.id == 4) {
 
-			game.heightMultipler = mult;
-			game.shouldFilter = filter;
-			game.treeGen = trees;
-
-			TextureManager.atlas.bind();
-			if (game.shouldFilter) {
-				GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MIN_FILTER, GL11.GL_LINEAR);
-				GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MAG_FILTER, GL11.GL_LINEAR);
-			} else {
-				GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MIN_FILTER, GL11.GL_NEAREST);
-				GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MAG_FILTER, GL11.GL_NEAREST);
-			}
-
-			game.worldSize = worldSize;
+			Game.settings.height_multiplier.setValue(mult);
+			Game.settings.linear_filtering.setValue(filter);
+			Game.settings.world_size.setValue(worldSize);
+			Game.settings.tree_generation.setValue(trees);
 			Game.settings.fov.setValue(fov);
 
+			game.updateFiltering();
+			
 			if (ingame) {
 				game.displayLoadingScreen();
 				game.makeNewWorld(false);
