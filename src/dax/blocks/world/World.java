@@ -36,8 +36,6 @@ public class World {
     float[] upMod = new float[3];
 	
 	Random rand = new Random();
-	
-	float multipler;
 	private int vertices;
 
 	TreeGenerator treeGen;
@@ -56,65 +54,16 @@ public class World {
 		return this.vertices;
 	}
 	
-	public World(int size, float multipler, boolean trees, Game game, boolean load) {
+	public World(int size, boolean trees, Game game, boolean load) {
 		this.size = size;
 		this.sizeBlocks = size * Chunk.CHUNK_SIZE;
 		player = new Player(this);
 		this.treeGen = new TreeGenerator(this);
-
-		this.multipler = multipler;
 		
 		chunkProvider = new ChunkProvider(this);
 
 		this.frustum = new Frustum();
 		this.c2d = new Coord2D(-1, -1);
-
-		//long start = System.nanoTime();
-		/*for (int x = 0; x < size; x++) {
-			for (int z = 0; z < size; z++) {
-				chunks[x][z] = chunkProvider.getChunk(x, z, load);
-				if (System.nanoTime() - lastTime > 100000000 && game.guiScreen instanceof GuiScreenLoading) {
-					GuiScreenLoading scr = (GuiScreenLoading) game.guiScreen;
-					scr.update("Generating chunk " + (x*size+z) + "/" + (size*size));
-					lastTime = System.nanoTime();
-				}
-			}
-		}
-
-		if (trees) {
-			Random rand = new Random();
-			int maxTrees = size * size - (rand.nextInt((size * size) - 5));
-			for (int i = 0; i < maxTrees; i++) {
-				int sy = 0;
-				int x = 1 + rand.nextInt(sizeBlocks - 1);
-				int z = 1 + rand.nextInt(sizeBlocks - 1);
-				for (int y = 0; y < Chunk.CHUNK_HEIGHT; y++) {
-					sy = y;
-					if (getBlock(x, sy + 1, z) == 0) {
-						break;
-					}
-				}
-				if (getBlock(x,sy,z) == Block.grass.getId()) {
-					treeGen.generateTree(x, sy, z);
-				}	
-			}
-		}*/
-
-		//Game.console.out("Chunks created in " + (System.nanoTime() - start) / 1000000 + "ms");
-
-		/*start = System.nanoTime();
-		for (int x = 0; x < size; x++) {
-			for (int z = 0; z < size; z++) {
-				chunks[x][z].rebuildEntireChunk();
-				if (System.nanoTime() - lastTime > 100000000 && game.guiScreen instanceof GuiScreenLoading) {
-					GuiScreenLoading scr = (GuiScreenLoading) game.guiScreen;
-					scr.update("Building chunk " + (x*size+z) + "/" + (size*size));
-					lastTime = System.nanoTime();
-				}
-			}
-		}*/
-
-		//Game.console.out("World geometry built in " + (System.nanoTime() - start) / 1000000 + "ms");
 		
 		chunkProvider.updateLoadedChunksInRadius((int)player.posX, (int)player.posZ, Game.settings.drawDistance.getValue());
 	}

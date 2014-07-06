@@ -8,7 +8,6 @@ import org.lwjgl.opengl.GL11;
 public class GuiScreenSettings extends GuiScreen {
 
 	int worldSize;
-	float mult;
 	boolean filter;
 
 	int width = 400;
@@ -26,7 +25,6 @@ public class GuiScreenSettings extends GuiScreen {
 		ingame = game.ingame;
 		
 		filter = Game.settings.linear_filtering.getValue();
-		mult = Game.settings.height_multiplier.getValue();
 		worldSize = Game.settings.world_size.getValue();
 		fov = Game.settings.fov.getValue();
 		trees = Game.settings.tree_generation.getValue();
@@ -41,9 +39,10 @@ public class GuiScreenSettings extends GuiScreen {
 		//World size
 		objects.add(new GuiObjectSlider((game.width - width) / 2, (game.height - height) / 2 + 34, (game.width + width) / 2, ((game.height - height) / 2) + 58, this.f, "World size: ", 1, this, 4, 120, worldSize, " chunks"));
 		
-		//Height multiplier
-		objects.add(new GuiObjectSlider((game.width - width) / 2, (game.height - height) / 2 + 62, (game.width + width) / 2, ((game.height - height) / 2) + 86, this.f, "World height multipler: ", 2, this, 0, 100, (int) mult, ""));
-
+		//Hole after multiplier
+		objects.add(new GuiObjectRectangle((game.width - width) / 2, (game.height - height) / 2 + 62, (game.width + width) / 2, ((game.height - height) / 2) + 86, 0xA0000000));
+		
+		
 		//Texture filtering
 		objects.add(new GuiObjectChangingButton((game.width - width) / 2, (game.height - height) / 2 + 118, (game.width + width) / 2, ((game.height - height) / 2) + 144, this.f, filteringText, filter ? 0 : 1, 1, this));
 		
@@ -58,7 +57,7 @@ public class GuiScreenSettings extends GuiScreen {
 		objects.add(new GuiObjectButton(((game.width + width) / 2 - (width / 2)), ((game.height + height) / 2) - 24, (game.width + width) / 2, ((game.height + height) / 2), this.f, "Apply", 4, this));
 
 		//Button IDs: 1 - filtering (ch); 2 - tree gen (ch); 3 - close; 4 - apply;
-		//Slider IDs: 1 - world size; 2 - multiplier; 3 - FOV
+		//Slider IDs: 1 - world size; 2 - xxx; 3 - FOV
 		
 		//objects.add(new GuiObjectText((game.width - width) / 2, (game.height - height) / 2 + 34, (game.width + width) / 2, (game.height + height) / 2 - 28, this.f, "Nope, nothing's here, use console"));
 	}
@@ -70,8 +69,7 @@ public class GuiScreenSettings extends GuiScreen {
 		}
 
 		if (button.id == 4) {
-
-			Game.settings.height_multiplier.setValue(mult);
+			
 			Game.settings.linear_filtering.setValue(filter);
 			Game.settings.world_size.setValue(worldSize);
 			Game.settings.tree_generation.setValue(trees);
@@ -97,7 +95,7 @@ public class GuiScreenSettings extends GuiScreen {
 			this.worldSize = slider.val;
 			break;
 		case 2:
-			this.mult = slider.val;
+			//TODO
 			break;
 		case 3:
 			this.fov = slider.val;

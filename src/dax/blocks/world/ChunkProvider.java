@@ -152,7 +152,10 @@ public class ChunkProvider {
 					for (int h = 127; h >= 0; h--) {
 						int block = world.getBlock(tx, h, tz);
 						if (block == Block.grass.getId()) {
-							world.treeGen.generateTree(tx, h+1, tz);
+							
+							if(Game.settings.tree_generation.getValue())
+								world.treeGen.generateTree(tx, h+1, tz);
+							
 						} else if (block != 0 && !(Block.getBlock((byte) block) instanceof BlockPlant)) {
 							break;
 						}
@@ -377,8 +380,6 @@ public class ChunkProvider {
 				if (words.length >= 2) {
 					if (words[0].equals("seed")) {
 						this.seed = Integer.parseInt(words[1]);
-					} else if (words[0].equals("mult")) {
-						this.world.multipler = Float.parseFloat(words[1]);
 					} else if (words[0].equals("playerx")) {
 						x = Float.parseFloat(words[1]);
 					} else if (words[0].equals("playery")) {
@@ -549,7 +550,6 @@ public class ChunkProvider {
 			pw.println("version " + WORLD_VERSION);
 
 			pw.println("seed " + this.seed);
-			pw.println("mult " + this.world.multipler);
 
 			pw.println("playerx " + this.world.player.posX);
 			pw.println("playery " + this.world.player.posY);

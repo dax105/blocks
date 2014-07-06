@@ -5,9 +5,9 @@ public class SettingsObject<T> {
 	private T value;
 	private String name;
 	
-	private Applyer applyer;
+	private Applier applyer;
 
-	public SettingsObject(String name, T defaultValue, Applyer applyer) {
+	public SettingsObject(String name, T defaultValue, Applier applyer) {
 		this.name = name;
 		this.value = defaultValue;
 		this.applyer = applyer;

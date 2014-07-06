@@ -192,8 +192,7 @@ public class Game implements Runnable {
 
 	public void makeNewWorld(boolean load) {
 		ingame = false;
-		world = new World(settings.world_size.getValue(), 
-				settings.height_multiplier.getValue(), settings.tree_generation.getValue(), this, load);
+		world = new World(settings.world_size.getValue(), settings.tree_generation.getValue(), this, load);
 		closeGuiScreen();
 		ingame = true;
 	}

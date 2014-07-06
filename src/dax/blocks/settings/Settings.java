@@ -13,7 +13,7 @@ public class Settings {
 
 	public SettingsObject<Integer> drawDistance = registerObjectInteger(new SettingsObject<Integer>("draw_distance", 10));
 	public SettingsObject<Integer> consoleHeight = registerObjectInteger(new SettingsObject<Integer>("console_height", 200));
-	public SettingsObject<Integer> aa_samples = registerObjectInteger(new SettingsObject<Integer>("aa_samples", 0, new ApplyerAA()));
+	public SettingsObject<Integer> aa_samples = registerObjectInteger(new SettingsObject<Integer>("aa_samples", 0, new ApplierAA()));
 	public SettingsObject<Integer> anisotropic = registerObjectInteger(new SettingsObject<Integer>("anisotropic", 0));
 	public SettingsObject<Integer> explosion_radius = registerObjectInteger(new SettingsObject<Integer>("explosion_radius", 5));
 	public SettingsObject<Integer> rebuilds_pf = registerObjectInteger(new SettingsObject<Integer>("rebuilds_pf", 5));
@@ -24,11 +24,10 @@ public class Settings {
 	public SettingsObject<Boolean> fullscreen = registerObjectBoolean(new SettingsObject<Boolean>("fullscreen", false));
 	public SettingsObject<Boolean> mipmaps = registerObjectBoolean(new SettingsObject<Boolean>("mipmaps", true));
 	public SettingsObject<Boolean> sound = registerObjectBoolean(new SettingsObject<Boolean>("sound", true));
-	public SettingsObject<Float> ao_intensity = registerObjectFloat(new SettingsObject<Float>("ao_intensity", 0.25f, new ApplyerAO()));
+	public SettingsObject<Float> ao_intensity = registerObjectFloat(new SettingsObject<Float>("ao_intensity", 0.25f, new ApplierAO()));
 	public SettingsObject<Boolean> tree_generation = registerObjectBoolean(new SettingsObject<Boolean>("tree_generation", true));
 	public SettingsObject<Integer> world_size = registerObjectInteger(new SettingsObject<Integer>("world_size", 4));
 	public SettingsObject<Boolean> linear_filtering = registerObjectBoolean(new SettingsObject<Boolean>("linear_filtering", true));
-	public SettingsObject<Float> height_multiplier = registerObjectFloat(new SettingsObject<Float>("height_multiplier", 20f));
 	
 	private SettingsObject<Integer> registerObjectInteger(SettingsObject<Integer> object) {
 		objectsInteger.put(object.getName(), object);
