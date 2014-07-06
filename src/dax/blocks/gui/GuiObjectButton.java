@@ -8,18 +8,18 @@ import org.newdawn.slick.Font;
 public class GuiObjectButton extends GuiObject {
 
 	public int id;
-	private GuiScreen parent;
+	protected GuiScreen parent;
 
 	public String text;
 
-	private int x1;
-	private int y1;
-	private int x2;
-	private int y2;
+	protected int x1;
+	protected int y1;
+	protected int x2;
+	protected int y2;
 
 	private Font font;
 
-	private boolean hover = false;
+	protected boolean hover = false;
 
 	public GuiObjectButton(int x1, int y1, int x2, int y2, Font font, String text, int id, GuiScreen parent) {
 		this.x1 = x1;
