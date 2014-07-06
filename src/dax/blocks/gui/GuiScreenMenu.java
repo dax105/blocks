@@ -28,7 +28,7 @@ public class GuiScreenMenu extends GuiScreen {
 			game.closeGuiScreen();
 		} else if (button.id == 1) {
 			game.displayLoadingScreen();
-			game.makeNewWorld(false);
+			game.makeNewWorld(false, game.world.name);
 		} else if (button.id == 2) {
 			game.openGuiScreen(new GuiScreenSettings(this));
 		} else if (button.id == 3) {

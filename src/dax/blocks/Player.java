@@ -8,6 +8,8 @@ import java.util.Random;
 
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
+import org.lwjgl.util.vector.Vector2f;
+
 import dax.blocks.world.Explosion;
 import dax.blocks.world.World;
 
@@ -26,7 +28,7 @@ public class Player {
 	public static final float JUMP_STRENGTH = 0.4f;
 	public static final float MAX_WALK_SPEED = 0.25f;
 
-	int selectedBlockID = 3;
+	byte selectedBlockID = 3;
 
 	public float xBob = 0;
 	public float yBob = 0;
@@ -102,9 +104,9 @@ public class Player {
 
 		if (!Keyboard.isKeyDown(Keyboard.KEY_Q)) {
 			
-		float xn = posX;
-		float yn = posY + PLAYER_HEIGHT;
-		float zn = posZ;
+		float xn = (float) posX;
+		float yn = (float) posY + PLAYER_HEIGHT;
+		float zn = (float) posZ;
 
 		float xl;
 		float yl;
@@ -121,9 +123,9 @@ public class Player {
 			yl = yn;
 			zl = zn;
 
-			xn = posX + f * xChange;
-			yn = posY + EYES_HEIGHT + f * yChange;
-			zn = posZ + f * zChange;
+			xn = (float) (posX + f * xChange);
+			yn = (float) (posY + EYES_HEIGHT + f * yChange);
+			zn = (float) (posZ + f * zChange);
 
 			if (world.getBlock((int) Math.floor(xn), (int) Math.floor(yn), (int) Math.floor(zn)) > 0) {
 				lookingAtX = (int) Math.floor(xn);
@@ -177,11 +179,17 @@ public class Player {
 		}
 
 		if (Keyboard.isKeyDown(Keyboard.KEY_SPACE) && onGround) {
+			//moveY += 0.005D * multi;
+			
 			if (multi == 1) {
-				yv += JUMP_STRENGTH;
+				yv += JUMP_STRENGTH * multi;
 			} else {
-				yv += JUMP_STRENGTH * 5;
+				yv += JUMP_STRENGTH *5;
 			}
+		}
+
+		if (Keyboard.isKeyDown(Keyboard.KEY_LMENU) || Keyboard.isKeyDown(Keyboard.KEY_LCONTROL)) {
+			//moveY -= 0.005D * multi;
 		}
 
 		if (Keyboard.isKeyDown(Keyboard.KEY_E)) {
@@ -238,7 +246,7 @@ public class Player {
 		//Game.console.out("SPD A: " + sp);
 		
 		if (sp  > MAX_WALK_SPEED*multi) {
-			float mult = MAX_WALK_SPEED*multi / sp;
+			float mult = (float) (MAX_WALK_SPEED*multi / sp);
 			speedC *= mult;
 			speedStrafeC *= mult;
 		}
@@ -253,7 +261,7 @@ public class Player {
 		
 		//Game.console.out("SPD B: " + spf);
 		
-		yv -= World.GRAVITY;
+		yv -= world.GRAVITY;
 		
 			double toMoveZ = (posZ + Math.cos(-heading / 180 * Math.PI) * speed) + (Math.cos((-heading + 90) / 180 * Math.PI) * speedStrafe);
 			double toMoveX = (posX + Math.sin(-heading / 180 * Math.PI) * speed) + (Math.sin((-heading + 90) / 180 * Math.PI) * speedStrafe);
@@ -271,19 +279,19 @@ public class Player {
 		      ArrayList<AABB> aABBs = this.world.getBBs(this.bb.expand(xa, ya, za));
 		      
 		      for(int i = 0; i < aABBs.size(); ++i) {
-		         ya = aABBs.get(i).clipYCollide(this.bb, ya);
+		         ya = ((AABB)aABBs.get(i)).clipYCollide(this.bb, ya);
 		      }
 
 		      this.bb.move(0.0F, ya, 0.0F);
 
 		      for(int i = 0; i < aABBs.size(); ++i) {
-		         xa = aABBs.get(i).clipXCollide(this.bb, xa);
+		         xa = ((AABB)aABBs.get(i)).clipXCollide(this.bb, xa);
 		      }
 
 		      this.bb.move(xa, 0.0F, 0.0F);
 
 		      for(int i = 0; i < aABBs.size(); ++i) {
-		          za = aABBs.get(i).clipZCollide(this.bb, za);
+		          za = ((AABB)aABBs.get(i)).clipZCollide(this.bb, za);
 		       }
 
 		       this.bb.move(0.0F, 0.0F, za);

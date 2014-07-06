@@ -31,6 +31,7 @@ public class World {
 	public int sizeBlocks;
 	public Player player;
 	public ChunkProvider chunkProvider;
+	public String name;
 	
     float[] rightMod = new float[3];
     float[] upMod = new float[3];
@@ -54,13 +55,14 @@ public class World {
 		return this.vertices;
 	}
 	
-	public World(int size, boolean trees, Game game, boolean load) {
+	public World(int size, boolean trees, Game game, boolean load, String worldName) {
 		this.size = size;
 		this.sizeBlocks = size * Chunk.CHUNK_SIZE;
+		this.name = worldName;
 		player = new Player(this);
 		this.treeGen = new TreeGenerator(this);
 		
-		chunkProvider = new ChunkProvider(this);
+		chunkProvider = new ChunkProvider(this, load);
 
 		this.frustum = new Frustum();
 		this.c2d = new Coord2D(-1, -1);
@@ -133,11 +135,11 @@ public class World {
 			emitterZ = player.posZ;
 		}
 		
-		chunkProvider.updateLoadedChunksInRadius(((int)Math.floor(player.posX)) >> 4, ((int)Math.floor(player.posZ)) >> 4, Game.settings.drawDistance.getValue()+1);
+		chunkProvider.updateLoadedChunksInRadius(((int)player.posX) / 16, ((int)player.posZ) / 16, Game.settings.drawDistance.getValue()+1);
 	}
 	
 	public void menuUpdate() {
-		chunkProvider.updateLoadedChunksInRadius(((int)Math.floor(player.posX)) >> 4, ((int)Math.floor(player.posZ)) >> 4, Game.settings.drawDistance.getValue()+1);
+		chunkProvider.updateLoadedChunksInRadius(((int)player.posX) / 16, ((int)player.posZ) / 16, Game.settings.drawDistance.getValue()+1);
 	}
 
 	public void setChunkDirty(int x, int y, int z) {
@@ -162,7 +164,7 @@ public class World {
 		return c != null ? c.getBlock(icx, y, icz) : 0;
 	}
 
-	public void setBlock(int x, int y, int z, int id, boolean artificial) {
+	public void setBlock(int x, int y, int z, byte id, boolean artificial) {
 		int icx = x & 15;
 		int icz = z & 15;
 
@@ -215,7 +217,7 @@ public class World {
 	}
 
 	public void saveAllChunks() {
-		chunkProvider.saveAll();
+		chunkProvider.loader.saveAll();
 	}
 
 	public void onRender() {

@@ -1,12 +1,22 @@
 package dax.blocks.world.chunk;
 
+import java.nio.ByteBuffer;
+import java.nio.IntBuffer;
 import java.nio.ShortBuffer;
+import java.util.Arrays;
 
+import org.lwjgl.BufferUtils;
+import org.lwjgl.opengl.GL15;
+
+import dax.blocks.block.Block;
+import dax.blocks.render.ChunkDisplayList;
 import dax.blocks.render.ChunkMeshGenerator;
 import dax.blocks.render.RenderChunk;
 import dax.blocks.world.World;
 
 public class Chunk {
+	public static int rc = 0;
+	
 	public boolean changed = false;
 	public boolean populated = false;
 	
@@ -17,10 +27,14 @@ public class Chunk {
 	public int z;
 
 	public World world;
+
+	//public ChunkMesh[] meshes;
 	
 	public RenderChunk[] renderChunks = new RenderChunk[8];
 
-	public ShortBuffer blocksBuffer;
+	// public byte[] blocks;
+	// public byte[][][] blocks;
+	public ShortBuffer blocks;
 
 	public void setDirty(int y) {
 		if (y >= 0 && y < 8) {
@@ -38,9 +52,10 @@ public class Chunk {
 		return (float) Math.sqrt(dX * dX + dZ * dZ);
 	}
 
-	public void setBlock(int x, int y, int z, int id, boolean rebuild) {
+	public void setBlock(int x, int y, int z, byte id, boolean rebuild) {
 		if (y < CHUNK_HEIGHT && y >= 0) {
-			blocksBuffer.put(x + Chunk.CHUNK_SIZE * (y + Chunk.CHUNK_HEIGHT * z), (short) id);
+			blocks.put(x + Chunk.CHUNK_SIZE * (y + Chunk.CHUNK_HEIGHT * z), id);
+			// blocks[x + Chunk.CHUNK_SIZE * (y + Chunk.CHUNK_HEIGHT * z)] = id;
 			int meshY = y / CHUNK_SIZE;
 			if (rebuild) {
 				setDirty(meshY);
@@ -86,7 +101,7 @@ public class Chunk {
 			return 0;
 		}
 
-		return blocksBuffer.get(x + Chunk.CHUNK_SIZE * (y + Chunk.CHUNK_HEIGHT * z));
+		return blocks.get(x + Chunk.CHUNK_SIZE * (y + Chunk.CHUNK_HEIGHT * z));
 		// return blocks[x + Chunk.CHUNK_SIZE * (y + Chunk.CHUNK_HEIGHT * z)];
 	}
 
@@ -99,6 +114,8 @@ public class Chunk {
 	public void deleteRenderChunk(int y) {
 		if (renderChunks[y].isGenerated()) { 
 			renderChunks[y].getCdl().delete();
+			//Game.console.out("Deleted render chunk " + y + " on chunk " + x + " " + z);
+			rc--;
 		}
 	}
 
@@ -109,6 +126,8 @@ public class Chunk {
 				deleteRenderChunk(y);
 			}		
 			renderChunks[y].setCdl(ChunkMeshGenerator.genDisplayList(this, y));
+			//Game.console.out("Built render chunk " + y + " on chunk " + x + " " + z);
+			rc++;	
 		}
 	}
 
@@ -119,10 +138,11 @@ public class Chunk {
 	}
 
 	public Chunk(int cX, int cZ, World world) {
-		this.blocksBuffer = ShortBuffer.allocate(Chunk.CHUNK_SIZE * Chunk.CHUNK_SIZE * Chunk.CHUNK_HEIGHT);
+		blocks = ShortBuffer.allocate(Chunk.CHUNK_SIZE * Chunk.CHUNK_SIZE * Chunk.CHUNK_HEIGHT);
+		// blocks = new byte[CHUNK_SIZE * CHUNK_HEIGHT * CHUNK_SIZE];
 		this.world = world;
-		this.x = cX;
-		this.z = cZ;
+		x = cX;
+		z = cZ;
 		
 		for (int i = 0; i < 8; i++) {
 			renderChunks[i] = new RenderChunk();
