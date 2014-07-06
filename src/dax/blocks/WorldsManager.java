@@ -10,24 +10,24 @@ import dax.blocks.world.WorldInfo;
 public class WorldsManager {
 	public static final String SAVES_DIR = "saves";
 
+	private File savesDir;
 	public WorldsManager() {
-
+		savesDir = new File(SAVES_DIR);
+		if(!savesDir.exists())
+			savesDir.mkdir();
 	}
 
 	public List<File> getWorldsDirs() {
 		ArrayList<File> worlds = new ArrayList<File>();
 
-		File file = new File(SAVES_DIR);
-		String[] names = file.list();
-
-		if (names != null) {
+		String[] names = savesDir.list();
 			for (String name : names) {
 				File d = new File(SAVES_DIR, name);
 				if (d.isDirectory()) {
 					worlds.add(d);
 				}
 			}
-		}
+		
 
 		return worlds;
 	}
