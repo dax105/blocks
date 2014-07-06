@@ -1,4 +1,4 @@
-package dax.blocks.world;
+package dax.blocks.world.chunk;
 
 import java.io.DataInputStream;
 import java.io.File;
@@ -16,9 +16,9 @@ import org.xerial.snappy.Snappy;
 
 import dax.blocks.Coord2D;
 import dax.blocks.Game;
-import dax.blocks.world.chunk.Chunk;
+import dax.blocks.world.World;
 
-public class SaveManager {
+public class ChunkSaveManager {
 	World world;
 	ChunkProvider provider;
 	String name;
@@ -99,7 +99,7 @@ public class SaveManager {
 		}
 	}
 	
-	public SaveManager(ChunkProvider provider, String saveName) {
+	public ChunkSaveManager(ChunkProvider provider, String saveName) {
 		this.provider = provider;
 		this.world = provider.world;
 		this.name = saveName;

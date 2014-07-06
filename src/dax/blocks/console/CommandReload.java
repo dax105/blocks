@@ -1,8 +1,8 @@
 package dax.blocks.console;
 
 import dax.blocks.Game;
-import dax.blocks.world.ChunkProvider;
 import dax.blocks.world.World;
+import dax.blocks.world.chunk.ChunkProvider;
 
 public class CommandReload extends Command {
 

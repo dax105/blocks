@@ -1,4 +1,4 @@
-package dax.blocks.world;
+package dax.blocks.world.chunk;
 
 import java.io.DataInputStream;
 import java.io.File;
@@ -27,7 +27,8 @@ import dax.blocks.GameMath;
 import dax.blocks.block.Block;
 import dax.blocks.block.BlockPlant;
 import dax.blocks.render.ChunkDistanceComparator;
-import dax.blocks.world.chunk.Chunk;
+import dax.blocks.world.CoordDistanceComparator;
+import dax.blocks.world.World;
 import dax.blocks.world.generator.SimplexNoise;
 
 public class ChunkProvider {
@@ -49,7 +50,7 @@ public class ChunkProvider {
 	SimplexNoise simplex3D_caves;
 
 	World world;
-	SaveManager loader;
+	public ChunkSaveManager loader;
 
 	int seed;
 
@@ -198,7 +199,7 @@ public class ChunkProvider {
 		this.loadedChunks = new HashMap<Coord2D, Chunk>();
 		this.seed = seed;
 		this.world = world;
-		this.loader = new SaveManager(this, world.name);
+		this.loader = new ChunkSaveManager(this, world.name);
 		
 		this.loadingWorld = shouldLoad;
 			loader.tryToLoadWorld();

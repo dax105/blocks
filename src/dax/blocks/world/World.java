@@ -16,6 +16,7 @@ import dax.blocks.block.Block;
 import dax.blocks.block.BlockPlant;
 import dax.blocks.render.Frustum;
 import dax.blocks.world.chunk.Chunk;
+import dax.blocks.world.chunk.ChunkProvider;
 import dax.blocks.world.generator.TreeGenerator;
 
 import org.lwjgl.input.Keyboard;
@@ -39,7 +40,7 @@ public class World {
 	Random rand = new Random();
 	private int vertices;
 
-	TreeGenerator treeGen;
+	public TreeGenerator treeGen;
 
 	Frustum frustum;
 

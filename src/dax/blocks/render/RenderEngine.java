@@ -30,9 +30,9 @@ import dax.blocks.Particle;
 import dax.blocks.Player;
 import dax.blocks.TextureManager;
 import dax.blocks.block.Block;
-import dax.blocks.world.ChunkProvider;
 import dax.blocks.world.World;
 import dax.blocks.world.chunk.Chunk;
+import dax.blocks.world.chunk.ChunkProvider;
 
 public class RenderEngine {
 
