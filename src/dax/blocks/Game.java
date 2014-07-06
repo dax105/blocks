@@ -267,7 +267,9 @@ public class Game implements Runnable {
 		// TODO
 		if (this.guiScreen == null && ingame && !consoleOpen) {
 			world.update();
+			Mouse.setGrabbed(true);
 		} else if (ingame) {
+			Mouse.setGrabbed(false);
 			world.menuUpdate();
 		}
 
