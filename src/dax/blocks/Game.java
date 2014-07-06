@@ -68,7 +68,7 @@ public class Game implements Runnable {
 
 	public GuiScreen guiScreen;
 
-	public int fov = 85;
+	//public int fov = 85;
 	public static final String TITLE = "Order of the stone";
 
 	public boolean treeGen;

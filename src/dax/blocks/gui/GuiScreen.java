@@ -59,4 +59,6 @@ public abstract class GuiScreen {
 	public abstract void buttonPress(GuiObjectButton button);
 
 	public abstract void sliderUpdate(GuiObjectSlider slider);
+	
+	public abstract void buttonChanged(GuiObjectChangingButton button, int line);
 }

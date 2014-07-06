@@ -48,4 +48,10 @@ public class GuiScreenLoading extends GuiScreen {
 		super.render();
 		titleBar.render();
 	}
+
+	@Override
+	public void buttonChanged(GuiObjectChangingButton button, int line) {
+		// TODO Auto-generated method stub
+		
+	}
 }

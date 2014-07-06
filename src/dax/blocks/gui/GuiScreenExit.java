@@ -33,4 +33,10 @@ public class GuiScreenExit extends GuiScreen {
 
 	}
 
+	@Override
+	public void buttonChanged(GuiObjectChangingButton button, int line) {
+		// TODO Auto-generated method stub
+		
+	}
+
 }
