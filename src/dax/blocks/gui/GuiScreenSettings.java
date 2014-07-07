@@ -81,13 +81,13 @@ public class GuiScreenSettings extends GuiScreen {
 	public void sliderUpdate(GuiObjectSlider slider) {
 		switch(slider.id) {
 		case 1:
-			//TODO FOV slider
+			//FOV slider
 			break;
 		case 2:
 			Game.sound.actualizeVolume();
 			break;
 		case 3:
-			//TODO Render distance slider
+			//Render distance slider
 			break;
 		}
 	}

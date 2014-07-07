@@ -1,20 +1,5 @@
 package dax.blocks;
 
-import dax.blocks.block.Block;
-import dax.blocks.block.BlockBasic;
-import dax.blocks.console.Console;
-import dax.blocks.gui.GuiObjectBlank;
-import dax.blocks.gui.GuiScreen;
-import dax.blocks.gui.GuiScreenLoading;
-import dax.blocks.gui.GuiScreenMainMenu;
-import dax.blocks.gui.GuiScreenMenu;
-import dax.blocks.render.RenderEngine;
-import dax.blocks.settings.Settings;
-import dax.blocks.world.World;
-import dax.blocks.world.chunk.Chunk;
-
-import java.awt.Canvas;
-import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Toolkit;
@@ -25,10 +10,7 @@ import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.FloatBuffer;
 import java.util.ListIterator;
-
 import javax.imageio.ImageIO;
-import javax.swing.JFrame;
-
 import org.lwjgl.BufferUtils;
 import org.lwjgl.LWJGLException;
 import org.lwjgl.Sys;
@@ -42,6 +24,16 @@ import org.lwjgl.opengl.GL12;
 import org.lwjgl.opengl.PixelFormat;
 import org.lwjgl.util.glu.GLU;
 import org.newdawn.slick.TrueTypeFont;
+import dax.blocks.block.Block;
+import dax.blocks.console.Console;
+import dax.blocks.gui.GuiObjectBlank;
+import dax.blocks.gui.GuiScreen;
+import dax.blocks.gui.GuiScreenLoading;
+import dax.blocks.gui.GuiScreenMainMenu;
+import dax.blocks.gui.GuiScreenMenu;
+import dax.blocks.render.RenderEngine;
+import dax.blocks.settings.Settings;
+import dax.blocks.world.World;
 
 public class Game implements Runnable {
 
@@ -282,7 +274,6 @@ public class Game implements Runnable {
 			openGuiScreen(new GuiScreenMainMenu(this));
 		}
 
-		// TODO
 		if (this.guiScreen == null && ingame && !consoleOpen) {
 			world.update();
 			Mouse.setGrabbed(true);

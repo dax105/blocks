@@ -1,7 +1,6 @@
 package dax.blocks.world.chunk;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -10,9 +9,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Random;
-
-import org.lwjgl.input.Mouse;
-
 import dax.blocks.Coord2D;
 import dax.blocks.Game;
 import dax.blocks.GameMath;
@@ -22,7 +18,6 @@ import dax.blocks.world.ChunkDistanceComparator;
 import dax.blocks.world.CoordDistanceComparator;
 import dax.blocks.world.World;
 import dax.blocks.world.generator.Biome;
-import dax.blocks.world.generator.BiomePlains;
 import dax.blocks.world.generator.SimplexNoise;
 
 public class ChunkProvider {

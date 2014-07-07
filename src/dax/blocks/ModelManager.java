@@ -4,18 +4,11 @@ import java.awt.Color;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.IOException;
 import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.Enumeration;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.zip.ZipEntry;
-import java.util.zip.ZipException;
-import java.util.zip.ZipFile;
 import java.util.zip.ZipInputStream;
 
 import javax.imageio.ImageIO;
@@ -31,24 +24,10 @@ public class ModelManager {
 	public static Model loadModel(String path) {
 		try {
 			Model m = new Model();
-
 			Map<String, byte[]> streams = new HashMap<String, byte[]>();
-
 			InputStream in = ResourceLoader.getResourceAsStream(path);
-
 			ZipInputStream zin = new ZipInputStream(in);
-
-			// ZipFile zipFile = new ZipFile();
-			// Enumeration<? extends ZipEntry> entries = zipFile.entries();
-
-			List<ZipEntry> entries = new ArrayList<ZipEntry>();
-
-			ZipEntry e;
-
-			
-			//byte[] data = new byte[BUFFER];
-
-			
+			ZipEntry e;	
 			
 			while ((e = zin.getNextEntry()) != null) {
 				ByteArrayOutputStream bout = new ByteArrayOutputStream();
@@ -89,8 +68,7 @@ public class ModelManager {
 				InputStream bain = new ByteArrayInputStream(streams.get("layer" + i + ".png")); 
 				
 				img = ImageIO.read(bain);
-				//Game.console.out(streams.get("layer" + i + ".png").length);
-
+				
 				if (i == 0) {
 					m.width = img.getWidth() + 1;
 					m.height = img.getHeight() + 1;
