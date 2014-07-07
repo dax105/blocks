@@ -8,6 +8,7 @@ public class ApplierAO extends Applier {
 
 	@Override
 	public void apply() {
+		Game.console.out("Applying AO");
 		if (Game.getInstance().ingame) {
 			Game.getInstance().world.saveAllChunks();
 			Game.getInstance().world = new World(false, Game.getInstance(), true, Game.getInstance().world.name);

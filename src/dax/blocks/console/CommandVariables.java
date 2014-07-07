@@ -22,24 +22,17 @@ public class CommandVariables extends Command {
 	public boolean execute(String[] args) {
 
 		Settings settings = Game.settings;
-		
+
 		Game.console.out("List of all variables and their types:");
-		
-		for (Entry<String, SettingsObject<Boolean>> e : settings.objectsBoolean.entrySet()) {
-			SettingsObject<Boolean> val = e.getValue();
-			Game.console.out("[BOOL] " + val.getName() + ": " + val.getValue());
+
+		for (Entry<String, SettingsObject<?>> e : settings.objects.entrySet()) {
+			SettingsObject<?> o = e.getValue();
+			Game.console.out(SettingsObject.getConsoleRepresentation(o
+					.getObjectType())
+					+ " "
+					+ o.getRepresentation());
 		}
-		
-		for (Entry<String, SettingsObject<Integer>> e : settings.objectsInteger.entrySet()) {
-			SettingsObject<Integer> val = e.getValue();
-			Game.console.out("[INT] " + val.getName() + ": " + val.getValue());
-		}
-		
-		for (Entry<String, SettingsObject<Float>> e : settings.objectsFloat.entrySet()) {
-			SettingsObject<Float> val = e.getValue();
-			Game.console.out("[FLOAT] " + val.getName() + ": " + val.getValue());
-		}
-		
+
 		return true;
 	}
 

@@ -1,6 +1,7 @@
 package dax.blocks.console;
 
 import dax.blocks.Game;
+import dax.blocks.settings.SettingsObject;
 
 public class CommandSet extends Command {
 
@@ -13,8 +14,9 @@ public class CommandSet extends Command {
 	public boolean execute(String[] args) {
 		
 		if (args.length >= 2) {
-			if(Game.settings.hasObject(args[0])) {
-				Game.settings.setValue(args[0], args[1]);
+			SettingsObject<?> o = Game.settings.getObject(args[0]);
+			if(o != null) {
+				Game.settings.setValue(o.getName(), args[1]);
 				return true;
 			} else {
 				Game.console.out("Unknown variable \"" + args[0] + "\"");

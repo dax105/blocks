@@ -9,6 +9,7 @@ public class ApplierAA extends Applier {
 
 	@Override
 	public void apply() {
+		Game.console.out("Applying AA");
 		if (Game.getInstance().ingame) {
 			Game.getInstance().world.saveAllChunks();
 			Game.getInstance().world = new World(false, Game.getInstance(), true, Game.getInstance().world.name);
