@@ -197,8 +197,13 @@ public class Player {
 		}
 
 		if (Keyboard.isKeyDown(Keyboard.KEY_P)) {
-			world.spawnParticleWithRandomDirectionFast(this.lookingAtX,
-					this.lookingAtY + 1, this.lastPosZ, rand.nextInt(20), 0.3f);
+			if (hasSelected) {
+				for (int i = 0; i < 50; i++) {
+					world.spawnParticleWithRandomDirectionFast(this.lookingAtX,
+							this.lookingAtY + 1, this.lookingAtZ,
+							rand.nextInt(10), 0.3f);
+				}
+			}
 		}
 
 		if (Keyboard.isKeyDown(Keyboard.KEY_1)
