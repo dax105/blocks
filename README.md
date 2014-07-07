@@ -49,5 +49,5 @@ Libraries
 * SNAPPY-JAVA
 * JOGG and JINPUT
 
-Made by Jerry1921 alias Dax105 and LeOndryasO
+Made by Dax105 and LeOndryasO
 Textures by Tomix
