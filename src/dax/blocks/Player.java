@@ -230,25 +230,6 @@ public class Player {
 			setSelectedBlock(10);
 		}
 		
-		int wh = Mouse.getDWheel();
-		
-		if (wh > 0) {
-			int newSelectedBlock = this.selectedBlockID + 1;
-			if(newSelectedBlock > (Block.blocksCount)) {
-				newSelectedBlock = 1;
-			}
-			
-			this.setSelectedBlock(newSelectedBlock);
-		}
-		
-		if (wh < 0) {
-			int newSelectedBlock = this.selectedBlockID - 1;
-			if(newSelectedBlock < 1) {
-				newSelectedBlock = Block.blocksCount;
-			}
-			
-			this.setSelectedBlock(newSelectedBlock);
-		}
 		
 		float xsq = Math.abs(speedC)*Math.abs(speedC);
 		float ysq = Math.abs(speedStrafeC)*Math.abs(speedStrafeC);
@@ -351,7 +332,26 @@ public class Player {
 						world.setBlock(placesAtX, placesAtY, placesAtZ, selectedBlockID, true);
 					}
 				}
+			}
+
+			int wh = Mouse.getEventDWheel();
+			
+			if (wh > 0) {
+				int newSelectedBlock = this.selectedBlockID + 1;
+				if(newSelectedBlock > (Block.blocksCount)) {
+					newSelectedBlock = 1;
+				}
 				
+				this.setSelectedBlock(newSelectedBlock);
+			}
+			
+			if (wh < 0) {
+				int newSelectedBlock = this.selectedBlockID - 1;
+				if(newSelectedBlock < 1) {
+					newSelectedBlock = Block.blocksCount;
+				}
+				
+				this.setSelectedBlock(newSelectedBlock);
 			}
 		}
 		

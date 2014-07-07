@@ -1,12 +1,19 @@
 package dax.blocks.settings;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.PrintWriter;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.Scanner;
 
 import dax.blocks.Game;
 
 public class Settings {
-
+	
+	private List<SettingsObject<?>> allObjects = new ArrayList<SettingsObject<?>>();
 	public Map<String, SettingsObject<Integer>> objectsInteger = new HashMap<String, SettingsObject<Integer>>();
 	public Map<String, SettingsObject<Float>> objectsFloat = new HashMap<String, SettingsObject<Float>>();
 	public Map<String, SettingsObject<Boolean>> objectsBoolean = new HashMap<String, SettingsObject<Boolean>>();
@@ -27,22 +34,49 @@ public class Settings {
 	public SettingsObject<Float> ao_intensity = registerObjectFloat(new SettingsObject<Float>("ao_intensity", 0.25f, new ApplierAO()));
 	public SettingsObject<Boolean> tree_generation = registerObjectBoolean(new SettingsObject<Boolean>("tree_generation", true));
 	public SettingsObject<Boolean> linear_filtering = registerObjectBoolean(new SettingsObject<Boolean>("linear_filtering", false));
+	public SettingsObject<Boolean> enable_shaders = registerObjectBoolean(new SettingsObject<Boolean>("enable_shaders", false));
 	
 	private SettingsObject<Integer> registerObjectInteger(SettingsObject<Integer> object) {
 		objectsInteger.put(object.getName(), object);
+		allObjects.add(object);
 		return object;
 	}
 
 	private SettingsObject<Boolean> registerObjectBoolean(SettingsObject<Boolean> object) {
 		objectsBoolean.put(object.getName(), object);
+		allObjects.add(object);
 		return object;
 	}
 
 	private SettingsObject<Float> registerObjectFloat(SettingsObject<Float> object) {
 		objectsFloat.put(object.getName(), object);
+		allObjects.add(object);
 		return object;
 	}
 
+	public void loadFromFile(File f) throws FileNotFoundException {
+		Scanner s = new Scanner(f);
+		while (s.hasNextLine()) {
+			String l = s.nextLine();
+			String[] words = l.split(" ");
+
+			if (words.length >= 2) {
+				setValue(words[0], words[1]);
+			}
+		}
+		
+		s.close();
+	}
+	
+	public void saveToFile(File f) throws FileNotFoundException {
+		PrintWriter pw = new PrintWriter(f);
+		for(SettingsObject<?> ob : allObjects) {
+			pw.println(ob.getName() + " " + ob.getValue());
+		}
+		
+		pw.close();
+	}
+	
 	public SettingsObject<Integer> getInt(String name) {
 		return objectsInteger.get(name);
 	}

@@ -4,7 +4,7 @@
 //= EDITABLE VARIABLES =//
 //======================//
 
-//#define ENABLE_ACID
+#define ENABLE_ACID
 
 //=============================//
 //= END OF EDITABLE VARIABLES =//
@@ -38,7 +38,7 @@ void main() {
 		color.rgba = gl_Color.rgba;
 	} else {
 		
-		float lightmult = min((diffuseLightIntensity + gl_LightModel.ambient.rgb), 1.0);
+		float lightmult = min((diffuseLightIntensity + (gl_LightModel.ambient.rgb.x * gl_LightModel.ambient.rgb.y * gl_LightModel.ambient.rgb.z)), 1.0);
 		
 		color.rgb = lightmult * gl_Color.rgb;
 		color.a = gl_Color.a;
@@ -53,9 +53,9 @@ void main() {
     
     #ifdef ENABLE_ACID
     
-    //vertex.x += cos(vertex.x+time*0.5)*0.2;
-    //vertex.y += sin(vertex.x+time*2)*0.22;  
-    //vertex.z += sin(vertex.x+time)*0.25;  
+    vertex.x += cos(vertex.x+time*0.5)*0.2;
+    vertex.y += sin(vertex.x+time*2)*0.22;  
+    vertex.z += sin(vertex.x+time)*0.25;  
     
     #endif   
     

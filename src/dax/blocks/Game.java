@@ -20,6 +20,7 @@ import java.awt.Font;
 import java.awt.Toolkit;
 import java.awt.image.BufferedImage;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.FloatBuffer;
@@ -33,6 +34,7 @@ import org.lwjgl.LWJGLException;
 import org.lwjgl.Sys;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
+import org.lwjgl.openal.AL;
 import org.lwjgl.opengl.Display;
 import org.lwjgl.opengl.DisplayMode;
 import org.lwjgl.opengl.GL11;
@@ -46,14 +48,13 @@ public class Game implements Runnable {
 	public static Settings settings = new Settings();
 	public static Console console = new Console();
 	public static WorldsManager worlds = new WorldsManager();
-	//--old settings--
+	// --old settings--
 	/*
-	 * public int worldSize = 4;
-	 * public int fov = 85;
-	 * public boolean shouldFilter = true;
-	 * public float heightMultipler = 20;
+	 * public int worldSize = 4; public int fov = 85; public boolean
+	 * shouldFilter = true; public float heightMultipler = 20;
 	 */
-	
+
+	private File configFile = new File("settings.txt");
 	public boolean showbg = false;
 
 	public RenderEngine renderEngine;
@@ -71,7 +72,6 @@ public class Game implements Runnable {
 
 	public GuiScreen guiScreen;
 
-	
 	public static final String TITLE = "Order of the stone";
 
 	public boolean isFullscreen = false;
@@ -100,29 +100,37 @@ public class Game implements Runnable {
 	}
 
 	public static boolean deleteDirectory(File directory) {
-	    if(directory.exists()){
-	        File[] files = directory.listFiles();
-	        if(null!=files){
-	            for(int i=0; i<files.length; i++) {
-	                if(files[i].isDirectory()) {
-	                    deleteDirectory(files[i]);
-	                }
-	                else {
-	                    files[i].delete();
-	                }
-	            }
-	        }
-	    }
-	    return(directory.delete());
+		if (directory.exists()) {
+			File[] files = directory.listFiles();
+			if (null != files) {
+				for (int i = 0; i < files.length; i++) {
+					if (files[i].isDirectory()) {
+						deleteDirectory(files[i]);
+					} else {
+						files[i].delete();
+					}
+				}
+			}
+		}
+		return (directory.delete());
 	}
-	
+
 	@Override
 	public void run() {
+		try {
+			if (!this.configFile.exists()) {
+				this.configFile.createNewFile();
+			}
+			
+			Game.settings.loadFromFile(this.configFile);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}	
+		
 		setDisplayMode(width, height, isFullscreen);
 		load(true);
-		
 
-		renderEngine = new RenderEngine();
+		renderEngine = new RenderEngine(Game.settings.enable_shaders.getValue());
 
 		long time = System.nanoTime();
 		long lastTime = time;
@@ -137,7 +145,8 @@ public class Game implements Runnable {
 				lastTime += TICK_TIME * 1000000000;
 			}
 
-			float partialTickTime = (time - lastTime) / ((float) TICK_TIME * 1000000000);
+			float partialTickTime = (time - lastTime)
+					/ ((float) TICK_TIME * 1000000000);
 
 			if (time - lastInfo >= 1000000000) {
 				lastInfo += 1000000000;
@@ -150,7 +159,7 @@ public class Game implements Runnable {
 			render(partialTickTime);
 
 			Display.update();
-			//Display.sync(5);
+			// Display.sync(5);
 		}
 
 		exit();
@@ -167,6 +176,14 @@ public class Game implements Runnable {
 			world.saveAllChunks();
 		}
 		Display.destroy();
+		AL.destroy();
+		
+		try {
+			Game.settings.saveToFile(this.configFile);
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		}
+		
 		System.exit(0);
 	}
 
@@ -179,9 +196,9 @@ public class Game implements Runnable {
 		displayLoadingScreen("Loading sounds...");
 		SoundManager.load();
 		lastFPS = getTime();
-		
+
 		showbg = true;
-		
+
 		if (toMenu) {
 			openGuiScreen(new GuiScreenMainMenu(this));
 		} else {
@@ -198,14 +215,14 @@ public class Game implements Runnable {
 	}
 
 	public void displayLoadingScreen(String text) {
-		//isIngame = false;
+		// isIngame = false;
 		openGuiScreen(new GuiScreenLoading(this, text));
 		render(0);
 		Display.update();
 	}
 
 	public void displayLoadingScreen() {
-		//isIngame = false;
+		// isIngame = false;
 		openGuiScreen(new GuiScreenLoading(this));
 		render(0);
 		Display.update();
@@ -238,10 +255,12 @@ public class Game implements Runnable {
 				}
 
 				if (consoleOpen) {
-					console.charTyped(Keyboard.getEventCharacter(), Keyboard.getEventKey());
+					console.charTyped(Keyboard.getEventCharacter(),
+							Keyboard.getEventKey());
 				}
 
-				if (Keyboard.getEventKey() == Keyboard.KEY_F && this.guiScreen == null && !consoleOpen) {
+				if (Keyboard.getEventKey() == Keyboard.KEY_F
+						&& this.guiScreen == null && !consoleOpen) {
 					toggleFullscreen();
 				}
 
@@ -311,14 +330,18 @@ public class Game implements Runnable {
 	public void updateFiltering() {
 		TextureManager.atlas.bind();
 		if (settings.linear_filtering.getValue()) {
-			GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MIN_FILTER, GL11.GL_LINEAR);
-			GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MAG_FILTER, GL11.GL_LINEAR);
+			GL11.glTexParameteri(GL11.GL_TEXTURE_2D,
+					GL11.GL_TEXTURE_MIN_FILTER, GL11.GL_LINEAR);
+			GL11.glTexParameteri(GL11.GL_TEXTURE_2D,
+					GL11.GL_TEXTURE_MAG_FILTER, GL11.GL_LINEAR);
 		} else {
-			GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MIN_FILTER, GL11.GL_NEAREST);
-			GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MAG_FILTER, GL11.GL_NEAREST);
+			GL11.glTexParameteri(GL11.GL_TEXTURE_2D,
+					GL11.GL_TEXTURE_MIN_FILTER, GL11.GL_NEAREST);
+			GL11.glTexParameteri(GL11.GL_TEXTURE_2D,
+					GL11.GL_TEXTURE_MAG_FILTER, GL11.GL_NEAREST);
 		}
 	}
-	
+
 	public void initGL() {
 		// Set perspective matrix
 		setPerspective();
@@ -352,7 +375,8 @@ public class Game implements Runnable {
 		ambientLight.put(0.8f).put(0.8f).put(0.8f).put(1).flip();
 		GL11.glLightModel(GL11.GL_LIGHT_MODEL_AMBIENT, ambientLight);
 
-		GL11.glColorMaterial(GL11.GL_FRONT_AND_BACK, GL11.GL_AMBIENT_AND_DIFFUSE);
+		GL11.glColorMaterial(GL11.GL_FRONT_AND_BACK,
+				GL11.GL_AMBIENT_AND_DIFFUSE);
 		GL11.glEnable(GL11.GL_COLOR_MATERIAL);
 		GL11.glEnable(GL12.GL_RESCALE_NORMAL);
 		// GL11.glEnable(GL11.GL_NORMALIZE);
@@ -375,7 +399,8 @@ public class Game implements Runnable {
 	public void setPerspective() {
 		GL11.glMatrixMode(GL11.GL_PROJECTION);
 		GL11.glLoadIdentity();
-		GLU.gluPerspective(settings.fov.getValue(), (float) width / (float) height, 0.05F, 1000);
+		GLU.gluPerspective(settings.fov.getValue(), (float) width
+				/ (float) height, 0.05F, 1000);
 		GL11.glViewport(0, 0, width, height);
 		GL11.glMatrixMode(GL11.GL_MODELVIEW);
 
@@ -440,7 +465,8 @@ public class Game implements Runnable {
 						GL11.glTexCoord2f(TextureManager.menuBg.getWidth(), 0);
 						GL11.glVertex2f(width, 0);
 
-						GL11.glTexCoord2f(TextureManager.menuBg.getWidth(), TextureManager.menuBg.getHeight());
+						GL11.glTexCoord2f(TextureManager.menuBg.getWidth(),
+								TextureManager.menuBg.getHeight());
 						GL11.glVertex2f(width, width);
 
 						GL11.glTexCoord2f(0, TextureManager.menuBg.getHeight());
@@ -452,7 +478,7 @@ public class Game implements Runnable {
 						GL11.glColor3f(0.2f, 0.2f, 0.2f);
 
 						GL11.glDisable(GL11.GL_TEXTURE_2D);
-						
+
 						GL11.glBegin(GL11.GL_QUADS);
 
 						GL11.glVertex2f(0, 0);
@@ -472,16 +498,27 @@ public class Game implements Runnable {
 						GL11.glBegin(GL11.GL_QUADS);
 
 						GL11.glTexCoord2f(0, 0);
-						GL11.glVertex2f((width - TextureManager.logo.getImageWidth()) / 2, height / 2 - 180);
+						GL11.glVertex2f(
+								(width - TextureManager.logo.getImageWidth()) / 2,
+								height / 2 - 180);
 
 						GL11.glTexCoord2f(TextureManager.logo.getWidth(), 0);
-						GL11.glVertex2f((width + TextureManager.logo.getImageWidth()) / 2, height / 2 - 180);
+						GL11.glVertex2f(
+								(width + TextureManager.logo.getImageWidth()) / 2,
+								height / 2 - 180);
 
-						GL11.glTexCoord2f(TextureManager.logo.getWidth(), TextureManager.logo.getHeight());
-						GL11.glVertex2f((width + TextureManager.logo.getImageWidth()) / 2, height / 2 - 180 + TextureManager.logo.getImageHeight());
+						GL11.glTexCoord2f(TextureManager.logo.getWidth(),
+								TextureManager.logo.getHeight());
+						GL11.glVertex2f(
+								(width + TextureManager.logo.getImageWidth()) / 2,
+								height / 2 - 180
+										+ TextureManager.logo.getImageHeight());
 
 						GL11.glTexCoord2f(0, TextureManager.logo.getHeight());
-						GL11.glVertex2f((width - TextureManager.logo.getImageWidth()) / 2, height / 2 - 180 + TextureManager.logo.getImageHeight());
+						GL11.glVertex2f(
+								(width - TextureManager.logo.getImageWidth()) / 2,
+								height / 2 - 180
+										+ TextureManager.logo.getImageHeight());
 
 						GL11.glEnd();
 
@@ -499,30 +536,37 @@ public class Game implements Runnable {
 
 		int cHeight = settings.consoleHeight.getValue();
 
-		float lerp = lastProgress + (animationProgress - lastProgress) * pttbackup;
+		float lerp = lastProgress + (animationProgress - lastProgress)
+				* pttbackup;
 
 		GL11.glTranslatef(0, -((1 - lerp) * cHeight), 0);
 
 		if (lastProgress > 0) {
 			GuiObjectBlank gui = new GuiObjectBlank();
 			gui.drawRect(0, 0, this.width, cHeight, 0xD0000000);
-			gui.drawRect(0, cHeight - font.getLineHeight(), this.width, cHeight, 0x500030A0);
+			gui.drawRect(0, cHeight - font.getLineHeight(), this.width,
+					cHeight, 0x500030A0);
 			GL11.glEnable(GL11.GL_TEXTURE_2D);
 
 			String cursor = (ticks % TPS >= TPS / 2) ? "_" : "";
-			font.drawString(0, cHeight - font.getLineHeight(), "> " + console.currentCommand + cursor);
+			font.drawString(0, cHeight - font.getLineHeight(), "> "
+					+ console.currentCommand + cursor);
 			String info = "Order of the Stone a_0.0.1";
-			font.drawString(width - font.getWidth(info) - 2, cHeight - font.getLineHeight() * 2, info, new org.newdawn.slick.Color(120, 120, 120));
+			font.drawString(width - font.getWidth(info) - 2,
+					cHeight - font.getLineHeight() * 2, info,
+					new org.newdawn.slick.Color(120, 120, 120));
 
-			
-			ListIterator<String> li = console.lines.listIterator(console.lines.size());
+			ListIterator<String> li = console.lines.listIterator(console.lines
+					.size());
 
 			int offset = 0;
 
 			while (li.hasPrevious()) {
 				offset += font.getLineHeight();
 
-				font.drawString(0, cHeight - font.getLineHeight() - offset - console.getTranslation(), li.previous(), new org.newdawn.slick.Color(200, 200, 200));
+				font.drawString(0, cHeight - font.getLineHeight() - offset
+						- console.getTranslation(), li.previous(),
+						new org.newdawn.slick.Color(200, 200, 200));
 			}
 
 		}
@@ -542,7 +586,8 @@ public class Game implements Runnable {
 		int bpp = 4; // Assuming a 32-bit display with a byte each for red,
 						// green, blue, and alpha.
 		ByteBuffer buffer = BufferUtils.createByteBuffer(width * height * bpp);
-		GL11.glReadPixels(0, 0, width, height, GL11.GL_RGBA, GL11.GL_UNSIGNED_BYTE, buffer);
+		GL11.glReadPixels(0, 0, width, height, GL11.GL_RGBA,
+				GL11.GL_UNSIGNED_BYTE, buffer);
 
 		File dir = new File("screenshots");
 
@@ -554,15 +599,17 @@ public class Game implements Runnable {
 
 		int num = 0;
 
-		File file = new File(dir, filename + num + ".png"); 
+		File file = new File(dir, filename + num + ".png");
 
 		while (file.exists()) {
 			num++;
-			file = new File(dir, filename + num + ".png"); 
+			file = new File(dir, filename + num + ".png");
 		}
 
-		String format = "PNG"; // Can be changed to JPG or any other supported format
-		BufferedImage image = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
+		String format = "PNG"; // Can be changed to JPG or any other supported
+								// format
+		BufferedImage image = new BufferedImage(width, height,
+				BufferedImage.TYPE_INT_RGB);
 
 		for (int x = 0; x < width; x++) {
 			for (int y = 0; y < height; y++) {
@@ -570,7 +617,8 @@ public class Game implements Runnable {
 				int r = buffer.get(i) & 0xFF;
 				int g = buffer.get(i + 1) & 0xFF;
 				int b = buffer.get(i + 2) & 0xFF;
-				image.setRGB(x, height - (y + 1), (0xFF << 24) | (r << 16) | (g << 8) | b);
+				image.setRGB(x, height - (y + 1), (0xFF << 24) | (r << 16)
+						| (g << 8) | b);
 			}
 		}
 
@@ -589,11 +637,11 @@ public class Game implements Runnable {
 
 	public void closeGuiScreen() {
 		this.guiScreen = null;
-		
+
 		if (consoleOpen) {
 			consoleOpen = false;
 		}
-		
+
 		Mouse.setGrabbed(true);
 	}
 
@@ -604,13 +652,17 @@ public class Game implements Runnable {
 		GL11.glColor3f(1, 1, 1);
 
 		GL11.glBegin(GL11.GL_QUADS);
-		GL11.glTexCoord2f(TextureManager.getX1(textureid), TextureManager.getY1(textureid));
+		GL11.glTexCoord2f(TextureManager.getX1(textureid),
+				TextureManager.getY1(textureid));
 		GL11.glVertex2f(25, height - 75);
-		GL11.glTexCoord2f(TextureManager.getX2(textureid), TextureManager.getY1(textureid));
+		GL11.glTexCoord2f(TextureManager.getX2(textureid),
+				TextureManager.getY1(textureid));
 		GL11.glVertex2f(75, height - 75);
-		GL11.glTexCoord2f(TextureManager.getX2(textureid), TextureManager.getY2(textureid));
+		GL11.glTexCoord2f(TextureManager.getX2(textureid),
+				TextureManager.getY2(textureid));
 		GL11.glVertex2f(75, height - 25);
-		GL11.glTexCoord2f(TextureManager.getX1(textureid), TextureManager.getY2(textureid));
+		GL11.glTexCoord2f(TextureManager.getX1(textureid),
+				TextureManager.getY2(textureid));
 		GL11.glVertex2f(25, height - 25);
 		GL11.glEnd();
 
@@ -621,25 +673,37 @@ public class Game implements Runnable {
 
 		String fpsString = "FPS: " + fps + ", " + ticksString;
 		int stringWidth = font.getWidth(fpsString);
-		font.drawString(width - stringWidth - 2, font.getHeight() * 2, fpsString);
+		font.drawString(width - stringWidth - 2, font.getHeight() * 2,
+				fpsString);
 
 		font.drawString(2, 0, "X Position: " + world.player.posX);
 		font.drawString(2, font.getHeight(), "Y Position: " + world.player.posY);
-		font.drawString(2, font.getHeight() * 2, "Z Position: " + world.player.posZ);
+		font.drawString(2, font.getHeight() * 2, "Z Position: "
+				+ world.player.posZ);
 
-		String memory = "Used memory: " + (allocatedMemory / (1024 * 1024) - freeMemory / (1024 * 1024)) + "MB" + "/" + allocatedMemory / (1024 * 1024) + "MB";
+		String memory = "Used memory: "
+				+ (allocatedMemory / (1024 * 1024) - freeMemory / (1024 * 1024))
+				+ "MB" + "/" + allocatedMemory / (1024 * 1024) + "MB";
 		int memoryWidth = font.getWidth(memory);
 		font.drawString(width - memoryWidth - 2, 0, memory);
 
-		String chunks = "Chunks drawn: " + renderEngine.chunksDrawn + "/" + renderEngine.chunksLoaded;
-		font.drawString(width - font.getWidth(chunks) - 2, font.getHeight(), chunks);
-		
+		String chunks = "Chunks drawn: " + renderEngine.chunksDrawn + "/"
+				+ renderEngine.chunksLoaded;
+		font.drawString(width - font.getWidth(chunks) - 2, font.getHeight(),
+				chunks);
+
 		if (world.chunkProvider.loading) {
-			font.drawString(width - font.getWidth("Loading chunks...") - 2, height - font.getHeight(), "Loading chunks...", new org.newdawn.slick.Color(255, 255, 255, 255));
+			font.drawString(width - font.getWidth("Loading chunks...") - 2,
+					height - font.getHeight(), "Loading chunks...",
+					new org.newdawn.slick.Color(255, 255, 255, 255));
 		}
-		
+
 		if (renderEngine.building) {
-			font.drawString(width - font.getWidth("Building chunks...") - 2, height - font.getHeight() * (world.chunkProvider.loading ? 2 : 1), "Building chunks...", new org.newdawn.slick.Color(255, 255, 255, 255));
+			font.drawString(width - font.getWidth("Building chunks...") - 2,
+					height - font.getHeight()
+							* (world.chunkProvider.loading ? 2 : 1),
+					"Building chunks...", new org.newdawn.slick.Color(255, 255,
+							255, 255));
 		}
 
 		GL11.glDisable(GL11.GL_TEXTURE_2D);
@@ -666,7 +730,10 @@ public class Game implements Runnable {
 	 * @author NinjaCave
 	 */
 	public void setDisplayMode(int width, int height, boolean fullscreen) {
-		if (Display.isCreated() && (Display.getDisplayMode().getWidth() == width) && (Display.getDisplayMode().getHeight() == height) && (Display.isFullscreen() == fullscreen)) {
+		if (Display.isCreated()
+				&& (Display.getDisplayMode().getWidth() == width)
+				&& (Display.getDisplayMode().getHeight() == height)
+				&& (Display.isFullscreen() == fullscreen)) {
 			return;
 		}
 
@@ -680,15 +747,22 @@ public class Game implements Runnable {
 				for (int i = 0; i < modes.length; i++) {
 					DisplayMode current = modes[i];
 
-					if ((current.getWidth() == width) && (current.getHeight() == height)) {
-						if ((targetDisplayMode == null) || (current.getFrequency() >= freq)) {
-							if ((targetDisplayMode == null) || (current.getBitsPerPixel() > targetDisplayMode.getBitsPerPixel())) {
+					if ((current.getWidth() == width)
+							&& (current.getHeight() == height)) {
+						if ((targetDisplayMode == null)
+								|| (current.getFrequency() >= freq)) {
+							if ((targetDisplayMode == null)
+									|| (current.getBitsPerPixel() > targetDisplayMode
+											.getBitsPerPixel())) {
 								targetDisplayMode = current;
 								freq = targetDisplayMode.getFrequency();
 							}
 						}
 
-						if ((current.getBitsPerPixel() == Display.getDesktopDisplayMode().getBitsPerPixel()) && (current.getFrequency() == Display.getDesktopDisplayMode().getFrequency())) {
+						if ((current.getBitsPerPixel() == Display
+								.getDesktopDisplayMode().getBitsPerPixel())
+								&& (current.getFrequency() == Display
+										.getDesktopDisplayMode().getFrequency())) {
 							targetDisplayMode = current;
 							break;
 						}
@@ -711,14 +785,16 @@ public class Game implements Runnable {
 			}
 
 			if (targetDisplayMode == null) {
-				Game.console.out("Failed to find value mode: " + width + "x" + height + " fs=" + fullscreen);
+				Game.console.out("Failed to find value mode: " + width + "x"
+						+ height + " fs=" + fullscreen);
 				return;
 			}
 
 			Display.setDisplayMode(targetDisplayMode);
 			Display.setFullscreen(fullscreen);
 
-			if (!Display.isCreated()) {;
+			if (!Display.isCreated()) {
+				;
 				try {
 					Display.create(new PixelFormat(/* Alpha Bits */8, /*
 																		 * Depth
@@ -726,7 +802,8 @@ public class Game implements Runnable {
 																		 */8, /*
 																			 * Stencil
 																			 * bits
-																			 */0, /* samples */settings.aa_samples.getValue()));
+																			 */
+							0, /* samples */settings.aa_samples.getValue()));
 					Game.console.out("Display created!");
 					// Display.create();
 				} catch (LWJGLException e) {
@@ -737,7 +814,8 @@ public class Game implements Runnable {
 			init();
 
 		} catch (LWJGLException e) {
-			Game.console.out("Unable to setup mode " + width + "x" + height + " fullscreen=" + fullscreen + e);
+			Game.console.out("Unable to setup mode " + width + "x" + height
+					+ " fullscreen=" + fullscreen + e);
 		}
 	}
 

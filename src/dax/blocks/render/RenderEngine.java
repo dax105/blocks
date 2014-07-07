@@ -39,40 +39,50 @@ public class RenderEngine {
 
 	public int chunksDrawn = 0;
 	public int chunksLoaded = 0;
-	
+
 	public boolean building = false;
 
 	public int program = 0;
-	
+
 	public int blockAttributeID;
 
+	private boolean enableShaders;
+
 	public RenderEngine() {
+		this(false);
+	}
+
+	public RenderEngine(boolean enableShaders) {
+		this.enableShaders = enableShaders;
 		this.frustum = new Frustum();
 		this.rightModelviewVec = new float[3];
 		this.upModelviewVec = new float[3];
 		this.chunkDistComp = new ChunkDistanceComparator();
 
-		// Load a shader that I'll never use 
+		// Load a shader that I'll never use
 		// ===================
 		// INIT WORLD SHADER
 		// ===================
 		int vertShader = 0, fragShader = 0;
 
 		try {
-			vertShader = createShader("dax/blocks/shaders/screen.vsh", ARBVertexShader.GL_VERTEX_SHADER_ARB);
-			fragShader = createShader("dax/blocks/shaders/screen.fsh", ARBFragmentShader.GL_FRAGMENT_SHADER_ARB);
+			vertShader = createShader("dax/blocks/shaders/screen.vsh",
+					ARBVertexShader.GL_VERTEX_SHADER_ARB);
+			fragShader = createShader("dax/blocks/shaders/screen.fsh",
+					ARBFragmentShader.GL_FRAGMENT_SHADER_ARB);
 		} catch (Exception exc) {
-			System.err.println("============================================\n" + "=AN ERROR OCCURED WHILE LOADING THE SHADER!=\n" + "============================================");
+			System.err.println("============================================\n"
+					+ "=AN ERROR OCCURED WHILE LOADING THE SHADER!=\n"
+					+ "============================================");
 
 			exc.printStackTrace();
 
 			System.err.println(getLogInfo(program));
-			
-			
-			//JOptionPane.showMessageDialog(null, "AN ERROR OCCURED WHILE LOADING THE SHADER!");
-			
-			
-			//System.exit(1);
+
+			// JOptionPane.showMessageDialog(null,
+			// "AN ERROR OCCURED WHILE LOADING THE SHADER!");
+
+			// System.exit(1);
 		} finally {
 			if (vertShader == 0 || fragShader == 0)
 				return;
@@ -83,38 +93,39 @@ public class RenderEngine {
 		if (program == 0)
 			return;
 
-		/*
-		 * if the vertex and fragment shaders setup sucessfully, attach them to
-		 * the shader program, link the sahder program (into the GL context I
-		 * suppose), and validate
-		 */
-		ARBShaderObjects.glAttachObjectARB(program, vertShader);
-		ARBShaderObjects.glAttachObjectARB(program, fragShader);
+		if (enableShaders) {
 
-		ARBShaderObjects.glLinkProgramARB(program);
-		if (ARBShaderObjects.glGetObjectParameteriARB(program, ARBShaderObjects.GL_OBJECT_LINK_STATUS_ARB) == GL11.GL_FALSE) {
-			System.err.println("============================================\n" + "=AN ERROR OCCURED WHILE LOADING THE SHADER!=\n" + "============================================");
-			System.err.println(getLogInfo(program));
-			
-			//JOptionPane.showMessageDialog(null, "AN ERROR OCCURED WHILE LOADING THE SHADER!");
-			
-			//System.exit(1);
+			/*
+			 * if the vertex and fragment shaders setup sucessfully, attach them
+			 * to the shader program, link the sahder program (into the GL
+			 * context I suppose), and validate
+			 */
+			ARBShaderObjects.glAttachObjectARB(program, vertShader);
+			ARBShaderObjects.glAttachObjectARB(program, fragShader);
+
+			ARBShaderObjects.glLinkProgramARB(program);
+			if (ARBShaderObjects.glGetObjectParameteriARB(program,
+					ARBShaderObjects.GL_OBJECT_LINK_STATUS_ARB) == GL11.GL_FALSE) {
+				System.err
+						.println("============================================\n"
+								+ "=AN ERROR OCCURED WHILE LOADING THE SHADER!=\n"
+								+ "============================================");
+				System.err.println(getLogInfo(program));
+			}
+
+			ARBShaderObjects.glValidateProgramARB(program);
+			if (ARBShaderObjects.glGetObjectParameteriARB(program,
+					ARBShaderObjects.GL_OBJECT_VALIDATE_STATUS_ARB) == GL11.GL_FALSE) {
+				System.err
+						.println("============================================\n"
+								+ "=AN ERROR OCCURED WHILE LOADING THE SHADER!=\n"
+								+ "============================================");
+				System.err.println(getLogInfo(program));
+			}
+
+			blockAttributeID = GL20.glGetAttribLocation(program, "blockid");
+			Game.console.out("Shader seems to be loaded!");
 		}
-
-		ARBShaderObjects.glValidateProgramARB(program);
-		if (ARBShaderObjects.glGetObjectParameteriARB(program, ARBShaderObjects.GL_OBJECT_VALIDATE_STATUS_ARB) == GL11.GL_FALSE) {
-			System.err.println("============================================\n" + "=AN ERROR OCCURED WHILE LOADING THE SHADER!=\n" + "============================================");
-			System.err.println(getLogInfo(program));
-			
-			//JOptionPane.showMessageDialog(null, "AN ERROR OCCURED WHILE LOADING THE SHADER!");
-			
-			//System.exit(1);
-		}
-
-		//blockAttributeID = GL20.glGetAttribLocation(program, "blockid");
-		
-		//Game.console.out("Shader seems to be loaded!");
-
 	}
 
 	/*
@@ -131,11 +142,14 @@ public class RenderEngine {
 			if (shader == 0)
 				return 0;
 
-			ARBShaderObjects.glShaderSourceARB(shader, readFileAsString(filename));
+			ARBShaderObjects.glShaderSourceARB(shader,
+					readFileAsString(filename));
 			ARBShaderObjects.glCompileShaderARB(shader);
 
-			if (ARBShaderObjects.glGetObjectParameteriARB(shader, ARBShaderObjects.GL_OBJECT_COMPILE_STATUS_ARB) == GL11.GL_FALSE)
-				throw new RuntimeException("Error creating shader: " + getLogInfo(shader));
+			if (ARBShaderObjects.glGetObjectParameteriARB(shader,
+					ARBShaderObjects.GL_OBJECT_COMPILE_STATUS_ARB) == GL11.GL_FALSE)
+				throw new RuntimeException("Error creating shader: "
+						+ getLogInfo(shader));
 
 			return shader;
 		} catch (Exception exc) {
@@ -145,13 +159,16 @@ public class RenderEngine {
 	}
 
 	private static String getLogInfo(int obj) {
-		return ARBShaderObjects.glGetInfoLogARB(obj, ARBShaderObjects.glGetObjectParameteriARB(obj, ARBShaderObjects.GL_OBJECT_INFO_LOG_LENGTH_ARB));
+		return ARBShaderObjects.glGetInfoLogARB(obj, ARBShaderObjects
+				.glGetObjectParameteriARB(obj,
+						ARBShaderObjects.GL_OBJECT_INFO_LOG_LENGTH_ARB));
 	}
 
 	private String readFileAsString(String filename) throws Exception {
 		StringBuilder source = new StringBuilder();
 
-		InputStream in = getClass().getClassLoader().getResourceAsStream(filename);
+		InputStream in = getClass().getClassLoader().getResourceAsStream(
+				filename);
 
 		Exception exception = null;
 
@@ -215,7 +232,9 @@ public class RenderEngine {
 		GL11.glPushMatrix();
 		GL11.glRotatef(-player.tilt, 1f, 0f, 0f);
 		GL11.glRotatef(player.heading, 0f, 1f, 0f);
-		GL11.glTranslated(-player.getPartialX(this.ptt), -player.getPartialY(this.ptt) - Player.EYES_HEIGHT, -player.getPartialZ(ptt));
+		GL11.glTranslated(-player.getPartialX(this.ptt),
+				-player.getPartialY(this.ptt) - Player.EYES_HEIGHT,
+				-player.getPartialZ(ptt));
 	}
 
 	public static final String FLAG_LIGHTING = "lighting";
@@ -246,15 +265,17 @@ public class RenderEngine {
 
 		GL11.glColor3f(1, 1, 1);
 
-		//ARBShaderObjects.glUseProgramObjectARB(program);
+		if(enableShaders)
+			ARBShaderObjects.glUseProgramObjectARB(program);
 
 		sSetFloat(UNIFORM_TIME, System.nanoTime() / 1000000000f);
-		sSetFloat(UNIFORM_FOG_DISTANCE, Game.settings.drawDistance.getValue() * 16 - 8);
+		sSetFloat(UNIFORM_FOG_DISTANCE,
+				Game.settings.drawDistance.getValue() * 16 - 8);
 
-		//Game.getInstance().setOrtho();
-		//renderSky(Game.getInstance().world.player.tilt);
-		//Game.getInstance().setPerspective();
-		
+		// Game.getInstance().setOrtho();
+		// renderSky(Game.getInstance().world.player.tilt);
+		// Game.getInstance().setPerspective();
+
 		this.ptt = ptt;
 		pushPlayerMatrix(world.player);
 		updateBeforeRendering(ptt);
@@ -275,14 +296,16 @@ public class RenderEngine {
 		sEnable(FLAG_TEXTURE);
 		sEnable(FLAG_FOG);
 
-		renderSkybox(world.player.getPartialX(ptt), world.player.getPartialY(ptt) + Player.EYES_HEIGHT, world.player.getPartialZ(ptt));
+		renderSkybox(world.player.getPartialX(ptt),
+				world.player.getPartialY(ptt) + Player.EYES_HEIGHT,
+				world.player.getPartialZ(ptt));
 
 		TextureManager.atlas.bind();
 
 		sDisable(FLAG_TEXTURE);
 
 		GL11.glDisable(GL11.GL_TEXTURE_2D);
-		
+
 		// Render particles
 		GL11.glBegin(GL11.GL_QUADS);
 		for (Particle p : world.particles) {
@@ -296,10 +319,10 @@ public class RenderEngine {
 		for (int i = 0; i < 1; i++) {
 			GL11.glPushMatrix();
 			GL11.glTranslatef(i - 0.0625f, 49, 10);
-			//GL11.glTranslatef(33.0f, 0f, 60.0f);
-			//GL11.glRotatef(System.nanoTime() / 100000000f, 0, 1, 0);
-			//GL11.glTranslatef(-33.0f, 0f, -60.0f);
-			//GL11.glScalef(0.0625f, 0.0625f, 0.0625f);
+			// GL11.glTranslatef(33.0f, 0f, 60.0f);
+			// GL11.glRotatef(System.nanoTime() / 100000000f, 0, 1, 0);
+			// GL11.glTranslatef(-33.0f, 0f, -60.0f);
+			// GL11.glScalef(0.0625f, 0.0625f, 0.0625f);
 			GL11.glScalef(0.5f, 0.5f, 0.5f);
 			GL11.glCallList(ModelManager.character.displayList);
 			GL11.glPopMatrix();
@@ -316,7 +339,8 @@ public class RenderEngine {
 		int pcx = (int) world.player.posX / 16;
 		int pcz = (int) world.player.posZ / 16;
 
-		List<Chunk> visibleChunks = world.chunkProvider.getChunksInRadius(pcx, pcz, Game.settings.drawDistance.getValue());
+		List<Chunk> visibleChunks = world.chunkProvider.getChunksInRadius(pcx,
+				pcz, Game.settings.drawDistance.getValue());
 
 		for (Iterator<Chunk> iter = visibleChunks.iterator(); iter.hasNext();) {
 			Chunk c = iter.next();
@@ -330,105 +354,142 @@ public class RenderEngine {
 
 		int generatedMeshes = 0;
 
-
-		for (Chunk c : visibleChunks) {	
+		for (Chunk c : visibleChunks) {
 			if (c != null) {
-				for (int y = 0; y < 8; y++) {			
-					
+				for (int y = 0; y < 8; y++) {
+
 					if (generatedMeshes >= Game.settings.rebuilds_pf.getValue()) {
 						building = true;
 						break;
 					} else {
 						building = false;
 					}
-					
-					if (!c.renderChunks[y].isGenerated() || c.renderChunks[y].isDirty()) {
+
+					if (!c.renderChunks[y].isGenerated()
+							|| c.renderChunks[y].isDirty()) {
 						ChunkProvider cp = world.chunkProvider;
-						if (cp.isChunkLoaded(new Coord2D(c.x+1, c.z)) && cp.isChunkLoaded(new Coord2D(c.x-1, c.z)) && cp.isChunkLoaded(new Coord2D(c.x, c.z+1)) && cp.isChunkLoaded(new Coord2D(c.x, c.z-1))) {
+						if (cp.isChunkLoaded(new Coord2D(c.x + 1, c.z))
+								&& cp.isChunkLoaded(new Coord2D(c.x - 1, c.z))
+								&& cp.isChunkLoaded(new Coord2D(c.x, c.z + 1))
+								&& cp.isChunkLoaded(new Coord2D(c.x, c.z - 1))) {
 							c.rebuild(y);
 							generatedMeshes++;
 						}
 					}
 				}
 			}
-			
+
 			if (generatedMeshes >= Game.settings.rebuilds_pf.getValue()) {
 				building = true;
 				break;
 			} else {
 				building = false;
 			}
-			
+
 		}
-		
-		for (Chunk c : visibleChunks) {		
+
+		for (Chunk c : visibleChunks) {
 			if (c != null) {
-				for (int y = 0; y < 8; y++) {			
-					if (c.renderChunks[y].isGenerated() && c.renderChunks[y].getCdl().isPresent(RenderPass.PASS_OPAQUE) && frustum.cuboidInFrustum(c.x*16, y*16, c.z*16, c.x*16+16, y*16+16, c.z*16+16)) {
-						GL11.glCallList(c.renderChunks[y].getCdl().getListID(RenderPass.PASS_OPAQUE));
+				for (int y = 0; y < 8; y++) {
+					if (c.renderChunks[y].isGenerated()
+							&& c.renderChunks[y].getCdl().isPresent(
+									RenderPass.PASS_OPAQUE)
+							&& frustum.cuboidInFrustum(c.x * 16, y * 16,
+									c.z * 16, c.x * 16 + 16, y * 16 + 16,
+									c.z * 16 + 16)) {
+						GL11.glCallList(c.renderChunks[y].getCdl().getListID(
+								RenderPass.PASS_OPAQUE));
 						chunksDrawn++;
 					}
 				}
 			}
 		}
-		
-		GL11.glEnable(GL11.GL_ALPHA_TEST);	
-		for (Chunk c : visibleChunks) {		
+
+		GL11.glEnable(GL11.GL_ALPHA_TEST);
+		for (Chunk c : visibleChunks) {
 			if (c != null) {
-				for (int y = 0; y < 8; y++) {			
-					if (c.renderChunks[y].isGenerated() && c.renderChunks[y].getCdl().isPresent(RenderPass.PASS_TRANSPARENT) && frustum.cuboidInFrustum(c.x*16, y*16, c.z*16, c.x*16+16, y*16+16, c.z*16+16)) {
-						GL11.glCallList(c.renderChunks[y].getCdl().getListID(RenderPass.PASS_TRANSPARENT));
+				for (int y = 0; y < 8; y++) {
+					if (c.renderChunks[y].isGenerated()
+							&& c.renderChunks[y].getCdl().isPresent(
+									RenderPass.PASS_TRANSPARENT)
+							&& frustum.cuboidInFrustum(c.x * 16, y * 16,
+									c.z * 16, c.x * 16 + 16, y * 16 + 16,
+									c.z * 16 + 16)) {
+						GL11.glCallList(c.renderChunks[y].getCdl().getListID(
+								RenderPass.PASS_TRANSPARENT));
 						chunksDrawn++;
 					}
 				}
 			}
 		}
-		
+
 		GL11.glDisable(GL11.GL_ALPHA_TEST);
-		
+
 		GL11.glColorMask(false, false, false, false);
-		
-		for (Chunk c : visibleChunks) {		
+
+		for (Chunk c : visibleChunks) {
 			if (c != null) {
-				for (int y = 0; y < 8; y++) {			
-					if (c.renderChunks[y].isGenerated() && c.renderChunks[y].getCdl().isPresent(RenderPass.PASS_TRANSLUCENT) && frustum.cuboidInFrustum(c.x*16, y*16, c.z*16, c.x*16+16, y*16+16, c.z*16+16)) {
-						GL11.glCallList(c.renderChunks[y].getCdl().getListID(RenderPass.PASS_TRANSLUCENT));
+				for (int y = 0; y < 8; y++) {
+					if (c.renderChunks[y].isGenerated()
+							&& c.renderChunks[y].getCdl().isPresent(
+									RenderPass.PASS_TRANSLUCENT)
+							&& frustum.cuboidInFrustum(c.x * 16, y * 16,
+									c.z * 16, c.x * 16 + 16, y * 16 + 16,
+									c.z * 16 + 16)) {
+						GL11.glCallList(c.renderChunks[y].getCdl().getListID(
+								RenderPass.PASS_TRANSLUCENT));
 						chunksDrawn++;
 					}
 				}
 			}
 		}
-		
+
 		GL11.glColorMask(true, true, true, true);
-		for (Chunk c : visibleChunks) {		
+		for (Chunk c : visibleChunks) {
 			if (c != null) {
-				for (int y = 0; y < 8; y++) {			
-					if (c.renderChunks[y].isGenerated() && c.renderChunks[y].getCdl().isPresent(RenderPass.PASS_TRANSLUCENT) && frustum.cuboidInFrustum(c.x*16, y*16, c.z*16, c.x*16+16, y*16+16, c.z*16+16)) {
-						GL11.glCallList(c.renderChunks[y].getCdl().getListID(RenderPass.PASS_TRANSLUCENT));
+				for (int y = 0; y < 8; y++) {
+					if (c.renderChunks[y].isGenerated()
+							&& c.renderChunks[y].getCdl().isPresent(
+									RenderPass.PASS_TRANSLUCENT)
+							&& frustum.cuboidInFrustum(c.x * 16, y * 16,
+									c.z * 16, c.x * 16 + 16, y * 16 + 16,
+									c.z * 16 + 16)) {
+						GL11.glCallList(c.renderChunks[y].getCdl().getListID(
+								RenderPass.PASS_TRANSLUCENT));
 						chunksDrawn++;
 					}
 				}
 			}
 		}
-		
 
 		GL11.glDisable(GL11.GL_LIGHTING);
 		sDisable(FLAG_LIGHTING);
 		sDisable(FLAG_FOG);
 
-		renderClouds(world.player.getPartialX(ptt), world.player.getPartialZ(ptt));
-		
+		renderClouds(world.player.getPartialX(ptt),
+				world.player.getPartialZ(ptt));
+
 		// Render selection box
 		if (world.player.hasSelected) {
 			GL11.glDisable(GL11.GL_DEPTH_TEST);
 			GL11.glDepthMask(false);
 			GL11.glLineWidth(2);
 			GL11.glColor4f(0.0F, 0.0F, 0.0F, 0.25F);
-			renderLinedBox(world.player.lookingAtX - 0.002f, world.player.lookingAtY - 0.002f, world.player.lookingAtZ - 0.002f, world.player.lookingAtX + 1 + 0.002f, world.player.lookingAtY + 1 + 0.002f, world.player.lookingAtZ + 1 + 0.002f);
+			renderLinedBox(world.player.lookingAtX - 0.002f,
+					world.player.lookingAtY - 0.002f,
+					world.player.lookingAtZ - 0.002f,
+					world.player.lookingAtX + 1 + 0.002f,
+					world.player.lookingAtY + 1 + 0.002f,
+					world.player.lookingAtZ + 1 + 0.002f);
 			GL11.glEnable(GL11.GL_DEPTH_TEST);
 			GL11.glLineWidth(4);
 			GL11.glColor4f(0.0F, 0.0F, 0.0F, 0.5F);
-			renderLinedBox(world.player.lookingAtX - 0.002f, world.player.lookingAtY - 0.002f, world.player.lookingAtZ - 0.002f, world.player.lookingAtX + 1 + 0.002f, world.player.lookingAtY + 1 + 0.002f, world.player.lookingAtZ + 1 + 0.002f);
+			renderLinedBox(world.player.lookingAtX - 0.002f,
+					world.player.lookingAtY - 0.002f,
+					world.player.lookingAtZ - 0.002f,
+					world.player.lookingAtX + 1 + 0.002f,
+					world.player.lookingAtY + 1 + 0.002f,
+					world.player.lookingAtZ + 1 + 0.002f);
 			GL11.glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
 			GL11.glDepthMask(true);
 		}
@@ -485,9 +546,9 @@ public class RenderEngine {
 		GL11.glDisable(GL11.GL_DEPTH_TEST);
 		GL11.glDisable(GL11.GL_LIGHTING);
 		GL11.glDisable(GL11.GL_BLEND);
-		
+
 		GL11.glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
-		
+
 		GL11.glBegin(GL11.GL_QUADS);
 		GL11.glColor3f(0.9f, 0.9f, 1.0f);
 		GL11.glVertex2f(0, 0);
@@ -498,11 +559,11 @@ public class RenderEngine {
 		GL11.glColor3f(0.8f, 0.8f, 1.0f);
 		GL11.glVertex2f(0, Display.getHeight());
 		GL11.glEnd();
-		
+
 		GL11.glPopAttrib();
 		GL11.glPopMatrix();
 	}
-	
+
 	public void renderSkybox(float x, float y, float z) {
 		// Store the current matrix
 		GL11.glPushMatrix();
@@ -596,7 +657,7 @@ public class RenderEngine {
 	}
 
 	public void renderUnlockedBlock(float x, float y, float z, Block block) {
-		//TODO Actually do something here
+		// TODO Actually do something here
 	}
 
 	public void renderParticle(Particle p, float ptt) {
@@ -605,12 +666,18 @@ public class RenderEngine {
 		float h = Particle.PARTICLE_SIZE / 2;
 		float sizemutipler = (h / 1);
 
-		float rightup0p = (rightModelviewVec[0] + upModelviewVec[0]) * sizemutipler;
-		float rightup1p = (rightModelviewVec[1] + upModelviewVec[1]) * sizemutipler;
-		float rightup2p = (rightModelviewVec[2] + upModelviewVec[2]) * sizemutipler;
-		float rightup0n = (rightModelviewVec[0] - upModelviewVec[0]) * sizemutipler;
-		float rightup1n = (rightModelviewVec[1] - upModelviewVec[1]) * sizemutipler;
-		float rightup2n = (rightModelviewVec[2] - upModelviewVec[2]) * sizemutipler;
+		float rightup0p = (rightModelviewVec[0] + upModelviewVec[0])
+				* sizemutipler;
+		float rightup1p = (rightModelviewVec[1] + upModelviewVec[1])
+				* sizemutipler;
+		float rightup2p = (rightModelviewVec[2] + upModelviewVec[2])
+				* sizemutipler;
+		float rightup0n = (rightModelviewVec[0] - upModelviewVec[0])
+				* sizemutipler;
+		float rightup1n = (rightModelviewVec[1] - upModelviewVec[1])
+				* sizemutipler;
+		float rightup2n = (rightModelviewVec[2] - upModelviewVec[2])
+				* sizemutipler;
 
 		float px = p.getPartialX(ptt);
 		float py = p.getPartialY(ptt);
@@ -620,7 +687,7 @@ public class RenderEngine {
 		GL11.glVertex3f(px + rightup0n, py + rightup1n, pz + rightup2n);
 		GL11.glVertex3f(px + rightup0p, py + rightup1p, pz + rightup2p);
 		GL11.glVertex3f(px - rightup0n, py - rightup1n, pz - rightup2n);
-		
+
 		// GL11.glVertex3f(px, py, pz);
 
 		// GL11.glVertex3f(px-Particle.PARTICLE_SIZE/2,
@@ -629,7 +696,8 @@ public class RenderEngine {
 		// py+Particle.PARTICLE_SIZE/2, pz+Particle.PARTICLE_SIZE/2);
 	}
 
-	public void renderLinedBox(float x0, float y0, float z0, float x1, float y1, float z1) {
+	public void renderLinedBox(float x0, float y0, float z0, float x1,
+			float y1, float z1) {
 		GL11.glBegin(GL11.GL_LINES);
 
 		// front

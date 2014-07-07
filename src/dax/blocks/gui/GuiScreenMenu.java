@@ -34,7 +34,7 @@ public class GuiScreenMenu extends GuiScreen {
 		} else if (button.id == 3) {
 			game.world.saveAllChunks();
 			game.world = null;
-			game.renderEngine = new RenderEngine();
+			game.renderEngine = new RenderEngine(Game.settings.enable_shaders.getValue());
 			game.ingame = false;
 			game.openGuiScreen(new GuiScreenMainMenu(game));
 		}

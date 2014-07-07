@@ -4,7 +4,7 @@
 //= EDITABLE VARIABLES =
 //======================
 
-//#define ENABLE_FOG
+#define ENABLE_FOG
 #define FOG_RAMP 30.0
 
 //=============================
