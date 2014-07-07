@@ -1,10 +1,6 @@
 package dax.blocks.gui;
 
 import dax.blocks.Game;
-import dax.blocks.SoundManager;
-import dax.blocks.TextureManager;
-
-import org.lwjgl.opengl.GL11;
 
 public class GuiScreenSettings extends GuiScreen {
 
@@ -30,40 +26,36 @@ public class GuiScreenSettings extends GuiScreen {
 		String treeText[] = {"Tree generator: ON", "Tree generator: OFF"};
 		String soundText[] = {"Sound: ON", "Sound: OFF"};
 	
+		//Rectangle
 		objects.add(new GuiObjectRectangle((game.width - width - overflow) / 2, (game.height - height - overflow) / 2, (game.width + width + overflow) / 2, (game.height + height + overflow) / 2, 0xA0000000));
-
 		objects.add(new GuiObjectTitleBar((game.width - width) / 2, (game.height - height) / 2, (game.width + width) / 2, ((game.height - height) / 2) + 30, this.f, "Options"));
 
-		//Render distance
+		//Render distance [INTEGER SETTINGS SLIDER][ID 3]
 		objects.add(new GuiObjectSettingsIntegerSlider((game.width - width) / 2, (game.height - height) / 2 + 34, (game.width + width) / 2, ((game.height - height) / 2) + 58, this.f, "Render distance: %v chunks", 3, this, 2, 30, Game.settings.drawDistance));
 		
-		//objects.add(new GuiObjectRectangle((game.width - width) / 2, (game.height - height) / 2 + 62, (game.width + width) / 2, ((game.height - height) / 2) + 86, 0xA0051B7F));
-		objects.add(new GuiObjectChangingButton((game.width - width) / 2, (game.height - height) / 2 + 62, (game.width - width - 8) / 2 + 128, (game.height - height) / 2 + 86, this.f, soundText, sound ? 0 : 1, 5, this));
+		//Sound on/off [CHANGING BUTTON][ID 4]
+		objects.add(new GuiObjectChangingButton((game.width - width) / 2, (game.height - height) / 2 + 62, (game.width - width - 8) / 2 + 128, (game.height - height) / 2 + 86, this.f, soundText, sound ? 0 : 1, 4, this));
+		
+		//Sound volume [FLOAT SETTINGS SLIDER][ID 2]
 		objects.add(new GuiObjectSettingsFloatSlider((game.width - width) / 2 + 128, (game.height - height) / 2 + 62, (game.width + width) / 2, ((game.height - height) / 2) + 86, this.f, "Volume: %v", 2, this, 0f, 1f, Game.settings.sound_volume));
 		
-		//Texture filtering
-		objects.add(new GuiObjectChangingButton((game.width - width) / 2, (game.height - height) / 2 + 118, (game.width + width) / 2, ((game.height - height) / 2) + 144, this.f, filteringText, filter ? 0 : 1, 1, this));
+		//Texture filtering [CHANGING BUTTON][ID 3]
+		objects.add(new GuiObjectChangingButton((game.width - width) / 2, (game.height - height) / 2 + 118, (game.width + width) / 2, ((game.height - height) / 2) + 144, this.f, filteringText, filter ? 0 : 1, 3, this));
 		
-		//Tree generation
+		//Tree generation [CHANGING BUTTON][ID 2]
 		objects.add(new GuiObjectChangingButton((game.width - width) / 2, (game.height - height) / 2 + 148, (game.width + width) / 2, ((game.height - height) / 2) + 172, this.f, treeText, trees ? 0 : 1, 2, this));
 		
-		//FOV
-		objects.add(new GuiObjectSettingsFloatSlider((game.width - width) / 2, (game.height - height) / 2 + 90, (game.width + width) / 2, ((game.height - height) / 2) + 114, this.f, "FOV: %v", 3, this, 30, 160, Game.settings.fov));
+		//FOV [FLOAT SETTINGS SLIDER][ID 1]
+		objects.add(new GuiObjectSettingsFloatSlider((game.width - width) / 2, (game.height - height) / 2 + 90, (game.width + width) / 2, ((game.height - height) / 2) + 114, this.f, "FOV: %v", 1, this, 30, 160, Game.settings.fov));
 		
-		//Apply, close
-		objects.add(new GuiObjectButton((game.width - width) / 2, (game.height + height) / 2 - 24, ((game.width + width) / 2), ((game.height + height) / 2), this.f, "Close", 4, this));
-
-		//Button IDs: 1 - filtering (ch); 2 - tree gen (ch); 3 - close; 4 - apply; 5 - sound on/off (ch)
-		//Slider IDs: 1 - xxx; 2 - volume; 3 - FOV
+		//Apply/close [BUTTON][ID 1]
+		objects.add(new GuiObjectButton((game.width - width) / 2, (game.height + height) / 2 - 24, ((game.width + width) / 2), ((game.height + height) / 2), this.f, "Close", 1, this));
 	}
 
 	@Override
 	public void buttonPress(GuiObjectButton button) {
-		if (button.id == 3) {
-			close();
-		}
 
-		if (button.id == 4) {
+		if (button.id == 1) {
 			
 			Game.settings.linear_filtering.setValue(filter);
 			Game.settings.tree_generation.setValue(trees);
@@ -89,13 +81,13 @@ public class GuiScreenSettings extends GuiScreen {
 	public void sliderUpdate(GuiObjectSlider slider) {
 		switch(slider.id) {
 		case 1:
-			//TODO
+			//TODO FOV slider
 			break;
 		case 2:
 			Game.sound.actualizeVolume();
 			break;
 		case 3:
-			//TODO
+			//TODO Render distance slider
 			break;
 		}
 	}
@@ -103,13 +95,13 @@ public class GuiScreenSettings extends GuiScreen {
 	@Override
 	public void buttonChanged(GuiObjectChangingButton button, int line) {
 		switch(button.id) {
-		case 1:
+		case 3:
 			filter = (button.getCurrentLine() == 0); 
 			break;
 		case 2:
 			trees = (button.getCurrentLine() == 0);
 			break;
-		case 5:
+		case 4:
 			sound = (button.getCurrentLine() == 0);
 			break;
 		}
