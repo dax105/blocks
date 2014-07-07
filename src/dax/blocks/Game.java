@@ -122,7 +122,7 @@ public class Game implements Runnable {
 		}
 
 		setDisplayMode(width, height, isFullscreen);
-		// load(true);
+		 load(true);
 
 		renderEngine = new RenderEngine(Game.settings.enable_shaders.getValue());
 
