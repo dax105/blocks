@@ -35,11 +35,10 @@ public class GuiScreenSettings extends GuiScreen {
 		objects.add(new GuiObjectTitleBar((game.width - width) / 2, (game.height - height) / 2, (game.width + width) / 2, ((game.height - height) / 2) + 30, this.f, "Options"));
 
 		//Render distance
-		objects.add(new GuiObjectSettingsIntegerSlider((game.width - width) / 2, (game.height - height) / 2 + 34, (game.width + width) / 2, ((game.height - height) / 2) + 58, this.f, "Render distance: %v chunks", 3, this, 5, 80, Game.settings.drawDistance));
+		objects.add(new GuiObjectSettingsIntegerSlider((game.width - width) / 2, (game.height - height) / 2 + 34, (game.width + width) / 2, ((game.height - height) / 2) + 58, this.f, "Render distance: %v chunks", 3, this, 2, 30, Game.settings.drawDistance));
 		
-		//Hole after multiplier
 		//objects.add(new GuiObjectRectangle((game.width - width) / 2, (game.height - height) / 2 + 62, (game.width + width) / 2, ((game.height - height) / 2) + 86, 0xA0051B7F));
-		objects.add(new GuiObjectChangingButton((game.width - width) / 2, (game.height - height) / 2 + 62, (game.width - width) / 2 + 128, (game.height - height) / 2 + 86, this.f, soundText, sound ? 0 : 1, 5, this));
+		objects.add(new GuiObjectChangingButton((game.width - width) / 2, (game.height - height) / 2 + 62, (game.width - width - 8) / 2 + 128, (game.height - height) / 2 + 86, this.f, soundText, sound ? 0 : 1, 5, this));
 		objects.add(new GuiObjectSettingsFloatSlider((game.width - width) / 2 + 128, (game.height - height) / 2 + 62, (game.width + width) / 2, ((game.height - height) / 2) + 86, this.f, "Volume: %v", 2, this, 0f, 1f, Game.settings.sound_volume));
 		
 		//Texture filtering
@@ -52,13 +51,10 @@ public class GuiScreenSettings extends GuiScreen {
 		objects.add(new GuiObjectSettingsFloatSlider((game.width - width) / 2, (game.height - height) / 2 + 90, (game.width + width) / 2, ((game.height - height) / 2) + 114, this.f, "FOV: %v", 3, this, 30, 160, Game.settings.fov));
 		
 		//Apply, close
-		objects.add(new GuiObjectButton((game.width - width) / 2, (game.height + height) / 2 - 24, ((game.width + width) / 2 - (width / 2)), ((game.height + height) / 2), this.f, "Close", 3, this));
-		objects.add(new GuiObjectButton(((game.width + width) / 2 - (width / 2)), ((game.height + height) / 2) - 24, (game.width + width) / 2, ((game.height + height) / 2), this.f, "Apply", 4, this));
+		objects.add(new GuiObjectButton((game.width - width) / 2, (game.height + height) / 2 - 24, ((game.width + width) / 2), ((game.height + height) / 2), this.f, "Close", 4, this));
 
 		//Button IDs: 1 - filtering (ch); 2 - tree gen (ch); 3 - close; 4 - apply; 5 - sound on/off (ch)
 		//Slider IDs: 1 - xxx; 2 - volume; 3 - FOV
-		
-		//objects.add(new GuiObjectText((game.width - width) / 2, (game.height - height) / 2 + 34, (game.width + width) / 2, (game.height + height) / 2 - 28, this.f, "Nope, nothing's here, use console"));
 	}
 
 	@Override
