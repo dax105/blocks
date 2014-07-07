@@ -20,6 +20,7 @@ public class WorldInfo {
 	
 	public static WorldInfo constructFromFile(File f) throws FileNotFoundException {
 		WorldInfo w = new WorldInfo(f.getParentFile().getName());
+		w.setWorldDirectory(f.getParent());
 		
 		Scanner s = new Scanner(f);
 		while (s.hasNextLine()) {
@@ -44,9 +45,7 @@ public class WorldInfo {
 
 		}
 		
-		s.close();
-		w.setWorldDirectory(f.getParent());
-		
+		s.close();	
 		return w;
 	}
 	

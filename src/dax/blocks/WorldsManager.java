@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Logger;
 
 import dax.blocks.world.WorldInfo;
 
@@ -41,7 +42,7 @@ public class WorldsManager {
 				worlds.add(WorldInfo
 						.constructFromFile(new File(d, "world.txt")));
 			} catch (FileNotFoundException e) {
-				e.printStackTrace();
+				Logger.getGlobal().warning("World definition file doesn't exist");
 			}
 		}
 

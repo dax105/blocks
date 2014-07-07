@@ -4,7 +4,7 @@
 //= EDITABLE VARIABLES =//
 //======================//
 
-#define ENABLE_ACID
+//#define ENABLE_ACID
 
 //=============================//
 //= END OF EDITABLE VARIABLES =//
@@ -38,7 +38,7 @@ void main() {
 		color.rgba = gl_Color.rgba;
 	} else {
 		
-		float lightmult = min((diffuseLightIntensity + (gl_LightModel.ambient.rgb.x * gl_LightModel.ambient.rgb.y * gl_LightModel.ambient.rgb.z)), 1.0);
+		vec3 lightmult = min((diffuseLightIntensity + gl_LightModel.ambient.rgb), 1.0);
 		
 		color.rgb = lightmult * gl_Color.rgb;
 		color.a = gl_Color.a;
