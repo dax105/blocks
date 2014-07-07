@@ -11,6 +11,8 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Random;
 
+import org.lwjgl.input.Mouse;
+
 import dax.blocks.Coord2D;
 import dax.blocks.Game;
 import dax.blocks.GameMath;
@@ -289,7 +291,7 @@ public class ChunkProvider {
 		}
 	}
 	
-	private Biome getBiomeAtLocation(int x, int z) {
+	public Biome getBiomeAtLocation(int x, int z) {
 		float noise = (float) simplex2D_rainfall.getNoise(x, z);
 		return noise > 0 ? Biome.mountains : Biome.plains;
 	}
