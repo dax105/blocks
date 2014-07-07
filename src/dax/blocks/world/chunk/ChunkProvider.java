@@ -1,12 +1,5 @@
 package dax.blocks.world.chunk;
 
-import java.io.DataInputStream;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -17,9 +10,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Random;
-import java.util.Scanner;
-
-import org.xerial.snappy.Snappy;
 
 import dax.blocks.Coord2D;
 import dax.blocks.Game;
@@ -29,6 +19,7 @@ import dax.blocks.block.BlockPlant;
 import dax.blocks.world.ChunkDistanceComparator;
 import dax.blocks.world.CoordDistanceComparator;
 import dax.blocks.world.World;
+import dax.blocks.world.generator.Biome;
 import dax.blocks.world.generator.SimplexNoise;
 
 public class ChunkProvider {
@@ -36,14 +27,10 @@ public class ChunkProvider {
 	private static final int SAMPLE_RATE_HORIZONTAL = 8;
 	private static final int SAMPLE_RATE_VERTICAL = 4;
 
-
-
 	public boolean loading = false;
 	//Shall I load the world from files?
 	public boolean loadingWorld = true;
 	Map<Coord2D, Chunk> loadedChunks;
-	
-	public double[] densityOffsets;
 
 	SimplexNoise simplex3D_1;
 	SimplexNoise simplex3D_2;
@@ -206,52 +193,7 @@ public class ChunkProvider {
 		this.simplex3D_1 = new SimplexNoise(512, 0.425, this.seed);
 		this.simplex3D_2 = new SimplexNoise(512, 0.525, this.seed*2);
 		this.simplex3D_caves = new SimplexNoise(64, 0.55, this.seed*3);
-		
-		double[] offsets = new double[128];
-		Arrays.fill(offsets, -9999);
-		
-		offsets[0] = 1.2;
-		offsets[38] = 0.5;
-		offsets[40] = 0.3;
-		offsets[40] = 0.3;
-		offsets[52] = 0.0;
-		offsets[56] = -0.1;
-		offsets[60] = -0.14;
-		offsets[68] = -0.175;
-		offsets[75] = -0.2;
-		offsets[80] = -0.30;
-		offsets[82] = -0.4;
-		offsets[85] = -0.5;
-		offsets[127] = -1.2;
-		
-		densityOffsets = new double[128];	
-		
-		for (int i = 0; i < 128; i++) {
-			if (offsets[i] != -9999) {
-				densityOffsets[i] = offsets[i];
-			} else {
-				int lp = 0;
-				int hp = 0;
-				
-				for (int x = i; x >= 0; x--) {
-					if (offsets[x] != -9999) {
-						lp = x;
-						break;
-					}
-				}
-				
-				for (int x = i; x < 128; x++) {
-					if (offsets[x] != -9999) {
-						hp = x;
-						break;
-					}
-				}
-				
-				densityOffsets[i] = GameMath.lerp(i, lp, hp, offsets[lp], offsets[hp]);
-				
-			}
-		}
-		
+
 	}
 
 	public void loadChunk(Coord2D coord) {
@@ -340,6 +282,10 @@ public class ChunkProvider {
 		}
 	}
 	
+	private Biome getBiomeAtLocation(int x, int z) {
+		return Biome.mountains;
+	}
+	
 	private Chunk generateChunk(int xc, int zc) {
 		Chunk chunk = new Chunk(xc, zc, world);
 
@@ -351,6 +297,8 @@ public class ChunkProvider {
 		for (int x = 0; x < Chunk.CHUNK_SIZE; x++) {
 			for (int z = 0; z < Chunk.CHUNK_SIZE; z++) {
 				int depth = 0;
+				
+				double[] densityOffsets = getBiomeAtLocation(xc*16+x, zc*16+z).getOffsets();
 				
 				for (int y = 127; y >= 0; y--) {
 					double density = densityMap[x][y][z];
