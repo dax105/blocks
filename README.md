@@ -1,6 +1,6 @@
 Order of the stone
 ==================
-Order of the stone is a voxel game that I make, nothing spectacular...
+Order of the stone is a voxel game that we make, nothing spectacular...
 
 What can it do
 --------------
@@ -50,4 +50,5 @@ Libraries
 * JOGG and JINPUT
 
 Made by Dax105 and LeOndryasO
+
 Textures by Tomix
