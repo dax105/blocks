@@ -122,14 +122,14 @@ public class Game implements Runnable {
 			if (!this.configFile.exists()) {
 				this.configFile.createNewFile();
 			}
-			
+
 			Game.settings.loadFromFile(this.configFile);
 		} catch (IOException e) {
 			e.printStackTrace();
-		}	
-		
+		}
+
 		setDisplayMode(width, height, isFullscreen);
-		//load(true);
+		// load(true);
 
 		renderEngine = new RenderEngine(Game.settings.enable_shaders.getValue());
 
@@ -177,16 +177,16 @@ public class Game implements Runnable {
 			world.saveAllChunks();
 		}
 		Game.sound.stopPlaying();
-		
+
 		Display.destroy();
 		AL.destroy();
-		
+
 		try {
 			Game.settings.saveToFile(this.configFile);
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
 		}
-		
+
 		System.exit(0);
 	}
 
@@ -309,8 +309,8 @@ public class Game implements Runnable {
 
 		// Display.sync(200);
 		// updateFPS();
-		if(Game.sound.isPlaying())
-			org.newdawn.slick.openal.SoundStore.get().poll(0); 
+		if (Game.sound.isPlaying())
+			org.newdawn.slick.openal.SoundStore.get().poll(0);
 	}
 
 	public void onRender() {
@@ -685,6 +685,15 @@ public class Game implements Runnable {
 		font.drawString(2, font.getHeight(), "Y Position: " + world.player.posY);
 		font.drawString(2, font.getHeight() * 2, "Z Position: "
 				+ world.player.posZ);
+		font.drawString(
+				2,
+				font.getHeight() * 3,
+				"Biome: "
+						+ world.chunkProvider.getBiomeAtLocation(
+								(int) world.player.posX,
+								(int) world.player.posZ).getName());
+		/*world.chunkProvider.getChunk((int) world.player.posX,
+								(int) world.player.posZ, true).*/
 
 		String memory = "Used memory: "
 				+ (allocatedMemory / (1024 * 1024) - freeMemory / (1024 * 1024))
@@ -808,7 +817,7 @@ public class Game implements Runnable {
 																			 * Stencil
 																			 * bits
 																			 */
-							0, /* samples */settings.aa_samples.getValue()));
+					0, /* samples */settings.aa_samples.getValue()));
 					Game.console.out("Display created!");
 					// Display.create();
 				} catch (LWJGLException e) {

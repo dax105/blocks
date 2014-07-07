@@ -15,7 +15,7 @@ public abstract class Biome {
 	private double[] densityOffsets = new double[129];
 	
 	public Biome(String name) {
-		name = this.name;
+		this.name = name;
 		Arrays.fill(tempOffsets, -9999);
 		setOffsets();
 		applyOffsets();
