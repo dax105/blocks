@@ -183,7 +183,8 @@ public class Game implements Runnable {
 	}
 
 	public void load(boolean toMenu) {
-		createFont();
+		FontManager.load();
+		this.font = FontManager.text;
 		displayLoadingScreen("Loading textures...");
 		TextureManager.load();
 		displayLoadingScreen("Loading models...");
