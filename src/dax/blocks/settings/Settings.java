@@ -16,24 +16,26 @@ public class Settings {
 	public Map<String, SettingsObject<?>> objects = new HashMap<String, SettingsObject<?>>();
 	
 	
-	public SettingsObject<Integer> drawDistance = (SettingsObject<Integer>) registerObject(new SettingsObject<Integer>("draw_distance", 10));
-	public SettingsObject<Integer> consoleHeight = (SettingsObject<Integer>) registerObject(new SettingsObject<Integer>("console_height", 200));
-	public SettingsObject<Integer> aa_samples = (SettingsObject<Integer>) registerObject(new SettingsObject<Integer>("aa_samples", 0, new ApplierAA()));
-	public SettingsObject<Integer> anisotropic = (SettingsObject<Integer>) registerObject(new SettingsObject<Integer>("anisotropic", 0));
-	public SettingsObject<Integer> explosion_radius = (SettingsObject<Integer>) registerObject(new SettingsObject<Integer>("explosion_radius", 5));
-	public SettingsObject<Integer> rebuilds_pf = (SettingsObject<Integer>) registerObject(new SettingsObject<Integer>("rebuilds_pf", 5));
-	public SettingsObject<Integer> loads_pt = (SettingsObject<Integer>) registerObject(new SettingsObject<Integer>("loads_pt", 3));
-	public SettingsObject<Integer> decorations_pt = (SettingsObject<Integer>) registerObject(new SettingsObject<Integer>("decorations_pt", 3));
-	public SettingsObject<Float> fov = (SettingsObject<Float>) registerObject(new SettingsObject<Float>("fov", 80.0f));
-	public SettingsObject<Float> reach = (SettingsObject<Float>) registerObject(new SettingsObject<Float>("reach", 20.0f));
-	public SettingsObject<Boolean> fullscreen = (SettingsObject<Boolean>) registerObject(new SettingsObject<Boolean>("fullscreen", false));
-	public SettingsObject<Boolean> mipmaps = (SettingsObject<Boolean>) registerObject(new SettingsObject<Boolean>("mipmaps", true));
-	public SettingsObject<Boolean> sound = (SettingsObject<Boolean>) registerObject(new SettingsObject<Boolean>("sound", true));
-	public SettingsObject<Float> ao_intensity = (SettingsObject<Float>) registerObject(new SettingsObject<Float>("ao_intensity", 0.25f, new ApplierAO()));
-	public SettingsObject<Boolean> tree_generation = (SettingsObject<Boolean>) registerObject(new SettingsObject<Boolean>("tree_generation", true));
-	public SettingsObject<Boolean> linear_filtering = (SettingsObject<Boolean>) registerObject(new SettingsObject<Boolean>("linear_filtering", false));
-	public SettingsObject<Boolean> enable_shaders = (SettingsObject<Boolean>) registerObject(new SettingsObject<Boolean>("enable_shaders", false));
-	public SettingsObject<Float> sound_volume = (SettingsObject<Float>) registerObject(new SettingsObject<Float>("sound_volume", 1f));
+	public SettingsObject<Integer> drawDistance = (SettingsObject<Integer>) registerObject(new SettingsObject<Integer>("draw_distance", 10, "Render distance", "%v chunks", null));
+	public SettingsObject<Integer> consoleHeight = (SettingsObject<Integer>) registerObject(new SettingsObject<Integer>("console_height", 200, "Console height", "%v px", null));
+	public SettingsObject<Integer> aa_samples = (SettingsObject<Integer>) registerObject(new SettingsObject<Integer>("aa_samples", 0, "AA samples", null, new ApplierAA()));
+	public SettingsObject<Integer> anisotropic = (SettingsObject<Integer>) registerObject(new SettingsObject<Integer>("anisotropic", 0, "AF value", null, null));
+	public SettingsObject<Integer> explosion_radius = (SettingsObject<Integer>) registerObject(new SettingsObject<Integer>("explosion_radius", 5, "Explosion radius", null, null));
+	public SettingsObject<Integer> rebuilds_pf = (SettingsObject<Integer>) registerObject(new SettingsObject<Integer>("rebuilds_pf", 5, "Chunk geometry rebuilds per frame", null, null));
+	public SettingsObject<Integer> loads_pt = (SettingsObject<Integer>) registerObject(new SettingsObject<Integer>("loads_pt", 3, "Loaded chunks per tick", "%v chunks", null));
+	public SettingsObject<Integer> decorations_pt = (SettingsObject<Integer>) registerObject(new SettingsObject<Integer>("decorations_pt", 3, "Decorations per tick", null, null));
+	
+	public SettingsObject<Boolean> fullscreen = (SettingsObject<Boolean>) registerObject(new SettingsObject<Boolean>("fullscreen", false, "Fullscreen mode", "%o", null));
+	public SettingsObject<Boolean> mipmaps = (SettingsObject<Boolean>) registerObject(new SettingsObject<Boolean>("mipmaps", true, "Mipmapping", "%o", null));
+	public SettingsObject<Boolean> sound = (SettingsObject<Boolean>) registerObject(new SettingsObject<Boolean>("sound", true, "Sound", "%o", null));
+	public SettingsObject<Boolean> tree_generation = (SettingsObject<Boolean>) registerObject(new SettingsObject<Boolean>("tree_generation", true, "Tree generator", "%o", null));
+	public SettingsObject<Boolean> linear_filtering = (SettingsObject<Boolean>) registerObject(new SettingsObject<Boolean>("linear_filtering", false, "Linear filtering", "%o", null));
+	public SettingsObject<Boolean> enable_shaders = (SettingsObject<Boolean>) registerObject(new SettingsObject<Boolean>("enable_shaders", false, "Enable shaders", "%o", null));
+	
+	public SettingsObject<Float> fov = (SettingsObject<Float>) registerObject(new SettingsObject<Float>("fov", 80.0f, "FOV", null, null));
+	public SettingsObject<Float> reach = (SettingsObject<Float>) registerObject(new SettingsObject<Float>("reach", 20.0f, "Block reach radius", "%v blocks", null));
+	public SettingsObject<Float> ao_intensity = (SettingsObject<Float>) registerObject(new SettingsObject<Float>("ao_intensity", 0.25f, "AO Intensity", null, new ApplierAO()));
+	public SettingsObject<Float> sound_volume = (SettingsObject<Float>) registerObject(new SettingsObject<Float>("sound_volume", 1f, "Sound volume (0.0 - 1.0)", null, null));
 	
 	private SettingsObject<?> registerObject(SettingsObject<?> object) {
 		objects.put(object.getName(), object);

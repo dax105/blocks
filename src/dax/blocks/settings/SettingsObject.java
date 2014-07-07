@@ -7,6 +7,8 @@ public class SettingsObject<T> {
 	private String readableForm;
 	private Applier applier;
 	private String readableName;
+	private boolean inSettings = true;
+	
 	public static String getConsoleRepresentation(ObjectType t) {
 		switch(t) {
 		case INTEGER:
@@ -25,6 +27,7 @@ public class SettingsObject<T> {
 		this.value = defaultValue;
 		this.applier = applier;
 		this.readableForm = readableForm;
+		this.readableName = readableName;
 	}
 	
 	public SettingsObject(String name, T defaultValue, Applier applier) {
@@ -51,15 +54,16 @@ public class SettingsObject<T> {
 	
 	public String getReadableValue() {
 		if(readableForm == null)
-			return null;
+			return value.toString();
 		
+		if(this.getObjectType() == ObjectType.BOOLEAN) {
+			boolean b = (Boolean)value;
+			return readableForm.replace("%o", b ? "ON" : "OFF").replace("%v", value.toString());
+		}
 		return readableForm.replace("%v", value.toString());
 	}
 	
 	public String getRepresentation() {
-		if(readableForm == null)
-			return this.getReadableName() + ": " + value.toString();
-		
 		return this.getReadableName() + ": " + getReadableValue();
 	}
 	
@@ -92,6 +96,14 @@ public class SettingsObject<T> {
 
 	public void setReadableName(String readableName) {
 		this.readableName = readableName;
+	}
+
+	public boolean isInSettings() {
+		return inSettings;
+	}
+
+	public void setInSettings(boolean inSettings) {
+		this.inSettings = inSettings;
 	}
 
 }

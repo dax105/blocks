@@ -30,7 +30,7 @@ public class CommandVariables extends Command {
 			Game.console.out(SettingsObject.getConsoleRepresentation(o
 					.getObjectType())
 					+ " "
-					+ o.getRepresentation());
+					+ o.getReadableName() + " (" + o.getName() + "): " + o.getReadableValue());
 		}
 
 		return true;
