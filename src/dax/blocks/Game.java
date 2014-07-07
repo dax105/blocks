@@ -242,10 +242,6 @@ public class Game implements Runnable {
 
 		while (Keyboard.next()) {
 			if (Keyboard.getEventKeyState()) {
-				if (Keyboard.getEventKey() == Keyboard.KEY_M) {
-					ModelManager.load();
-				}
-
 				if (Keyboard.getEventKey() == Keyboard.KEY_F2) {
 					screenshot();
 				}

@@ -84,7 +84,7 @@ public class World {
 		float velY = velhalf - rand.nextFloat()*vel-rand.nextFloat()*velFuzziness;
 		float velZ = velhalf - rand.nextFloat()*vel-rand.nextFloat()*velFuzziness;
 		
-		Particle p = new Particle(x, y, z, velX, velY, velZ, 5000+rand.nextInt(20), rand.nextFloat(), rand.nextFloat(), rand.nextFloat());
+		Particle p = new Particle(x, y, z, velX, velY, velZ, 100, rand.nextFloat(), rand.nextFloat(), rand.nextFloat());
 		particles.add(p);
 		
 	}
