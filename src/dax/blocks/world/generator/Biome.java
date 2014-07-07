@@ -7,11 +7,12 @@ import dax.blocks.GameMath;
 public abstract class Biome {
 
 	public static final Biome mountains = new BiomeMountains();
+	public static final Biome plains = new BiomePlains();
 	
-	private double[] tempOffsets = new double[128];
+	private double[] tempOffsets = new double[129];
 	
 	private String name;
-	private double[] densityOffsets = new double[128];
+	private double[] densityOffsets = new double[129];
 	
 	public Biome(String name) {
 		name = this.name;
@@ -38,7 +39,7 @@ public abstract class Biome {
 	}
 	
 	public void applyOffsets() {
-		for (int i = 0; i < 128; i++) {
+		for (int i = 0; i < 129; i++) {
 			if (tempOffsets[i] != -9999) {
 				densityOffsets[i] = tempOffsets[i];
 			} else {
@@ -52,7 +53,7 @@ public abstract class Biome {
 					}
 				}
 				
-				for (int x = i; x < 128; x++) {
+				for (int x = i; x < 129; x++) {
 					if (tempOffsets[x] != -9999) {
 						hp = x;
 						break;

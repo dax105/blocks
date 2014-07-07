@@ -20,6 +20,7 @@ import dax.blocks.world.ChunkDistanceComparator;
 import dax.blocks.world.CoordDistanceComparator;
 import dax.blocks.world.World;
 import dax.blocks.world.generator.Biome;
+import dax.blocks.world.generator.BiomePlains;
 import dax.blocks.world.generator.SimplexNoise;
 
 public class ChunkProvider {
@@ -35,6 +36,9 @@ public class ChunkProvider {
 	SimplexNoise simplex3D_1;
 	SimplexNoise simplex3D_2;
 	SimplexNoise simplex3D_caves;
+	
+	SimplexNoise simplex2D_rainfall;
+	SimplexNoise simplex2D_temperature;
 
 	World world;
 	public ChunkSaveManager loader;
@@ -193,6 +197,8 @@ public class ChunkProvider {
 		this.simplex3D_1 = new SimplexNoise(512, 0.425, this.seed);
 		this.simplex3D_2 = new SimplexNoise(512, 0.525, this.seed*2);
 		this.simplex3D_caves = new SimplexNoise(64, 0.55, this.seed*3);
+		this.simplex2D_rainfall = new SimplexNoise(2048, 0.3, this.seed+1);
+		this.simplex2D_temperature = new SimplexNoise(1024, 0.2, this.seed+2);
 
 	}
 
@@ -206,7 +212,8 @@ public class ChunkProvider {
 		for (int x = 0; x <= 16; x += SAMPLE_RATE_HORIZONTAL) {
 			for (int z = 0; z <= 16; z += SAMPLE_RATE_HORIZONTAL) {
 				for (int y = 0; y <= 128; y += SAMPLE_RATE_VERTICAL) {
-					densityMap[x][y][z] = (float) Math.max(simplex3D_1.getNoise(cx*16+x, y, cz*16+z), simplex3D_2.getNoise(cx*16+x, y, cz*16+z));				
+					double[] densityOffsets = getOffsetsAtLocation(cx*16+x, cz*16+z);
+					densityMap[x][y][z] = (float) (Math.max(simplex3D_1.getNoise(cx*16+x, y, cz*16+z), simplex3D_2.getNoise(cx*16+x, y, cz*16+z)))+densityOffsets[y];				
 				}
 			}
 		}
@@ -283,7 +290,27 @@ public class ChunkProvider {
 	}
 	
 	private Biome getBiomeAtLocation(int x, int z) {
-		return Biome.mountains;
+		float noise = (float) simplex2D_rainfall.getNoise(x, z);
+		return noise > 0 ? Biome.mountains : Biome.plains;
+	}
+	
+	private double[] getOffsetsAtLocation(int x, int z) {
+		float smoothening = 0.025f;
+		float noise = (float) simplex2D_rainfall.getNoise(x, z);
+		float offset = 0-noise;
+		if (noise > smoothening) {
+			return Biome.mountains.getOffsets();
+		} else if (noise < -smoothening) {
+			return Biome.plains.getOffsets();
+		} else {
+			double[] interpolated = new double[129];
+			
+			for (int i = 0; i < 129; i++) {
+				interpolated[i] = GameMath.lerp(Biome.mountains.getOffsets()[i], Biome.plains.getOffsets()[i], 1/smoothening/2*offset+0.5); //GameMath.lerp(i, Biome.mountains.getOffsets()[i], Biome.plains.getOffsets()[i], smoothening, -smoothening);
+			}
+			
+			return interpolated;
+		}
 	}
 	
 	private Chunk generateChunk(int xc, int zc) {
@@ -298,13 +325,13 @@ public class ChunkProvider {
 			for (int z = 0; z < Chunk.CHUNK_SIZE; z++) {
 				int depth = 0;
 				
-				double[] densityOffsets = getBiomeAtLocation(xc*16+x, zc*16+z).getOffsets();
+				
 				
 				for (int y = 127; y >= 0; y--) {
 					double density = densityMap[x][y][z];
 					boolean cave = caveMap[x][y][z] > (0.3 + 1/(8.0+depth/2));
 					
-					if (!cave && density > 0 - densityOffsets[y]) {
+					if (!cave && density > 0) {
 						if (depth == 0) {
 							if (y < 52) {
 								chunk.setBlock(x, y, z, Block.sand.getId(), false);
