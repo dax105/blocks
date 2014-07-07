@@ -68,8 +68,12 @@ public class SettingsObject<T> {
 	}
 	
 	public void setValue(T value) {
+		setValue(value, true);
+	}
+	
+	public void setValue(T value, boolean applyApplier) {
 		this.value = value;
-		if (applier != null) {
+		if (applier != null && applyApplier) {
 			applier.apply();
 		}
 	}

@@ -47,7 +47,7 @@ public class Settings {
 			String[] words = l.split(" ");
 
 			if (words.length >= 2) {
-				setValue(words[0], words[1]);
+				setValue(words[0], words[1], false);
 			}
 		}
 		
@@ -84,20 +84,24 @@ public class Settings {
 	}
 	
 	public void setValue(String name, String value) {
+		this.setValue(name, value, true);
+	}
+	
+	public void setValue(String name, String value, boolean applyAppliers) {
 		ObjectType type = getType(name);
 		if (type != null) {
 			try {
 				switch (type) {
 				case INTEGER:
-					((SettingsObject<Integer>)getObject(name)).setValue(Integer.parseInt(value));
+					((SettingsObject<Integer>)getObject(name)).setValue(Integer.parseInt(value), applyAppliers);
 					Game.console.out("Set value of int " + name + " to " + Integer.parseInt(value));
 					break;
 				case FLOAT:
-					((SettingsObject<Float>)getObject(name)).setValue(Float.parseFloat(value));
+					((SettingsObject<Float>)getObject(name)).setValue(Float.parseFloat(value), applyAppliers);
 					Game.console.out("Set value of float " + name + " to " + Float.parseFloat(value));
 					break;
 				case BOOLEAN:
-					((SettingsObject<Boolean>)getObject(name)).setValue(Boolean.parseBoolean(value));
+					((SettingsObject<Boolean>)getObject(name)).setValue(Boolean.parseBoolean(value), applyAppliers);
 					Game.console.out("Set value of boolean " + name + " to " + Boolean.parseBoolean(value));
 					break;
 				default:

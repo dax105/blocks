@@ -681,8 +681,6 @@ public class Game implements Runnable {
 						+ world.chunkProvider.getBiomeAtLocation(
 								(int) world.player.posX,
 								(int) world.player.posZ).getName());
-		/*world.chunkProvider.getChunk((int) world.player.posX,
-								(int) world.player.posZ, true).*/
 
 		String memory = "Used memory: "
 				+ (allocatedMemory / (1024 * 1024) - freeMemory / (1024 * 1024))
@@ -772,18 +770,6 @@ public class Game implements Runnable {
 					}
 				}
 			} else {
-				/*
-				 * Canvas c = new Canvas(); JFrame f = new JFrame("frame");
-				 * 
-				 * f.setSize(1280, 720);
-				 * f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-				 * f.setBackground(Color.BLACK); c.setBackground(Color.BLACK);
-				 * f.getContentPane().add(c); f.setLocationRelativeTo(null);
-				 * f.setUndecorated(true); f.setVisible(true);
-				 * 
-				 * Display.setParent(c);
-				 */
-
 				targetDisplayMode = new DisplayMode(width, height);
 			}
 
