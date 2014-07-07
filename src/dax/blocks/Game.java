@@ -113,6 +113,7 @@ public class Game implements Runnable {
 		try {
 			if (!this.configFile.exists()) {
 				this.configFile.createNewFile();
+				Game.settings.saveToFile(configFile);
 			}
 
 			Game.settings.loadFromFile(this.configFile);
