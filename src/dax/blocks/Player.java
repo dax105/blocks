@@ -359,10 +359,8 @@ public class Player {
 			int b = world.getBlock((int)Math.floor(this.posX), (int)Math.floor(this.posY-1.0f), (int)Math.floor(this.posZ));
 			Block block = Block.getBlock((byte)b);
 			if (block != null) {
-				SoundManager.play(block.getFallSound(), 0.7f+rand.nextFloat()*0.25f, 0.5f);
+				Game.sound.play(block.getFallSound(), 0.7f+rand.nextFloat()*0.25f, 0.5f * Game.settings.sound_volume.getValue(), false);
 			}
-			
-			//SoundManager.fall_soft.playAsSoundEffect(0.7f+rand.nextFloat()*0.25f, 0.5f, false);
 		}
 		
 		if (onGround) {
@@ -377,7 +375,7 @@ public class Player {
 			int b = world.getBlock((int)Math.floor(this.posX), (int)Math.floor(this.posY-1.0f), (int)Math.floor(this.posZ));
 			Block block = Block.getBlock((byte)b);
 			if (block != null) {
-				SoundManager.play(block.getStepSound(), 1.0f-(rand.nextFloat()*0.2f-0.1f), 1f);
+				Game.sound.play(block.getStepSound(), 1.0f-(rand.nextFloat()*0.2f-0.1f), Game.settings.sound_volume.getValue(), false);
 			}
 			
 			//SoundManager.play(SoundManager.footstep_grass, 1.0f-(rand.nextFloat()*0.2f-0.1f), 1f);

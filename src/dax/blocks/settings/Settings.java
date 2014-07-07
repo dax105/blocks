@@ -35,6 +35,7 @@ public class Settings {
 	public SettingsObject<Boolean> tree_generation = registerObjectBoolean(new SettingsObject<Boolean>("tree_generation", true));
 	public SettingsObject<Boolean> linear_filtering = registerObjectBoolean(new SettingsObject<Boolean>("linear_filtering", false));
 	public SettingsObject<Boolean> enable_shaders = registerObjectBoolean(new SettingsObject<Boolean>("enable_shaders", false));
+	public SettingsObject<Float> sound_volume = registerObjectFloat(new SettingsObject<Float>("sound_volume", 1f));
 	
 	private SettingsObject<Integer> registerObjectInteger(SettingsObject<Integer> object) {
 		objectsInteger.put(object.getName(), object);

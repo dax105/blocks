@@ -25,6 +25,7 @@ public class GuiScreenMainMenu extends GuiScreen {
 		if (button.id == 0) {
 			game.displayLoadingScreen();
 			game.makeNewWorld(true,"test3");
+			Game.sound.playMusic(dax.blocks.SoundManager.music_piano, false);
 		} else if (button.id == 1) {
 			game.openGuiScreen(new GuiScreenSettings(this));
 		} else if (button.id == 2) {

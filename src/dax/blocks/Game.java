@@ -48,6 +48,7 @@ public class Game implements Runnable {
 	public static Settings settings = new Settings();
 	public static Console console = new Console();
 	public static WorldsManager worlds = new WorldsManager();
+	public static SoundManager sound = new SoundManager();
 	// --old settings--
 	/*
 	 * public int worldSize = 4; public int fov = 85; public boolean
@@ -128,7 +129,7 @@ public class Game implements Runnable {
 		}	
 		
 		setDisplayMode(width, height, isFullscreen);
-		load(true);
+		//load(true);
 
 		renderEngine = new RenderEngine(Game.settings.enable_shaders.getValue());
 
@@ -175,6 +176,8 @@ public class Game implements Runnable {
 		if (ingame) {
 			world.saveAllChunks();
 		}
+		Game.sound.stopPlaying();
+		
 		Display.destroy();
 		AL.destroy();
 		
@@ -194,7 +197,7 @@ public class Game implements Runnable {
 		displayLoadingScreen("Loading models...");
 		ModelManager.load();
 		displayLoadingScreen("Loading sounds...");
-		SoundManager.load();
+		Game.sound.load();
 		lastFPS = getTime();
 
 		showbg = true;
@@ -306,6 +309,8 @@ public class Game implements Runnable {
 
 		// Display.sync(200);
 		// updateFPS();
+		if(Game.sound.isPlaying())
+			org.newdawn.slick.openal.SoundStore.get().poll(0); 
 	}
 
 	public void onRender() {

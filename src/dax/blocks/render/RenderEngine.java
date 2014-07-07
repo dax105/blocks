@@ -66,9 +66,9 @@ public class RenderEngine {
 		int vertShader = 0, fragShader = 0;
 
 		try {
-			vertShader = createShader("dax/blocks/shaders/screen.vsh",
+			vertShader = createShader("dax/blocks/shaders/screenN.vsh",
 					ARBVertexShader.GL_VERTEX_SHADER_ARB);
-			fragShader = createShader("dax/blocks/shaders/screen.fsh",
+			fragShader = createShader("dax/blocks/shaders/screenN.fsh",
 					ARBFragmentShader.GL_FRAGMENT_SHADER_ARB);
 		} catch (Exception exc) {
 			System.err.println("============================================\n"
