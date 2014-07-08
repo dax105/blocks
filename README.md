@@ -19,8 +19,10 @@ What can it do
 * Nearest/Linear filtering
 * Loading and saving world (we hope)
 * Infinite world
+* Sometimes it can shut down on it's own
 * Loading and saving all settings
 * Console
+* Fake Ambient Occlusion (blocks shading)
 * Explosions!
 
 WIP
@@ -29,7 +31,7 @@ WIP
 * Collisions
 * Blocks of different shapes
 * Biomes
-* AO, AA, AF
+* AA, AF
 * Shaders (mostly unused)
 
 Controls
@@ -49,6 +51,9 @@ Libraries
 * SNAPPY-JAVA
 * JOGG and JINPUT
 
-Made by Dax105 and LeOndryasO
+#####Made by Dax105 and LeOndryasO, textures by Tomix
 
-Textures by Tomix
+**Background music:**<br>
+Licensed under the cc-by-sa Germany License.   
+Name: Bernd Krueger   
+Source: http://www.piano-midi.de
