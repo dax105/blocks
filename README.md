@@ -51,11 +51,9 @@ Libraries
 * SNAPPY-JAVA
 * JOGG and JINPUT
 
-Made by Dax105 and LeOndryasO
+#####Made by Dax105 and LeOndryasO, textures by Tomix
 
-Textures by Tomix
-
-####Background music
+######Background music:
 Licensed under the cc-by-sa Germany License.   
 Name: Bernd Krueger   
 Source: http://www.piano-midi.de
