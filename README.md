@@ -53,8 +53,7 @@ Libraries
 
 #####Made by Dax105 and LeOndryasO, textures by Tomix
 
-
-######Background music:
+**Background music:**<br>
 Licensed under the cc-by-sa Germany License.   
 Name: Bernd Krueger   
 Source: http://www.piano-midi.de
