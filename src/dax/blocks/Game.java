@@ -146,7 +146,6 @@ public class Game implements Runnable {
 	public void init() {
 		initGL();
 		Display.setTitle(TITLE);
-		Mouse.setGrabbed(true);
 	}
 
 	public void exit() {
