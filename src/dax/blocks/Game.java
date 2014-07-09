@@ -137,7 +137,7 @@ public class Game implements Runnable {
 			render(partialTickTime);
 
 			Display.update();
-			Display.sync(5);
+			//Display.sync(5);
 		}
 
 		exit();
