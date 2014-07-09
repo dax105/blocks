@@ -26,8 +26,8 @@ public class World {
 	public static final float GRAVITY = 0.06f;
 	public static final int MAX_PARTICLES = 10000;
 	
-	private List<SchleduledUpdate> schleduledUpdates;
-	private List<SchleduledUpdate> newlySchleduledUpdates;
+	private List<ScheduledUpdate> scheduledUpdates;
+	private List<ScheduledUpdate> newlyScheduledUpdates;
 	
 	private Coord2D c2d;
 	
@@ -69,8 +69,8 @@ public class World {
 		this.frustum = new Frustum();
 		this.c2d = new Coord2D(-1, -1);
 		
-		this.schleduledUpdates = new LinkedList<SchleduledUpdate>();
-		this.newlySchleduledUpdates = new LinkedList<SchleduledUpdate>();
+		this.scheduledUpdates = new LinkedList<ScheduledUpdate>();
+		this.newlyScheduledUpdates = new LinkedList<ScheduledUpdate>();
 		
 		chunkProvider.updateLoadedChunksInRadius((int)player.posX, (int)player.posZ, Game.settings.drawDistance.getValue());
 	}
@@ -121,12 +121,12 @@ public class World {
 	}
 	
 	public void updateNeighbours(int x, int y, int z) {
-		schleduleUpdate(x+1, y, z,1);
-		schleduleUpdate(x-1, y, z,1);
-		schleduleUpdate(x, y+1, z,1);
-		schleduleUpdate(x, y-1, z,1);
-		schleduleUpdate(x, y, z+1,1);
-		schleduleUpdate(x, y, z-1,1);
+		scheduleUpdate(x+1, y, z,1);
+		scheduleUpdate(x-1, y, z,1);
+		scheduleUpdate(x, y+1, z,1);
+		scheduleUpdate(x, y-1, z,1);
+		scheduleUpdate(x, y, z+1,1);
+		scheduleUpdate(x, y, z-1,1);
 	}
 	
 	public void updateBlock(int x, int y, int z) {
@@ -136,8 +136,8 @@ public class World {
 		}
 	}
 	
-	public void schleduleUpdate(int x, int y, int z, int ticks) {
-		newlySchleduledUpdates.add(new SchleduledUpdate(x, y, z, ticks));
+	public void scheduleUpdate(int x, int y, int z, int ticks) {
+		newlyScheduledUpdates.add(new ScheduledUpdate(x, y, z, ticks));
 	}
 	
 	public void update() {
@@ -154,14 +154,14 @@ public class World {
 			}		    
 		}
 		
-		for(Iterator<SchleduledUpdate> it = newlySchleduledUpdates.iterator(); it.hasNext();) {
-			schleduledUpdates.add(it.next());
+		for(Iterator<ScheduledUpdate> it = newlyScheduledUpdates.iterator(); it.hasNext();) {
+			scheduledUpdates.add(it.next());
 			it.remove();
 		}
 		
-		Iterator<SchleduledUpdate> updateIterator = schleduledUpdates.iterator();
+		Iterator<ScheduledUpdate> updateIterator = scheduledUpdates.iterator();
 		while(updateIterator.hasNext()) {
-			SchleduledUpdate s = updateIterator.next();
+			ScheduledUpdate s = updateIterator.next();
 			if (s.ticks > 0) {
 				s.ticks--;
 			} else {
@@ -219,7 +219,7 @@ public class World {
 			c.setBlock(icx, y, icz, id, true);
 			c.changed = artificial;
 			if (artificial) {
-				schleduleUpdate(x, y, z, 1);
+				scheduleUpdate(x, y, z, 1);
 				updateNeighbours(x, y, z);
 			}
 		}
