@@ -136,7 +136,7 @@ public class Game implements Runnable {
 			render(partialTickTime);
 
 			Display.update();
-			// Display.sync(5);
+			Display.sync(5);
 		}
 
 		exit();
@@ -261,9 +261,7 @@ public class Game implements Runnable {
 
 		if (this.guiScreen == null && ingame && !consoleOpen) {
 			world.update();
-			Mouse.setGrabbed(true);
 		} else if (ingame) {
-			Mouse.setGrabbed(false);
 			world.menuUpdate();
 		}
 
