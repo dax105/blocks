@@ -470,8 +470,9 @@ public class RenderEngine {
 		sDisable(FLAG_LIGHTING);
 		sDisable(FLAG_FOG);
 
-		renderClouds(world.player.getPartialX(ptt),
-				world.player.getPartialZ(ptt));
+		if (Game.settings.clouds.getValue()) {
+			renderClouds(world.player.getPartialX(ptt),world.player.getPartialZ(ptt));
+		}	
 
 		// Render selection box
 		if (world.player.hasSelected) {
