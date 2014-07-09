@@ -3,6 +3,7 @@ package dax.blocks.block;
 import org.lwjgl.opengl.GL11;
 
 import dax.blocks.TextureManager;
+import dax.blocks.world.World;
 
 public class BlockBasic extends Block {
 
@@ -114,6 +115,11 @@ public class BlockBasic extends Block {
 
 	@Override
 	public void renderIndependent(int x, int y, int z) {
+		
+	}
+
+	@Override
+	public void update(int x, int y, int z, World world) {
 		
 	}
 

@@ -26,6 +26,9 @@ public class World {
 	public static final float GRAVITY = 0.06f;
 	public static final int MAX_PARTICLES = 10000;
 	
+	private List<SchleduledUpdate> schleduledUpdates;
+	private List<SchleduledUpdate> newlySchleduledUpdates;
+	
 	private Coord2D c2d;
 	
 	public int size;
@@ -65,6 +68,9 @@ public class World {
 
 		this.frustum = new Frustum();
 		this.c2d = new Coord2D(-1, -1);
+		
+		this.schleduledUpdates = new LinkedList<SchleduledUpdate>();
+		this.newlySchleduledUpdates = new LinkedList<SchleduledUpdate>();
 		
 		chunkProvider.updateLoadedChunksInRadius((int)player.posX, (int)player.posZ, Game.settings.drawDistance.getValue());
 	}
@@ -114,6 +120,26 @@ public class World {
 		return id > 0 ? Block.getBlock((byte) id).isOccluder() : false; 
 	}
 	
+	public void updateNeighbours(int x, int y, int z) {
+		schleduleUpdate(x+1, y, z,1);
+		schleduleUpdate(x-1, y, z,1);
+		schleduleUpdate(x, y+1, z,1);
+		schleduleUpdate(x, y-1, z,1);
+		schleduleUpdate(x, y, z+1,1);
+		schleduleUpdate(x, y, z-1,1);
+	}
+	
+	public void updateBlock(int x, int y, int z) {
+		int id = getBlock(x, y, z);
+		if (id > 0) {
+			Block.getBlock(id).update(x, y, z, this);
+		}
+	}
+	
+	public void schleduleUpdate(int x, int y, int z, int ticks) {
+		newlySchleduledUpdates.add(new SchleduledUpdate(x, y, z, ticks));
+	}
+	
 	public void update() {
 		player.update();
 		
@@ -126,6 +152,22 @@ public class World {
 				iter.remove();
 				size--;
 			}		    
+		}
+		
+		for(Iterator<SchleduledUpdate> it = newlySchleduledUpdates.iterator(); it.hasNext();) {
+			schleduledUpdates.add(it.next());
+			it.remove();
+		}
+		
+		Iterator<SchleduledUpdate> updateIterator = schleduledUpdates.iterator();
+		while(updateIterator.hasNext()) {
+			SchleduledUpdate s = updateIterator.next();
+			if (s.ticks > 0) {
+				s.ticks--;
+			} else {
+				updateBlock(s.x, s.y, s.z);
+				updateIterator.remove();
+			}
 		}
 
 		if (Keyboard.isKeyDown(Keyboard.KEY_Q)) {
@@ -176,6 +218,10 @@ public class World {
 			Chunk c = chunkProvider.getChunk(coord);
 			c.setBlock(icx, y, icz, id, true);
 			c.changed = artificial;
+			if (artificial) {
+				schleduleUpdate(x, y, z, 1);
+				updateNeighbours(x, y, z);
+			}
 		}
 	}
 

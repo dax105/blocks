@@ -4,6 +4,7 @@ import org.lwjgl.opengl.GL11;
 
 import dax.blocks.TextureManager;
 import dax.blocks.render.RenderPass;
+import dax.blocks.world.World;
 
 public class BlockPlant extends Block {
 
@@ -86,6 +87,13 @@ public class BlockPlant extends Block {
 		GL11.glTexCoord2f(TextureManager.getX1(this.sideTexture), TextureManager.getY1(this.sideTexture));
 		GL11.glVertex3f(x+1, y+1, z+0);
 		
+	}
+
+	@Override
+	public void update(int x, int y, int z, World world) {
+		if (world.getBlock(x, y-1, z) == 0) {
+			world.setBlock(x, y, z, 0, true);
+		}
 	}
 
 }

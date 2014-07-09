@@ -6,6 +6,7 @@ import org.newdawn.slick.openal.Audio;
 import dax.blocks.Game;
 import dax.blocks.render.RenderPass;
 import dax.blocks.sound.SoundManager;
+import dax.blocks.world.World;
 
 public abstract class Block {
 
@@ -24,6 +25,8 @@ public abstract class Block {
 	
 	private static int lastAO = -1;
 
+	public abstract void update(int x, int y, int z, World world);
+	
 	public Block(int id) {
 		this.id = id;
 		blocks[id] = this;
