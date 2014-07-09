@@ -336,8 +336,8 @@ public class RenderEngine {
 		GL11.glEnable(GL11.GL_LIGHTING);
 		GL11.glEnable(GL11.GL_TEXTURE_2D);
 
-		int pcx = (int) world.player.posX / 16;
-		int pcz = (int) world.player.posZ / 16;
+		int pcx = (int) Math.floor(world.player.posX) >> 4;
+		int pcz = (int) Math.floor(world.player.posZ) >> 4;
 
 		List<Chunk> visibleChunks = world.chunkProvider.getChunksInRadius(pcx,
 				pcz, Game.settings.drawDistance.getValue());
