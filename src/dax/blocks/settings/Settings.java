@@ -24,7 +24,13 @@ public class Settings {
 	
 	public SettingsObject<Boolean> fullscreen = (SettingsObject<Boolean>) registerObject(new SettingsObject<Boolean>("fullscreen", false, "Fullscreen mode", "%o", null));
 	public SettingsObject<Boolean> mipmaps = (SettingsObject<Boolean>) registerObject(new SettingsObject<Boolean>("mipmaps", true, "Mipmapping", "%o", null));
-	public SettingsObject<Boolean> sound = (SettingsObject<Boolean>) registerObject(new SettingsObject<Boolean>("sound", true, "Sound", "%o", null));
+	public SettingsObject<Boolean> sound = (SettingsObject<Boolean>) registerObject(new SettingsObject<Boolean>("sound", true, "Sound", "%o", new Applier() {
+		@Override
+		public void apply() {
+			Game.sound.updateVolume();
+			
+		}
+	}));
 	public SettingsObject<Boolean> tree_generation = (SettingsObject<Boolean>) registerObject(new SettingsObject<Boolean>("tree_generation", true, "Tree generator", "%o", null));
 	public SettingsObject<Boolean> linear_filtering = (SettingsObject<Boolean>) registerObject(new SettingsObject<Boolean>("linear_filtering", false, "Linear filtering", "%o", null));
 	public SettingsObject<Boolean> enable_shaders = (SettingsObject<Boolean>) registerObject(new SettingsObject<Boolean>("enable_shaders", false, "Enable shaders", "%o", null));
@@ -35,7 +41,13 @@ public class Settings {
 	public SettingsObject<Float> fov = (SettingsObject<Float>) registerObject(new SettingsObject<Float>("fov", 80.0f, "FOV", null, null));
 	public SettingsObject<Float> reach = (SettingsObject<Float>) registerObject(new SettingsObject<Float>("reach", 20.0f, "Block reach radius", "%v blocks", null));
 	public SettingsObject<Float> ao_intensity = (SettingsObject<Float>) registerObject(new SettingsObject<Float>("ao_intensity", 0.25f, "AO Intensity", null, new ApplierAO()));
-	public SettingsObject<Float> sound_volume = (SettingsObject<Float>) registerObject(new SettingsObject<Float>("sound_volume", 1f, "Sound volume (0.0 - 1.0)", null, null));
+	public SettingsObject<Float> sound_volume = (SettingsObject<Float>) registerObject(new SettingsObject<Float>("sound_volume", 1f, "Sound volume (0.0 - 1.0)", null, new Applier() {
+		@Override
+		public void apply() {
+			Game.sound.updateVolume();
+			
+		}
+	}));
 	
 	private SettingsObject<?> registerObject(SettingsObject<?> object) {
 		objects.put(object.getName(), object);
@@ -49,7 +61,10 @@ public class Settings {
 			String[] words = l.split(" ");
 
 			if (words.length >= 2) {
-				setValue(words[0], words[1], false);
+				if(words[0].equalsIgnoreCase("ao_intensity") || words[0].equalsIgnoreCase("aa_samples"))
+					setValue(words[0], words[1], false);
+				else
+					setValue(words[0], words[1], true);
 			}
 		}
 		

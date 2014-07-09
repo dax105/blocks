@@ -51,7 +51,7 @@ public class GuiObjectButton extends GuiObject {
 			while (Mouse.next()) {
 				if (Mouse.getEventButtonState()) {
 					if (Mouse.getEventButton() == 0) {
-						parent.buttonPress(this);
+						this.onClick();
 					}
 				}
 			}
@@ -59,6 +59,10 @@ public class GuiObjectButton extends GuiObject {
 			hover = false;
 		}
 
+	}
+	
+	protected void onClick() {
+		parent.buttonPress(this);
 	}
 
 }
