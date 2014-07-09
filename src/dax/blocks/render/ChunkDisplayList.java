@@ -30,6 +30,7 @@ public class ChunkDisplayList {
 		for (int i = 0; i < RenderPass.TOTAL_PASSES; i++) {
 			if (listsPresent[i]) {
 				GL11.glDeleteLists(listIDs[i], 1);
+				listsPresent[i] = false;
 			}
 		}
 	}

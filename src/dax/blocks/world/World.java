@@ -215,6 +215,18 @@ public class World {
 		return aABBs;
 	}
 
+	public void setAllChunksDirty() {
+		for (Chunk c : chunkProvider.getAllLoadedChunks()) {
+			c.setAllDirty();
+		}
+	}
+	
+	public void deleteAllDisplayLists() {
+		for (Chunk c : chunkProvider.getAllLoadedChunks()) {
+			c.deleteAllRenderChunks();
+		}
+	}
+	
 	public void saveAllChunks() {
 		chunkProvider.loader.saveAll();
 	}

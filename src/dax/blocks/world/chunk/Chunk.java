@@ -27,6 +27,12 @@ public class Chunk {
 			renderChunks[y].setDirty(true);
 		}
 	}
+	
+	public void setAllDirty() {
+		for (RenderChunk r : renderChunks) {
+			r.setDirty(true);
+		}
+	}
 
 	public float getDistanceToPlayer() {
 		float pX = world.player.posX;
@@ -98,7 +104,7 @@ public class Chunk {
 
 	public void deleteRenderChunk(int y) {
 		if (renderChunks[y].isGenerated()) { 
-			renderChunks[y].getCdl().delete();
+			renderChunks[y].clear();
 		}
 	}
 

@@ -114,6 +114,7 @@ public class TextureManager {
 		ab.addTexture(loadImage("dax/blocks/res/textures/blocks/flower_y.png"));
 		ab.addTexture(loadImage("dax/blocks/res/textures/blocks/flower_r.png"));
 		ab.addTexture(loadImage("dax/blocks/res/textures/blocks/flower_w.png"));
+		ab.addTexture(loadImage("dax/blocks/res/textures/blocks/leaves_opaque.png"));
 		
 		atlas = ab.buildAtlas(true);
 		

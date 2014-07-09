@@ -11,8 +11,7 @@ import dax.blocks.Game;
 
 @SuppressWarnings("unchecked")
 public class Settings {
-	public Map<String, SettingsObject<?>> objects = new HashMap<String, SettingsObject<?>>();
-	
+	public Map<String, SettingsObject<?>> objects = new HashMap<String, SettingsObject<?>>();	
 	
 	public SettingsObject<Integer> drawDistance = (SettingsObject<Integer>) registerObject(new SettingsObject<Integer>("draw_distance", 10, "Render distance", "%v chunks", null));
 	public SettingsObject<Integer> consoleHeight = (SettingsObject<Integer>) registerObject(new SettingsObject<Integer>("console_height", 200, "Console height", "%v px", null));
@@ -29,6 +28,8 @@ public class Settings {
 	public SettingsObject<Boolean> tree_generation = (SettingsObject<Boolean>) registerObject(new SettingsObject<Boolean>("tree_generation", true, "Tree generator", "%o", null));
 	public SettingsObject<Boolean> linear_filtering = (SettingsObject<Boolean>) registerObject(new SettingsObject<Boolean>("linear_filtering", false, "Linear filtering", "%o", null));
 	public SettingsObject<Boolean> enable_shaders = (SettingsObject<Boolean>) registerObject(new SettingsObject<Boolean>("enable_shaders", false, "Enable shaders", "%o", null));
+	public SettingsObject<Boolean> transparent_leaves = (SettingsObject<Boolean>) registerObject(new SettingsObject<Boolean>("transparent_leaves", true, "Transparent leaves", "%o", new ApplierLeaves()));
+	public SettingsObject<Boolean> two_pass_translucent = (SettingsObject<Boolean>) registerObject(new SettingsObject<Boolean>("two_pass_translucent", true, "Two pass rendering of translucent blocks", "%o", null));
 	
 	public SettingsObject<Float> fov = (SettingsObject<Float>) registerObject(new SettingsObject<Float>("fov", 80.0f, "FOV", null, null));
 	public SettingsObject<Float> reach = (SettingsObject<Float>) registerObject(new SettingsObject<Float>("reach", 20.0f, "Block reach radius", "%v blocks", null));
@@ -87,21 +88,21 @@ public class Settings {
 		this.setValue(name, value, true);
 	}
 	
-	public void setValue(String name, String value, boolean applyAppliers) {
+	public void setValue(String name, String value, boolean apply) {
 		ObjectType type = getType(name);
 		if (type != null) {
 			try {
 				switch (type) {
 				case INTEGER:
-					((SettingsObject<Integer>)getObject(name)).setValue(Integer.parseInt(value), applyAppliers);
+					((SettingsObject<Integer>)getObject(name)).setValue(Integer.parseInt(value), apply);
 					Game.console.out("Set value of int " + name + " to " + Integer.parseInt(value));
 					break;
 				case FLOAT:
-					((SettingsObject<Float>)getObject(name)).setValue(Float.parseFloat(value), applyAppliers);
+					((SettingsObject<Float>)getObject(name)).setValue(Float.parseFloat(value), apply);
 					Game.console.out("Set value of float " + name + " to " + Float.parseFloat(value));
 					break;
 				case BOOLEAN:
-					((SettingsObject<Boolean>)getObject(name)).setValue(Boolean.parseBoolean(value), applyAppliers);
+					((SettingsObject<Boolean>)getObject(name)).setValue(Boolean.parseBoolean(value), apply);
 					Game.console.out("Set value of boolean " + name + " to " + Boolean.parseBoolean(value));
 					break;
 				default:

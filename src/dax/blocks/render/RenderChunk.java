@@ -28,6 +28,12 @@ public class RenderChunk {
 		return generated;
 	}
 	
+	public void clear() {
+		cdl.delete();
+		this.generated = false;
+		this.dirty = true;
+	}
+	
 	public void setGenerated() {
 		this.generated = true;
 		this.dirty = false;

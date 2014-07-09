@@ -425,6 +425,8 @@ public class RenderEngine {
 
 		GL11.glDisable(GL11.GL_ALPHA_TEST);
 
+		if (Game.settings.two_pass_translucent.getValue()) {
+		
 		GL11.glColorMask(false, false, false, false);
 
 		for (Chunk c : visibleChunks) {
@@ -445,6 +447,8 @@ public class RenderEngine {
 		}
 
 		GL11.glColorMask(true, true, true, true);
+		}
+		
 		for (Chunk c : visibleChunks) {
 			if (c != null) {
 				for (int y = 0; y < 8; y++) {
