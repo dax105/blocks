@@ -4,9 +4,8 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import org.newdawn.slick.openal.Audio;
-
 import dax.blocks.Game;
+import paulscode.sound.ListenerData;
 import paulscode.sound.SoundSystem;
 import paulscode.sound.SoundSystemConfig;
 import paulscode.sound.SoundSystemException;
@@ -20,20 +19,12 @@ public class SoundManager {
 	public static Map<String, String> sounds;
 	public static Map<String, String> music;
 
-	public static Audio[] footstep_dirt;
-	public static Audio fall_hard;
+	public static String[] footstep_dirt;
+	public static String[] footstep_grass;
+	public static String[] footstep_wood;
+	public static String[] footstep_stone;
 
-	public static Audio[] footstep_grass;
-
-	public static Audio fall_soft;
-
-	public static Audio[] footstep_stone;
-
-	public static Audio[] footstep_wood;
-
-	public static Audio explosion;
-
-	public static void loadSounds(SoundSystem system) {
+	private static void loadSounds(SoundSystem system) {
 		sounds = new HashMap<>();
 		music = new HashMap<>();
 
@@ -55,10 +46,21 @@ public class SoundManager {
 
 		music.put("music1", "alb_esp2.ogg");
 
+		ListenerData d = system.getListenerData();
 		for (Entry<String, String> sound : sounds.entrySet()) {
-			system.newSource(false, sound.getKey(), sound.getValue(), false, 0,
-					0, 0, SoundSystemConfig.ATTENUATION_NONE, 0);
+			system.newSource(false, sound.getKey(), sound.getValue(), false,
+					d.position.x, d.position.y, d.position.z,
+					SoundSystemConfig.ATTENUATION_NONE, 0);
 		}
+
+		sortSounds();
+	}
+
+	private static void sortSounds() {
+		footstep_dirt = new String[] { "footstep_dirt_0", "footstep_dirt_1" };
+		footstep_grass = new String[] { "footstep_grass_0", "footstep_grass_1" };
+		footstep_wood = new String[] { "footstep_wood_0", "footstep_wood_1" };
+		footstep_stone = new String[] { "footstep_stone_0", "footstep_stone_1" };
 	}
 
 	public SoundManager() {
@@ -74,7 +76,7 @@ public class SoundManager {
 
 		system = new SoundSystem();
 		SoundManager.loadSounds(this.system);
-		this.actualizeVolume();
+		this.updateVolume();
 	}
 
 	private String musicPlaying = null;
@@ -89,24 +91,24 @@ public class SoundManager {
 	}
 
 	public void pauseMusic() {
-		if (system.playing(musicPlaying)) {
+		if (musicPlaying != null && system.playing(musicPlaying)) {
 			system.pause(musicPlaying);
 		}
 	}
 
 	public void playMusic() {
-		if (!system.playing(musicPlaying)) {
+		if (musicPlaying != null && !system.playing(musicPlaying)) {
 			system.play(musicPlaying);
 		}
 	}
 
 	public void stopMusic() {
-		if (system.playing(musicPlaying)) {
+		if (musicPlaying != null && system.playing(musicPlaying)) {
 			system.stop(musicPlaying);
 		}
 	}
 
-	public void actualizeVolume() {
+	public void updateVolume() {
 		if (Game.settings.sound.getValue()) {
 			system.setMasterVolume(Game.settings.sound_volume.getValue());
 			this.playMusic();
@@ -120,15 +122,53 @@ public class SoundManager {
 		stopMusic();
 		system.cleanup();
 	}
-
-	public void play(org.newdawn.slick.openal.Audio a, float b, float c,
-			boolean d) {
-
+	
+	public void playSound(String name) {
+		playSound(name, 1);
+	}
+	
+	public void playSound(String name, float pitch) {
+		playSound(name, pitch, system.getMasterVolume());
 	}
 
-	public void play(org.newdawn.slick.openal.Audio[] a, float b, float c,
-			boolean d) {
-
+	public void playSound(String name, float pitch, float volume) {
+		ListenerData d = system.getListenerData();
+		playSound(name, pitch, volume, d.position.x, d.position.y, d.position.z, false);
 	}
 
+	public void playSound(String name, float pitch, float volume, float x,
+			float y, float z, boolean loop) {
+		if (sounds.containsKey(name)) {
+			system.setVolume(name, volume);
+			system.setPitch(name, pitch);
+			system.setPosition(name, x, y, z);
+			system.setLooping(name, loop);
+			system.play(name);
+
+			ListenerData d = system.getListenerData();
+			system.setPosition(name, d.position.x, d.position.y, d.position.z);
+		}
+	}
+
+	public void playSound(String[] names) {
+		playSound(names, 1);
+	}
+	
+	public void playSound(String[] names, float pitch) {
+		playSound(names, pitch, system.getMasterVolume());
+	}
+
+	public void playSound(String[] names, float pitch, float volume) {
+		ListenerData d = system.getListenerData();
+		playSound(names, pitch, volume, d.position.x, d.position.y, d.position.z);
+	}
+
+	public void playSound(String[] names, float pitch, float volume, float x, float y, float z) {
+		int index = system.randomNumberGenerator.nextInt(names.length);
+		playSound(names[index], pitch, volume, x, y, z, false);
+	}
+	
+	public SoundSystem getSoundSystem() {
+		return system;
+	}
 }

@@ -390,9 +390,8 @@ public class Player {
 					(int) Math.floor(this.posZ));
 			Block block = Block.getBlock((byte) b);
 			if (block != null) {
-				Game.sound.play(block.getFallSound(),
-						0.7f + rand.nextFloat() * 0.25f,
-						0.5f * Game.settings.sound_volume.getValue(), false);
+				Game.sound.playSound(block.getFallSound(),
+						0.7f + rand.nextFloat() * 0.25f);
 			}
 		}
 
@@ -411,9 +410,8 @@ public class Player {
 					(int) Math.floor(this.posZ));
 			Block block = Block.getBlock((byte) b);
 			if (block != null) {
-				Game.sound.play(block.getStepSound(),
-						1.0f - (rand.nextFloat() * 0.2f - 0.1f),
-						Game.settings.sound_volume.getValue(), false);
+				Game.sound.playSound(block.getStepSound(),
+						1.0f - (rand.nextFloat() * 0.2f - 0.1f));
 			}
 
 			// SoundManager.play(SoundManager.footstep_grass,
