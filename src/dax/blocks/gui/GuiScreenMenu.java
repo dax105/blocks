@@ -52,4 +52,14 @@ public class GuiScreenMenu extends GuiScreen {
 		
 	}
 
+	@Override
+	public void onClosing() {
+		Game.sound.playMusic();	
+	}
+
+	@Override
+	public void onOpening() {
+		Game.sound.pauseMusic();
+	}
+
 }

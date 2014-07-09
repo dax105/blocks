@@ -30,12 +30,18 @@ public class SoundManager {
 
 		sounds.put("footstep_dirt_0", "footstep_dirt_0.wav");
 		sounds.put("footstep_dirt_1", "footstep_dirt_1.wav");
+		sounds.put("footstep_dirt_1", "footstep_dirt_2.wav");
+		sounds.put("footstep_dirt_1", "footstep_dirt_3.wav");
 
 		sounds.put("footstep_grass_0", "footstep_grass_0.wav");
 		sounds.put("footstep_grass_1", "footstep_grass_1.wav");
+		sounds.put("footstep_grass_1", "footstep_grass_2.wav");
+		sounds.put("footstep_grass_1", "footstep_grass_3.wav");
 
 		sounds.put("footstep_wood_0", "footstep_wood_0.wav");
 		sounds.put("footstep_wood_1", "footstep_wood_1.wav");
+		sounds.put("footstep_wood_1", "footstep_wood_2.wav");
+		sounds.put("footstep_wood_1", "footstep_wood_3.wav");
 
 		sounds.put("footstep_stone_0", "footstep_stone_0.wav");
 		sounds.put("footstep_stone_1", "footstep_stone_1.wav");
@@ -44,7 +50,9 @@ public class SoundManager {
 		sounds.put("fall_soft", "fall_soft.wav");
 		sounds.put("explosion", "explosion.wav");
 
-		music.put("music1", "alb_esp2.ogg");
+		music.put("music1", "got_roc.ogg");
+		music.put("menu1", "got_main.ogg");
+		music.put("menu2", "got_north.ogg");
 
 		ListenerData d = system.getListenerData();
 		for (Entry<String, String> sound : sounds.entrySet()) {
@@ -57,9 +65,9 @@ public class SoundManager {
 	}
 
 	private static void sortSounds() {
-		footstep_dirt = new String[] { "footstep_dirt_0", "footstep_dirt_1" };
-		footstep_grass = new String[] { "footstep_grass_0", "footstep_grass_1" };
-		footstep_wood = new String[] { "footstep_wood_0", "footstep_wood_1" };
+		footstep_dirt = new String[] { "footstep_dirt_0", "footstep_dirt_1", "footstep_dirt_2", "footstep_dirt_3" };
+		footstep_grass = new String[] { "footstep_grass_0", "footstep_grass_1", "footstep_grass_2", "footstep_grass_3" };
+		footstep_wood = new String[] { "footstep_wood_0", "footstep_wood_1", "footstep_grass_2", "footstep_grass_3" };
 		footstep_stone = new String[] { "footstep_stone_0", "footstep_stone_1" };
 	}
 
@@ -80,9 +88,10 @@ public class SoundManager {
 	}
 
 	private String musicPlaying = null;
-
+	
 	public void playMusic(String name, boolean loop) {
 		if (music.containsKey(name)) {
+			stopMusic();
 			system.backgroundMusic(name, music.get(name), loop);
 			musicPlaying = name;
 		} else {
@@ -143,6 +152,9 @@ public class SoundManager {
 			system.setPitch(name, pitch);
 			system.setPosition(name, x, y, z);
 			system.setLooping(name, loop);
+			
+			if(system.playing(name))
+				system.stop(name);
 			system.play(name);
 
 			ListenerData d = system.getListenerData();
