@@ -14,8 +14,7 @@ public class Explosion {
 		int radius = Game.settings.explosion_radius.getValue();
 		float fuzzyness = 1.5f;
 
-		Game.sound.play(SoundManager.explosion, 0.8f + rand.nextFloat() * 0.4f,
-				Game.settings.sound_volume.getValue(), false);
+		Game.sound.playSound("explosion", 0.8f + rand.nextFloat() * 0.4f);
 
 		for (int x = (int) ex - radius; x < ex + radius; x++) {
 			for (int y = (int) ey - radius; y < ey + radius; y++) {

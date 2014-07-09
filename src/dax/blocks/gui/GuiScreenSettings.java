@@ -61,7 +61,7 @@ public class GuiScreenSettings extends GuiScreen {
 			Game.settings.tree_generation.setValue(trees);
 			Game.settings.sound.setValue(sound);
 
-			Game.sound.actualizeVolume();
+			Game.sound.updateVolume();
 			
 			game.updateFiltering();
 			
@@ -84,7 +84,7 @@ public class GuiScreenSettings extends GuiScreen {
 			//FOV slider
 			break;
 		case 2:
-			Game.sound.actualizeVolume();
+			Game.sound.updateVolume();
 			break;
 		case 3:
 			//Render distance slider

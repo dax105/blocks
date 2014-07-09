@@ -1,184 +1,174 @@
 package dax.blocks.sound;
 
-import java.io.IOException;
-import java.util.Random;
-
-import org.newdawn.slick.openal.Audio;
-import org.newdawn.slick.openal.AudioLoader;
-import org.newdawn.slick.openal.SoundStore;
-import org.newdawn.slick.util.ResourceLoader;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Map.Entry;
 
 import dax.blocks.Game;
+import paulscode.sound.ListenerData;
+import paulscode.sound.SoundSystem;
+import paulscode.sound.SoundSystemConfig;
+import paulscode.sound.SoundSystemException;
+import paulscode.sound.codecs.CodecJOgg;
+import paulscode.sound.codecs.CodecWav;
+import paulscode.sound.libraries.LibraryLWJGLOpenAL;
 
 public class SoundManager {
-	private Random rand = new Random();
+	private SoundSystem system;
 
-	public static Audio footstep_grass[];
-	public static Audio footstep_wood[];
-	public static Audio footstep_dirt[];
-	public static Audio footstep_stone[];
-	public static Audio fall_soft;
-	public static Audio fall_hard;
-	public static Audio explosion;
-	public static Audio music_piano;
+	public static Map<String, String> sounds;
+	public static Map<String, String> music;
 
-	public static Audio loadSound(String path) {
-		return loadSound(path, false);
-	}
-	
-	public static Audio loadSound(String path, boolean loadAsStream) {
-		try {
-			Audio sound;
-			sound = loadAsStream ? AudioLoader.getStreamingAudio("OGG",
-					ResourceLoader.getResource(path)) : AudioLoader.getAudio(
-					"WAV", ResourceLoader.getResourceAsStream(path));
-			Game.console.out("Successfully loaded sound from " + path);
-			return sound;
-		} catch (IOException e) {
-			// e.printStackTrace();
-			System.err.println("Can't load sound from " + path
-					+ ", perhaps the file doesn't exist?");
-			System.exit(1);
+	public static String[] footstep_dirt;
+	public static String[] footstep_grass;
+	public static String[] footstep_wood;
+	public static String[] footstep_stone;
+
+	private static void loadSounds(SoundSystem system) {
+		sounds = new HashMap<>();
+		music = new HashMap<>();
+
+		sounds.put("footstep_dirt_0", "footstep_dirt_0.wav");
+		sounds.put("footstep_dirt_1", "footstep_dirt_1.wav");
+
+		sounds.put("footstep_grass_0", "footstep_grass_0.wav");
+		sounds.put("footstep_grass_1", "footstep_grass_1.wav");
+
+		sounds.put("footstep_wood_0", "footstep_wood_0.wav");
+		sounds.put("footstep_wood_1", "footstep_wood_1.wav");
+
+		sounds.put("footstep_stone_0", "footstep_stone_0.wav");
+		sounds.put("footstep_stone_1", "footstep_stone_1.wav");
+
+		sounds.put("fall_hard", "fall_hard.wav");
+		sounds.put("fall_soft", "fall_soft.wav");
+		sounds.put("explosion", "explosion.wav");
+
+		music.put("music1", "alb_esp2.ogg");
+
+		ListenerData d = system.getListenerData();
+		for (Entry<String, String> sound : sounds.entrySet()) {
+			system.newSource(false, sound.getKey(), sound.getValue(), false,
+					d.position.x, d.position.y, d.position.z,
+					SoundSystemConfig.ATTENUATION_NONE, 0);
 		}
-		return null;
+
+		sortSounds();
 	}
 
-	public static void load() {
-		explosion = loadSound("dax/blocks/res/sound/explosion.wav", false);
-
-		fall_soft = loadSound("dax/blocks/res/sound/fall_soft.wav", false);
-		fall_hard = loadSound("dax/blocks/res/sound/fall_hard.wav", false);
-
-		footstep_grass = new Audio[4];
-		footstep_grass[0] = loadSound(
-				"dax/blocks/res/sound/footstep_grass_0.wav", false);
-		footstep_grass[1] = loadSound(
-				"dax/blocks/res/sound/footstep_grass_1.wav", false);
-		footstep_grass[2] = loadSound(
-				"dax/blocks/res/sound/footstep_grass_2.wav", false);
-		footstep_grass[3] = loadSound(
-				"dax/blocks/res/sound/footstep_grass_3.wav", false);
-
-		footstep_wood = new Audio[4];
-		footstep_wood[0] = loadSound(
-				"dax/blocks/res/sound/footstep_wood_0.wav", false);
-		footstep_wood[1] = loadSound(
-				"dax/blocks/res/sound/footstep_wood_1.wav", false);
-		footstep_wood[2] = loadSound(
-				"dax/blocks/res/sound/footstep_wood_2.wav", false);
-		footstep_wood[3] = loadSound(
-				"dax/blocks/res/sound/footstep_wood_3.wav", false);
-
-		footstep_dirt = new Audio[3];
-		footstep_dirt[0] = loadSound(
-				"dax/blocks/res/sound/footstep_dirt_0.wav", false);
-		footstep_dirt[1] = loadSound(
-				"dax/blocks/res/sound/footstep_dirt_1.wav", false);
-		// footstep_dirt[2] =
-		// loadSound("dax/blocks/res/sound/footstep_dirt_2.wav");
-		footstep_dirt[2] = loadSound(
-				"dax/blocks/res/sound/footstep_dirt_3.wav", false);
-
-		footstep_stone = new Audio[2];
-		footstep_stone[0] = loadSound(
-				"dax/blocks/res/sound/footstep_stone_0.wav", false);
-		footstep_stone[1] = loadSound(
-				"dax/blocks/res/sound/footstep_stone_1.wav", false);
-
-		music_piano = loadSound("dax/blocks/res/sound/alb_esp2.ogg", true);
+	private static void sortSounds() {
+		footstep_dirt = new String[] { "footstep_dirt_0", "footstep_dirt_1" };
+		footstep_grass = new String[] { "footstep_grass_0", "footstep_grass_1" };
+		footstep_wood = new String[] { "footstep_wood_0", "footstep_wood_1" };
+		footstep_stone = new String[] { "footstep_stone_0", "footstep_stone_1" };
 	}
 
 	public SoundManager() {
-		SoundManager.load();
-	}
-	
-	private Audio actualMusic;
-	private boolean isPlaying_;
-	private boolean shouldRepeat;
-	private boolean isPaused = false;
-	private float pausePosition;
-	
-	public boolean isPlaying() {
-		return isPlaying_;
+		try {
+			SoundSystemConfig.addLibrary(LibraryLWJGLOpenAL.class);
+			SoundSystemConfig.setCodec("ogg", CodecJOgg.class);
+			SoundSystemConfig.setCodec("wav", CodecWav.class);
+			SoundSystemConfig.setSoundFilesPackage("dax/blocks/res/sound/");
+		} catch (SoundSystemException e) {
+			// TODO Sound system fail message
+			e.printStackTrace();
+		}
+
+		system = new SoundSystem();
+		SoundManager.loadSounds(this.system);
+		this.updateVolume();
 	}
 
-	public void actualizeVolume() {
-		actualizeVolume(Game.settings.sound_volume.getValue());
-	}
+	private String musicPlaying = null;
 
-	public void actualizeVolume(float volume) {
-		if (actualMusic != null && actualMusic.isPlaying()) {
-			if (Game.settings.sound.getValue()) {
-				SoundStore.get().setMusicVolume(volume);
-			} else {
-				pause();
-			}
-		} else if (actualMusic != null && !actualMusic.isPlaying()
-				 && Game.settings.sound.getValue()) {
-			resume();
-		}
-	}
-	
-	public void pause() {
-		if(!isPaused && isPlaying_) {
-			this.pausePosition = actualMusic.getPosition();
-			this.stopPlaying();
-			this.isPaused = true;
-		}
-	}
-	
-	public void resume() {
-		if(isPaused && !isPlaying_) {
-			Game.console.out(this.actualMusic.setPosition(pausePosition) + "");
-			this.playMusic(actualMusic, shouldRepeat);
-			this.isPaused = false;
+	public void playMusic(String name, boolean loop) {
+		if (music.containsKey(name)) {
+			system.backgroundMusic(name, music.get(name), loop);
+			musicPlaying = name;
+		} else {
+			Game.console.out("Music called " + name + " does not exist");
 		}
 	}
 
-	public void stopPlaying() {
-		if (actualMusic != null && actualMusic.isPlaying()) {
-			actualMusic.stop();
-			this.isPlaying_ = false;
+	public void pauseMusic() {
+		if (musicPlaying != null && system.playing(musicPlaying)) {
+			system.pause(musicPlaying);
 		}
 	}
 
-	public void playMusic(Audio music, boolean repeat) {
-		playMusic(music, 1f, Game.settings.sound_volume.getValue(), repeat);
+	public void playMusic() {
+		if (musicPlaying != null && !system.playing(musicPlaying)) {
+			system.play(musicPlaying);
+		}
 	}
 
-	public void playMusic(Audio music, float pitch, float volume, boolean repeat) {
-		if (!Game.settings.sound.getValue())
-			return;
-		stopPlaying();
-
-		this.actualMusic = music;
-		this.isPlaying_ = true;
-		this.shouldRepeat = repeat;
-
-		music.playAsMusic(pitch, volume, repeat);
-		actualizeVolume();
+	public void stopMusic() {
+		if (musicPlaying != null && system.playing(musicPlaying)) {
+			system.stop(musicPlaying);
+		}
 	}
 
-	public void play(Audio[] soundVariants) {
-		play(soundVariants, 1f, Game.settings.sound_volume.getValue(), false);
+	public void updateVolume() {
+		if (Game.settings.sound.getValue()) {
+			system.setMasterVolume(Game.settings.sound_volume.getValue());
+			this.playMusic();
+		} else {
+			system.setMasterVolume(0);
+			this.pauseMusic();
+		}
 	}
 
-	public void play(Audio[] soundVariants, float pitch, float volume,
-			boolean repeat) {
-		if (!Game.settings.sound.getValue())
-			return;
-		int index = rand.nextInt(soundVariants.length);
-		soundVariants[index].playAsSoundEffect(pitch, volume, repeat);
+	public void shutdown() {
+		stopMusic();
+		system.cleanup();
+	}
+	
+	public void playSound(String name) {
+		playSound(name, 1);
+	}
+	
+	public void playSound(String name, float pitch) {
+		playSound(name, pitch, system.getMasterVolume());
 	}
 
-	public void play(Audio sound) {
-		play(sound, 1f, Game.settings.sound_volume.getValue(), false);
+	public void playSound(String name, float pitch, float volume) {
+		ListenerData d = system.getListenerData();
+		playSound(name, pitch, volume, d.position.x, d.position.y, d.position.z, false);
 	}
 
-	public void play(Audio sound, float pitch, float volume, boolean repeat) {
-		if (!Game.settings.sound.getValue())
-			return;
-		sound.playAsSoundEffect(pitch, volume, repeat);
+	public void playSound(String name, float pitch, float volume, float x,
+			float y, float z, boolean loop) {
+		if (sounds.containsKey(name)) {
+			system.setVolume(name, volume);
+			system.setPitch(name, pitch);
+			system.setPosition(name, x, y, z);
+			system.setLooping(name, loop);
+			system.play(name);
+
+			ListenerData d = system.getListenerData();
+			system.setPosition(name, d.position.x, d.position.y, d.position.z);
+		}
 	}
 
+	public void playSound(String[] names) {
+		playSound(names, 1);
+	}
+	
+	public void playSound(String[] names, float pitch) {
+		playSound(names, pitch, system.getMasterVolume());
+	}
+
+	public void playSound(String[] names, float pitch, float volume) {
+		ListenerData d = system.getListenerData();
+		playSound(names, pitch, volume, d.position.x, d.position.y, d.position.z);
+	}
+
+	public void playSound(String[] names, float pitch, float volume, float x, float y, float z) {
+		int index = system.randomNumberGenerator.nextInt(names.length);
+		playSound(names[index], pitch, volume, x, y, z, false);
+	}
+	
+	public SoundSystem getSoundSystem() {
+		return system;
+	}
 }
