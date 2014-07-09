@@ -152,7 +152,7 @@ public class Game implements Runnable {
 		if (ingame) {
 			world.saveAllChunks();
 		}
-		Game.sound.stopPlaying();
+		Game.sound.shutdown();
 
 		Display.destroy();
 		AL.destroy();
@@ -279,8 +279,6 @@ public class Game implements Runnable {
 
 		// Display.sync(200);
 		// updateFPS();
-		if (Game.sound.isPlaying())
-			org.newdawn.slick.openal.SoundStore.get().poll(0);
 	}
 
 	public void onRender() {
