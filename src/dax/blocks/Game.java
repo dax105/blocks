@@ -32,6 +32,7 @@ import dax.blocks.gui.GuiScreenMainMenu;
 import dax.blocks.gui.GuiScreenMenu;
 import dax.blocks.render.RenderEngine;
 import dax.blocks.settings.Settings;
+import dax.blocks.sound.SoundManager;
 import dax.blocks.world.World;
 
 public class Game implements Runnable {

@@ -3,8 +3,8 @@ package dax.blocks.world;
 import java.util.Random;
 
 import dax.blocks.Game;
-import dax.blocks.SoundManager;
 import dax.blocks.block.Block;
+import dax.blocks.sound.SoundManager;
 
 public class Explosion {
 

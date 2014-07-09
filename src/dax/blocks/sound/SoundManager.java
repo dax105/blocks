@@ -1,4 +1,4 @@
-package dax.blocks;
+package dax.blocks.sound;
 
 import java.io.IOException;
 import java.util.Random;
@@ -7,6 +7,8 @@ import org.newdawn.slick.openal.Audio;
 import org.newdawn.slick.openal.AudioLoader;
 import org.newdawn.slick.openal.SoundStore;
 import org.newdawn.slick.util.ResourceLoader;
+
+import dax.blocks.Game;
 
 public class SoundManager {
 	private Random rand = new Random();
@@ -20,11 +22,11 @@ public class SoundManager {
 	public static Audio explosion;
 	public static Audio music_piano;
 
-	public Audio loadSound(String path) {
+	public static Audio loadSound(String path) {
 		return loadSound(path, false);
 	}
-
-	public Audio loadSound(String path, boolean loadAsStream) {
+	
+	public static Audio loadSound(String path, boolean loadAsStream) {
 		try {
 			Audio sound;
 			sound = loadAsStream ? AudioLoader.getStreamingAudio("OGG",
@@ -33,15 +35,15 @@ public class SoundManager {
 			Game.console.out("Successfully loaded sound from " + path);
 			return sound;
 		} catch (IOException e) {
-			e.printStackTrace();
-			// System.err.println("Can't load sound from " + path
-			// + ", perhaps the file doesn't exist?");
+			// e.printStackTrace();
+			System.err.println("Can't load sound from " + path
+					+ ", perhaps the file doesn't exist?");
 			System.exit(1);
 		}
 		return null;
 	}
 
-	public void load() {
+	public static void load() {
 		explosion = loadSound("dax/blocks/res/sound/explosion.wav", false);
 
 		fall_soft = loadSound("dax/blocks/res/sound/fall_soft.wav", false);
@@ -86,10 +88,15 @@ public class SoundManager {
 		music_piano = loadSound("dax/blocks/res/sound/alb_esp2.ogg", true);
 	}
 
+	public SoundManager() {
+		SoundManager.load();
+	}
+	
 	private Audio actualMusic;
 	private boolean isPlaying_;
-	private boolean shouldContinue;
 	private boolean shouldRepeat;
+	private boolean isPaused = false;
+	private float pausePosition;
 	
 	public boolean isPlaying() {
 		return isPlaying_;
@@ -104,12 +111,27 @@ public class SoundManager {
 			if (Game.settings.sound.getValue()) {
 				SoundStore.get().setMusicVolume(volume);
 			} else {
-				stopPlaying();
-				shouldContinue = true;
+				pause();
 			}
-		} else if(actualMusic != null && !actualMusic.isPlaying() && shouldContinue && Game.settings.sound.getValue()) {
-			playMusic(actualMusic, shouldRepeat);
-			shouldContinue = false;
+		} else if (actualMusic != null && !actualMusic.isPlaying()
+				 && Game.settings.sound.getValue()) {
+			resume();
+		}
+	}
+	
+	public void pause() {
+		if(!isPaused && isPlaying_) {
+			this.pausePosition = actualMusic.getPosition();
+			this.stopPlaying();
+			this.isPaused = true;
+		}
+	}
+	
+	public void resume() {
+		if(isPaused && !isPlaying_) {
+			this.playMusic(actualMusic, shouldRepeat);
+			this.actualMusic.setPosition(pausePosition);
+			this.isPaused = false;
 		}
 	}
 
@@ -128,12 +150,12 @@ public class SoundManager {
 		if (!Game.settings.sound.getValue())
 			return;
 		stopPlaying();
-		
+
 		this.actualMusic = music;
 		this.isPlaying_ = true;
 		this.shouldRepeat = repeat;
-		
-		music.playAsMusic(pitch, volume, repeat);		
+
+		music.playAsMusic(pitch, volume, repeat);
 		actualizeVolume();
 	}
 
