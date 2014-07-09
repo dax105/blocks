@@ -554,11 +554,15 @@ public class Game implements Runnable {
 	float lastProgress = 0;
 
 	public void openGuiScreen(GuiScreen scr) {
+		if(this.guiScreen != null)
+			this.guiScreen.onClosing();
 		this.guiScreen = scr;
+		scr.onOpening();
 		Mouse.setGrabbed(false);
 	}
 
 	public void closeGuiScreen() {
+		this.guiScreen.onClosing();
 		this.guiScreen = null;
 
 		if (consoleOpen) {

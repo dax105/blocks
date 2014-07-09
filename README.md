@@ -49,11 +49,13 @@ Libraries
 * LWJGL (lwjgl, lwjgl_util)
 * SLICK-UTIL
 * SNAPPY-JAVA
-* JOGG and JINPUT
+* JOGG
+* PAULSCODE SOUNDSYSTEM (SoundSystem, CodecWav, CodecJOgg, LibraryLWJGLOpenAL)
 
 #####Made by Dax105 and LeOndryasO, textures by Tomix
 
 **Background music:**<br>
 Licensed under the cc-by-sa Germany License.   
 Name: Bernd Krueger   
-Source: http://www.piano-midi.de
+Source: http://www.piano-midi.de  
+Game of Thrones music by Ramin Djawadi, we do not claim ownership over these songs nor are we profiting by them. Own by HBO.

@@ -55,6 +55,10 @@ public abstract class GuiScreen {
 			game.closeGuiScreen();
 		}
 	}
+	
+	public abstract void onOpening();
+	
+	public abstract void onClosing();
 
 	public abstract void buttonPress(GuiObjectButton button);
 

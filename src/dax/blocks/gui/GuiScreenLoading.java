@@ -54,4 +54,16 @@ public class GuiScreenLoading extends GuiScreen {
 		
 		
 	}
+
+	@Override
+	public void onClosing() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void onOpening() {
+		// TODO Auto-generated method stub
+		
+	}
 }
