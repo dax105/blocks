@@ -175,7 +175,7 @@ public class Game implements Runnable {
 		displayLoadingScreen("Loading models...");
 		ModelManager.load();
 		displayLoadingScreen("Loading sounds...");
-		Game.sound.load();
+
 		lastFPS = getTime();
 
 		showbg = true;

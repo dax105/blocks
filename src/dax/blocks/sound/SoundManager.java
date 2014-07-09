@@ -129,8 +129,8 @@ public class SoundManager {
 	
 	public void resume() {
 		if(isPaused && !isPlaying_) {
+			Game.console.out(this.actualMusic.setPosition(pausePosition) + "");
 			this.playMusic(actualMusic, shouldRepeat);
-			this.actualMusic.setPosition(pausePosition);
 			this.isPaused = false;
 		}
 	}
