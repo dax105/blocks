@@ -23,6 +23,7 @@ import org.lwjgl.opengl.PixelFormat;
 import org.lwjgl.util.glu.GLU;
 import org.newdawn.slick.TrueTypeFont;
 
+import paulscode.sound.SoundSystemConfig;
 import dax.blocks.block.Block;
 import dax.blocks.console.Console;
 import dax.blocks.gui.GuiObjectBlank;
@@ -131,7 +132,9 @@ public class Game implements Runnable {
 				// Display.setTitle("Ticks: " + ticks);
 				ticksString = "Ticks: " + ticks;
 				ticks = 0;
+				Game.sound.updatePlaying();
 			}
+				
 
 			onRender();
 			render(partialTickTime);
@@ -277,6 +280,9 @@ public class Game implements Runnable {
 		if (animationProgress > 1) {
 			animationProgress = 1;
 		}
+		
+		Game.sound.getMusicProvider().updateGameMusic();
+		Game.sound.getMusicProvider().updateMenuMusic();
 
 		// Display.sync(200);
 		// updateFPS();

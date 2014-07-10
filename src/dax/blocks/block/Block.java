@@ -1,8 +1,6 @@
 package dax.blocks.block;
 
 import org.lwjgl.opengl.GL11;
-import org.newdawn.slick.openal.Audio;
-
 import dax.blocks.Game;
 import dax.blocks.render.RenderPass;
 import dax.blocks.sound.SoundManager;

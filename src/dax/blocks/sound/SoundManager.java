@@ -15,7 +15,8 @@ import paulscode.sound.libraries.LibraryLWJGLOpenAL;
 
 public class SoundManager {
 	private SoundSystem system;
-
+	private MusicProvider provider;
+	
 	public static Map<String, String> sounds;
 	public static Map<String, String> music;
 
@@ -50,9 +51,6 @@ public class SoundManager {
 		sounds.put("fall_soft", "fall_soft.wav");
 		sounds.put("explosion", "explosion.wav");
 
-		music.put("music1", "got_roc.ogg");
-		music.put("menu1", "got_main.ogg");
-		music.put("menu2", "got_north.ogg");
 
 		ListenerData d = system.getListenerData();
 		for (Entry<String, String> sound : sounds.entrySet()) {
@@ -81,39 +79,61 @@ public class SoundManager {
 			// TODO Sound system fail message
 			e.printStackTrace();
 		}
-
+		
 		system = new SoundSystem();
 		SoundManager.loadSounds(this.system);
 		this.updateVolume();
+		provider = new MusicProvider(this);
+	}
+	
+	public MusicProvider getMusicProvider() {
+		return provider;
 	}
 
 	private String musicPlaying = null;
+	private boolean isMusicPlaying = false;
+	private boolean isMusicPaused = false;
+	
+	public boolean isMusicPlaying() {
+		return isMusicPlaying;
+	}
 	
 	public void playMusic(String name, boolean loop) {
 		if (music.containsKey(name)) {
 			stopMusic();
 			system.backgroundMusic(name, music.get(name), loop);
 			musicPlaying = name;
+			isMusicPlaying = true;
 		} else {
 			Game.console.out("Music called " + name + " does not exist");
+		}
+	}
+	
+	public void updatePlaying() {
+		if(isMusicPlaying) {
+			isMusicPlaying = !(!this.isMusicPaused && !system.playing(musicPlaying));
 		}
 	}
 
 	public void pauseMusic() {
 		if (musicPlaying != null && system.playing(musicPlaying)) {
 			system.pause(musicPlaying);
+			this.isMusicPaused = true;
 		}
 	}
 
 	public void playMusic() {
 		if (musicPlaying != null && !system.playing(musicPlaying)) {
 			system.play(musicPlaying);
+			this.isMusicPaused = false;
 		}
 	}
 
 	public void stopMusic() {
 		if (musicPlaying != null && system.playing(musicPlaying)) {
 			system.stop(musicPlaying);
+			musicPlaying = null;
+			isMusicPlaying = false;
 		}
 	}
 

@@ -1,7 +1,6 @@
 package dax.blocks.gui;
 
 import org.lwjgl.input.Mouse;
-import org.lwjgl.opengl.Display;
 import org.newdawn.slick.Font;
 
 public class GuiObjectChangingButton extends GuiObjectButton {
