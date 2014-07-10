@@ -4,7 +4,7 @@
 .project
 bin/
 .settings/
-.screenshots/
+screenshots/
 .saves/
 saved.png
 

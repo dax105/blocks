@@ -156,15 +156,20 @@ public class Player {
 	public void update() {
 		wasOnGround = onGround;
 
+		boolean inWater = (world.getBlock((int) this.posX, (int) this.posY,
+				(int) this.posZ) == Block.water.getId());
 		float speedC = 0;
 		float speedStrafeC = 0;
 
-		int multi = 1;
+		float multi = 1;
 
 		if (Keyboard.isKeyDown(Keyboard.KEY_LSHIFT)
 				|| Keyboard.isKeyDown(Keyboard.KEY_RSHIFT)) {
 			multi = 15;
 		}
+
+		if (inWater)
+			multi *= 0.5f;
 
 		if (Keyboard.isKeyDown(Keyboard.KEY_W)) {
 			speedC -= onGround ? 0.25 * multi : 0.03 * multi;
@@ -182,11 +187,17 @@ public class Player {
 			speedStrafeC += onGround ? 0.25 * multi : 0.03 * multi;
 		}
 
-		if (Keyboard.isKeyDown(Keyboard.KEY_SPACE) && onGround) {
-			if (multi == 1) {
-				yv += JUMP_STRENGTH;
-			} else {
-				yv += JUMP_STRENGTH * 5;
+		if (Keyboard.isKeyDown(Keyboard.KEY_SPACE)) {
+			if (onGround) {
+				if (multi == 1) {
+					yv += JUMP_STRENGTH;
+				} else if (multi > 1) {
+					yv += JUMP_STRENGTH * 4;
+				} else {
+					yv += JUMP_STRENGTH * 0.95f;
+				}
+			} else if(!onGround && inWater) {
+				yv += JUMP_STRENGTH / 4;
 			}
 		}
 
@@ -280,7 +291,7 @@ public class Player {
 
 		// Game.console.out("SPD B: " + spf);
 
-		yv -= World.GRAVITY;
+		yv -= inWater ? World.WATER_GRAVITY : World.GRAVITY;
 
 		double toMoveZ = (posZ + Math.cos(-heading / 180 * Math.PI) * speed)
 				+ (Math.cos((-heading + 90) / 180 * Math.PI) * speedStrafe);
@@ -418,7 +429,6 @@ public class Player {
 			// 1.0f-(rand.nextFloat()*0.2f-0.1f), 1f);
 			stepTimer += STEP_TIMER_FULL;
 		}
-
 	}
 
 	public void onRender() {

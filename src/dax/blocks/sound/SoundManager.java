@@ -101,9 +101,9 @@ public class SoundManager {
 	public void playMusic(String name, boolean loop) {
 		if (music.containsKey(name)) {
 			stopMusic();
-			system.backgroundMusic(name, music.get(name), loop);
 			musicPlaying = name;
 			isMusicPlaying = true;
+			system.backgroundMusic(name, music.get(name), loop);
 		} else {
 			Game.console.out("Music called " + name + " does not exist");
 		}
