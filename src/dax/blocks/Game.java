@@ -65,7 +65,7 @@ public class Game implements Runnable {
 
 	public GuiScreen guiScreen;
 
-	public static final String TITLE = "Order of the stone";
+	public static final String TITLE = Start.GAME_NAME + " v" + Start.GAME_VERSION;
 
 	public boolean isFullscreen = false;
 
@@ -497,8 +497,9 @@ public class Game implements Runnable {
 						GL11.glEnd();
 
 						GL11.glDisable(GL11.GL_TEXTURE_2D);
+						
+						font.drawString(5, this.height - font.getHeight(), "version " + Start.GAME_VERSION);
 					}
-
 					guiScreen.render();
 				}
 
@@ -525,7 +526,7 @@ public class Game implements Runnable {
 			String cursor = (ticks % TPS >= TPS / 2) ? "_" : "";
 			font.drawString(0, cHeight - font.getLineHeight(), "> "
 					+ console.currentCommand + cursor);
-			String info = "Order of the Stone a_0.0.1";
+			String info = TITLE;
 			font.drawString(width - font.getWidth(info) - 2,
 					cHeight - font.getLineHeight() * 2, info,
 					new org.newdawn.slick.Color(120, 120, 120));
