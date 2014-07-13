@@ -11,9 +11,9 @@ import java.util.Random;
 import dax.blocks.Coord2D;
 import dax.blocks.Game;
 import dax.blocks.Particle;
-import dax.blocks.Player;
 import dax.blocks.block.Block;
 import dax.blocks.block.BlockPlant;
+import dax.blocks.movable.entity.PlayerEntity;
 import dax.blocks.render.Frustum;
 import dax.blocks.world.chunk.Chunk;
 import dax.blocks.world.chunk.ChunkProvider;
@@ -34,7 +34,7 @@ public class World {
 	
 	public int size;
 	public int sizeBlocks;
-	public Player player;
+	public PlayerEntity player;
 	public ChunkProvider chunkProvider;
 	public String name;
 	
@@ -62,7 +62,7 @@ public class World {
 	
 	public World(boolean trees, Game game, boolean load, String worldName) {
 		this.name = worldName;
-		player = new Player(this);
+		player = new PlayerEntity(this, 0, 128, 0);
 		this.treeGen = new TreeGenerator(this);
 		
 		chunkProvider = new ChunkProvider(this, load);
@@ -73,7 +73,7 @@ public class World {
 		this.scheduledUpdates = new LinkedList<ScheduledUpdate>();
 		this.newlyScheduledUpdates = new LinkedList<ScheduledUpdate>();
 		
-		chunkProvider.updateLoadedChunksInRadius((int)player.posX, (int)player.posZ, Game.settings.drawDistance.getValue());
+		chunkProvider.updateLoadedChunksInRadius((int)player.getPosX(), (int)player.getPosZ(), Game.settings.drawDistance.getValue());
 	}
 	
 	public Coord2D getCoord2D(int x, int y) {
@@ -172,16 +172,16 @@ public class World {
 		}
 
 		if (Keyboard.isKeyDown(Keyboard.KEY_Q)) {
-			emitterX = player.posX;
-			emitterY = player.posY;
-			emitterZ = player.posZ;
+			emitterX = player.getPosX();
+			emitterY = player.getPosY();
+			emitterZ = player.getPosZ();
 		}
 		
-		chunkProvider.updateLoadedChunksInRadius(((int)Math.floor(player.posX)) >> 4, ((int)Math.floor(player.posZ)) >> 4, Game.settings.drawDistance.getValue()+1);
+		chunkProvider.updateLoadedChunksInRadius(((int)Math.floor(player.getPosX())) >> 4, ((int)Math.floor(player.getPosZ())) >> 4, Game.settings.drawDistance.getValue()+1);
 	}
 	
 	public void menuUpdate() {
-		chunkProvider.updateLoadedChunksInRadius(((int)Math.floor(player.posX)) >> 4, ((int)Math.floor(player.posZ)) >> 4, Game.settings.drawDistance.getValue()+1);
+		chunkProvider.updateLoadedChunksInRadius(((int)Math.floor(player.getPosX())) >> 4, ((int)Math.floor(player.getPosZ())) >> 4, Game.settings.drawDistance.getValue()+1);
 	}
 
 	public void setChunkDirty(int x, int y, int z) {

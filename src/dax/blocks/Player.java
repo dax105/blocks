@@ -8,9 +8,11 @@ import java.util.Random;
 
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
+
 import dax.blocks.world.Explosion;
 import dax.blocks.world.World;
 
+@Deprecated
 public class Player {
 
 	Random rand = new Random();
@@ -28,8 +30,8 @@ public class Player {
 
 	int selectedBlockID = 3;
 
-	public float xBob = 0;
-	public float yBob = 0;
+	//public float xBob = 0;
+	//public float yBob = 0;
 
 	public float posX = 0.0F;
 	public float posZ = 0.0F;
@@ -59,7 +61,7 @@ public class Player {
 	public float speed = 0;
 	public float speedStrafe = 0;
 
-	float bob = 0;
+	//float bob = 0;
 
 	public float xv = 0.0f;
 	public float yv = 0.0f;
@@ -346,7 +348,7 @@ public class Player {
 		 * if(zaOrg != za) { this.zd = 0.0F; }
 		 */
 
-		bob += za + xa;
+		//bob += za + xa;
 
 		lastPosX = posX;
 		lastPosY = posY;
@@ -413,9 +415,6 @@ public class Player {
 		}
 
 		if (stepTimer <= 0 && onGround) {
-			// SoundManager.footstep.playAsSoundEffect(1.0f-rand.nextFloat()*0.3f,
-			// 1.0f, false);
-
 			int b = world.getBlock((int) Math.floor(this.posX),
 					(int) Math.floor(this.posY - 1.0f),
 					(int) Math.floor(this.posZ));
@@ -425,8 +424,6 @@ public class Player {
 						1.0f - (rand.nextFloat() * 0.2f - 0.1f));
 			}
 
-			// SoundManager.play(SoundManager.footstep_grass,
-			// 1.0f-(rand.nextFloat()*0.2f-0.1f), 1f);
 			stepTimer += STEP_TIMER_FULL;
 		}
 	}
@@ -455,10 +452,10 @@ public class Player {
 			tilt = 90;
 		}
 
-		xBob = (float) Math.sin(System.nanoTime() / 100000000.0d) * 0.5f
+		/*xBob = (float) Math.sin(System.nanoTime() / 100000000.0d) * 0.5f
 				* speed;
 		yBob = (float) Math.cos(System.nanoTime() / 100000000.0d) * 0.5f
-				* speed;
+				* speed;*/
 
 		updateLookingAt();
 

@@ -44,8 +44,8 @@ public class Particle extends Movable {
 	}
 	
 	@Override
-	public void onTick() {
-		super.onTick();
+	public void update() {
+		super.update();
 		age++;
 		if (age > lifetime) {
 			this.dead = true;

@@ -58,9 +58,9 @@ public class ChunkSaveManager {
 			}
 
 			WorldInfo i = Game.worlds.getWorld(name);
-			this.world.player.setPos(i.getPlayerX(), i.getPlayerY(), i.getPlayerZ());
-			this.world.player.tilt = i.getPlayerTilt();
-			this.world.player.heading = i.getPlayerHeading();
+			this.world.player.setPosition(i.getPlayerX(), i.getPlayerY(), i.getPlayerZ());
+			this.world.player.setTilt(i.getPlayerTilt());
+			this.world.player.setHeading(i.getPlayerHeading());
 			this.provider.seed = i.getWorldSeed();
 			
 			Game.console.out("World info sucessfully loaded!");
@@ -100,11 +100,11 @@ public class ChunkSaveManager {
 		if (i == null)
 			i = new WorldInfo(name);
 		
-		i.setPlayerX(this.world.player.posX);
-		i.setPlayerY(this.world.player.posY);
-		i.setPlayerZ(this.world.player.posZ);
-		i.setPlayerTilt(this.world.player.tilt);
-		i.setPlayerHeading(this.world.player.heading);
+		i.setPlayerX(this.world.player.getPosX());
+		i.setPlayerY(this.world.player.getPosY());
+		i.setPlayerZ(this.world.player.getPosZ());
+		i.setPlayerTilt(this.world.player.getTilt());
+		i.setPlayerHeading(this.world.player.getHeading());
 		i.setWorldSeed(this.provider.seed);
 		i.setWorldVersion("" + WORLD_VERSION);
 		

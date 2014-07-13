@@ -20,9 +20,9 @@ import dax.blocks.Coord2D;
 import dax.blocks.Game;
 import dax.blocks.ModelManager;
 import dax.blocks.Particle;
-import dax.blocks.Player;
 import dax.blocks.TextureManager;
 import dax.blocks.block.Block;
+import dax.blocks.movable.entity.PlayerEntity;
 import dax.blocks.world.ChunkDistanceComparator;
 import dax.blocks.world.World;
 import dax.blocks.world.chunk.Chunk;
@@ -228,13 +228,13 @@ public class RenderEngine {
 		upModelviewVec[2] = modelviewMatrix.get(9);
 	}
 
-	public void pushPlayerMatrix(Player player) {
+	public void pushPlayerMatrix(PlayerEntity player) {
 		GL11.glPushMatrix();
-		GL11.glRotatef(-player.tilt, 1f, 0f, 0f);
-		GL11.glRotatef(player.heading, 0f, 1f, 0f);
-		GL11.glTranslated(-player.getPartialX(this.ptt),
-				-player.getPartialY(this.ptt) - Player.EYES_HEIGHT,
-				-player.getPartialZ(ptt));
+		GL11.glRotatef(-player.getTilt(), 1f, 0f, 0f);
+		GL11.glRotatef(player.getHeading(), 0f, 1f, 0f);
+		GL11.glTranslated(-player.getPosXPartial(),
+				-player.getPosYPartial() - PlayerEntity.EYES_HEIGHT,
+				-player.getPosZPartial());
 	}
 
 	public static final String FLAG_LIGHTING = "lighting";
@@ -262,6 +262,7 @@ public class RenderEngine {
 	public void renderWorld(World world, float ptt) {
 		chunksLoaded = 0;
 		chunksDrawn = 0;
+		world.player.render(ptt);
 
 		GL11.glColor3f(1, 1, 1);
 
@@ -296,9 +297,9 @@ public class RenderEngine {
 		sEnable(FLAG_TEXTURE);
 		sEnable(FLAG_FOG);
 
-		renderSkybox(world.player.getPartialX(ptt),
-				world.player.getPartialY(ptt) + Player.EYES_HEIGHT,
-				world.player.getPartialZ(ptt));
+		renderSkybox(world.player.getPosXPartial(),
+				world.player.getPosYPartial() + PlayerEntity.EYES_HEIGHT,
+				world.player.getPosZPartial());
 
 		TextureManager.atlas.bind();
 
@@ -336,8 +337,8 @@ public class RenderEngine {
 		GL11.glEnable(GL11.GL_LIGHTING);
 		GL11.glEnable(GL11.GL_TEXTURE_2D);
 
-		int pcx = (int) Math.floor(world.player.posX) >> 4;
-		int pcz = (int) Math.floor(world.player.posZ) >> 4;
+		int pcx = (int) Math.floor(world.player.getPosX()) >> 4;
+		int pcz = (int) Math.floor(world.player.getPosZ()) >> 4;
 
 		List<Chunk> visibleChunks = world.chunkProvider.getChunksInRadius(pcx,
 				pcz, Game.settings.drawDistance.getValue());
@@ -471,30 +472,30 @@ public class RenderEngine {
 		sDisable(FLAG_FOG);
 
 		if (Game.settings.clouds.getValue()) {
-			renderClouds(world.player.getPartialX(ptt),world.player.getPartialZ(ptt));
+			renderClouds(world.player.getPosXPartial(), world.player.getPosYPartial());
 		}	
 
 		// Render selection box
-		if (world.player.hasSelected) {
+		if (world.player.hasSelectedBlock()) {
 			GL11.glDisable(GL11.GL_DEPTH_TEST);
 			GL11.glDepthMask(false);
 			GL11.glLineWidth(2);
 			GL11.glColor4f(0.0F, 0.0F, 0.0F, 0.25F);
-			renderLinedBox(world.player.lookingAtX - 0.002f,
-					world.player.lookingAtY - 0.002f,
-					world.player.lookingAtZ - 0.002f,
-					world.player.lookingAtX + 1 + 0.002f,
-					world.player.lookingAtY + 1 + 0.002f,
-					world.player.lookingAtZ + 1 + 0.002f);
+			renderLinedBox(world.player.getLookingAtX() - 0.002f,
+					world.player.getLookingAtY() - 0.002f,
+					world.player.getLookingAtZ() - 0.002f,
+					world.player.getLookingAtX() + 1 + 0.002f,
+					world.player.getLookingAtY() + 1 + 0.002f,
+					world.player.getLookingAtZ() + 1 + 0.002f);
 			GL11.glEnable(GL11.GL_DEPTH_TEST);
 			GL11.glLineWidth(4);
 			GL11.glColor4f(0.0F, 0.0F, 0.0F, 0.5F);
-			renderLinedBox(world.player.lookingAtX - 0.002f,
-					world.player.lookingAtY - 0.002f,
-					world.player.lookingAtZ - 0.002f,
-					world.player.lookingAtX + 1 + 0.002f,
-					world.player.lookingAtY + 1 + 0.002f,
-					world.player.lookingAtZ + 1 + 0.002f);
+			renderLinedBox(world.player.getLookingAtX() - 0.002f,
+					world.player.getLookingAtY() - 0.002f,
+					world.player.getLookingAtZ() - 0.002f,
+					world.player.getLookingAtX() + 1 + 0.002f,
+					world.player.getLookingAtY() + 1 + 0.002f,
+					world.player.getLookingAtZ() + 1 + 0.002f);
 			GL11.glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
 			GL11.glDepthMask(true);
 		}

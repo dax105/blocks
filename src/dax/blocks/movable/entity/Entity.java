@@ -6,9 +6,9 @@ import dax.blocks.world.World;
 
 public abstract class Entity extends Movable {
 
-	public AABB bb;
-	
-	private World world;
+	protected AABB bb;
+	protected World world;
+	protected int lifes;
 	
 	public Entity(World world, float x, float y, float z) {
 		super(x, y, z);
@@ -23,4 +23,14 @@ public abstract class Entity extends Movable {
 		this.world = world;
 	}
 	
+	public AABB getAABB() {
+		return bb;
+	}
+
+	public void setPosition(float x, float y, float z) {
+		this.setPosX(x);
+		this.setPosY(y);
+		this.setPosZ(z);
+	}
+
 }

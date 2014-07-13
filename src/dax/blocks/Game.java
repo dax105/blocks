@@ -8,7 +8,6 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.nio.FloatBuffer;
 import java.util.ListIterator;
-
 import org.lwjgl.BufferUtils;
 import org.lwjgl.LWJGLException;
 import org.lwjgl.Sys;
@@ -22,8 +21,6 @@ import org.lwjgl.opengl.GL12;
 import org.lwjgl.opengl.PixelFormat;
 import org.lwjgl.util.glu.GLU;
 import org.newdawn.slick.TrueTypeFont;
-
-import paulscode.sound.SoundSystemConfig;
 import dax.blocks.block.Block;
 import dax.blocks.console.Console;
 import dax.blocks.gui.GuiObjectBlank;
@@ -580,7 +577,7 @@ public class Game implements Runnable {
 	}
 
 	public void renderOverlay() {
-		Block b = Block.getBlock(world.player.selectedBlockID);
+		Block b = Block.getBlock(world.player.getSelectedBlockID());
 		int textureid = b.sideTexture;
 
 		GL11.glColor3f(1, 1, 1);
@@ -610,17 +607,17 @@ public class Game implements Runnable {
 		font.drawString(width - stringWidth - 2, font.getHeight() * 2,
 				fpsString);
 
-		font.drawString(2, 0, "X Position: " + world.player.posX);
-		font.drawString(2, font.getHeight(), "Y Position: " + world.player.posY);
+		font.drawString(2, 0, "X Position: " + world.player.getPosX());
+		font.drawString(2, font.getHeight(), "Y Position: " + world.player.getPosY());
 		font.drawString(2, font.getHeight() * 2, "Z Position: "
-				+ world.player.posZ);
+				+ world.player.getPosZ());
 		font.drawString(
 				2,
 				font.getHeight() * 3,
 				"Biome: "
 						+ world.chunkProvider.getBiomeAtLocation(
-								(int) world.player.posX,
-								(int) world.player.posZ).getName());
+								(int) world.player.getPosX(),
+								(int) world.player.getPosZ()).getName());
 
 		String memory = "Used memory: "
 				+ (allocatedMemory / (1024 * 1024) - freeMemory / (1024 * 1024))

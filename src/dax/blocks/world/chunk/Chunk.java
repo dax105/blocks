@@ -35,8 +35,8 @@ public class Chunk {
 	}
 
 	public float getDistanceToPlayer() {
-		float pX = world.player.posX;
-		float pZ = world.player.posZ;
+		float pX = world.player.getPosX();
+		float pZ = world.player.getPosZ();
 
 		float dX = Math.abs(pX - x * CHUNK_SIZE - CHUNK_SIZE / 2);
 		float dZ = Math.abs(pZ - z * CHUNK_SIZE - CHUNK_SIZE / 2);

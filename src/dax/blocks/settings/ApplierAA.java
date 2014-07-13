@@ -3,7 +3,6 @@ package dax.blocks.settings;
 import org.lwjgl.opengl.Display;
 
 import dax.blocks.Game;
-import dax.blocks.world.World;
 
 public class ApplierAA extends Applier {
 

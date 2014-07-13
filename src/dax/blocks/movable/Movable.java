@@ -2,23 +2,23 @@ package dax.blocks.movable;
 
 public abstract class Movable {
 
-	private float posX;
-	private float posY;
-	private float posZ;
+	protected float posX;
+	protected float posY;
+	protected float posZ;
 	
-	private float posXPartial;
-	private float posYPartial;
-	private float posZPartial;
+	protected float posXPartial;
+	protected float posYPartial;
+	protected float posZPartial;
 	
 	protected float velX;
 	protected float velY;
 	protected float velZ;
 	
-	private float lastPosX;
-	private float lastPosY;
-	private float lastPosZ;
+	protected float lastPosX;
+	protected float lastPosY;
+	protected float lastPosZ;
 
-	public void onTick() {
+	public void update() {
 		lastPosX = posX;
 		lastPosY = posY;
 		lastPosZ = posZ;
@@ -26,7 +26,7 @@ public abstract class Movable {
 		updatePosition();
 	}
 
-	public void onRenderTick(float ptt) {		
+	public void render(float ptt) {		
 		updateRenderPosition(ptt);	
 	}
 
@@ -129,18 +129,6 @@ public abstract class Movable {
 	
 	public void setPosZ(float posZ) {
 		this.posZ = posZ;
-	}
-	
-	public void setPosXPartial(float posXPartial) {
-		this.posXPartial = posXPartial;
-	}
-	
-	public void setPosYPartial(float posYPartial) {
-		this.posYPartial = posYPartial;
-	}
-	
-	public void setPosZPartial(float posZPartial) {
-		this.posZPartial = posZPartial;
 	}
 	
 	public float getPosXPartial() {
