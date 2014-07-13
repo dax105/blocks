@@ -12,6 +12,7 @@ public abstract class Block {
 	public int sideTexture = 0;
 	public int bottomTexture = 0;
 	
+	private int fallHurt = 5;
 	private int id;
 	private boolean opaque = true;
 	private int renderPass = RenderPass.PASS_OPAQUE;
@@ -29,6 +30,15 @@ public abstract class Block {
 		this.id = id;
 		blocks[id] = this;
 		blocksCount++;
+	}
+	
+	public Block setFallHurt(int value) {
+		this.fallHurt = value;
+		return this;
+	}
+	
+	public int getFallHurt() {
+		return this.fallHurt;
 	}
 
 	public Block setAllTextures(int texture) {

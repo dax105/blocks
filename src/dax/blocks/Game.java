@@ -8,6 +8,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.nio.FloatBuffer;
 import java.util.ListIterator;
+
 import org.lwjgl.BufferUtils;
 import org.lwjgl.LWJGLException;
 import org.lwjgl.Sys;
@@ -21,6 +22,7 @@ import org.lwjgl.opengl.GL12;
 import org.lwjgl.opengl.PixelFormat;
 import org.lwjgl.util.glu.GLU;
 import org.newdawn.slick.TrueTypeFont;
+
 import dax.blocks.block.Block;
 import dax.blocks.console.Console;
 import dax.blocks.gui.GuiObjectBlank;
@@ -150,7 +152,7 @@ public class Game implements Runnable {
 
 	public void exit() {
 		if (ingame) {
-			world.saveAllChunks();
+			this.exitGame();
 		}
 		Game.sound.shutdown();
 
@@ -618,6 +620,7 @@ public class Game implements Runnable {
 						+ world.chunkProvider.getBiomeAtLocation(
 								(int) world.player.getPosX(),
 								(int) world.player.getPosZ()).getName());
+		font.drawString(2, font.getHeight() * 4, "Lives: " + ((int)(world.player.getLifes() * 100)));
 
 		String memory = "Used memory: "
 				+ (allocatedMemory / (1024 * 1024) - freeMemory / (1024 * 1024))
@@ -743,6 +746,14 @@ public class Game implements Runnable {
 			Game.console.out("Unable to setup mode " + width + "x" + height
 					+ " fullscreen=" + fullscreen + e);
 		}
+	}
+	
+	public void exitGame() {
+		world.saveAllChunks();
+		world = null;
+		renderEngine = new RenderEngine(Game.settings.enable_shaders.getValue());
+		ingame = false;
+		openGuiScreen(new GuiScreenMainMenu(this));
 	}
 
 	public void toggleFullscreen() {

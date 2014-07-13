@@ -6,13 +6,17 @@ import dax.blocks.world.World;
 
 public abstract class Entity extends Movable {
 
+	public static final float STRENGTH_MULTIPLIER = 0.01f;
+	
 	protected AABB bb;
 	protected World world;
-	protected int lifes;
+	protected float lifes = 1;
+	protected boolean alive;
 	
 	public Entity(World world, float x, float y, float z) {
 		super(x, y, z);
 		this.setWorld(world);
+		this.alive = true;
 	}
 
 	public World getWorld() {
@@ -32,5 +36,25 @@ public abstract class Entity extends Movable {
 		this.setPosY(y);
 		this.setPosZ(z);
 	}
-
+	
+	public float getLifes() {
+		return lifes;
+	}
+	
+	public void setLifes(float lifes) {
+		if(lifes > 1)
+			this.lifes = 1;
+		else if(lifes <= 0)
+			this.alive = false;
+		else
+			this.lifes = lifes;
+	}
+	
+	public void regenerate(int strength) {
+		setLifes(lifes + (strength * Entity.STRENGTH_MULTIPLIER));
+	}
+	
+	public void hurt(int strength) {
+		setLifes(lifes - (strength * Entity.STRENGTH_MULTIPLIER));
+	}
 }

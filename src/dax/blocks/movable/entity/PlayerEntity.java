@@ -20,9 +20,10 @@ public class PlayerEntity extends Entity {
 	public static final float STEP_TIMER_FULL = 2.25f;
 	public static final float JUMP_STRENGTH = 0.4f;
 	public static final float MAX_WALK_SPEED = 0.25f;
+	public static final int REGENERATION_TICKS = 20;
 	
-	private int selectedBlockID = 1;	
-		
+	private int selectedBlockID = 1;
+
 	private int lookingAtX;
 	private int lookingAtY;
 	private int lookingAtZ;
@@ -35,17 +36,22 @@ public class PlayerEntity extends Entity {
 
 	private float heading = 140.0F;
 	private float tilt = -60.0F;
-	
+
 	private boolean onGround = false;
 	private boolean wasOnGround = false;
-	
+
 	private float speed = 0;
 	private float speedStrafe = 0;
-	
+
 	private Random rand = new Random();
-	
+
 	private float spf;
 	private float stepTimer = PlayerEntity.STEP_TIMER_FULL;
+
+	private float hurtMultiplier;
+	private boolean shouldHurt = false;
+
+	private int regenerationTimer = 0;
 	
 	public PlayerEntity(World world, float x, float y, float z) {
 		super(world, x, y, z);
@@ -57,8 +63,15 @@ public class PlayerEntity extends Entity {
 	@Override
 	public void update() {
 		super.update();
-		updateBlock();
+		regenerationTimer++;
 		
+		if(this.regenerationTimer >= PlayerEntity.REGENERATION_TICKS) {
+			regenerationTimer = 0;
+			this.regenerate(1);
+		}
+		
+		updateBlock();
+
 		if (Keyboard.isKeyDown(Keyboard.KEY_E)) {
 			if (hasSelected) {
 				Explosion.explode(world, lookingAtX, lookingAtY, lookingAtZ);
@@ -74,13 +87,13 @@ public class PlayerEntity extends Entity {
 				}
 			}
 		}
-		
+
 		while (Mouse.next()) {
 			if (Mouse.getEventButtonState()) {
 				if (Mouse.getEventButton() == 0) {
 					if (hasSelected) {
-						world.setBlock(lookingAtX, lookingAtY, lookingAtZ,
-								(byte) 0, true);
+						world.setBlock(lookingAtX, lookingAtY, lookingAtZ, 0,
+								true);
 					}
 				}
 				if (Mouse.getEventButton() == 1) {
@@ -118,10 +131,14 @@ public class PlayerEntity extends Entity {
 			int b = world.getBlock((int) Math.floor(this.posX),
 					(int) Math.floor(this.posY - 1.0f),
 					(int) Math.floor(this.posZ));
-			Block block = Block.getBlock((byte) b);
+			Block block = Block.getBlock(b);
 			if (block != null) {
 				Game.sound.playSound(block.getFallSound(),
 						0.7f + rand.nextFloat() * 0.25f);
+				if (shouldHurt) {
+					this.hurt((int) (this.hurtMultiplier * block.getFallHurt()));
+					this.shouldHurt = false;
+				}
 			}
 		}
 
@@ -135,13 +152,17 @@ public class PlayerEntity extends Entity {
 			int b = world.getBlock((int) Math.floor(this.posX),
 					(int) Math.floor(this.posY - 1.0f),
 					(int) Math.floor(this.posZ));
-			Block block = Block.getBlock((byte) b);
+			Block block = Block.getBlock(b);
 			if (block != null) {
 				Game.sound.playSound(block.getStepSound(),
 						1.0f - (rand.nextFloat() * 0.2f - 0.1f));
 			}
 
 			stepTimer += STEP_TIMER_FULL;
+		}
+		
+		if(!this.alive) {
+			Game.getInstance().exitGame();
 		}
 	}
 
@@ -167,17 +188,21 @@ public class PlayerEntity extends Entity {
 		if (tilt > 90) {
 			tilt = 90;
 		}
-		
+
 		updateLookingAt();
 	}
-	
-	
+
+	private float highestPos;
+	private boolean shouldCount = true;
+
 	@Override
 	public void updatePosition() {
 		wasOnGround = onGround;
 
-		boolean inWater = (world.getBlock((int) this.posX, (int) this.posY,
-				(int) this.posZ) == Block.water.getId());
+		boolean inWater = ((world.getBlock((int) this.posX, (int) this.posY,
+				(int) this.posZ) == Block.water.getId()) || (world.getBlock(
+				(int) this.posX, (int) this.posY + 1, (int) this.posZ) == Block.water
+				.getId()));
 		float speedC = 0;
 		float speedStrafeC = 0;
 
@@ -216,11 +241,11 @@ public class PlayerEntity extends Entity {
 				} else {
 					velY += JUMP_STRENGTH * 0.95f;
 				}
-			} else if(!onGround && inWater) {
+			} else if (!onGround && inWater) {
 				velY += JUMP_STRENGTH / 4;
 			}
 		}
-		
+
 		float xsq = Math.abs(speedC) * Math.abs(speedC);
 		float ysq = Math.abs(speedStrafeC) * Math.abs(speedStrafeC);
 		float sp = (float) Math.sqrt(xsq + ysq);
@@ -229,18 +254,17 @@ public class PlayerEntity extends Entity {
 			speedC *= mult;
 			speedStrafeC *= mult;
 		}
-	
+
 		speed += speedC;
 		speedStrafe += speedStrafeC;
 
 		speed *= onGround ? 0.5f : 0.9f;
 		speedStrafe *= onGround ? 0.5f : 0.9f;
-		
-		spf = (float) Math
-				.sqrt(speed * speed + speedStrafe * speedStrafe);
-		
+
+		spf = (float) Math.sqrt(speed * speed + speedStrafe * speedStrafe);
+
 		velY -= inWater ? World.WATER_GRAVITY : World.GRAVITY;
-		
+
 		double toMoveZ = (posZ + Math.cos(-heading / 180 * Math.PI) * speed)
 				+ (Math.cos((-heading + 90) / 180 * Math.PI) * speedStrafe);
 		double toMoveX = (posX + Math.sin(-heading / 180 * Math.PI) * speed)
@@ -255,7 +279,7 @@ public class PlayerEntity extends Entity {
 		velZ = za;
 
 		float yab = ya;
-		
+
 		ArrayList<AABB> aABBs = this.world.getBBs(this.bb.expand(xa, ya, za));
 
 		for (int i = 0; i < aABBs.size(); ++i) {
@@ -283,14 +307,29 @@ public class PlayerEntity extends Entity {
 		}
 
 		if (yab != ya) {
-			velY = 0.0F;
+			velY = 0;
 		}
-		
+
 		this.posX = (this.bb.x0 + this.bb.x1) / 2.0F;
 		this.posY = this.bb.y0;
 		this.posZ = (this.bb.z0 + this.bb.z1) / 2.0F;
+
+		if (this.lastPosY > this.posY && shouldCount) {
+			this.highestPos = this.lastPosY;
+			shouldCount = false;
+		}
+
+		if (this.onGround) {
+			float posDif = (this.highestPos - this.posY);
+			if (posDif > 5) {
+				this.shouldHurt = true;
+				this.hurtMultiplier = (posDif / 5);
+			}
+			
+			this.shouldCount = true;
+		}
 	}
-	
+
 	private void updateBlock() {
 		if (Keyboard.isKeyDown(Keyboard.KEY_1)
 				|| Keyboard.isKeyDown(Keyboard.KEY_NUMPAD1)) {
@@ -342,8 +381,7 @@ public class PlayerEntity extends Entity {
 			setSelectedBlockID(10);
 		}
 	}
-	
-	
+
 	private void updateLookingAt() {
 		float reach = Game.settings.reach.getValue();
 
@@ -370,7 +408,8 @@ public class PlayerEntity extends Entity {
 			yn = (float) (getPosY() + EYES_HEIGHT + f * yChange);
 			zn = (float) (getPosZ() + f * zChange);
 
-			if (getWorld().getBlock((int) Math.floor(xn), (int) Math.floor(yn), (int) Math.floor(zn)) > 0) {
+			if (getWorld().getBlock((int) Math.floor(xn), (int) Math.floor(yn),
+					(int) Math.floor(zn)) > 0) {
 				lookingAtX = (int) Math.floor(xn);
 				lookingAtY = (int) Math.floor(yn);
 				lookingAtZ = (int) Math.floor(zn);
@@ -394,7 +433,7 @@ public class PlayerEntity extends Entity {
 				posZ - PLAYER_SIZE / 2, posX + PLAYER_SIZE / 2, posY
 						+ PLAYER_HEIGHT, posZ + PLAYER_SIZE / 2);
 	}
-	
+
 	public int getSelectedBlockID() {
 		return selectedBlockID;
 	}
@@ -442,27 +481,23 @@ public class PlayerEntity extends Entity {
 	public int getPlacesAtZ() {
 		return placesAtZ;
 	}
-	
+
 	public boolean hasSelectedBlock() {
 		return hasSelected;
 	}
 
-	
 	public float getSpeed() {
 		return speed;
 	}
 
-	
 	public void setSpeed(float speed) {
 		this.speed = speed;
 	}
 
-	
 	public float getSpeedStrafe() {
 		return speedStrafe;
 	}
 
-	
 	public void setSpeedStrafe(float speedStrafe) {
 		this.speedStrafe = speedStrafe;
 	}
