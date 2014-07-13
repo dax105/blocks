@@ -210,14 +210,14 @@ public class PlayerEntity extends Entity {
 		GL11.glTexCoord2f(0, 0);
 		GL11.glVertex2f(heartsX, heartsY);
 		
-		GL11.glTexCoord2f(TextureManager.life_full.getImageWidth(), 0);
-		GL11.glVertex2f((heartsX + TextureManager.life_full.getImageWidth()) * this.lifes, heartsY);
+		GL11.glTexCoord2f(TextureManager.life_full.getTextureWidth(), 0);
+		GL11.glVertex2f((heartsX + TextureManager.life_full.getTextureWidth()) * this.lifes, heartsY);
 		
-		GL11.glTexCoord2f(TextureManager.life_full.getImageWidth(), TextureManager.life_full.getImageHeight());
-		GL11.glVertex2f((heartsX + TextureManager.life_full.getImageWidth()) * this.lifes, heartsY + TextureManager.life_full.getImageHeight());
+		GL11.glTexCoord2f(TextureManager.life_full.getTextureWidth(), TextureManager.life_full.getTextureHeight());
+		GL11.glVertex2f((heartsX + TextureManager.life_full.getTextureWidth()) * this.lifes, heartsY + TextureManager.life_full.getTextureHeight());
 		
-		GL11.glTexCoord2f(0, TextureManager.life_full.getImageHeight());
-		GL11.glVertex2f(heartsX, heartsY + TextureManager.life_full.getImageHeight());
+		GL11.glTexCoord2f(0, TextureManager.life_full.getTextureHeight());
+		GL11.glVertex2f(heartsX, heartsY + TextureManager.life_full.getTextureHeight());
 		
 		GL11.glEnd();
 		

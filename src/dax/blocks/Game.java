@@ -415,9 +415,10 @@ public class Game implements Runnable {
 			TextureManager.atlas.bind();
 
 			renderEngine.renderWorld(world, ptt);
-			world.player.render(ptt);
 
 			setOrtho();
+			
+			world.player.render(ptt);
 			renderOverlay();
 
 			updateFPS();
