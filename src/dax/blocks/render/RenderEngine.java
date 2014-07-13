@@ -262,7 +262,7 @@ public class RenderEngine {
 	public void renderWorld(World world, float ptt) {
 		chunksLoaded = 0;
 		chunksDrawn = 0;
-		world.player.render(ptt);
+		//world.player.render(ptt);
 
 		GL11.glColor3f(1, 1, 1);
 

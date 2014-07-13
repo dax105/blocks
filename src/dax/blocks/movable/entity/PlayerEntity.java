@@ -5,8 +5,10 @@ import java.util.Random;
 
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
+import org.lwjgl.opengl.GL11;
 
 import dax.blocks.Game;
+import dax.blocks.TextureManager;
 import dax.blocks.block.Block;
 import dax.blocks.collisions.AABB;
 import dax.blocks.world.Explosion;
@@ -52,6 +54,9 @@ public class PlayerEntity extends Entity {
 	private boolean shouldHurt = false;
 
 	private int regenerationTimer = 0;
+	
+	private int heartsX = 80;
+	private int heartsY = Game.getInstance().height - 61;
 	
 	public PlayerEntity(World world, float x, float y, float z) {
 		super(world, x, y, z);
@@ -192,6 +197,34 @@ public class PlayerEntity extends Entity {
 		updateLookingAt();
 	}
 
+	public void render(float ptt) {
+		super.render(ptt);
+		
+		
+		TextureManager.life_full.bind();
+		GL11.glEnable(GL11.GL_TEXTURE_2D);
+		GL11.glColor3f(1, 1, 1);
+		
+		GL11.glBegin(GL11.GL_QUADS);
+		
+		GL11.glTexCoord2f(0, 0);
+		GL11.glVertex2f(heartsX, heartsY);
+		
+		GL11.glTexCoord2f(TextureManager.life_full.getImageWidth(), 0);
+		GL11.glVertex2f((heartsX + TextureManager.life_full.getImageWidth()) * this.lifes, heartsY);
+		
+		GL11.glTexCoord2f(TextureManager.life_full.getImageWidth(), TextureManager.life_full.getImageHeight());
+		GL11.glVertex2f((heartsX + TextureManager.life_full.getImageWidth()) * this.lifes, heartsY + TextureManager.life_full.getImageHeight());
+		
+		GL11.glTexCoord2f(0, TextureManager.life_full.getImageHeight());
+		GL11.glVertex2f(heartsX, heartsY + TextureManager.life_full.getImageHeight());
+		
+		GL11.glEnd();
+		
+		
+		GL11.glDisable(GL11.GL_TEXTURE_2D);
+	}
+	
 	private float highestPos;
 	private boolean shouldCount = true;
 

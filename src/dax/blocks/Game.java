@@ -415,7 +415,7 @@ public class Game implements Runnable {
 			TextureManager.atlas.bind();
 
 			renderEngine.renderWorld(world, ptt);
-			// world.render(ptt);
+			world.player.render(ptt);
 
 			setOrtho();
 			renderOverlay();
@@ -582,6 +582,7 @@ public class Game implements Runnable {
 		Block b = Block.getBlock(world.player.getSelectedBlockID());
 		int textureid = b.sideTexture;
 
+		TextureManager.atlas.bind();
 		GL11.glColor3f(1, 1, 1);
 
 		GL11.glBegin(GL11.GL_QUADS);

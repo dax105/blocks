@@ -30,6 +30,9 @@ public class TextureManager {
 	public static Texture skybox_right;
 	public static Texture skybox_top;
 	public static Texture skybox_side;
+	
+	public static Texture life_full;
+	public static Texture life_zero;
 
 	private static Texture loadTex(String path) {
 		try {
@@ -67,6 +70,9 @@ public class TextureManager {
 		skybox_right = loadTex("dax/blocks/res/textures/skybox_right.png");
 		skybox_top = loadTex("dax/blocks/res/textures/skybox_top.png");
 		skybox_side = loadTex("dax/blocks/res/textures/skybox_side.png");
+		
+		life_full = loadTex("dax/blocks/res/textures/life_full.png");
+		life_zero = loadTex("dax/blocks/res/textures/life_null.png");
 		
 		skybox_back.bind();
 		GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_WRAP_S, GL12.GL_CLAMP_TO_EDGE);
