@@ -49,14 +49,9 @@ public class PlayerEntity extends Entity {
 
 	private float spf;
 	private float stepTimer = PlayerEntity.STEP_TIMER_FULL;
-
-	private float hurtMultiplier;
-	private boolean shouldHurt = false;
+	private float fallVelocity;
 
 	private int regenerationTimer = 0;
-	
-	private int heartsX = 80;
-	private int heartsY = Game.getInstance().height - 61;
 	
 	public PlayerEntity(World world, float x, float y, float z) {
 		super(world, x, y, z);
@@ -140,9 +135,11 @@ public class PlayerEntity extends Entity {
 			if (block != null) {
 				Game.sound.playSound(block.getFallSound(),
 						0.7f + rand.nextFloat() * 0.25f);
-				if (shouldHurt) {
-					this.hurt((int) (this.hurtMultiplier * block.getFallHurt()));
-					this.shouldHurt = false;
+				
+				if(fallVelocity > 0.75f) {
+					int h = block.getFallHurt() * (int)(fallVelocity * 3);
+					Game.console.out("Hurt: " + h);
+					this.hurt(h);
 				}
 			}
 		}
@@ -200,34 +197,53 @@ public class PlayerEntity extends Entity {
 	public void render(float ptt) {
 		super.render(ptt);
 		
+		int heartsX = 80;
+		int heartsY = Game.getInstance().height - 43;
 		
-		TextureManager.life_full.bind();
+		
 		GL11.glEnable(GL11.GL_TEXTURE_2D);
 		GL11.glColor3f(1, 1, 1);
 		
+		TextureManager.life_zero.bind();
 		GL11.glBegin(GL11.GL_QUADS);
 		
 		GL11.glTexCoord2f(0, 0);
 		GL11.glVertex2f(heartsX, heartsY);
 		
-		GL11.glTexCoord2f(TextureManager.life_full.getTextureWidth(), 0);
-		GL11.glVertex2f((heartsX + TextureManager.life_full.getTextureWidth()) * this.lifes, heartsY);
+		GL11.glTexCoord2f(TextureManager.life_full.getWidth(), 0);
+		GL11.glVertex2f(heartsX + TextureManager.life_full.getImageWidth(), heartsY);
 		
-		GL11.glTexCoord2f(TextureManager.life_full.getTextureWidth(), TextureManager.life_full.getTextureHeight());
-		GL11.glVertex2f((heartsX + TextureManager.life_full.getTextureWidth()) * this.lifes, heartsY + TextureManager.life_full.getTextureHeight());
+		GL11.glTexCoord2f(TextureManager.life_full.getWidth(), TextureManager.life_full.getHeight());
+		GL11.glVertex2f(heartsX + TextureManager.life_full.getImageWidth(), heartsY + TextureManager.life_full.getImageHeight());
 		
-		GL11.glTexCoord2f(0, TextureManager.life_full.getTextureHeight());
-		GL11.glVertex2f(heartsX, heartsY + TextureManager.life_full.getTextureHeight());
+		GL11.glTexCoord2f(0, TextureManager.life_full.getHeight());
+		GL11.glVertex2f(heartsX, heartsY + TextureManager.life_full.getImageHeight());
+		
+		GL11.glEnd();
+		
+		TextureManager.life_full.bind();
+		GL11.glBegin(GL11.GL_QUADS);
+		
+		GL11.glTexCoord2f(0, 0);
+		GL11.glVertex2f(heartsX, heartsY);
+		
+		GL11.glTexCoord2f(TextureManager.life_full.getWidth() * lifes, 0);
+		GL11.glVertex2f(heartsX + TextureManager.life_full.getImageWidth() * lifes, heartsY);
+		
+		GL11.glTexCoord2f(TextureManager.life_full.getWidth() * lifes, TextureManager.life_full.getHeight());
+		GL11.glVertex2f(heartsX + TextureManager.life_full.getImageWidth() * lifes, heartsY + TextureManager.life_full.getImageHeight());
+		
+		GL11.glTexCoord2f(0, TextureManager.life_full.getHeight());
+		GL11.glVertex2f(heartsX, heartsY + TextureManager.life_full.getImageHeight());
 		
 		GL11.glEnd();
 		
 		
 		GL11.glDisable(GL11.GL_TEXTURE_2D);
 	}
-	
-	private float highestPos;
-	private boolean shouldCount = true;
 
+	
+	
 	@Override
 	public void updatePosition() {
 		wasOnGround = onGround;
@@ -336,6 +352,7 @@ public class PlayerEntity extends Entity {
 		this.onGround = yab != ya && yab < 0.0F;
 
 		if (this.onGround) {
+			this.fallVelocity = -velY;
 			velY = 0;
 		}
 
@@ -347,20 +364,7 @@ public class PlayerEntity extends Entity {
 		this.posY = this.bb.y0;
 		this.posZ = (this.bb.z0 + this.bb.z1) / 2.0F;
 
-		if (this.lastPosY > this.posY && shouldCount) {
-			this.highestPos = this.lastPosY;
-			shouldCount = false;
-		}
-
-		if (this.onGround) {
-			float posDif = (this.highestPos - this.posY);
-			if (posDif > 5) {
-				this.shouldHurt = true;
-				this.hurtMultiplier = (posDif / 5);
-			}
-			
-			this.shouldCount = true;
-		}
+		
 	}
 
 	private void updateBlock() {
