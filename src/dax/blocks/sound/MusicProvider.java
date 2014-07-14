@@ -33,10 +33,12 @@ public class MusicProvider {
 		SoundManager.music.put("music1", "got_roc.ogg");
 		SoundManager.music.put("menu1", "got_main.ogg");
 		SoundManager.music.put("menu2", "got_north.ogg");
+		SoundManager.music.put("music2", "piano1.ogg");
+		SoundManager.music.put("music3", "got_kta.ogg");
 	}
 
 	private void sortMusic() {
-		gameMusic = new String[] { "music1" };
+		gameMusic = new String[] { "music1", "music2", "music3" };
 		gameQueue = new String[gameMusic.length];
 		for (String music : gameMusic) {
 			addMusicToField(gameQueue, music);
