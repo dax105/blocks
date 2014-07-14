@@ -27,13 +27,16 @@ public abstract class Movable implements IRenderable {
 		
 		updatePosition();
 	}
-
-	public void renderGui(float ptt) {		
-		updateRenderPosition(ptt);	
+	
+	@Override
+	public void onRenderTick(float partialTickTime) {
+		updateRenderPosition(partialTickTime);
 	}
 
-	
-	
+	public void renderGui(float ptt) {		
+			
+	}
+
 	public Movable(float x, float y, float z) {
 		this(x, y, z, 0, 0, 0);
 	}

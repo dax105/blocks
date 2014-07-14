@@ -167,6 +167,8 @@ public class PlayerEntity extends Entity {
 	}
 
 	public void onRenderTick(float ptt) {
+		super.onRenderTick(ptt);
+		
 		if (Mouse.isGrabbed()) {
 			float mouseDX = Mouse.getDX() * 0.8f * 0.16f;
 			float mouseDY = Mouse.getDY() * 0.8f * 0.16f;
