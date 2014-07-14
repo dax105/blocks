@@ -44,8 +44,8 @@ public class Particle extends Movable {
 	}
 	
 	@Override
-	public void update() {
-		super.update();
+	public void onTick() {
+		super.onTick();
 		age++;
 		if (age > lifetime) {
 			this.dead = true;
@@ -118,6 +118,12 @@ public class Particle extends Movable {
 		if (collidedZ) {
 			this.velZ = (float) (-velZ*(BOUNCE_MIN+rand.nextDouble()*(BOUNCE_MAX-BOUNCE_MIN)));
 		}
+	}
+
+	@Override
+	public void renderWorld(float partialTickTime) {
+		// TODO Auto-generated method stub
+		
 	}
 	
 }

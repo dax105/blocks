@@ -142,7 +142,7 @@ public class World {
 	}
 	
 	public void update() {
-		player.update();
+		player.onTick();
 		
 		int size = particles.size();
 		
@@ -278,8 +278,8 @@ public class World {
 		chunkProvider.loader.saveAll();
 	}
 
-	public void onRender() {
-		player.onRender();
+	public void onRender(float ptt) {
+		player.onRenderTick(ptt);
 	}
 
 }

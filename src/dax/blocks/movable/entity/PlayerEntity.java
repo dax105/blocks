@@ -2,7 +2,6 @@ package dax.blocks.movable.entity;
 
 import java.util.ArrayList;
 import java.util.Random;
-
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
 import dax.blocks.GLHelper;
@@ -49,6 +48,8 @@ public class PlayerEntity extends Entity {
 	private float spf;
 	private float stepTimer = PlayerEntity.STEP_TIMER_FULL;
 	private float fallVelocity;
+	
+	private Block standingOn = null;
 
 	private int regenerationTimer = 0;
 	
@@ -60,8 +61,11 @@ public class PlayerEntity extends Entity {
 	}
 
 	@Override
-	public void update() {
-		super.update();
+	public void onTick() {
+		super.onTick();
+		
+		updateStandingOn();
+		
 		regenerationTimer++;
 		
 		if(this.regenerationTimer >= PlayerEntity.REGENERATION_TICKS) {
@@ -127,19 +131,15 @@ public class PlayerEntity extends Entity {
 		}
 
 		if (!wasOnGround && onGround) {
-			int b = world.getBlock((int) Math.floor(this.posX),
-					(int) Math.floor(this.posY - 1.0f),
-					(int) Math.floor(this.posZ));
-			Block block = Block.getBlock(b);
-			if (block != null) {
-				Game.sound.playSound(block.getFallSound(),
-						0.7f + rand.nextFloat() * 0.25f);
-				
-				if(fallVelocity > 0.75f) {
-					int h = block.getFallHurt() * (int)(fallVelocity * 3);
-					Game.console.out("Hurt: " + h);
-					this.hurt(h);
-				}
+			
+			Block block = this.standingOn;
+			
+			Game.sound.playSound(block.getFallSound(), 0.7f + rand.nextFloat() * 0.25f);
+			
+			if(fallVelocity > 0.75f) {
+				int h = block.getFallHurt() * (int)(fallVelocity * 3);
+				Game.console.out("Hurt: " + h);
+				this.hurt(h);
 			}
 		}
 
@@ -150,24 +150,75 @@ public class PlayerEntity extends Entity {
 		}
 
 		if (stepTimer <= 0 && onGround) {
-			int b = world.getBlock((int) Math.floor(this.posX),
-					(int) Math.floor(this.posY - 1.0f),
-					(int) Math.floor(this.posZ));
-			Block block = Block.getBlock(b);
+			Block block = this.standingOn;
 			if (block != null) {
-				Game.sound.playSound(block.getStepSound(),
-						1.0f - (rand.nextFloat() * 0.2f - 0.1f));
+				Game.sound.playSound(block.getStepSound(), 1.0f - (rand.nextFloat() * 0.2f));
+				System.out.println("Playing step sound");
 			}
 
 			stepTimer += STEP_TIMER_FULL;
 		}
 		
-		if(!this.alive && !Game.settings.peaceful_mode.getValue()) {
+		if(!this.alive) {
 			Game.getInstance().exitGame();
 		}
 	}
 
-	public void onRender() {
+	private void updateStandingOn() {
+		
+		int blockX = (int) Math.floor(this.posX);
+		int blockY = (int) Math.floor(this.posY - 1);
+		int blockZ = (int) Math.floor(this.posZ);
+		
+		int b = world.getBlock(blockX, blockY, blockZ);
+		
+		if (b == 0) {
+			float[][] blocksAround = new float[3][3];
+			for (int x = 0; x < 3; x++) {
+				for (int z = 0; z < 3; z++) {
+					if (world.getBlock(blockX+x-1, blockY, blockZ+z-1) == 0) {
+						blocksAround[x][z] = -1;
+					} else {
+						float xDist = x-1.5f;
+						float zDist = z-1.5f;
+						
+						blocksAround[x][z] = (float) Math.sqrt(xDist*xDist+zDist*zDist);
+					}
+				}
+			}
+			
+			boolean foundBlock = false;
+			
+			float minDist = 999999;
+			
+			int closestX = 0;
+			int closestZ = 0;
+			
+			for (int x = 0; x < 3; x++) {
+				for (int z = 0; z < 3; z++) {
+					if (blocksAround[x][z] >= 0) {
+						if (blocksAround[x][z] < minDist) {
+							foundBlock = true;
+							minDist = blocksAround[x][z];
+							closestX = x;
+							closestZ = z;
+						}
+					}
+				}
+			}
+			
+			b = foundBlock ? world.getBlock(closestX+blockX-1, blockY, closestZ+blockZ-1) : 0;
+			
+		}
+		
+		this.standingOn = Block.getBlock(b);
+		
+		
+	}
+
+	public void onRenderTick(float ptt) {
+		super.onRenderTick(ptt);
+		
 		if (Mouse.isGrabbed()) {
 			float mouseDX = Mouse.getDX() * 0.8f * 0.16f;
 			float mouseDY = Mouse.getDY() * 0.8f * 0.16f;
@@ -193,14 +244,17 @@ public class PlayerEntity extends Entity {
 		updateLookingAt();
 	}
 
-	public void render(float ptt) {
-		super.render(ptt);
-		
+	@Override
+	public void renderGui(float ptt) {
 		int heartsX = 80;
 		int heartsY = Game.getInstance().height - 43;
 		
 		GLHelper.drawTexture(TextureManager.life_zero, heartsX, heartsY);
 		GLHelper.drawTextureCropped(TextureManager.life_full, heartsX, heartsY, lifes, 1);
+	}
+	
+	@Override
+	public void renderWorld(float partialTickTime) {
 	}
 	
 	@Override
@@ -312,10 +366,6 @@ public class PlayerEntity extends Entity {
 
 		if (this.onGround) {
 			this.fallVelocity = -velY;
-			velY = 0;
-		}
-
-		if (yab != ya) {
 			velY = 0;
 		}
 
@@ -497,4 +547,5 @@ public class PlayerEntity extends Entity {
 	public void setSpeedStrafe(float speedStrafe) {
 		this.speedStrafe = speedStrafe;
 	}
+
 }

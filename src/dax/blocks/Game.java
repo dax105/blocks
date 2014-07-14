@@ -130,7 +130,7 @@ public class Game implements Runnable {
 				Game.sound.getMusicProvider().updateMusic();
 			}
 
-			onRender();
+			onRender(partialTickTime);
 			render(partialTickTime);
 
 			Display.update();
@@ -283,9 +283,9 @@ public class Game implements Runnable {
 		// updateFPS();
 	}
 
-	public void onRender() {
+	public void onRender(float ptt) {
 		if (this.guiScreen == null && ingame && !consoleOpen) {
-			world.onRender();
+			world.onRender(ptt);
 		}
 	}
 
@@ -400,7 +400,7 @@ public class Game implements Runnable {
 
 			setOrtho();
 
-			world.player.render(ptt);
+			world.player.renderGui(ptt);
 			renderOverlay();
 
 			updateFPS();
