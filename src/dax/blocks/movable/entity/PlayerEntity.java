@@ -275,8 +275,6 @@ public class PlayerEntity extends Entity {
 		float density = (d0+d1)/2f;
 		float frictionMultipler = 1f/density;
 		
-		System.out.println(density);
-		
 		float speedC = 0;
 		float speedStrafeC = 0;
 

@@ -24,7 +24,6 @@ import org.lwjgl.input.Keyboard;
 public class World {
 
 	public static final float GRAVITY = 0.06f;
-	public static final float WATER_GRAVITY = 0.04f;
 	public static final int MAX_PARTICLES = 10000;
 	
 	private List<ScheduledUpdate> scheduledUpdates;
