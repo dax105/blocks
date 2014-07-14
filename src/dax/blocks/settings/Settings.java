@@ -35,7 +35,7 @@ public class Settings {
 	public SettingsObject<Boolean> linear_filtering = (SettingsObject<Boolean>) registerObject(new SettingsObject<Boolean>("linear_filtering", false, "Linear filtering", "%o", null));
 	public SettingsObject<Boolean> enable_shaders = (SettingsObject<Boolean>) registerObject(new SettingsObject<Boolean>("enable_shaders", false, "Enable shaders", "%o", null));
 	public SettingsObject<Boolean> transparent_leaves = (SettingsObject<Boolean>) registerObject(new SettingsObject<Boolean>("transparent_leaves", true, "Transparent leaves", "%o", new ApplierLeaves()));
-	public SettingsObject<Boolean> two_pass_translucent = (SettingsObject<Boolean>) registerObject(new SettingsObject<Boolean>("two_pass_translucent", true, "Two pass rendering of translucent blocks", "%o", null));
+	public SettingsObject<Boolean> two_pass_translucent = (SettingsObject<Boolean>) registerObject(new SettingsObject<Boolean>("two_pass_translucent", true, "Two pass rendering", "%o", null));
 	public SettingsObject<Boolean> clouds = (SettingsObject<Boolean>) registerObject(new SettingsObject<Boolean>("clouds", true, "Enable clouds", "%o", null));
 	
 	public SettingsObject<Float> fov = (SettingsObject<Float>) registerObject(new SettingsObject<Float>("fov", 80.0f, "FOV", null, null));

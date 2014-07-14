@@ -21,7 +21,7 @@ public class PlayerEntity extends Entity {
 	public static final float JUMP_STRENGTH = 0.4f;
 	public static final float MAX_WALK_SPEED = 0.25f;
 	public static final int REGENERATION_TICKS = 20;
-	
+
 	private int selectedBlockID = 1;
 
 	private int lookingAtX;
@@ -48,11 +48,11 @@ public class PlayerEntity extends Entity {
 	private float spf;
 	private float stepTimer = PlayerEntity.STEP_TIMER_FULL;
 	private float fallVelocity;
-	
+
 	private Block standingOn = null;
 
 	private int regenerationTimer = 0;
-	
+
 	public PlayerEntity(World world, float x, float y, float z) {
 		super(world, x, y, z);
 		this.bb = new AABB(posX - PLAYER_SIZE / 2, posY,
@@ -63,16 +63,16 @@ public class PlayerEntity extends Entity {
 	@Override
 	public void onTick() {
 		super.onTick();
-		
+
 		updateStandingOn();
-		
+
 		regenerationTimer++;
-		
-		if(this.regenerationTimer >= PlayerEntity.REGENERATION_TICKS) {
+
+		if (this.regenerationTimer >= PlayerEntity.REGENERATION_TICKS) {
 			regenerationTimer = 0;
 			this.regenerate(1);
 		}
-		
+
 		updateBlock();
 
 		if (Keyboard.isKeyDown(Keyboard.KEY_E)) {
@@ -131,15 +131,17 @@ public class PlayerEntity extends Entity {
 		}
 
 		if (!wasOnGround && onGround) {
-			
+
 			Block block = this.standingOn;
-			
-			Game.sound.playSound(block.getFallSound(), 0.7f + rand.nextFloat() * 0.25f);
-			
-			if(fallVelocity > 0.75f) {
-				int h = block.getFallHurt() * (int)(fallVelocity * 3);
-				Game.console.out("Hurt: " + h);
-				this.hurt(h);
+
+			Game.sound.playSound(block.getFallSound(),
+					0.7f + rand.nextFloat() * 0.25f);
+
+			if (fallVelocity > 0.75f) {
+				if (block != Block.water) {
+					int h = block.getFallHurt() * (int) (fallVelocity * 3);
+					this.hurt(h);
+				}
 			}
 		}
 
@@ -151,49 +153,48 @@ public class PlayerEntity extends Entity {
 
 		if (stepTimer <= 0 && onGround) {
 			Block block = this.standingOn;
-			if (block != null) {
-				Game.sound.playSound(block.getStepSound(), 1.0f - (rand.nextFloat() * 0.2f));
-				System.out.println("Playing step sound");
-			}
+				Game.sound.playSound(block.getStepSound(),
+						1.0f - (rand.nextFloat() * 0.2f));
 
 			stepTimer += STEP_TIMER_FULL;
 		}
-		
-		if(!this.alive) {
+
+		if (!this.alive && !Game.settings.peaceful_mode.getValue()) {
 			Game.getInstance().exitGame();
 		}
 	}
 
 	private void updateStandingOn() {
-		
+
 		int blockX = (int) Math.floor(this.posX);
 		int blockY = (int) Math.floor(this.posY - 1);
 		int blockZ = (int) Math.floor(this.posZ);
-		
+
 		int b = world.getBlock(blockX, blockY, blockZ);
-		
+
 		if (b == 0) {
 			float[][] blocksAround = new float[3][3];
 			for (int x = 0; x < 3; x++) {
 				for (int z = 0; z < 3; z++) {
-					if (world.getBlock(blockX+x-1, blockY, blockZ+z-1) == 0) {
+					if (world.getBlock(blockX + x - 1, blockY, blockZ + z - 1) == 0) {
 						blocksAround[x][z] = -1;
 					} else {
-						float xDist = x-1.5f;
-						float zDist = z-1.5f;
-						
-						blocksAround[x][z] = (float) Math.sqrt(xDist*xDist+zDist*zDist);
+						float xDist = x - 1.5f;
+						float zDist = z - 1.5f;
+
+						blocksAround[x][z] = (float) Math.sqrt(xDist * xDist
+								+ zDist * zDist);
 					}
 				}
 			}
-			
+
 			boolean foundBlock = false;
-			
+
 			float minDist = 999999;
-			
+
 			int closestX = 0;
 			int closestZ = 0;
-			
+
 			for (int x = 0; x < 3; x++) {
 				for (int z = 0; z < 3; z++) {
 					if (blocksAround[x][z] >= 0) {
@@ -206,19 +207,19 @@ public class PlayerEntity extends Entity {
 					}
 				}
 			}
-			
-			b = foundBlock ? world.getBlock(closestX+blockX-1, blockY, closestZ+blockZ-1) : 0;
-			
+
+			b = foundBlock ? world.getBlock(closestX + blockX - 1, blockY,
+					closestZ + blockZ - 1) : 0;
+
 		}
-		
+
 		this.standingOn = Block.getBlock(b);
-		
-		
+
 	}
 
 	public void onRenderTick(float ptt) {
 		super.onRenderTick(ptt);
-		
+
 		if (Mouse.isGrabbed()) {
 			float mouseDX = Mouse.getDX() * 0.8f * 0.16f;
 			float mouseDY = Mouse.getDY() * 0.8f * 0.16f;
@@ -248,15 +249,16 @@ public class PlayerEntity extends Entity {
 	public void renderGui(float ptt) {
 		int heartsX = 80;
 		int heartsY = Game.getInstance().height - 43;
-		
+
 		GLHelper.drawTexture(TextureManager.life_zero, heartsX, heartsY);
-		GLHelper.drawTextureCropped(TextureManager.life_full, heartsX, heartsY, lifes, 1);
+		GLHelper.drawTextureCropped(TextureManager.life_full, heartsX, heartsY,
+				lifes, 1);
 	}
-	
+
 	@Override
 	public void renderWorld(float partialTickTime) {
 	}
-	
+
 	@Override
 	public void updatePosition() {
 		wasOnGround = onGround;
@@ -373,7 +375,6 @@ public class PlayerEntity extends Entity {
 		this.posY = this.bb.y0;
 		this.posZ = (this.bb.z0 + this.bb.z1) / 2.0F;
 
-		
 	}
 
 	private void updateBlock() {
