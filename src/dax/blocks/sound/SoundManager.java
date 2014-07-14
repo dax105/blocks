@@ -110,27 +110,35 @@ public class SoundManager {
 	}
 	
 	public void updatePlaying() {
-		if(isMusicPlaying) {
-			isMusicPlaying = !(!this.isMusicPaused && !system.playing(musicPlaying));
+		if(musicPlaying == null) {
+			isMusicPlaying = false;
+			return;
 		}
+		
+		if(!system.playing(musicPlaying) && !this.isMusicPaused) {
+			isMusicPlaying = false;
+			return;
+		}
+		
+		isMusicPlaying = true;
 	}
 
 	public void pauseMusic() {
-		if (musicPlaying != null && system.playing(musicPlaying)) {
+		if (isMusicPlaying && !isMusicPaused) {
 			system.pause(musicPlaying);
 			this.isMusicPaused = true;
 		}
 	}
 
 	public void playMusic() {
-		if (musicPlaying != null && !system.playing(musicPlaying)) {
+		if (musicPlaying != null && isMusicPaused) {
 			system.play(musicPlaying);
 			this.isMusicPaused = false;
 		}
 	}
 
 	public void stopMusic() {
-		if (musicPlaying != null && system.playing(musicPlaying)) {
+		if (isMusicPlaying) {
 			system.stop(musicPlaying);
 			musicPlaying = null;
 			isMusicPlaying = false;

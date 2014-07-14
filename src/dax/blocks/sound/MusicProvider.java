@@ -2,12 +2,14 @@ package dax.blocks.sound;
 
 import java.util.Random;
 
+import dax.blocks.Game;
+
 public class MusicProvider {
 	public String[] gameMusic;
 	public String[] menuMusic;
 
-	private boolean isMenuPlaying;
-	private boolean isGamePlaying;
+	// private boolean isMenuPlaying;
+	// private boolean isGamePlaying;
 
 	private String[] menuQueue;
 	private String[] gameQueue;
@@ -15,7 +17,7 @@ public class MusicProvider {
 	private int menuIndex = 0;
 	private int gameIndex = 0;
 
-	private final int startGameMusicProbability = 100;
+	private final int startGameMusicProbability = 10;
 
 	private SoundManager sound;
 
@@ -56,60 +58,46 @@ public class MusicProvider {
 		}
 	}
 
-	public void startMenuMusic() {
-		if (!isMenuPlaying) {
-			stopGameMusic();
-			this.isMenuPlaying = true;
-		}
-	}
+	boolean isGame = false;
+	boolean wasInGame = false;
 
-	public void updateMenuMusic() {
-		if(isMenuPlaying) {
-			if(!sound.isMusicPlaying()) {
-				sound.playMusic(menuQueue[menuIndex], false);
-				menuIndex++;
-				
-				if(menuIndex > (menuQueue.length - 1)) {
-					menuIndex = 0;
-				}
-			}
-		}
-	}
+	public void updateMusic() {
+		wasInGame = isGame;
+		isGame = Game.getInstance().ingame;
 
-	public void stopMenuMusic() {
-		if (isMenuPlaying) {
-			sound.stopMusic();
-			this.isMenuPlaying = false;
+		if (isGame ^ wasInGame) {
+			stopMusic();
+			sound.updatePlaying();
+			return;
 		}
-	}
 
-	public void startGameMusic() {
-		if (!isGamePlaying) {
-			stopMenuMusic();
-			this.isGamePlaying = true;
-		}
-	}
-
-	public void updateGameMusic() {
-		if (isGamePlaying) {
-			if (!sound.isMusicPlaying()) {
-				int r = rand.nextInt(startGameMusicProbability);
-				if (r == 1) {
+		if (!sound.isMusicPlaying()) {
+			if (isGame) {
+				if (rand.nextInt(this.startGameMusicProbability) == 1) {
 					sound.playMusic(gameQueue[gameIndex], false);
+
 					gameIndex++;
-					
-					if(gameIndex > (gameQueue.length - 1)) {
+
+					if (gameIndex > (gameQueue.length - 1)) {
 						gameIndex = 0;
 					}
 				}
+			} else {
+				sound.playMusic(menuQueue[menuIndex], false);
+
+				menuIndex++;
+
+				if (menuIndex > (menuQueue.length - 1)) {
+					menuIndex = 0;
+				}
 			}
+
 		}
+
 	}
 
-	public void stopGameMusic() {
-		if (isGamePlaying) {
-			sound.stopMusic();
-			this.isGamePlaying = false;
-		}
+	public void stopMusic() {
+		sound.stopMusic();
 	}
+
 }

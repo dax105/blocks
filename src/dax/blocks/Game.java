@@ -127,6 +127,7 @@ public class Game implements Runnable {
 				ticksString = "Ticks: " + ticks;
 				ticks = 0;
 				Game.sound.updatePlaying();
+				Game.sound.getMusicProvider().updateMusic();
 			}
 
 			onRender();
@@ -185,11 +186,11 @@ public class Game implements Runnable {
 	}
 
 	public void makeNewWorld(boolean load, String name) {
-		ingame = false;
+		ingame = true;
 		GLHelper.updateFiltering(Game.settings.linear_filtering.getValue());
 		world = new World(settings.tree_generation.getValue(), this, load, name);
 		closeGuiScreen();
-		ingame = true;
+		//ingame = true;
 	}
 
 	public void displayLoadingScreen(String text) {
@@ -275,8 +276,8 @@ public class Game implements Runnable {
 			animationProgress = 1;
 		}
 
-		Game.sound.getMusicProvider().updateGameMusic();
-		Game.sound.getMusicProvider().updateMenuMusic();
+		/*Game.sound.getMusicProvider().updateGameMusic();
+		Game.sound.getMusicProvider().updateMenuMusic();*/
 
 		// Display.sync(200);
 		// updateFPS();

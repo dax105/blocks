@@ -23,7 +23,7 @@ public class GuiScreenMainMenu extends GuiScreen {
 	@Override
 	public void buttonPress(GuiObjectButton button) {
 		if (button.id == 0) {
-			Game.sound.getMusicProvider().startGameMusic();
+			Game.sound.getMusicProvider().updateMusic();
 			game.displayLoadingScreen();
 			game.makeNewWorld(true,"this_will_be_changable");
 		} else if (button.id == 1) {
@@ -51,7 +51,7 @@ public class GuiScreenMainMenu extends GuiScreen {
 
 	@Override
 	public void onOpening() {
-		Game.sound.getMusicProvider().startMenuMusic();
+		Game.sound.getMusicProvider().updateMusic();
 	}
 
 }
