@@ -5,8 +5,6 @@ import java.util.Random;
 
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
-import org.lwjgl.opengl.GL11;
-
 import dax.blocks.GLHelper;
 import dax.blocks.Game;
 import dax.blocks.TextureManager;

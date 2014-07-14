@@ -3,13 +3,11 @@ package dax.blocks.sound;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
-
 import dax.blocks.Game;
 import paulscode.sound.ListenerData;
 import paulscode.sound.SoundSystem;
 import paulscode.sound.SoundSystemConfig;
 import paulscode.sound.SoundSystemException;
-import paulscode.sound.codecs.CodecJOgg;
 import paulscode.sound.codecs.CodecWav;
 import paulscode.sound.libraries.LibraryLWJGLOpenAL;
 
