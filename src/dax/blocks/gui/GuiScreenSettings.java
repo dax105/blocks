@@ -33,14 +33,12 @@ public class GuiScreenSettings extends GuiScreen {
 		//Transparent leaves [SETTINGS BUTTON][ID 2]
 		objects.add(new GuiObjectSettingsBooleanButton(game.width / 2 + 2, (game.height - height) / 2 + 118, (game.width + width) / 2, ((game.height - height) / 2) + 144, this.f, 2, this, Game.settings.transparent_leaves));
 		
-		//
-		objects.add(new GuiObjectSettingsBooleanButton((game.width - width) / 2, (game.height - height) / 2 + 148, game.width / 2 - 2, ((game.height - height) / 2) + 172, this.f, 3, this, Game.settings.two_pass_translucent));
+		//Two pass transl. [SETTINGS BUTTON][ID 5]
+		objects.add(new GuiObjectSettingsBooleanButton((game.width - width) / 2, (game.height - height) / 2 + 148, game.width / 2 - 2, ((game.height - height) / 2) + 172, this.f, 5, this, Game.settings.two_pass_translucent));
 				
-		//
-		objects.add(new GuiObjectSettingsBooleanButton(game.width / 2 + 2, (game.height - height) / 2 + 148, (game.width + width) / 2, ((game.height - height) / 2) + 172, this.f, 2, this, Game.settings.peaceful_mode));
+		//Peaceful [SETTINGS BUTTON][ID 6]
+		objects.add(new GuiObjectSettingsBooleanButton(game.width / 2 + 2, (game.height - height) / 2 + 148, (game.width + width) / 2, ((game.height - height) / 2) + 172, this.f, 6, this, Game.settings.peaceful_mode));
 
-		
-		
 		//FOV [FLOAT SETTINGS SLIDER][ID 1]
 		objects.add(new GuiObjectSettingsFloatSlider((game.width - width) / 2, (game.height - height) / 2 + 90, (game.width + width) / 2, ((game.height - height) / 2) + 114, this.f, "FOV: %v", 1, this, 30, 160, Game.settings.fov));
 		
@@ -63,17 +61,6 @@ public class GuiScreenSettings extends GuiScreen {
 	
 	@Override
 	public void sliderUpdate(GuiObjectSlider slider) {
-		switch(slider.id) {
-		case 1:
-			//FOV slider
-			break;
-		case 2:
-			//
-			break;
-		case 3:
-			//Render distance slider
-			break;
-		}
 	}
 
 	@Override
@@ -87,5 +74,7 @@ public class GuiScreenSettings extends GuiScreen {
 	@Override
 	public void onOpening() {
 	}
+
+
 
 }

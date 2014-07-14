@@ -422,13 +422,7 @@ public class Game implements Runnable {
 					}
 
 					if (TextureManager.logo != null && showbg) {
-						GLHelper.drawTexture(
-								TextureManager.logo,
-								((width - TextureManager.logo.getImageWidth()) / 2),
-								((width + TextureManager.logo.getImageWidth()) / 2),
-								(height / 2 - 180),
-								(height / 2 - 180 + TextureManager.logo
-										.getImageHeight()));
+						GLHelper.drawTexture(TextureManager.logo, (width / 2) - (TextureManager.logo.getImageWidth() / 2) , 32);
 
 						font.drawString(5, this.height - font.getHeight(),
 								"version " + Start.GAME_VERSION);

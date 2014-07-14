@@ -35,23 +35,21 @@ public class GuiScreenMainMenu extends GuiScreen {
 	
 	@Override
 	public void sliderUpdate(GuiObjectSlider slider) {
-
 	}
 
 	@Override
 	public void buttonChanged(GuiObjectChangingButton button, int line) {
-		
-		
 	}
 
 	@Override
 	public void onClosing() {
-		
 	}
 
 	@Override
 	public void onOpening() {
 		Game.sound.getMusicProvider().updateMusic();
 	}
+
+
 
 }
