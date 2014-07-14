@@ -134,14 +134,14 @@ public class PlayerEntity extends Entity {
 
 			Block block = this.standingOn;
 
-			Game.sound.playSound(block.getFallSound(),
-					0.7f + rand.nextFloat() * 0.25f);
+			if (block != null) {
+			
+			Game.sound.playSound(block.getFallSound(), 0.7f + rand.nextFloat() * 0.25f);
 
-			if (fallVelocity > 0.75f) {
-				if (block != Block.water) {
-					int h = block.getFallHurt() * (int) (fallVelocity * 3);
-					this.hurt(h);
-				}
+			if (fallVelocity > 0.7f) {
+				int h = block.getFallHurt() * (int) (fallVelocity * 3);
+				this.hurt(h);
+			}
 			}
 		}
 
