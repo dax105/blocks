@@ -15,7 +15,7 @@ public class MusicProvider {
 	private int menuIndex = 0;
 	private int gameIndex = 0;
 
-	private final int startGameMusicProbability = 100;
+	private final int startGameMusicProbability = 10000000;
 
 	private SoundManager sound;
 

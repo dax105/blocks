@@ -48,6 +48,8 @@ public class PlayerEntity extends Entity {
 	private float spf;
 	private float stepTimer = PlayerEntity.STEP_TIMER_FULL;
 	private float fallVelocity;
+	
+	private Block standingOn = null;
 
 	private int regenerationTimer = 0;
 	
@@ -61,6 +63,9 @@ public class PlayerEntity extends Entity {
 	@Override
 	public void onTick() {
 		super.onTick();
+		
+		updateStandingOn();
+		
 		regenerationTimer++;
 		
 		if(this.regenerationTimer >= PlayerEntity.REGENERATION_TICKS) {
@@ -126,19 +131,15 @@ public class PlayerEntity extends Entity {
 		}
 
 		if (!wasOnGround && onGround) {
-			int b = world.getBlock((int) Math.floor(this.posX),
-					(int) Math.floor(this.posY - 1.0f),
-					(int) Math.floor(this.posZ));
-			Block block = Block.getBlock(b);
-			if (block != null) {
-				Game.sound.playSound(block.getFallSound(),
-						0.7f + rand.nextFloat() * 0.25f);
-				
-				if(fallVelocity > 0.75f) {
-					int h = block.getFallHurt() * (int)(fallVelocity * 3);
-					Game.console.out("Hurt: " + h);
-					this.hurt(h);
-				}
+			
+			Block block = this.standingOn;
+			
+			Game.sound.playSound(block.getFallSound(), 0.7f + rand.nextFloat() * 0.25f);
+			
+			if(fallVelocity > 0.75f) {
+				int h = block.getFallHurt() * (int)(fallVelocity * 3);
+				Game.console.out("Hurt: " + h);
+				this.hurt(h);
 			}
 		}
 
@@ -149,13 +150,10 @@ public class PlayerEntity extends Entity {
 		}
 
 		if (stepTimer <= 0 && onGround) {
-			int b = world.getBlock((int) Math.floor(this.posX),
-					(int) Math.floor(this.posY - 1.0f),
-					(int) Math.floor(this.posZ));
-			Block block = Block.getBlock(b);
+			Block block = this.standingOn;
 			if (block != null) {
-				Game.sound.playSound(block.getStepSound(),
-						1.0f - (rand.nextFloat() * 0.2f - 0.1f));
+				Game.sound.playSound(block.getStepSound(), 1.0f - (rand.nextFloat() * 0.2f));
+				System.out.println("Playing step sound");
 			}
 
 			stepTimer += STEP_TIMER_FULL;
@@ -164,6 +162,58 @@ public class PlayerEntity extends Entity {
 		if(!this.alive) {
 			Game.getInstance().exitGame();
 		}
+	}
+
+	private void updateStandingOn() {
+		
+		int blockX = (int) Math.floor(this.posX);
+		int blockY = (int) Math.floor(this.posY - 1);
+		int blockZ = (int) Math.floor(this.posZ);
+		
+		int b = world.getBlock(blockX, blockY, blockZ);
+		
+		if (b == 0) {
+			float[][] blocksAround = new float[3][3];
+			for (int x = 0; x < 3; x++) {
+				for (int z = 0; z < 3; z++) {
+					if (world.getBlock(blockX+x-1, blockY, blockZ+z-1) == 0) {
+						blocksAround[x][z] = -1;
+					} else {
+						float xDist = x-1.5f;
+						float zDist = z-1.5f;
+						
+						blocksAround[x][z] = (float) Math.sqrt(xDist*xDist+zDist*zDist);
+					}
+				}
+			}
+			
+			boolean foundBlock = false;
+			
+			float minDist = 999999;
+			
+			int closestX = 0;
+			int closestZ = 0;
+			
+			for (int x = 0; x < 3; x++) {
+				for (int z = 0; z < 3; z++) {
+					if (blocksAround[x][z] >= 0) {
+						if (blocksAround[x][z] < minDist) {
+							foundBlock = true;
+							minDist = blocksAround[x][z];
+							closestX = x;
+							closestZ = z;
+						}
+					}
+				}
+			}
+			
+			b = foundBlock ? world.getBlock(closestX+blockX-1, blockY, closestZ+blockZ-1) : 0;
+			
+		}
+		
+		this.standingOn = Block.getBlock(b);
+		
+		
 	}
 
 	public void onRenderTick(float ptt) {
@@ -316,10 +366,6 @@ public class PlayerEntity extends Entity {
 
 		if (this.onGround) {
 			this.fallVelocity = -velY;
-			velY = 0;
-		}
-
-		if (yab != ya) {
 			velY = 0;
 		}
 
