@@ -29,7 +29,6 @@ public class SoundManager {
 
 		sounds.put("footstep_dirt_0", "footstep_dirt_0.wav");
 		sounds.put("footstep_dirt_1", "footstep_dirt_1.wav");
-		sounds.put("footstep_dirt_2", "footstep_dirt_2.wav");
 		sounds.put("footstep_dirt_3", "footstep_dirt_3.wav");
 
 		sounds.put("footstep_grass_0", "footstep_grass_0.wav");
@@ -61,7 +60,7 @@ public class SoundManager {
 	}
 
 	private static void sortSounds() {
-		footstep_dirt = new String[] { "footstep_dirt_0", "footstep_dirt_1", "footstep_dirt_2", "footstep_dirt_3" };
+		footstep_dirt = new String[] { "footstep_dirt_0", "footstep_dirt_1", "footstep_dirt_3" };
 		footstep_grass = new String[] { "footstep_grass_0", "footstep_grass_1", "footstep_grass_2", "footstep_grass_3" };
 		footstep_wood = new String[] { "footstep_wood_0", "footstep_wood_1", "footstep_grass_2", "footstep_grass_3" };
 		footstep_stone = new String[] { "footstep_stone_0", "footstep_stone_1" };
