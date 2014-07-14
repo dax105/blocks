@@ -28,10 +28,18 @@ public class GuiScreenSettings extends GuiScreen {
 		objects.add(new GuiObjectSettingsFloatSlider((game.width - width) / 2 + 128, (game.height - height) / 2 + 62, (game.width + width) / 2, ((game.height - height) / 2) + 86, this.f, "Volume: %v", 2, this, 0f, 1f, Game.settings.sound_volume));
 		
 		//Linear filtering [SETTINGS BUTTON][ID 3]
-		objects.add(new GuiObjectSettingsBooleanButton((game.width - width) / 2, (game.height - height) / 2 + 118, (game.width + width) / 2, ((game.height - height) / 2) + 144, this.f, 3, this, Game.settings.linear_filtering));
+		objects.add(new GuiObjectSettingsBooleanButton((game.width - width) / 2, (game.height - height) / 2 + 118, game.width / 2 - 2, ((game.height - height) / 2) + 144, this.f, 3, this, Game.settings.linear_filtering));
 		
-		//Tree generation [SETTINGS BUTTON][ID 2]
-		objects.add(new GuiObjectSettingsBooleanButton((game.width - width) / 2, (game.height - height) / 2 + 148, (game.width + width) / 2, ((game.height - height) / 2) + 172, this.f, 2, this, Game.settings.tree_generation));
+		//Transparent leaves [SETTINGS BUTTON][ID 2]
+		objects.add(new GuiObjectSettingsBooleanButton(game.width / 2 + 2, (game.height - height) / 2 + 118, (game.width + width) / 2, ((game.height - height) / 2) + 144, this.f, 2, this, Game.settings.transparent_leaves));
+		
+		//
+		objects.add(new GuiObjectSettingsBooleanButton((game.width - width) / 2, (game.height - height) / 2 + 148, game.width / 2 - 2, ((game.height - height) / 2) + 172, this.f, 3, this, Game.settings.two_pass_translucent));
+				
+		//
+		objects.add(new GuiObjectSettingsBooleanButton(game.width / 2 + 2, (game.height - height) / 2 + 148, (game.width + width) / 2, ((game.height - height) / 2) + 172, this.f, 2, this, Game.settings.peaceful_mode));
+
+		
 		
 		//FOV [FLOAT SETTINGS SLIDER][ID 1]
 		objects.add(new GuiObjectSettingsFloatSlider((game.width - width) / 2, (game.height - height) / 2 + 90, (game.width + width) / 2, ((game.height - height) / 2) + 114, this.f, "FOV: %v", 1, this, 30, 160, Game.settings.fov));
