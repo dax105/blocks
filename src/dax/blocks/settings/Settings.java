@@ -49,6 +49,9 @@ public class Settings {
 		}
 	}));
 	
+	
+	public SettingsObject<Integer> fps_limit = (SettingsObject<Integer>) registerObject(new SettingsObject<Integer>("fps_limit", 0, "FPS Limit", null, null));
+	
 	private SettingsObject<?> registerObject(SettingsObject<?> object) {
 		objects.put(object.getName(), object);
 		return object;

@@ -7,6 +7,7 @@ import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.GL11;
 
+import dax.blocks.GLHelper;
 import dax.blocks.Game;
 import dax.blocks.TextureManager;
 import dax.blocks.block.Block;
@@ -200,49 +201,9 @@ public class PlayerEntity extends Entity {
 		int heartsX = 80;
 		int heartsY = Game.getInstance().height - 43;
 		
-		
-		GL11.glEnable(GL11.GL_TEXTURE_2D);
-		GL11.glColor3f(1, 1, 1);
-		
-		TextureManager.life_zero.bind();
-		GL11.glBegin(GL11.GL_QUADS);
-		
-		GL11.glTexCoord2f(0, 0);
-		GL11.glVertex2f(heartsX, heartsY);
-		
-		GL11.glTexCoord2f(TextureManager.life_full.getWidth(), 0);
-		GL11.glVertex2f(heartsX + TextureManager.life_full.getImageWidth(), heartsY);
-		
-		GL11.glTexCoord2f(TextureManager.life_full.getWidth(), TextureManager.life_full.getHeight());
-		GL11.glVertex2f(heartsX + TextureManager.life_full.getImageWidth(), heartsY + TextureManager.life_full.getImageHeight());
-		
-		GL11.glTexCoord2f(0, TextureManager.life_full.getHeight());
-		GL11.glVertex2f(heartsX, heartsY + TextureManager.life_full.getImageHeight());
-		
-		GL11.glEnd();
-		
-		TextureManager.life_full.bind();
-		GL11.glBegin(GL11.GL_QUADS);
-		
-		GL11.glTexCoord2f(0, 0);
-		GL11.glVertex2f(heartsX, heartsY);
-		
-		GL11.glTexCoord2f(TextureManager.life_full.getWidth() * lifes, 0);
-		GL11.glVertex2f(heartsX + TextureManager.life_full.getImageWidth() * lifes, heartsY);
-		
-		GL11.glTexCoord2f(TextureManager.life_full.getWidth() * lifes, TextureManager.life_full.getHeight());
-		GL11.glVertex2f(heartsX + TextureManager.life_full.getImageWidth() * lifes, heartsY + TextureManager.life_full.getImageHeight());
-		
-		GL11.glTexCoord2f(0, TextureManager.life_full.getHeight());
-		GL11.glVertex2f(heartsX, heartsY + TextureManager.life_full.getImageHeight());
-		
-		GL11.glEnd();
-		
-		
-		GL11.glDisable(GL11.GL_TEXTURE_2D);
+		GLHelper.drawTexture(TextureManager.life_zero, heartsX, heartsY);
+		GLHelper.drawTextureCropped(TextureManager.life_full, heartsX, heartsY, lifes, 1);
 	}
-
-	
 	
 	@Override
 	public void updatePosition() {

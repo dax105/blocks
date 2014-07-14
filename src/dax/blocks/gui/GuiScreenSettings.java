@@ -43,7 +43,7 @@ public class GuiScreenSettings extends GuiScreen {
 	@Override
 	public void buttonPress(GuiObjectButton button) {
 		if (button.id == 1) {	
-			game.updateFiltering();
+			dax.blocks.GLHelper.updateFiltering(Game.settings.linear_filtering.getValue());
 			
 			if (ingame) {
 				close();
