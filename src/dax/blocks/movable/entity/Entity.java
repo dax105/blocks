@@ -44,8 +44,10 @@ public abstract class Entity extends Movable {
 	public void setLifes(float lifes) {
 		if(lifes > 1)
 			this.lifes = 1;
-		else if(lifes <= 0)
+		else if(lifes <= 0) {
 			this.alive = false;
+			this.lifes = 0;
+		}
 		else
 			this.lifes = lifes;
 	}

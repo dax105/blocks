@@ -51,6 +51,8 @@ public class Settings {
 	
 	
 	public SettingsObject<Integer> fps_limit = (SettingsObject<Integer>) registerObject(new SettingsObject<Integer>("fps_limit", 0, "FPS Limit", null, null));
+	public SettingsObject<Boolean> peaceful_mode = (SettingsObject<Boolean>) registerObject(new SettingsObject<Boolean>("peaceful", false, "What is dead may never die", "%o", null));
+	
 	
 	private SettingsObject<?> registerObject(SettingsObject<?> object) {
 		objects.put(object.getName(), object);

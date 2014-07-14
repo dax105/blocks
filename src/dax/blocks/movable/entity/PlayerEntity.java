@@ -164,7 +164,7 @@ public class PlayerEntity extends Entity {
 			stepTimer += STEP_TIMER_FULL;
 		}
 		
-		if(!this.alive) {
+		if(!this.alive && !Game.settings.peaceful_mode.getValue()) {
 			Game.getInstance().exitGame();
 		}
 	}

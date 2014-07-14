@@ -31,18 +31,18 @@ public class SoundManager {
 
 		sounds.put("footstep_dirt_0", "footstep_dirt_0.wav");
 		sounds.put("footstep_dirt_1", "footstep_dirt_1.wav");
-		sounds.put("footstep_dirt_1", "footstep_dirt_2.wav");
-		sounds.put("footstep_dirt_1", "footstep_dirt_3.wav");
+		sounds.put("footstep_dirt_2", "footstep_dirt_2.wav");
+		sounds.put("footstep_dirt_3", "footstep_dirt_3.wav");
 
 		sounds.put("footstep_grass_0", "footstep_grass_0.wav");
 		sounds.put("footstep_grass_1", "footstep_grass_1.wav");
-		sounds.put("footstep_grass_1", "footstep_grass_2.wav");
-		sounds.put("footstep_grass_1", "footstep_grass_3.wav");
+		sounds.put("footstep_grass_2", "footstep_grass_2.wav");
+		sounds.put("footstep_grass_3", "footstep_grass_3.wav");
 
 		sounds.put("footstep_wood_0", "footstep_wood_0.wav");
 		sounds.put("footstep_wood_1", "footstep_wood_1.wav");
-		sounds.put("footstep_wood_1", "footstep_wood_2.wav");
-		sounds.put("footstep_wood_1", "footstep_wood_3.wav");
+		sounds.put("footstep_wood_2", "footstep_wood_2.wav");
+		sounds.put("footstep_wood_3", "footstep_wood_3.wav");
 
 		sounds.put("footstep_stone_0", "footstep_stone_0.wav");
 		sounds.put("footstep_stone_1", "footstep_stone_1.wav");
@@ -72,7 +72,7 @@ public class SoundManager {
 	public SoundManager() {
 		try {
 			SoundSystemConfig.addLibrary(LibraryLWJGLOpenAL.class);
-			SoundSystemConfig.setCodec("ogg", CodecJOgg.class);
+			SoundSystemConfig.setCodec("ogg", paulscode.sound.codecs.CodecJOrbis.class);
 			SoundSystemConfig.setCodec("wav", CodecWav.class);
 			SoundSystemConfig.setSoundFilesPackage("dax/blocks/res/sound/");
 		} catch (SoundSystemException e) {
@@ -183,8 +183,9 @@ public class SoundManager {
 			
 			if(system.playing(name))
 				system.stop(name);
+			
 			system.play(name);
-
+			
 			ListenerData d = system.getListenerData();
 			system.setPosition(name, d.position.x, d.position.y, d.position.z);
 		}
