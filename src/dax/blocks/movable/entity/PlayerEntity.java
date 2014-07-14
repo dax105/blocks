@@ -368,6 +368,10 @@ public class PlayerEntity extends Entity {
 			this.fallVelocity = -velY;
 			velY = 0;
 		}
+		
+		if (yab != ya) {
+			velY = 0;
+		}
 
 		this.posX = (this.bb.x0 + this.bb.x1) / 2.0F;
 		this.posY = this.bb.y0;
