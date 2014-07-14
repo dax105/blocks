@@ -153,8 +153,10 @@ public class PlayerEntity extends Entity {
 
 		if (stepTimer <= 0 && onGround) {
 			Block block = this.standingOn;
-				Game.sound.playSound(block.getStepSound(),
-						1.0f - (rand.nextFloat() * 0.2f));
+			if (block != null) { 
+				Game.sound.playSound(block.getStepSound(), 1.0f - (rand.nextFloat() * 0.2f));
+			}
+
 
 			stepTimer += STEP_TIMER_FULL;
 		}
@@ -179,8 +181,8 @@ public class PlayerEntity extends Entity {
 					if (world.getBlock(blockX + x - 1, blockY, blockZ + z - 1) == 0) {
 						blocksAround[x][z] = -1;
 					} else {
-						float xDist = x - 1.5f;
-						float zDist = z - 1.5f;
+						float xDist = x - 0.5f;
+						float zDist = z - 0.5f;
 
 						blocksAround[x][z] = (float) Math.sqrt(xDist * xDist
 								+ zDist * zDist);
@@ -263,10 +265,18 @@ public class PlayerEntity extends Entity {
 	public void updatePosition() {
 		wasOnGround = onGround;
 
-		boolean inWater = ((world.getBlock((int) this.posX, (int) this.posY,
-				(int) this.posZ) == Block.water.getId()) || (world.getBlock(
-				(int) this.posX, (int) this.posY + 1, (int) this.posZ) == Block.water
-				.getId()));
+		int blockPosX = (int) Math.floor(this.posX);
+		int blockPosY = (int) Math.floor(this.posY);
+		int blockPosZ =	(int) Math.floor(this.posZ);	
+		
+		boolean inWater = ((world.getBlock(blockPosX, blockPosY, blockPosZ) == Block.water.getId()) || (world.getBlock(blockPosX, blockPosY + 1, blockPosZ) == Block.water.getId()));
+		float d0 = Block.getBlock(world.getBlock(blockPosX, blockPosY, blockPosZ)) != null ? Block.getBlock(world.getBlock(blockPosX, blockPosY, blockPosZ)).getDensity() : 1;
+		float d1 = Block.getBlock(world.getBlock(blockPosX, blockPosY + 1, blockPosZ)) != null ? Block.getBlock(world.getBlock(blockPosX, blockPosY + 1, blockPosZ)).getDensity() : 1;
+		float density = (d0+d1)/2f;
+		float frictionMultipler = 1f/density;
+		
+		System.out.println(density);
+		
 		float speedC = 0;
 		float speedStrafeC = 0;
 
@@ -276,9 +286,6 @@ public class PlayerEntity extends Entity {
 				|| Keyboard.isKeyDown(Keyboard.KEY_RSHIFT)) {
 			multi = 15;
 		}
-
-		if (inWater)
-			multi *= 0.5f;
 
 		if (Keyboard.isKeyDown(Keyboard.KEY_W)) {
 			speedC -= onGround ? 0.25 * multi : 0.03 * multi;
@@ -323,11 +330,14 @@ public class PlayerEntity extends Entity {
 		speedStrafe += speedStrafeC;
 
 		speed *= onGround ? 0.5f : 0.9f;
+		speed *= frictionMultipler;
 		speedStrafe *= onGround ? 0.5f : 0.9f;
+		speedStrafe *= frictionMultipler;
 
 		spf = (float) Math.sqrt(speed * speed + speedStrafe * speedStrafe);
 
-		velY -= inWater ? World.WATER_GRAVITY : World.GRAVITY;
+		velY -= World.GRAVITY;
+		velY *= frictionMultipler;
 
 		double toMoveZ = (posZ + Math.cos(-heading / 180 * Math.PI) * speed)
 				+ (Math.cos((-heading + 90) / 180 * Math.PI) * speedStrafe);
