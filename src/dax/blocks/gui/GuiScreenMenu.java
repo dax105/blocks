@@ -43,13 +43,11 @@ public class GuiScreenMenu extends GuiScreen {
 	
 	@Override
 	public void sliderUpdate(GuiObjectSlider slider) {
-
 	}
 
 	@Override
 	public void buttonChanged(GuiObjectChangingButton button, int line) {
-		
-		
+
 	}
 
 	@Override
@@ -61,5 +59,6 @@ public class GuiScreenMenu extends GuiScreen {
 	public void onOpening() {
 		Game.sound.pauseMusic();
 	}
+
 
 }
