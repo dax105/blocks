@@ -15,13 +15,14 @@ import dax.blocks.block.Block;
 import dax.blocks.block.BlockPlant;
 import dax.blocks.movable.entity.PlayerEntity;
 import dax.blocks.render.Frustum;
+import dax.blocks.render.ITickListener;
 import dax.blocks.world.chunk.Chunk;
 import dax.blocks.world.chunk.ChunkProvider;
 import dax.blocks.world.generator.TreeGenerator;
 
 import org.lwjgl.input.Keyboard;
 
-public class World {
+public class World implements ITickListener {
 
 	public static final float GRAVITY = 0.06f;
 	public static final float WATER_GRAVITY = 0.04f;
@@ -141,8 +142,8 @@ public class World {
 		newlyScheduledUpdates.add(new ScheduledUpdate(x, y, z, ticks));
 	}
 	
-	public void update() {
-		player.update();
+	public void onTick() {
+		player.onTick();
 		
 		int size = particles.size();
 		
@@ -278,8 +279,8 @@ public class World {
 		chunkProvider.loader.saveAll();
 	}
 
-	public void onRender() {
-		player.onRender();
+	public void onRenderTick(float ptt) {
+		player.onRenderTick(ptt);
 	}
 
 }

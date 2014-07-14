@@ -2,11 +2,8 @@ package dax.blocks.movable.entity;
 
 import java.util.ArrayList;
 import java.util.Random;
-
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
-import org.lwjgl.opengl.GL11;
-
 import dax.blocks.GLHelper;
 import dax.blocks.Game;
 import dax.blocks.TextureManager;
@@ -62,8 +59,8 @@ public class PlayerEntity extends Entity {
 	}
 
 	@Override
-	public void update() {
-		super.update();
+	public void onTick() {
+		super.onTick();
 		regenerationTimer++;
 		
 		if(this.regenerationTimer >= PlayerEntity.REGENERATION_TICKS) {
@@ -169,7 +166,7 @@ public class PlayerEntity extends Entity {
 		}
 	}
 
-	public void onRender() {
+	public void onRenderTick(float ptt) {
 		if (Mouse.isGrabbed()) {
 			float mouseDX = Mouse.getDX() * 0.8f * 0.16f;
 			float mouseDY = Mouse.getDY() * 0.8f * 0.16f;
@@ -195,14 +192,17 @@ public class PlayerEntity extends Entity {
 		updateLookingAt();
 	}
 
-	public void render(float ptt) {
-		super.render(ptt);
-		
+	@Override
+	public void renderGui(float ptt) {
 		int heartsX = 80;
 		int heartsY = Game.getInstance().height - 43;
 		
 		GLHelper.drawTexture(TextureManager.life_zero, heartsX, heartsY);
 		GLHelper.drawTextureCropped(TextureManager.life_full, heartsX, heartsY, lifes, 1);
+	}
+	
+	@Override
+	public void renderWorld(float partialTickTime) {
 	}
 	
 	@Override
@@ -499,4 +499,5 @@ public class PlayerEntity extends Entity {
 	public void setSpeedStrafe(float speedStrafe) {
 		this.speedStrafe = speedStrafe;
 	}
+
 }

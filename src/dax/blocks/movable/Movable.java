@@ -1,6 +1,8 @@
 package dax.blocks.movable;
 
-public abstract class Movable {
+import dax.blocks.render.IRenderable;
+
+public abstract class Movable implements IRenderable {
 
 	protected float posX;
 	protected float posY;
@@ -18,7 +20,7 @@ public abstract class Movable {
 	protected float lastPosY;
 	protected float lastPosZ;
 
-	public void update() {
+	public void onTick() {
 		lastPosX = posX;
 		lastPosY = posY;
 		lastPosZ = posZ;
@@ -26,10 +28,12 @@ public abstract class Movable {
 		updatePosition();
 	}
 
-	public void render(float ptt) {		
+	public void renderGui(float ptt) {		
 		updateRenderPosition(ptt);	
 	}
 
+	
+	
 	public Movable(float x, float y, float z) {
 		this(x, y, z, 0, 0, 0);
 	}
