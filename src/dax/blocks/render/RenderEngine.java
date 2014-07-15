@@ -300,11 +300,11 @@ public class RenderEngine {
 		GL11.glDisable(GL11.GL_TEXTURE_2D);
 
 		// Render particles
-		/*GL11.glBegin(GL11.GL_QUADS);
+		GL11.glBegin(GL11.GL_QUADS);
 		for (Particle p : world.particles) {
 			renderParticle(p, ptt);
 		}
-		GL11.glEnd();*/
+		GL11.glEnd();
 
 		sEnable(FLAG_LIGHTING);
 		GL11.glEnable(GL11.GL_LIGHTING);
