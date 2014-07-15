@@ -442,15 +442,9 @@ public class Game implements Runnable {
 		}
 
 		GL11.glDisable(GL11.GL_TEXTURE_2D);
-		GL11.glLineWidth(2);
-
-		GL11.glBegin(GL11.GL_LINES);
-		GL11.glVertex2f(width / 2, (height / 2) - 10);
-		GL11.glVertex2f(width / 2, (height / 2) + 10);
-
-		GL11.glVertex2f((width / 2) - 10, height / 2);
-		GL11.glVertex2f((width / 2) + 10, height / 2);
-		GL11.glEnd();
+		
+		GLHelper.drawLine(width / 2, width / 2, (height / 2) - 10, (height / 2) + 10, 2, 0, 0, 0, 0.5f);
+		GLHelper.drawLine((width / 2) - 10, (width / 2) + 10, height / 2, height / 2, 2, 0, 0, 0, 0.5f);
 	}
 
 

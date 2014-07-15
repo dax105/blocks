@@ -202,7 +202,6 @@ public class GLHelper {
 		drawTexture(texture, 0, texture.getWidth(), 0, texture.getHeight(), x1, x2, y1, y2);
 	}
 	
-	
 	public static void drawTextureCropped(Texture texture, float x, float y,
 			float cropXPercent, float cropYPercent) {
 		drawTexture(texture, 0, texture.getWidth() * cropXPercent, 0,
@@ -253,4 +252,19 @@ public class GLHelper {
 		}
 	}
 
+	public static void drawLine(float x1, float x2, float y1, float y2, int thickness, float r, float g, float b, float a) {
+		GL11.glColor4f(r, g, b, a);
+		GL11.glLineWidth(thickness);
+		
+		GL11.glBegin(GL11.GL_LINES);
+		
+		GL11.glVertex2f(x1, y1);
+		GL11.glVertex2f(x2, y2);
+		
+		GL11.glEnd();
+	}
+	
+	public static void drawLine(float x1, float x2, float y1, float y2, int thickness) {
+		drawLine(x1, x2, y1, y2, thickness, 1, 1, 1, 1);
+	}
 }

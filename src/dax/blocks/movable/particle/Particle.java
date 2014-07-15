@@ -3,6 +3,10 @@ package dax.blocks.movable.particle;
 import java.util.List;
 import java.util.Random;
 
+import org.lwjgl.opengl.GL11;
+
+import dax.blocks.Game;
+import dax.blocks.Particle;
 import dax.blocks.collisions.AABB;
 import dax.blocks.movable.Movable;
 import dax.blocks.world.World;
@@ -122,7 +126,32 @@ public class Particle extends Movable {
 
 	@Override
 	public void renderWorld(float partialTickTime) {
-		// TODO Auto-generated method stub
+		GL11.glColor4f(p.r, p.g, p.b, 1);
+
+		float h = Particle.PARTICLE_SIZE / 2;
+		float sizemutipler = (h / 1);
+
+		float rightup0p = (rightModelviewVec[0] + upModelviewVec[0])
+				* sizemutipler;
+		float rightup1p = (rightModelviewVec[1] + upModelviewVec[1])
+				* sizemutipler;
+		float rightup2p = (rightModelviewVec[2] + upModelviewVec[2])
+				* sizemutipler;
+		float rightup0n = (rightModelviewVec[0] - upModelviewVec[0])
+				* sizemutipler;
+		float rightup1n = (rightModelviewVec[1] - upModelviewVec[1])
+				* sizemutipler;
+		float rightup2n = (rightModelviewVec[2] - upModelviewVec[2])
+				* sizemutipler;
+
+		float px = p.getPartialX(ptt);
+		float py = p.getPartialY(ptt);
+		float pz = p.getPartialZ(ptt);
+
+		GL11.glVertex3f(px - rightup0p, py - rightup1p, pz - rightup2p);
+		GL11.glVertex3f(px + rightup0n, py + rightup1n, pz + rightup2n);
+		GL11.glVertex3f(px + rightup0p, py + rightup1p, pz + rightup2p);
+		GL11.glVertex3f(px - rightup0n, py - rightup1n, pz - rightup2n);
 		
 	}
 	
