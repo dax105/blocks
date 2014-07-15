@@ -22,6 +22,7 @@ public class Settings {
 	public SettingsObject<Integer> loads_pt = (SettingsObject<Integer>) registerObject(new SettingsObject<Integer>("loads_pt", 3, "Loaded chunks per tick", "%v chunks", null));
 	public SettingsObject<Integer> decorations_pt = (SettingsObject<Integer>) registerObject(new SettingsObject<Integer>("decorations_pt", 3, "Decorations per tick", null, null));
 	
+	public SettingsObject<Boolean> debug = (SettingsObject<Boolean>) registerObject(new SettingsObject<Boolean>("debug", false, "Show debug info", "%o", null));
 	public SettingsObject<Boolean> fullscreen = (SettingsObject<Boolean>) registerObject(new SettingsObject<Boolean>("fullscreen", false, "Fullscreen mode", "%o", null));
 	public SettingsObject<Boolean> mipmaps = (SettingsObject<Boolean>) registerObject(new SettingsObject<Boolean>("mipmaps", true, "Mipmapping", "%o", null));
 	public SettingsObject<Boolean> sound = (SettingsObject<Boolean>) registerObject(new SettingsObject<Boolean>("sound", true, "Sound", "%o", new Applier() {

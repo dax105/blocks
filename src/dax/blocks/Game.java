@@ -7,6 +7,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ListIterator;
+
 import org.lwjgl.Sys;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
@@ -14,6 +15,7 @@ import org.lwjgl.openal.AL;
 import org.lwjgl.opengl.Display;
 import org.lwjgl.opengl.GL11;
 import org.newdawn.slick.TrueTypeFont;
+
 import dax.blocks.block.Block;
 import dax.blocks.console.Console;
 import dax.blocks.gui.GuiObjectBlank;
@@ -21,6 +23,7 @@ import dax.blocks.gui.GuiScreen;
 import dax.blocks.gui.GuiScreenLoading;
 import dax.blocks.gui.GuiScreenMainMenu;
 import dax.blocks.gui.GuiScreenMenu;
+import dax.blocks.profiler.Profiler;
 import dax.blocks.render.IRenderable;
 import dax.blocks.render.RenderEngine;
 import dax.blocks.settings.Settings;
@@ -33,9 +36,7 @@ public class Game implements Runnable {
 	public static Console console = new Console();
 	public static WorldsManager worlds = new WorldsManager();
 	public static SoundManager sound = new SoundManager();
-	public static final String TITLE = Start.GAME_NAME + " v"
-			+ Start.GAME_VERSION;
-	
+	public static final String TITLE = Start.GAME_NAME + " v" + Start.GAME_VERSION;
 	
 	private File configFile = new File("settings.txt");
 	
@@ -66,6 +67,7 @@ public class Game implements Runnable {
 	long lastFPS;
 	int vertices = 0;
 
+	private Profiler profiler = new Profiler();
 	
 	private static Game instance;
 
@@ -106,13 +108,11 @@ public class Game implements Runnable {
 			time = System.nanoTime();
 			while (time - lastTime >= TICK_TIME * 1000000000) {
 				ticks++;
-
+				profiler.startTick();
 				onTick();
+				profiler.endTick();
 				lastTime += TICK_TIME * 1000000000;
 			}
-
-			float partialTickTime = (time - lastTime)
-					/ ((float) TICK_TIME * 1000000000);
 
 			if (time - lastInfo >= 1000000000) {
 				lastInfo += 1000000000;
@@ -121,11 +121,16 @@ public class Game implements Runnable {
 				Game.sound.updatePlaying();
 				Game.sound.getMusicProvider().updateMusic();
 			}
+			
+			profiler.startRender();
+			float partialTickTime = (time - lastTime) / ((float) TICK_TIME * 1000000000);
 
 			onRender(partialTickTime);
 			render(partialTickTime);
 
 			Display.update();
+			profiler.endRender();
+			
 			if(Game.settings.fps_limit.getValue() > 0)
 				Display.sync(Game.settings.fps_limit.getValue());
 		}
@@ -386,6 +391,47 @@ public class Game implements Runnable {
 	}
 	
 	public void renderOverlay() {
+		if (Game.settings.debug.getValue()) {
+			GL11.glLineWidth(1);
+			
+			GL11.glBegin(GL11.GL_LINES);
+			
+			int offset = Display.getWidth() - Profiler.MAX_RECORDS;
+			
+			float[] tick = this.profiler.getTickTimes();
+			float[] render = this.profiler.getRenderTimes();
+			
+			for (int i = 0; i < Profiler.MAX_RECORDS; i++) {
+				GL11.glColor4f(0, 1, 0, 1.0f);
+				GL11.glVertex2f(offset+i, Display.getHeight());
+				GL11.glVertex2f(offset+i, Display.getHeight()-tick[i]*10);
+				
+				GL11.glColor4f(0, 0, 1, 0.5f);
+				GL11.glVertex2f(offset+i, Display.getHeight());
+				GL11.glVertex2f(offset+i, Display.getHeight()-render[i]*10);
+				
+			}
+			
+			float avgTick = this.profiler.avgTick();
+			float avgRender = this.profiler.avgRender();
+			
+			GL11.glColor4f(0.5f, 1.0f, 0, 1.0f);
+			GL11.glVertex2f(Display.getWidth()-Profiler.MAX_RECORDS, Display.getHeight()-avgTick*10);
+			GL11.glVertex2f(Display.getWidth(), Display.getHeight()-avgTick*10);
+			
+			GL11.glColor4f(0.5f, 0, 1.0f, 1.0f);
+			GL11.glVertex2f(Display.getWidth()-Profiler.MAX_RECORDS, Display.getHeight()-avgRender*10);
+			GL11.glVertex2f(Display.getWidth(), Display.getHeight()-avgRender*10);
+			
+			GL11.glEnd(); 
+			
+			String tickText = "avg tick " + String.format("%.2f", avgTick) + "ms";
+			FontManager.text.drawString(offset-FontManager.text.getWidth(tickText)-2, (int)(Display.getHeight()-avgTick*10-FontManager.text.getLineHeight()*0.75f), tickText);
+			
+			String renderText = "avg render " + String.format("%.2f", avgRender) + "ms";
+			FontManager.text.drawString(offset-FontManager.text.getWidth(renderText)-2, (int)(Display.getHeight()-avgRender*10-FontManager.text.getLineHeight()*0.75f), renderText);
+		}
+		
 		Block b = Block.getBlock(world.player.getSelectedBlockID());
 		int textureid = b.sideTexture;
 
@@ -445,6 +491,7 @@ public class Game implements Runnable {
 		
 		GLHelper.drawLine(width / 2, width / 2, (height / 2) - 10, (height / 2) + 10, 2, 0, 0, 0, 0.5f);
 		GLHelper.drawLine((width / 2) - 10, (width / 2) + 10, height / 2, height / 2, 2, 0, 0, 0, 0.5f);
+
 	}
 
 
