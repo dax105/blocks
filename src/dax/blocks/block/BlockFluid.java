@@ -34,7 +34,7 @@ public class BlockFluid extends BlockBasic {
 	}
 	
 	@Override
-	public void update(int x, int y, int z, World world) {
+	public void onTick(int x, int y, int z, World world) {
 		if (world.getBlock(x, y-1, z) == Block.water.getId()) {
 			return;
 		}

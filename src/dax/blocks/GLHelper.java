@@ -1,9 +1,166 @@
 package dax.blocks;
 
+import java.nio.FloatBuffer;
+
+import org.lwjgl.BufferUtils;
+import org.lwjgl.LWJGLException;
+import org.lwjgl.opengl.Display;
+import org.lwjgl.opengl.DisplayMode;
 import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GL12;
+import org.lwjgl.opengl.PixelFormat;
+import org.lwjgl.util.glu.GLU;
 import org.newdawn.slick.opengl.Texture;
 
 public class GLHelper {
+	public static void setOrtho(int width, int height) {
+		GL11.glMatrixMode(GL11.GL_PROJECTION);
+		GL11.glLoadIdentity();
+		GL11.glOrtho(0, width, height, 0, 0, 1);
+		GL11.glMatrixMode(GL11.GL_MODELVIEW);
+
+		GL11.glDisable(GL11.GL_LIGHTING);
+		GL11.glDisable(GL11.GL_CULL_FACE);
+		GL11.glDisable(GL11.GL_DEPTH_TEST);
+	}
+	
+	public static void setPerspective(int width, int height) {
+		GL11.glMatrixMode(GL11.GL_PROJECTION);
+		GL11.glLoadIdentity();
+		GLU.gluPerspective(Game.settings.fov.getValue(), (float) width
+				/ (float) height, 0.05F, 1000);
+		GL11.glViewport(0, 0, width, height);
+		GL11.glMatrixMode(GL11.GL_MODELVIEW);
+
+		GL11.glEnable(GL11.GL_LIGHTING);
+		GL11.glEnable(GL11.GL_CULL_FACE);
+		GL11.glEnable(GL11.GL_DEPTH_TEST);
+	}
+	
+	public static void initGL(int width, int height) {
+		// Set perspective matrix
+		setPerspective(width, height);
+
+		// Enable depth test
+		GL11.glEnable(GL11.GL_DEPTH_TEST);
+		GL11.glDepthFunc(GL11.GL_LEQUAL);
+
+		// Enable back face culling
+		GL11.glEnable(GL11.GL_CULL_FACE);
+
+		// Enable textures
+		GL11.glEnable(GL11.GL_TEXTURE_2D);
+
+		// Blending
+		GL11.glEnable(GL11.GL_BLEND);
+		GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
+
+		// Setup alpha test
+		GL11.glDisable(GL11.GL_ALPHA_TEST);
+		GL11.glAlphaFunc(GL11.GL_GEQUAL, 0.01F);
+
+		// Clear color
+		GL11.glClearColor(0.63f, 0.87f, 1.0f, 1.0f);
+
+		// Set light properties
+		GL11.glShadeModel(GL11.GL_SMOOTH);
+		GL11.glEnable(GL11.GL_LIGHTING);
+		GL11.glEnable(GL11.GL_LIGHT0);
+		FloatBuffer ambientLight = BufferUtils.createFloatBuffer(4);
+		ambientLight.put(0.8f).put(0.8f).put(0.8f).put(1).flip();
+		GL11.glLightModel(GL11.GL_LIGHT_MODEL_AMBIENT, ambientLight);
+
+		GL11.glColorMaterial(GL11.GL_FRONT_AND_BACK,
+				GL11.GL_AMBIENT_AND_DIFFUSE);
+		GL11.glEnable(GL11.GL_COLOR_MATERIAL);
+		GL11.glEnable(GL12.GL_RESCALE_NORMAL);
+		// GL11.glEnable(GL11.GL_NORMALIZE);
+
+		// Fog
+		// GL11.glEnable(GL11.GL_FOG);
+		FloatBuffer fogColor = BufferUtils.createFloatBuffer(4);
+		fogColor.put(0.43f).put(0.67f).put(1.0f).put(0.0f).flip();
+		GL11.glFog(GL11.GL_FOG_COLOR, fogColor);
+		GL11.glHint(GL11.GL_FOG_HINT, GL11.GL_DONT_CARE);
+		GL11.glFogi(GL11.GL_FOG_MODE, GL11.GL_EXP2);
+		GL11.glFogf(GL11.GL_FOG_DENSITY, 0.01f);
+		// GL11.glFogf(GL11.GL_FOG_START, 100.0f);
+		// GL11.glFogf(GL11.GL_FOG_END, 160.0f);
+
+		// Nicest perspective correction
+		GL11.glHint(GL11.GL_PERSPECTIVE_CORRECTION_HINT, GL11.GL_NICEST);
+	}
+	
+	public static void setDisplayMode(int width, int height, boolean fullscreen) {
+		if (Display.isCreated()
+				&& (Display.getDisplayMode().getWidth() == width)
+				&& (Display.getDisplayMode().getHeight() == height)
+				&& (Display.isFullscreen() == fullscreen)) {
+			return;
+		}
+
+		try {
+			DisplayMode targetDisplayMode = null;
+
+			if (fullscreen) {
+				DisplayMode[] modes = Display.getAvailableDisplayModes();
+				int freq = 0;
+
+				for (int i = 0; i < modes.length; i++) {
+					DisplayMode current = modes[i];
+
+					if ((current.getWidth() == width)
+							&& (current.getHeight() == height)) {
+						if ((targetDisplayMode == null)
+								|| (current.getFrequency() >= freq)) {
+							if ((targetDisplayMode == null)
+									|| (current.getBitsPerPixel() > targetDisplayMode
+											.getBitsPerPixel())) {
+								targetDisplayMode = current;
+								freq = targetDisplayMode.getFrequency();
+							}
+						}
+
+						if ((current.getBitsPerPixel() == Display
+								.getDesktopDisplayMode().getBitsPerPixel())
+								&& (current.getFrequency() == Display
+										.getDesktopDisplayMode().getFrequency())) {
+							targetDisplayMode = current;
+							break;
+						}
+					}
+				}
+			} else {
+				targetDisplayMode = new DisplayMode(width, height);
+			}
+
+			if (targetDisplayMode == null) {
+				Game.console.out("Failed to find value mode: " + width + "x"
+						+ height + " fs=" + fullscreen);
+				return;
+			}
+
+			Display.setDisplayMode(targetDisplayMode);
+			Display.setFullscreen(fullscreen);
+
+			if (!Display.isCreated()) {
+				;
+				try {
+					Display.create(new PixelFormat(8, 8, 0, Game.settings.aa_samples
+							.getValue()));
+					Game.console.out("Display created!");
+					// Display.create();
+				} catch (LWJGLException e) {
+					e.printStackTrace();
+				}
+			}
+
+		} catch (LWJGLException e) {
+			Game.console.out("Unable to setup mode " + width + "x" + height
+					+ " fullscreen=" + fullscreen + e);
+		}
+	}
+	
 	public static void drawTexture(Texture texture, float textureX1,
 			float textureX2, float textureY1, float textureY2, float x1,
 			float x2, float y1, float y2) {

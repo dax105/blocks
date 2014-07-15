@@ -90,10 +90,26 @@ public class BlockPlant extends Block {
 	}
 
 	@Override
-	public void update(int x, int y, int z, World world) {
+	public void onTick(int x, int y, int z, World world) {
 		if (world.getBlock(x, y-1, z) == 0) {
 			world.setBlock(x, y, z, 0, true);
 		}
+	}
+
+	@Override
+	public void onTick() {
+	}
+
+	@Override
+	public void onRenderTick(float partialTickTime) {	
+	}
+
+	@Override
+	public void renderWorld(float partialTickTime) {	
+	}
+
+	@Override
+	public void renderGui(float partialTickTime) {
 	}
 
 }

@@ -1,37 +1,62 @@
 package dax.blocks.block;
 
 import org.lwjgl.opengl.GL11;
+
 import dax.blocks.Game;
+import dax.blocks.render.IRenderableBlock;
 import dax.blocks.render.RenderPass;
 import dax.blocks.sound.SoundManager;
 import dax.blocks.world.World;
 
-public abstract class Block {
+public abstract class Block implements IRenderableBlock {
 
 	public int topTexture = 0;
 	public int sideTexture = 0;
 	public int bottomTexture = 0;
 	
-	private int fallHurt = 5;
-	private int id;
-	private boolean opaque = true;
-	private int renderPass = RenderPass.PASS_OPAQUE;
-	private boolean cullSame = false;
-	private boolean occluder = true;
-	private float density = 1.0f;
-	
-	private String[] footStep = SoundManager.footstep_dirt;
-	private String fall = "fall_hard";
-	
-	private static int lastAO = -1;
-
-	public abstract void update(int x, int y, int z, World world);
+	protected int fallHurt = 5;
+	protected int id;
+	protected boolean opaque = true;
+	protected int renderPass = RenderPass.PASS_OPAQUE;
+	protected boolean cullSame = false;
+	protected boolean occluder = true;
+	protected float density = 1.0f;
+	protected boolean requiresData = false;
+	protected boolean requiresTick = false;
+	protected boolean requiresRenderTick = false;
+	protected String[] footStep = SoundManager.footstep_dirt;
+	protected String fall = "fall_hard";
+	protected static int lastAO = -1;
 	
 	public Block(int id) {
 		this.id = id;
 		blocks[id] = this;
 		blocksCount++;
 	}
+	
+	public Block requiresExtendedData() {
+		this.requiresData = true;
+		return this;
+	}
+	
+	public Block requiresTick() {
+		this.requiresTick = true;
+		return this;
+	}
+	
+	public Block requiresRenderTick() {
+		this.requiresRenderTick = true;
+		return this;
+	}
+	
+	public boolean isRequiringRenderTick() {
+		return this.requiresRenderTick;
+	}
+	
+	public boolean isRequiringTick() {
+		return this.requiresTick;
+	}
+	
 	
 	public Block setFallHurt(int value) {
 		this.fallHurt = value;
@@ -199,6 +224,7 @@ public abstract class Block {
 		GL11.glVertex3f(x, y, z);
 	}
 
+	
 	public abstract void renderIndependent(int x, int y, int z);
 	public abstract void renderFront(int x, int y, int z, boolean xnzn, boolean zn, boolean xpzn, boolean xn, boolean xp, boolean xnzp, boolean zp, boolean xpzp);
 	public abstract void renderBack(int x, int y, int z, boolean xnzn, boolean zn, boolean xpzn, boolean xn, boolean xp, boolean xnzp, boolean zp, boolean xpzp);

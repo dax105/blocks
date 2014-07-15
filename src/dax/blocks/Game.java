@@ -6,23 +6,14 @@ import java.awt.Toolkit;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.nio.FloatBuffer;
 import java.util.ListIterator;
-
-import org.lwjgl.BufferUtils;
-import org.lwjgl.LWJGLException;
 import org.lwjgl.Sys;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
 import org.lwjgl.openal.AL;
 import org.lwjgl.opengl.Display;
-import org.lwjgl.opengl.DisplayMode;
 import org.lwjgl.opengl.GL11;
-import org.lwjgl.opengl.GL12;
-import org.lwjgl.opengl.PixelFormat;
-import org.lwjgl.util.glu.GLU;
 import org.newdawn.slick.TrueTypeFont;
-
 import dax.blocks.block.Block;
 import dax.blocks.console.Console;
 import dax.blocks.gui.GuiObjectBlank;
@@ -30,6 +21,7 @@ import dax.blocks.gui.GuiScreen;
 import dax.blocks.gui.GuiScreenLoading;
 import dax.blocks.gui.GuiScreenMainMenu;
 import dax.blocks.gui.GuiScreenMenu;
+import dax.blocks.render.IRenderable;
 import dax.blocks.render.RenderEngine;
 import dax.blocks.settings.Settings;
 import dax.blocks.sound.SoundManager;
@@ -41,43 +33,40 @@ public class Game implements Runnable {
 	public static Console console = new Console();
 	public static WorldsManager worlds = new WorldsManager();
 	public static SoundManager sound = new SoundManager();
-
+	public static final String TITLE = Start.GAME_NAME + " v"
+			+ Start.GAME_VERSION;
+	
+	
 	private File configFile = new File("settings.txt");
+	
 	public boolean showbg = false;
+	public boolean consoleOpen = false;
+	public boolean isFullscreen = false;
+	public boolean ingame = false;
 
 	public RenderEngine renderEngine;
+	public GuiScreen guiScreen;
+	public TrueTypeFont font;
+	public World world;
 
-	public boolean consoleOpen = false;
-
+	
 	public static final int TPS = 20;
 	public static final double TICK_TIME = 1.0D / TPS;
 	public int ticks = 0;
-
 	String ticksString = "N/A";
 
 	public int width = 800;
 	public int height = 480;
 
-	public GuiScreen guiScreen;
-
-	public static final String TITLE = Start.GAME_NAME + " v"
-			+ Start.GAME_VERSION;
-
-	public boolean isFullscreen = false;
-
-	public TrueTypeFont font;
-
+	float animationProgress = 0;
+	float lastProgress = 0;
 	long lastFrame;
 	int fpsCounter;
 	int fps = 0;
 	long lastFPS;
+	int vertices = 0;
 
-	public World world;
-
-	public boolean ingame = false;
-
-	public int vertices = 0;
-
+	
 	private static Game instance;
 
 	public Game() {
@@ -88,6 +77,8 @@ public class Game implements Runnable {
 		return instance;
 	}
 
+	//.... RUN METHODS ....
+	
 	@Override
 	public void run() {
 		try {
@@ -101,7 +92,8 @@ public class Game implements Runnable {
 			e.printStackTrace();
 		}
 
-		setDisplayMode(width, height, isFullscreen);
+		GLHelper.setDisplayMode(width, height, isFullscreen);
+		init();
 		load(true);
 
 		renderEngine = new RenderEngine(Game.settings.enable_shaders.getValue());
@@ -142,7 +134,7 @@ public class Game implements Runnable {
 	}
 
 	public void init() {
-		initGL();
+		GLHelper.initGL(width, height);
 		Display.setTitle(TITLE);
 	}
 
@@ -185,6 +177,14 @@ public class Game implements Runnable {
 		}
 	}
 
+	public void createFont() {
+		Font awtFont = new Font("Arial", Font.BOLD, 10);
+		font = new TrueTypeFont(awtFont, false);
+	}
+
+	
+	//.... GAME METHODS ....
+
 	public void makeNewWorld(boolean load, String name) {
 		ingame = true;
 		GLHelper.updateFiltering(Game.settings.linear_filtering.getValue());
@@ -193,26 +193,16 @@ public class Game implements Runnable {
 		//ingame = true;
 	}
 
-	public void displayLoadingScreen(String text) {
-		// isIngame = false;
-		openGuiScreen(new GuiScreenLoading(this, text));
-		render(0);
-		Display.update();
+	public void exitGame() {
+		world.saveAllChunks();
+		world = null;
+		renderEngine = new RenderEngine(Game.settings.enable_shaders.getValue());
+		ingame = false;
+		openGuiScreen(new GuiScreenMainMenu(this));
 	}
 
-	public void displayLoadingScreen() {
-		// isIngame = false;
-		openGuiScreen(new GuiScreenLoading(this));
-		render(0);
-		Display.update();
-	}
-
-	public void createFont() {
-		Font awtFont = new Font("Arial", Font.BOLD, 10);
-		font = new TrueTypeFont(awtFont, false);
-	}
-
-	float animationProgress = 0;
+	
+	//.... RENDER/UPDATE METHODS ....
 
 	public void onTick() {
 
@@ -259,7 +249,7 @@ public class Game implements Runnable {
 		}
 
 		if (this.guiScreen == null && ingame && !consoleOpen) {
-			world.update();
+			world.onTick();
 		} else if (ingame) {
 			world.menuUpdate();
 		}
@@ -275,112 +265,14 @@ public class Game implements Runnable {
 		if (animationProgress > 1) {
 			animationProgress = 1;
 		}
-
-		/*Game.sound.getMusicProvider().updateGameMusic();
-		Game.sound.getMusicProvider().updateMenuMusic();*/
-
-		// Display.sync(200);
-		// updateFPS();
 	}
 
 	public void onRender(float ptt) {
 		if (this.guiScreen == null && ingame && !consoleOpen) {
-			world.onRender(ptt);
+			world.onRenderTick(ptt);
 		}
 	}
-
-	public long getTime() {
-		return (Sys.getTime() * 1000) / Sys.getTimerResolution();
-	}
-
-	public void updateFPS() {
-		if (getTime() - lastFPS > 1000) {
-			fps = fpsCounter;
-			fpsCounter = 0;
-			lastFPS += 1000;
-		}
-		fpsCounter++;
-	}
-
-
-	public void initGL() {
-		// Set perspective matrix
-		setPerspective();
-
-		// Enable depth test
-		GL11.glEnable(GL11.GL_DEPTH_TEST);
-		GL11.glDepthFunc(GL11.GL_LEQUAL);
-
-		// Enable back face culling
-		GL11.glEnable(GL11.GL_CULL_FACE);
-
-		// Enable textures
-		GL11.glEnable(GL11.GL_TEXTURE_2D);
-
-		// Blending
-		GL11.glEnable(GL11.GL_BLEND);
-		GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
-
-		// Setup alpha test
-		GL11.glDisable(GL11.GL_ALPHA_TEST);
-		GL11.glAlphaFunc(GL11.GL_GEQUAL, 0.01F);
-
-		// Clear color
-		GL11.glClearColor(0.63f, 0.87f, 1.0f, 1.0f);
-
-		// Set light properties
-		GL11.glShadeModel(GL11.GL_SMOOTH);
-		GL11.glEnable(GL11.GL_LIGHTING);
-		GL11.glEnable(GL11.GL_LIGHT0);
-		FloatBuffer ambientLight = BufferUtils.createFloatBuffer(4);
-		ambientLight.put(0.8f).put(0.8f).put(0.8f).put(1).flip();
-		GL11.glLightModel(GL11.GL_LIGHT_MODEL_AMBIENT, ambientLight);
-
-		GL11.glColorMaterial(GL11.GL_FRONT_AND_BACK,
-				GL11.GL_AMBIENT_AND_DIFFUSE);
-		GL11.glEnable(GL11.GL_COLOR_MATERIAL);
-		GL11.glEnable(GL12.GL_RESCALE_NORMAL);
-		// GL11.glEnable(GL11.GL_NORMALIZE);
-
-		// Fog
-		// GL11.glEnable(GL11.GL_FOG);
-		FloatBuffer fogColor = BufferUtils.createFloatBuffer(4);
-		fogColor.put(0.43f).put(0.67f).put(1.0f).put(0.0f).flip();
-		GL11.glFog(GL11.GL_FOG_COLOR, fogColor);
-		GL11.glHint(GL11.GL_FOG_HINT, GL11.GL_DONT_CARE);
-		GL11.glFogi(GL11.GL_FOG_MODE, GL11.GL_EXP2);
-		GL11.glFogf(GL11.GL_FOG_DENSITY, 0.01f);
-		// GL11.glFogf(GL11.GL_FOG_START, 100.0f);
-		// GL11.glFogf(GL11.GL_FOG_END, 160.0f);
-
-		// Nicest perspective correction
-		GL11.glHint(GL11.GL_PERSPECTIVE_CORRECTION_HINT, GL11.GL_NICEST);
-	}
-
-	public void setPerspective() {
-		GL11.glMatrixMode(GL11.GL_PROJECTION);
-		GL11.glLoadIdentity();
-		GLU.gluPerspective(settings.fov.getValue(), (float) width
-				/ (float) height, 0.05F, 1000);
-		GL11.glViewport(0, 0, width, height);
-		GL11.glMatrixMode(GL11.GL_MODELVIEW);
-
-		GL11.glEnable(GL11.GL_LIGHTING);
-		GL11.glEnable(GL11.GL_CULL_FACE);
-		GL11.glEnable(GL11.GL_DEPTH_TEST);
-	}
-
-	public void setOrtho() {
-		GL11.glMatrixMode(GL11.GL_PROJECTION);
-		GL11.glLoadIdentity();
-		GL11.glOrtho(0, width, height, 0, 0, 1);
-		GL11.glMatrixMode(GL11.GL_MODELVIEW);
-
-		GL11.glDisable(GL11.GL_LIGHTING);
-		GL11.glDisable(GL11.GL_CULL_FACE);
-		GL11.glDisable(GL11.GL_DEPTH_TEST);
-	}
-
+	
 	public void render(float ptt) {
 
 		float pttbackup = ptt;
@@ -398,16 +290,32 @@ public class Game implements Runnable {
 
 			renderEngine.renderWorld(world, ptt);
 
-			setOrtho();
-
-			world.player.renderGui(ptt);
+			for(IRenderable r : world.getRenderables()) {
+				r.renderWorld(ptt);
+			}
+			
+			GLHelper.setOrtho(width, height);
+			
+			for(IRenderable r : world.getRenderables()) {
+				r.renderGui(ptt);
+			}
+		
 			renderOverlay();
 
 			updateFPS();
 		}
 
-		setOrtho();
+		GLHelper.setOrtho(width, height);
 
+		renderGuiScreen(ptt);
+
+		renderConsole(pttbackup);
+
+		GLHelper.setPerspective(width, height);
+
+	}
+	
+	public void renderGuiScreen(float ptt) {
 		if (this.guiScreen != null) {
 			guiScreen.update();
 			if (this.guiScreen != null) {
@@ -433,13 +341,15 @@ public class Game implements Runnable {
 				guiScreen.render();
 			}
 		}
-
+	}
+	
+	public void renderConsole(float ptt) {
 		GL11.glPushMatrix();
 
 		int cHeight = settings.consoleHeight.getValue();
 
 		float lerp = lastProgress + (animationProgress - lastProgress)
-				* pttbackup;
+				* ptt;
 
 		GL11.glTranslatef(0, -((1 - lerp) * cHeight), 0);
 
@@ -473,32 +383,8 @@ public class Game implements Runnable {
 		}
 
 		GL11.glPopMatrix();
-
-		setPerspective();
-
 	}
-
-	float lastProgress = 0;
-
-	public void openGuiScreen(GuiScreen scr) {
-		if (this.guiScreen != null)
-			this.guiScreen.onClosing();
-		this.guiScreen = scr;
-		scr.onOpening();
-		Mouse.setGrabbed(false);
-	}
-
-	public void closeGuiScreen() {
-		this.guiScreen.onClosing();
-		this.guiScreen = null;
-
-		if (consoleOpen) {
-			consoleOpen = false;
-		}
-
-		Mouse.setGrabbed(true);
-	}
-
+	
 	public void renderOverlay() {
 		Block b = Block.getBlock(world.player.getSelectedBlockID());
 		int textureid = b.sideTexture;
@@ -567,95 +453,56 @@ public class Game implements Runnable {
 		GL11.glEnd();
 	}
 
-	/**
-	 * Set the display mode to be used
-	 * 
-	 * @param width
-	 *            The width of the display required
-	 * @param height
-	 *            The height of the display required
-	 * @param fullscreen
-	 *            True if we want fullscreen mode
-	 * @author NinjaCave
-	 */
-	public void setDisplayMode(int width, int height, boolean fullscreen) {
-		if (Display.isCreated()
-				&& (Display.getDisplayMode().getWidth() == width)
-				&& (Display.getDisplayMode().getHeight() == height)
-				&& (Display.isFullscreen() == fullscreen)) {
-			return;
-		}
 
-		try {
-			DisplayMode targetDisplayMode = null;
+	//.... GUI METHODS ....
 
-			if (fullscreen) {
-				DisplayMode[] modes = Display.getAvailableDisplayModes();
-				int freq = 0;
-
-				for (int i = 0; i < modes.length; i++) {
-					DisplayMode current = modes[i];
-
-					if ((current.getWidth() == width)
-							&& (current.getHeight() == height)) {
-						if ((targetDisplayMode == null)
-								|| (current.getFrequency() >= freq)) {
-							if ((targetDisplayMode == null)
-									|| (current.getBitsPerPixel() > targetDisplayMode
-											.getBitsPerPixel())) {
-								targetDisplayMode = current;
-								freq = targetDisplayMode.getFrequency();
-							}
-						}
-
-						if ((current.getBitsPerPixel() == Display
-								.getDesktopDisplayMode().getBitsPerPixel())
-								&& (current.getFrequency() == Display
-										.getDesktopDisplayMode().getFrequency())) {
-							targetDisplayMode = current;
-							break;
-						}
-					}
-				}
-			} else {
-				targetDisplayMode = new DisplayMode(width, height);
-			}
-
-			if (targetDisplayMode == null) {
-				Game.console.out("Failed to find value mode: " + width + "x"
-						+ height + " fs=" + fullscreen);
-				return;
-			}
-
-			Display.setDisplayMode(targetDisplayMode);
-			Display.setFullscreen(fullscreen);
-
-			if (!Display.isCreated()) {
-				;
-				try {
-					Display.create(new PixelFormat(8, 8, 0, settings.aa_samples
-							.getValue()));
-					Game.console.out("Display created!");
-					// Display.create();
-				} catch (LWJGLException e) {
-					e.printStackTrace();
-				}
-			}
-
-			init();
-
-		} catch (LWJGLException e) {
-			Game.console.out("Unable to setup mode " + width + "x" + height
-					+ " fullscreen=" + fullscreen + e);
-		}
+	public void openGuiScreen(GuiScreen scr) {
+		if (this.guiScreen != null)
+			this.guiScreen.onClosing();
+		this.guiScreen = scr;
+		scr.onOpening();
+		Mouse.setGrabbed(false);
 	}
 
-	public void exitGame() {
-		world.saveAllChunks();
-		world = null;
-		renderEngine = new RenderEngine(Game.settings.enable_shaders.getValue());
-		ingame = false;
-		openGuiScreen(new GuiScreenMainMenu(this));
+	public void closeGuiScreen() {
+		this.guiScreen.onClosing();
+		this.guiScreen = null;
+
+		if (consoleOpen) {
+			consoleOpen = false;
+		}
+
+		Mouse.setGrabbed(true);
+	}
+
+	public void displayLoadingScreen(String text) {
+		// isIngame = false;
+		openGuiScreen(new GuiScreenLoading(this, text));
+		render(0);
+		Display.update();
+	}
+
+	public void displayLoadingScreen() {
+		// isIngame = false;
+		openGuiScreen(new GuiScreenLoading(this));
+		render(0);
+		Display.update();
+	}
+
+
+	//.... NEMAMZDANIKCEMU METHODS ....
+
+	public long getTime() {
+		return (Sys.getTime() * 1000) / Sys.getTimerResolution();
+	}
+
+	public void updateFPS() {
+		if (getTime() - lastFPS > 1000) {
+			fps = fpsCounter;
+			fpsCounter = 0;
+			lastFPS += 1000;
+		}
+		fpsCounter++;
 	}
 
 	public void toggleFullscreen() {
@@ -670,7 +517,8 @@ public class Game implements Runnable {
 			height = screensize.height;
 			isFullscreen = true;
 		}
-		setDisplayMode(width, height, isFullscreen);
+		GLHelper.setDisplayMode(width, height, isFullscreen);
+		init();
 	}
 
 }

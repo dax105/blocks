@@ -262,7 +262,6 @@ public class RenderEngine {
 	public void renderWorld(World world, float ptt) {
 		chunksLoaded = 0;
 		chunksDrawn = 0;
-		//world.player.render(ptt);
 
 		GL11.glColor3f(1, 1, 1);
 
@@ -273,22 +272,15 @@ public class RenderEngine {
 		sSetFloat(UNIFORM_FOG_DISTANCE,
 				Game.settings.drawDistance.getValue() * 16 - 8);
 
-		// Game.getInstance().setOrtho();
-		// renderSky(Game.getInstance().world.player.tilt);
-		// Game.getInstance().setPerspective();
-
 		this.ptt = ptt;
 		pushPlayerMatrix(world.player);
 		updateBeforeRendering(ptt);
 
-		// FloatBuffer ld = BufferUtils.createFloatBuffer(4);
-		// ld.put(0.5f).put(0.5f).put(0.5f).put(1).flip();
 
 		FloatBuffer lp = BufferUtils.createFloatBuffer(4);
 		lp.put(-1000).put(1000).put(-1000).put(0).flip();
 
 		GL11.glLight(GL11.GL_LIGHT0, GL11.GL_POSITION, lp);
-		// GL11.glLight(GL11.GL_LIGHT0, GL11.GL_DIFFUSE, ld);
 
 		GL11.glDisable(GL11.GL_TEXTURE_2D);
 		GL11.glDisable(GL11.GL_LIGHTING);
@@ -320,10 +312,6 @@ public class RenderEngine {
 		for (int i = 0; i < 1; i++) {
 			GL11.glPushMatrix();
 			GL11.glTranslatef(i - 0.0625f, 49, 10);
-			// GL11.glTranslatef(33.0f, 0f, 60.0f);
-			// GL11.glRotatef(System.nanoTime() / 100000000f, 0, 1, 0);
-			// GL11.glTranslatef(-33.0f, 0f, -60.0f);
-			// GL11.glScalef(0.0625f, 0.0625f, 0.0625f);
 			GL11.glScalef(0.5f, 0.5f, 0.5f);
 			GL11.glCallList(ModelManager.character.displayList);
 			GL11.glPopMatrix();

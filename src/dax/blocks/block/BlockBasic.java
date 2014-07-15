@@ -118,9 +118,25 @@ public class BlockBasic extends Block {
 		
 	}
 
+
 	@Override
-	public void update(int x, int y, int z, World world) {
-		
+	public void onTick() {
+	}
+
+	@Override
+	public void onRenderTick(float partialTickTime) {
+	}
+
+	@Override
+	public void renderWorld(float partialTickTime) {
+	}
+
+	@Override
+	public void renderGui(float partialTickTime) {
+	}
+
+	@Override
+	public void onTick(int x, int y, int z, World world) {
 	}
 
 }
