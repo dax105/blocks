@@ -241,6 +241,8 @@ public abstract class Block {
 		if(Block.tickingBlocks.containsKey(c)) {
 			Block.tickingBlocks.remove(c);
 		}
+		
+		world.removeData(x, y, z);
 	}
 	
 	public abstract void renderIndependent(int x, int y, int z, World world);

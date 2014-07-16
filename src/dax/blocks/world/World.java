@@ -306,6 +306,10 @@ public class World implements IRenderable {
 		return false;
 	}
 	
+	public void removeData(int x, int y, int z) {
+		blockDataManager.getValuesForCoord(x, y, z).clear();
+	}
+	
 	@Override
 	public void onTick() {
 		player.onTick();
