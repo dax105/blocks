@@ -102,7 +102,7 @@ public class World implements IRenderable {
 		float velZ = velhalf - rand.nextFloat() * vel - rand.nextFloat()
 				* velFuzziness;
 
-		Particle p = new Particle(x, y, z, velX, velY, velZ, 100,
+		Particle p = new Particle(this, x, y, z, velX, velY, velZ, 100,
 				rand.nextFloat(), rand.nextFloat(), rand.nextFloat());
 		particles.add(p);
 
@@ -119,7 +119,7 @@ public class World implements IRenderable {
 		float velX = (float) (Math.cos(heading) * velocity * mult);
 		float velZ = (float) (Math.sin(heading) * velocity * mult);
 
-		Particle p = new Particle(x, y, z, velX, velY, velZ,
+		Particle p = new Particle(this, x, y, z, velX, velY, velZ,
 				50 + rand.nextInt(20), rand.nextFloat(), rand.nextFloat(),
 				rand.nextFloat());
 		particles.add(p);
@@ -147,8 +147,7 @@ public class World implements IRenderable {
 		if (id > 0) {
 			Block.getBlock(id).onTick(x, y, z, this);
 		}
-		
-		
+
 	}
 
 	public void scheduleUpdate(int x, int y, int z, int ticks) {
@@ -217,41 +216,46 @@ public class World implements IRenderable {
 		}
 	}
 
-	public ArrayList<AABB> getBBs(AABB aABB) {
-		ArrayList<AABB> aABBs = new ArrayList<AABB>();
-		int x0 = (int) (aABB.x0 - 1.0F);
-		int x1 = (int) (aABB.x1 + 1.0F);
-		int y0 = (int) (aABB.y0 - 1.0F);
-		int y1 = (int) (aABB.y1 + 1.0F);
-		int z0 = (int) (aABB.z0 - 1.0F);
-		int z1 = (int) (aABB.z1 + 1.0F);
+	public float[] clipMovement(AABB bb, float xm, float ym, float zm) {
 
-		for (int x = x0; x < x1; ++x) {
-			for (int y = y0; y < y1; ++y) {
-				for (int z = z0; z < z1; ++z) {
-					if (getBlock(x, y, z) > 0
-							&& getBlock(x, y, z) != Block.water.getId()
-							&& !(Block.getBlock(getBlock(x, y, z)) instanceof BlockPlant)) {
-						aABBs.add(new AABB((float) x, (float) y, (float) z,
-								(float) x + 1, (float) y + 1, (float) z + 1));
-					}
-				}
-			}
+		float _x0 = bb.x0;
+		float _y0 = bb.y0;
+		float _z0 = bb.z0;
+		float _x1 = bb.x1;
+		float _y1 = bb.y1;
+		float _z1 = bb.z1;
+
+		if (xm < 0.0F) {
+			_x0 += xm;
 		}
 
-		return aABBs;
-	}
-	
-	public float clipMovement(AABB bb, float xm, float ym, float zm) {
-		AABB area = bb.expand(xm, ym, zm);
-		
-		int x0 = (int) (area.x0 - 1.0F);
-		int x1 = (int) (area.x1 + 1.0F);
-		int y0 = (int) (area.y0 - 1.0F);
-		int y1 = (int) (area.y1 + 1.0F);
-		int z0 = (int) (area.z0 - 1.0F);
-		int z1 = (int) (area.z1 + 1.0F);
-		
+		if (xm > 0.0F) {
+			_x1 += xm;
+		}
+
+		if (ym < 0.0F) {
+			_y0 += ym;
+		}
+
+		if (ym > 0.0F) {
+			_y1 += ym;
+		}
+
+		if (zm < 0.0F) {
+			_z0 += zm;
+		}
+
+		if (zm > 0.0F) {
+			_z1 += zm;
+		}
+
+		int x0 = (int) (_x0 - 1.0F);
+		int x1 = (int) (_x1 + 1.0F);
+		int y0 = (int) (_y0 - 1.0F);
+		int y1 = (int) (_y1 + 1.0F);
+		int z0 = (int) (_z0 - 1.0F);
+		int z1 = (int) (_z1 + 1.0F);
+
 		for (int x = x0; x < x1; ++x) {
 			for (int y = y0; y < y1; ++y) {
 				for (int z = z0; z < z1; ++z) {
@@ -260,14 +264,14 @@ public class World implements IRenderable {
 						Block block = Block.getBlock(blockId);
 						if (block.isCollidable()) {
 							AABB blockBB = block.getOffsetAABB(x, y, z);
-							xm = blockBB.clipXCollide(bb, xm);			
+							xm = blockBB.clipXCollide(bb, xm);
 						}
 					}
 				}
 			}
 		}
 		bb.move(xm, 0.0F, 0.0F);
-		
+
 		for (int x = x0; x < x1; ++x) {
 			for (int y = y0; y < y1; ++y) {
 				for (int z = z0; z < z1; ++z) {
@@ -276,14 +280,14 @@ public class World implements IRenderable {
 						Block block = Block.getBlock(blockId);
 						if (block.isCollidable()) {
 							AABB blockBB = block.getOffsetAABB(x, y, z);
-							ym = blockBB.clipYCollide(bb, ym);			
+							ym = blockBB.clipYCollide(bb, ym);
 						}
 					}
 				}
 			}
 		}
 		bb.move(0.0F, ym, 0.0F);
-		
+
 		for (int x = x0; x < x1; ++x) {
 			for (int y = y0; y < y1; ++y) {
 				for (int z = z0; z < z1; ++z) {
@@ -292,15 +296,15 @@ public class World implements IRenderable {
 						Block block = Block.getBlock(blockId);
 						if (block.isCollidable()) {
 							AABB blockBB = block.getOffsetAABB(x, y, z);
-							zm = blockBB.clipZCollide(bb, zm);			
+							zm = blockBB.clipZCollide(bb, zm);
 						}
 					}
 				}
 			}
 		}
 		bb.move(0.0F, 0.0F, zm);
-		
-		return ym;
+
+		return new float[] { xm, ym, zm };
 	}
 
 	public void setAllChunksDirty() {
@@ -324,55 +328,60 @@ public class World implements IRenderable {
 	}
 
 	public void setData(int x, int y, int z, String key, String value) {
-		Map<String, DataValue> coordData = blockDataManager.getValuesForCoord(x, y, z);
-		if(coordData.containsKey(key))
+		Map<String, DataValue> coordData = blockDataManager.getValuesForCoord(
+				x, y, z);
+		if (coordData.containsKey(key))
 			coordData.get(key).setData(value);
 		else
 			coordData.put(key, new DataValue(value));
 	}
-	
+
 	public String getDataString(int x, int y, int z, String key) {
-		if(blockDataManager.getValuesForCoord(x, y, z).containsKey(key))
-			return blockDataManager.getValuesForCoord(x, y, z).get(key).getDataString();
-		
+		if (blockDataManager.getValuesForCoord(x, y, z).containsKey(key))
+			return blockDataManager.getValuesForCoord(x, y, z).get(key)
+					.getDataString();
+
 		return null;
 	}
-	
+
 	public int getDataInt(int x, int y, int z, String key) {
-		if(blockDataManager.getValuesForCoord(x, y, z).containsKey(key))
-			return blockDataManager.getValuesForCoord(x, y, z).get(key).getDataInt();
-		
+		if (blockDataManager.getValuesForCoord(x, y, z).containsKey(key))
+			return blockDataManager.getValuesForCoord(x, y, z).get(key)
+					.getDataInt();
+
 		return 0;
 	}
-	
+
 	public float getDataFloat(int x, int y, int z, String key) {
-		if(blockDataManager.getValuesForCoord(x, y, z).containsKey(key))
-			return blockDataManager.getValuesForCoord(x, y, z).get(key).getDataFloat();
-		
+		if (blockDataManager.getValuesForCoord(x, y, z).containsKey(key))
+			return blockDataManager.getValuesForCoord(x, y, z).get(key)
+					.getDataFloat();
+
 		return 0;
 	}
-	
+
 	public boolean getDataBoolean(int x, int y, int z, String key) {
-		if(blockDataManager.getValuesForCoord(x, y, z).containsKey(key))
-			return blockDataManager.getValuesForCoord(x, y, z).get(key).getDataBoolean();
-		
+		if (blockDataManager.getValuesForCoord(x, y, z).containsKey(key))
+			return blockDataManager.getValuesForCoord(x, y, z).get(key)
+					.getDataBoolean();
+
 		return false;
 	}
-	
+
 	@Override
 	public void onTick() {
 		player.onTick();
-		
-		for(int i = 0; i < Block.blocksCount; i++) {
-			if(Block.blocks[i] != null && Block.blocks[i].isRequiringTick())
+
+		for (int i = 0; i < Block.blocksCount; i++) {
+			if (Block.blocks[i] != null && Block.blocks[i].isRequiringTick())
 				Block.blocks[i].onTick();
 		}
-		
+
 		int size = particles.size();
 
 		for (Iterator<Particle> iter = particles.iterator(); iter.hasNext();) {
 			Particle pt = iter.next();
-			pt.update(getBBs(pt.aabb.expand(pt.velX, pt.velY, pt.velZ)));
+			pt.update();
 			if (pt.dead || size > MAX_PARTICLES) {
 				iter.remove();
 				size--;
@@ -401,7 +410,7 @@ public class World implements IRenderable {
 			emitterY = player.getPosY();
 			emitterZ = player.getPosZ();
 		}
-		
+
 		chunkProvider.updateLoadedChunksInRadius(
 				((int) Math.floor(player.getPosX())) >> 4,
 				((int) Math.floor(player.getPosZ())) >> 4,
@@ -412,9 +421,10 @@ public class World implements IRenderable {
 	@Override
 	public void onRenderTick(float partialTickTime) {
 		player.onRenderTick(partialTickTime);
-		
-		for(int i = 0; i < Block.blocksCount; i++) {
-			if(Block.blocks[i] != null && Block.blocks[i].isRequiringRenderTick())
+
+		for (int i = 0; i < Block.blocksCount; i++) {
+			if (Block.blocks[i] != null
+					&& Block.blocks[i].isRequiringRenderTick())
 				Block.blocks[i].onRenderTick(partialTickTime);
 		}
 	}

@@ -352,7 +352,8 @@ public class PlayerEntity extends Entity {
 
 		float yab = ya;
 
-		ya = world.clipMovement(this.bb, xa, ya, za);
+		float[] clipped = world.clipMovement(this.bb, xa, ya, za);	
+		ya = clipped[1];
 		
 		/*ArrayList<AABB> aABBs = this.world.getBBs(this.bb.expand(xa, ya, za));
 

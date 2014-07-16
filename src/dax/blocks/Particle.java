@@ -39,7 +39,10 @@ public class Particle {
 	public boolean dead;
 	public boolean ground;
 	
-	public Particle(float x, float y, float z, float velX, float velY, float velZ, int lifetime, float r, float g, float b) {
+	public World world;
+	
+	public Particle(World world, float x, float y, float z, float velX, float velY, float velZ, int lifetime, float r, float g, float b) {
+		this.world = world;
 		this.x = x;
 		this.y = y;
 		this.z = z;
@@ -70,7 +73,7 @@ public class Particle {
 		return lastZ + delta*ptt;
 	}
 	
-	public void update(List<AABB> obstacles) {
+	public void update() {
 		lastX = x;
 		lastY = y;
 		lastZ = z;
@@ -88,23 +91,11 @@ public class Particle {
 		float maxVelY = velY;
 		float maxVelZ = velZ;
 		
-		for (AABB o : obstacles) {
-			maxVelX = o.clipXCollide(this.aabb, maxVelX);
-		}
+		float[] clipped = world.clipMovement(this.aabb, maxVelX, maxVelY, maxVelZ);
 		
-		this.aabb.move(maxVelX, 0, 0);
-		
-		for (AABB o : obstacles) {
-			maxVelY = o.clipYCollide(this.aabb, maxVelY);
-		}
-		
-		this.aabb.move(0, maxVelY, 0);
-		
-		for (AABB o : obstacles) {
-			maxVelZ = o.clipZCollide(this.aabb, maxVelZ);
-		}
-		
-		this.aabb.move(0, 0, maxVelZ);
+		maxVelX = clipped[0];
+		maxVelY = clipped[1];
+		maxVelZ = clipped[2];
 		
 		boolean collidedX = false;
 		boolean collidedY = false;
