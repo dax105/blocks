@@ -132,7 +132,7 @@ public abstract class Block implements IRenderableBlock {
 	}
 	
 	public Block setCollidable(boolean collidable) {
-		this.collidable = true;
+		this.collidable = collidable;
 		return this;
 	}
 
