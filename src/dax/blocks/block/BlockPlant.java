@@ -23,7 +23,7 @@ public class BlockPlant extends Block {
 		
 		int lastTexture = this.sideTexture;
 		if(w.getDataBoolean(x, y, z, "spec_tex"))
-			this.setAllTextures(2);
+			this.setSideTexture(2);
 		
 		GL11.glTexCoord2f(TextureManager.getX1(this.sideTexture), TextureManager.getY1(this.sideTexture));
 		GL11.glVertex3f(x+0, y+1, z+0);
@@ -61,10 +61,7 @@ public class BlockPlant extends Block {
 		GL11.glTexCoord2f(TextureManager.getX1(this.sideTexture), TextureManager.getY1(this.sideTexture));
 		GL11.glVertex3f(x+1, y+1, z+0);
 		
-		if(w.getDataBoolean(x, y, z, "spec_tex"))
-			w.setAllChunksDirty();
-		
-		this.setAllTextures(lastTexture);
+		this.setSideTexture(lastTexture);
 	}
 
 	@Override
@@ -82,6 +79,8 @@ public class BlockPlant extends Block {
 	@Override
 	public void onClicked(int button, int x, int y, int z, World world) {
 		world.setData(x, y, z, "spec_tex", "true");
+		world.setChunkDirty(x >> 4, y/16, z >> 4);
+		System.out.println("click");
 	}
 
 
