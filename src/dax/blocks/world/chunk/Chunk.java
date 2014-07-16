@@ -92,7 +92,10 @@ public class Chunk {
 			return 0;
 		}
 
-		return blocksBuffer.get(x + Chunk.CHUNK_SIZE * (y + Chunk.CHUNK_HEIGHT * z));
+		if(blocksBuffer.array().length > (x + Chunk.CHUNK_SIZE * (y + Chunk.CHUNK_HEIGHT * z)))
+			return blocksBuffer.get(x + Chunk.CHUNK_SIZE * (y + Chunk.CHUNK_HEIGHT * z));
+		
+		return 1;
 		// return blocks[x + Chunk.CHUNK_SIZE * (y + Chunk.CHUNK_HEIGHT * z)];
 	}
 

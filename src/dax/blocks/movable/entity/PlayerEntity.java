@@ -93,7 +93,12 @@ public class PlayerEntity extends Entity {
 
 		while (Mouse.next()) {
 			if (Mouse.getEventButtonState()) {
-				if (Mouse.getEventButton() == 0) {
+				boolean isShifted = Keyboard.isKeyDown(Keyboard.KEY_LSHIFT);
+				if (Mouse.getEventButton() == 0 && isShifted) {
+					if (hasSelected) {
+						Block.blocks[world.getBlock(lookingAtX, lookingAtY, lookingAtZ)].onClicked(0, lookingAtX, lookingAtY, lookingAtZ, world);
+					}
+				} else if (Mouse.getEventButton() == 0) {
 					if (hasSelected) {
 						world.setBlock(lookingAtX, lookingAtY, lookingAtZ, 0,
 								true);
@@ -280,8 +285,8 @@ public class PlayerEntity extends Entity {
 
 		float multi = 1;
 
-		if (Keyboard.isKeyDown(Keyboard.KEY_LSHIFT)
-				|| Keyboard.isKeyDown(Keyboard.KEY_RSHIFT)) {
+		if (Keyboard.isKeyDown(Keyboard.KEY_LCONTROL)
+				|| Keyboard.isKeyDown(Keyboard.KEY_RCONTROL)) {
 			multi = 15;
 		}
 

@@ -12,7 +12,7 @@ public class BlockBasic extends Block {
 	}
 
 	@Override
-	public void renderFront(int x, int y, int z, boolean xnzn, boolean zn, boolean xpzn, boolean xn, boolean xp, boolean xnzp, boolean zp, boolean xpzp) {
+	public void renderFront(int x, int y, int z, boolean xnzn, boolean zn, boolean xpzn, boolean xn, boolean xp, boolean xnzp, boolean zp, boolean xpzp, World w) {
 		GL11.glNormal3f(0, 0, 1);
 		GL11.glTexCoord2f(TextureManager.getX2(sideTexture), TextureManager.getY1(sideTexture));
 		addVertexWithAO(x+1, y+1, z+1, xp, zp, xpzp);
@@ -29,7 +29,7 @@ public class BlockBasic extends Block {
 	}
 
 	@Override
-	public void renderBack(int x, int y, int z, boolean xnzn, boolean zn, boolean xpzn, boolean xn, boolean xp, boolean xnzp, boolean zp, boolean xpzp) {
+	public void renderBack(int x, int y, int z, boolean xnzn, boolean zn, boolean xpzn, boolean xn, boolean xp, boolean xnzp, boolean zp, boolean xpzp, World w) {
 		GL11.glNormal3f(0, 0, -1);
 		GL11.glTexCoord2f(TextureManager.getX1(sideTexture), TextureManager.getY2(sideTexture));
 		//GL11.glVertex3f(x+1.0f, y, z+0f); // Bottom Left Of The Quad (Back)
@@ -46,7 +46,7 @@ public class BlockBasic extends Block {
 	}
 
 	@Override
-	public void renderRight(int x, int y, int z, boolean xnzn, boolean zn, boolean xpzn, boolean xn, boolean xp, boolean xnzp, boolean zp, boolean xpzp) {
+	public void renderRight(int x, int y, int z, boolean xnzn, boolean zn, boolean xpzn, boolean xn, boolean xp, boolean xnzp, boolean zp, boolean xpzp, World w) {
 		GL11.glNormal3f(1, 0, 0);
 		GL11.glTexCoord2f(TextureManager.getX2(sideTexture), TextureManager.getY1(sideTexture));
 		//GL11.glVertex3f(x+1.0f, y+1f, z+0f); // Top Right Of The Quad (Right)
@@ -63,7 +63,7 @@ public class BlockBasic extends Block {
 	}
 
 	@Override
-	public void renderLeft(int x, int y, int z, boolean xnzn, boolean zn, boolean xpzn, boolean xn, boolean xp, boolean xnzp, boolean zp, boolean xpzp) {
+	public void renderLeft(int x, int y, int z, boolean xnzn, boolean zn, boolean xpzn, boolean xn, boolean xp, boolean xnzp, boolean zp, boolean xpzp, World w) {
 		GL11.glNormal3f(-1, 0, 0);
 		GL11.glTexCoord2f(TextureManager.getX2(sideTexture), TextureManager.getY1(sideTexture));
 		//GL11.glVertex3f(x+0f, y+1f, z+1.0f); // Top Right Of The Quad (Left)
@@ -80,7 +80,7 @@ public class BlockBasic extends Block {
 	}
 
 	@Override
-	public void renderTop(int x, int y, int z, boolean xnzn, boolean zn, boolean xpzn, boolean xn, boolean xp, boolean xnzp, boolean zp, boolean xpzp) {
+	public void renderTop(int x, int y, int z, boolean xnzn, boolean zn, boolean xpzn, boolean xn, boolean xp, boolean xnzp, boolean zp, boolean xpzp, World w) {
 		GL11.glNormal3f(0, 1, 0);
 		GL11.glTexCoord2f(TextureManager.getX2(topTexture), TextureManager.getY1(topTexture));
 		//GL11.glVertex3f(x+1.0f, y+1f, z+0f); // Top Right Of The Quad (Top)
@@ -97,7 +97,7 @@ public class BlockBasic extends Block {
 	}
 
 	@Override
-	public void renderBottom(int x, int y, int z, boolean xnzn, boolean zn, boolean xpzn, boolean xn, boolean xp, boolean xnzp, boolean zp, boolean xpzp) {
+	public void renderBottom(int x, int y, int z, boolean xnzn, boolean zn, boolean xpzn, boolean xn, boolean xp, boolean xnzp, boolean zp, boolean xpzp, World w) {
 		GL11.glNormal3f(0, -1, 0);
 		GL11.glTexCoord2f(TextureManager.getX1(bottomTexture), TextureManager.getY2(bottomTexture));
 		addVertexWithAO(x+1, y, z+1, xp, zp, xpzp);
@@ -114,29 +114,22 @@ public class BlockBasic extends Block {
 	}
 
 	@Override
-	public void renderIndependent(int x, int y, int z) {
+	public void renderIndependent(int x, int y, int z, World w) {
 		
 	}
 
 
 	@Override
-	public void onTick() {
+	public void onRenderTick(float partialTickTime, int x, int y, int z, World world) {
 	}
 
-	@Override
-	public void onRenderTick(float partialTickTime) {
-	}
-
-	@Override
-	public void renderWorld(float partialTickTime) {
-	}
-
-	@Override
-	public void renderGui(float partialTickTime) {
-	}
 
 	@Override
 	public void onTick(int x, int y, int z, World world) {
+	}
+
+	@Override
+	public void onClicked(int button, int x, int y, int z, World world) {
 	}
 
 }
