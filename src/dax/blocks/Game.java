@@ -7,6 +7,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ListIterator;
+import java.util.Locale;
 
 import org.lwjgl.Sys;
 import org.lwjgl.input.Keyboard;
@@ -79,7 +80,6 @@ public class Game implements Runnable {
 		return instance;
 	}
 
-	
 	//.... RUN METHODS ....
 	
 	@Override
@@ -94,7 +94,7 @@ public class Game implements Runnable {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		
+
 		GLHelper.setDisplayMode(width, height, isFullscreen);
 		init();
 		load(true);
@@ -416,20 +416,20 @@ public class Game implements Runnable {
 			float avgTick = this.profiler.avgTick();
 			float avgRender = this.profiler.avgRender();
 			
-			GL11.glColor4f(0.5f, 1.0f, 0, 1.0f);
+			GL11.glColor4f(0.3f, 1.0f, 0, 1.0f);
 			GL11.glVertex2f(Display.getWidth()-Profiler.MAX_RECORDS, Display.getHeight()-avgTick*10);
 			GL11.glVertex2f(Display.getWidth(), Display.getHeight()-avgTick*10);
 			
-			GL11.glColor4f(0.5f, 0, 1.0f, 1.0f);
+			GL11.glColor4f(0.3f, 0, 1.0f, 1.0f);
 			GL11.glVertex2f(Display.getWidth()-Profiler.MAX_RECORDS, Display.getHeight()-avgRender*10);
 			GL11.glVertex2f(Display.getWidth(), Display.getHeight()-avgRender*10);
 			
 			GL11.glEnd(); 
 			
-			String tickText = "avg tick " + String.format("%.2f", avgTick) + "ms";
+			String tickText = "avg tick " + String.format(Locale.ENGLISH, "%.2f", avgTick) + "ms";
 			FontManager.text.drawString(offset-FontManager.text.getWidth(tickText)-2, (int)(Display.getHeight()-avgTick*10-FontManager.text.getLineHeight()*0.75f), tickText);
 			
-			String renderText = "avg render " + String.format("%.2f", avgRender) + "ms";
+			String renderText = "avg render " + String.format(Locale.ENGLISH, "%.2f", avgRender) + "ms";
 			FontManager.text.drawString(offset-FontManager.text.getWidth(renderText)-2, (int)(Display.getHeight()-avgRender*10-FontManager.text.getLineHeight()*0.75f), renderText);
 		}
 		
