@@ -17,7 +17,7 @@ public abstract class Block implements IRenderableBlock {
 	protected int fallHurt = 5;
 	protected int id;
 	protected boolean opaque = true;
-	protected int renderPass = RenderPass.PASS_OPAQUE;
+	protected int renderPass = RenderPass.OPAQUE;
 	protected boolean cullSame = false;
 	protected boolean occluder = true;
 	protected float density = 1.0f;
@@ -150,11 +150,11 @@ public abstract class Block implements IRenderableBlock {
 	public static final Block bricks = new BlockBasic(6).setAllTextures(8).setStepSound(SoundManager.footstep_stone).setFallSound("fall_hard");
 	public static final Block sand = new BlockSand();
 	public static final Block log = new BlockBasic(8).setAllTextures(11).setSideTexture(7).setStepSound(SoundManager.footstep_wood).setFallSound("fall_hard");
-	public static final Block glass = new BlockBasic(9).setAllTextures(9).setOpaque(false).setCullSame(true).setStepSound(SoundManager.footstep_stone).setFallSound("fall_hard").setRenderPass(RenderPass.PASS_TRANSPARENT);
-	public static final Block leaves = new BlockBasic(10).setAllTextures(Game.settings.transparent_leaves.getValue() ? 10 : 19).setOpaque(!Game.settings.transparent_leaves.getValue()).setStepSound(SoundManager.footstep_grass).setFallSound("fall_soft").setRenderPass(Game.settings.transparent_leaves.getValue() ? RenderPass.PASS_TRANSPARENT : RenderPass.PASS_OPAQUE);
+	public static final Block glass = new BlockBasic(9).setAllTextures(9).setOpaque(false).setCullSame(true).setStepSound(SoundManager.footstep_stone).setFallSound("fall_hard").setRenderPass(RenderPass.TRANSPARENT);
+	public static final Block leaves = new BlockBasic(10).setAllTextures(Game.settings.transparent_leaves.getValue() ? 10 : 19).setOpaque(!Game.settings.transparent_leaves.getValue()).setStepSound(SoundManager.footstep_grass).setFallSound("fall_soft").setRenderPass(Game.settings.transparent_leaves.getValue() ? RenderPass.TRANSPARENT : RenderPass.OPAQUE);
 	public static final Block bedrock = new BlockBasic(11).setAllTextures(12).setStepSound(SoundManager.footstep_stone).setFallSound("fall_hard");
 	public static final Block water = new BlockFluid(12).setAllTextures(13).setCullSame(true).setOccluder(false).setOpaque(false).setDensity(1.175f);
-	public static final Block ice = new BlockBasic(13).setAllTextures(14).setOpaque(false).setCullSame(true).setRenderPass(RenderPass.PASS_TRANSLUCENT);
+	public static final Block ice = new BlockBasic(13).setAllTextures(14).setOpaque(false).setCullSame(true).setRenderPass(RenderPass.TRANSLUCENT);
 	public static final Block tallgrass = new BlockPlant(14).setAllTextures(15);
 	public static final Block flower_1 = new BlockPlant(15).setAllTextures(16);
 	public static final Block flower_2 = new BlockPlant(16).setAllTextures(17);

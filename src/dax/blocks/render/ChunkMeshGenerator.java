@@ -27,13 +27,13 @@ public class ChunkMeshGenerator {
 							Block block = Block.getBlock(blockID);
 
 							switch (block.getRenderPass()) {
-							case RenderPass.PASS_OPAQUE:
+							case RenderPass.OPAQUE:
 								opaqueCount++;
 								break;
-							case RenderPass.PASS_TRANSPARENT:
+							case RenderPass.TRANSPARENT:
 								transparentCount++;
 								break;
-							case RenderPass.PASS_TRANSLUCENT:
+							case RenderPass.TRANSLUCENT:
 								translucentCount++;
 								break;	
 							}
@@ -65,7 +65,7 @@ public class ChunkMeshGenerator {
 			
 			if (opaqueCount > 0) {
 				GL11.glNewList(listIDs + currentOffset, GL11.GL_COMPILE);
-				cdl.setListID(RenderPass.PASS_OPAQUE, listIDs + currentOffset);
+				cdl.setListID(RenderPass.OPAQUE, listIDs + currentOffset);
 				currentOffset++;
 
 				// All gl calls to draw the chunk (OPAQUE PASS) should be here
@@ -79,7 +79,7 @@ public class ChunkMeshGenerator {
 							if (blockID > 0) {
 								Block block = Block.getBlock(blockID);
 
-								if (block.getRenderPass() == RenderPass.PASS_OPAQUE) {
+								if (block.getRenderPass() == RenderPass.OPAQUE) {
 
 									int calcX = x + blockOffsetX;
 									int calcY = y;
@@ -215,7 +215,7 @@ public class ChunkMeshGenerator {
 
 			if (transparentCount > 0) {
 				GL11.glNewList(listIDs + currentOffset, GL11.GL_COMPILE);
-				cdl.setListID(RenderPass.PASS_TRANSPARENT, listIDs + currentOffset);
+				cdl.setListID(RenderPass.TRANSPARENT, listIDs + currentOffset);
 				currentOffset++;
 
 				// All gl calls to draw the chunk (TRANSPARENT PASS) should be here
@@ -229,7 +229,7 @@ public class ChunkMeshGenerator {
 							if (blockID > 0) {
 								Block block = Block.getBlock(blockID);
 
-								if (block.getRenderPass() == RenderPass.PASS_TRANSPARENT) {
+								if (block.getRenderPass() == RenderPass.TRANSPARENT) {
 
 									int calcX = x + blockOffsetX;
 									int calcY = y;
@@ -366,7 +366,7 @@ public class ChunkMeshGenerator {
 			
 			if (translucentCount > 0) {
 				GL11.glNewList(listIDs + currentOffset, GL11.GL_COMPILE);
-				cdl.setListID(RenderPass.PASS_TRANSLUCENT, listIDs + currentOffset);
+				cdl.setListID(RenderPass.TRANSLUCENT, listIDs + currentOffset);
 				currentOffset++;
 
 				// All gl calls to draw the chunk (TRANSLUCENT PASS) should be here
@@ -380,7 +380,7 @@ public class ChunkMeshGenerator {
 							if (blockID > 0) {
 								Block block = Block.getBlock(blockID);
 
-								if (block.getRenderPass() == RenderPass.PASS_TRANSLUCENT) {
+								if (block.getRenderPass() == RenderPass.TRANSLUCENT) {
 
 									int calcX = x + blockOffsetX;
 									int calcY = y;

@@ -4,8 +4,8 @@ public class RenderPass {
 
 	public static final int TOTAL_PASSES = 3;
 	
-	public static final int PASS_OPAQUE = 0;
-	public static final int PASS_TRANSPARENT = 1;
-	public static final int PASS_TRANSLUCENT = 2;
+	public static final int OPAQUE = 0;
+	public static final int TRANSPARENT = 1;
+	public static final int TRANSLUCENT = 2;
 	
 }

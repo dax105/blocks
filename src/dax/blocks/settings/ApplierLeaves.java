@@ -11,7 +11,7 @@ public class ApplierLeaves extends Applier {
 		boolean transp = Game.settings.transparent_leaves.getValue();
 		
 		Block.leaves.setOpaque(!transp);
-		Block.leaves.setRenderPass(transp ? RenderPass.PASS_TRANSPARENT : RenderPass.PASS_OPAQUE);
+		Block.leaves.setRenderPass(transp ? RenderPass.TRANSPARENT : RenderPass.OPAQUE);
 		Block.leaves.setAllTextures(transp ? 10 : 19);
 		
 		if (Game.getInstance().ingame) {

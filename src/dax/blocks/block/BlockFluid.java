@@ -13,7 +13,7 @@ public class BlockFluid extends BlockBasic {
 		setCullSame(true);
 		setOpaque(false);
 		setOccluder(false);
-		setRenderPass(RenderPass.PASS_TRANSLUCENT);
+		setRenderPass(RenderPass.TRANSLUCENT);
 		setCollidable(false);
 	}
 	

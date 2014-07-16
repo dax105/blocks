@@ -382,12 +382,12 @@ public class RenderEngine {
 				for (int y = 0; y < 8; y++) {
 					if (c.renderChunks[y].isGenerated()
 							&& c.renderChunks[y].getCdl().isPresent(
-									RenderPass.PASS_OPAQUE)
+									RenderPass.OPAQUE)
 							&& frustum.cuboidInFrustum(c.x * 16, y * 16,
 									c.z * 16, c.x * 16 + 16, y * 16 + 16,
 									c.z * 16 + 16)) {
 						GL11.glCallList(c.renderChunks[y].getCdl().getListID(
-								RenderPass.PASS_OPAQUE));
+								RenderPass.OPAQUE));
 						chunksDrawn++;
 					}
 				}
@@ -400,12 +400,12 @@ public class RenderEngine {
 				for (int y = 0; y < 8; y++) {
 					if (c.renderChunks[y].isGenerated()
 							&& c.renderChunks[y].getCdl().isPresent(
-									RenderPass.PASS_TRANSPARENT)
+									RenderPass.TRANSPARENT)
 							&& frustum.cuboidInFrustum(c.x * 16, y * 16,
 									c.z * 16, c.x * 16 + 16, y * 16 + 16,
 									c.z * 16 + 16)) {
 						GL11.glCallList(c.renderChunks[y].getCdl().getListID(
-								RenderPass.PASS_TRANSPARENT));
+								RenderPass.TRANSPARENT));
 						chunksDrawn++;
 					}
 				}
@@ -423,12 +423,12 @@ public class RenderEngine {
 				for (int y = 0; y < 8; y++) {
 					if (c.renderChunks[y].isGenerated()
 							&& c.renderChunks[y].getCdl().isPresent(
-									RenderPass.PASS_TRANSLUCENT)
+									RenderPass.TRANSLUCENT)
 							&& frustum.cuboidInFrustum(c.x * 16, y * 16,
 									c.z * 16, c.x * 16 + 16, y * 16 + 16,
 									c.z * 16 + 16)) {
 						GL11.glCallList(c.renderChunks[y].getCdl().getListID(
-								RenderPass.PASS_TRANSLUCENT));
+								RenderPass.TRANSLUCENT));
 						chunksDrawn++;
 					}
 				}
@@ -443,12 +443,12 @@ public class RenderEngine {
 				for (int y = 0; y < 8; y++) {
 					if (c.renderChunks[y].isGenerated()
 							&& c.renderChunks[y].getCdl().isPresent(
-									RenderPass.PASS_TRANSLUCENT)
+									RenderPass.TRANSLUCENT)
 							&& frustum.cuboidInFrustum(c.x * 16, y * 16,
 									c.z * 16, c.x * 16 + 16, y * 16 + 16,
 									c.z * 16 + 16)) {
 						GL11.glCallList(c.renderChunks[y].getCdl().getListID(
-								RenderPass.PASS_TRANSLUCENT));
+								RenderPass.TRANSLUCENT));
 						chunksDrawn++;
 					}
 				}
