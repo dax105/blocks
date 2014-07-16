@@ -2,13 +2,16 @@ package dax.blocks.movable.entity;
 
 import java.util.ArrayList;
 import java.util.Random;
+
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
+
 import dax.blocks.GLHelper;
 import dax.blocks.Game;
 import dax.blocks.TextureManager;
 import dax.blocks.block.Block;
 import dax.blocks.collisions.AABB;
+import dax.blocks.settings.Keyconfig;
 import dax.blocks.world.Explosion;
 import dax.blocks.world.World;
 
@@ -73,15 +76,13 @@ public class PlayerEntity extends Entity {
 			this.regenerate(1);
 		}
 
-		updateBlock();
-
-		if (Keyboard.isKeyDown(Keyboard.KEY_E)) {
+		if (Keyboard.isKeyDown(Keyconfig.explosion)) {
 			if (hasSelected) {
 				Explosion.explode(world, lookingAtX, lookingAtY, lookingAtZ);
 			}
 		}
 
-		if (Keyboard.isKeyDown(Keyboard.KEY_P)) {
+		if (Keyboard.isKeyDown(Keyconfig.particleFirework)) {
 			if (hasSelected) {
 				for (int i = 0; i < 50; i++) {
 					world.spawnParticleWithRandomDirectionFast(this.lookingAtX,
@@ -93,7 +94,14 @@ public class PlayerEntity extends Entity {
 
 		while (Mouse.next()) {
 			if (Mouse.getEventButtonState()) {
-				if (Mouse.getEventButton() == 0) {
+				if (Mouse.getEventButton() == 0
+						&& Keyconfig.isDown(Keyconfig.crouch)) {
+					if (hasSelected) {
+						Block.blocks[world.getBlock(lookingAtX, lookingAtY,
+								lookingAtZ)].onClicked(0, lookingAtX,
+								lookingAtY, lookingAtZ, world);
+					}
+				} else if (Mouse.getEventButton() == 0) {
 					if (hasSelected) {
 						world.setBlock(lookingAtX, lookingAtY, lookingAtZ, 0,
 								true);
@@ -109,25 +117,7 @@ public class PlayerEntity extends Entity {
 				}
 			}
 
-			int wh = Mouse.getEventDWheel();
-
-			if (wh > 0) {
-				int newSelectedBlock = this.selectedBlockID + 1;
-				if (newSelectedBlock > (Block.blocksCount)) {
-					newSelectedBlock = 1;
-				}
-
-				this.setSelectedBlockID(newSelectedBlock);
-			}
-
-			if (wh < 0) {
-				int newSelectedBlock = this.selectedBlockID - 1;
-				if (newSelectedBlock < 1) {
-					newSelectedBlock = Block.blocksCount;
-				}
-
-				this.setSelectedBlockID(newSelectedBlock);
-			}
+			updateBlock();
 		}
 
 		if (!wasOnGround && onGround) {
@@ -135,13 +125,14 @@ public class PlayerEntity extends Entity {
 			Block block = this.standingOn;
 
 			if (block != null) {
-			
-			Game.sound.playSound(block.getFallSound(), 0.7f + rand.nextFloat() * 0.25f);
 
-			if (fallVelocity > 0.7f) {
-				int h = block.getFallHurt() * (int) (fallVelocity * 3);
-				this.hurt(h);
-			}
+				Game.sound.playSound(block.getFallSound(),
+						0.7f + rand.nextFloat() * 0.25f);
+
+				if (fallVelocity > 0.7f) {
+					int h = block.getFallHurt() * (int) (fallVelocity * 3);
+					this.hurt(h);
+				}
 			}
 		}
 
@@ -153,10 +144,10 @@ public class PlayerEntity extends Entity {
 
 		if (stepTimer <= 0 && onGround) {
 			Block block = this.standingOn;
-			if (block != null) { 
-				Game.sound.playSound(block.getStepSound(), 1.0f - (rand.nextFloat() * 0.2f));
+			if (block != null) {
+				Game.sound.playSound(block.getStepSound(),
+						1.0f - (rand.nextFloat() * 0.2f));
 			}
-
 
 			stepTimer += STEP_TIMER_FULL;
 		}
@@ -267,41 +258,48 @@ public class PlayerEntity extends Entity {
 
 		int blockPosX = (int) Math.floor(this.posX);
 		int blockPosY = (int) Math.floor(this.posY);
-		int blockPosZ =	(int) Math.floor(this.posZ);	
-		
-		boolean inWater = ((world.getBlock(blockPosX, blockPosY, blockPosZ) == Block.water.getId()) || (world.getBlock(blockPosX, blockPosY + 1, blockPosZ) == Block.water.getId()));
-		float d0 = Block.getBlock(world.getBlock(blockPosX, blockPosY, blockPosZ)) != null ? Block.getBlock(world.getBlock(blockPosX, blockPosY, blockPosZ)).getDensity() : 1;
-		float d1 = Block.getBlock(world.getBlock(blockPosX, blockPosY + 1, blockPosZ)) != null ? Block.getBlock(world.getBlock(blockPosX, blockPosY + 1, blockPosZ)).getDensity() : 1;
-		float density = (d0+d1)/2f;
-		float frictionMultipler = 1f/density;
-		
+		int blockPosZ = (int) Math.floor(this.posZ);
+
+		boolean inWater = ((world.getBlock(blockPosX, blockPosY, blockPosZ) == Block.water
+				.getId()) || (world.getBlock(blockPosX, blockPosY + 1,
+				blockPosZ) == Block.water.getId()));
+		float d0 = Block.getBlock(world.getBlock(blockPosX, blockPosY,
+				blockPosZ)) != null ? Block.getBlock(
+				world.getBlock(blockPosX, blockPosY, blockPosZ)).getDensity()
+				: 1;
+		float d1 = Block.getBlock(world.getBlock(blockPosX, blockPosY + 1,
+				blockPosZ)) != null ? Block.getBlock(
+				world.getBlock(blockPosX, blockPosY + 1, blockPosZ))
+				.getDensity() : 1;
+		float density = (d0 + d1) / 2f;
+		float frictionMultipler = 1f / density;
+
 		float speedC = 0;
 		float speedStrafeC = 0;
 
 		float multi = 1;
 
-		if (Keyboard.isKeyDown(Keyboard.KEY_LSHIFT)
-				|| Keyboard.isKeyDown(Keyboard.KEY_RSHIFT)) {
+		if (Keyconfig.isDown(Keyconfig.boost)) {
 			multi = 15;
 		}
 
-		if (Keyboard.isKeyDown(Keyboard.KEY_W)) {
+		if (Keyconfig.isDown(Keyconfig.ahead)) {
 			speedC -= onGround ? 0.25 * multi : 0.03 * multi;
 		}
 
-		if (Keyboard.isKeyDown(Keyboard.KEY_S)) {
+		if (Keyconfig.isDown(Keyconfig.back)) {
 			speedC += onGround ? 0.25 * multi : 0.03 * multi;
 		}
 
-		if (Keyboard.isKeyDown(Keyboard.KEY_A)) {
+		if (Keyconfig.isDown(Keyconfig.left)) {
 			speedStrafeC -= onGround ? 0.25 * multi : 0.03 * multi;
 		}
 
-		if (Keyboard.isKeyDown(Keyboard.KEY_D)) {
+		if (Keyconfig.isDown(Keyconfig.right)) {
 			speedStrafeC += onGround ? 0.25 * multi : 0.03 * multi;
 		}
 
-		if (Keyboard.isKeyDown(Keyboard.KEY_SPACE)) {
+		if (Keyconfig.isDown(Keyconfig.jump)) {
 			if (onGround) {
 				if (multi == 1) {
 					velY += JUMP_STRENGTH;
@@ -381,7 +379,7 @@ public class PlayerEntity extends Entity {
 			this.fallVelocity = -velY;
 			velY = 0;
 		}
-		
+
 		if (yab != ya) {
 			velY = 0;
 		}
@@ -393,54 +391,24 @@ public class PlayerEntity extends Entity {
 	}
 
 	private void updateBlock() {
-		if (Keyboard.isKeyDown(Keyboard.KEY_1)
-				|| Keyboard.isKeyDown(Keyboard.KEY_NUMPAD1)) {
-			setSelectedBlockID(1);
+		int wh = Mouse.getEventDWheel();
+
+		if (wh > 0) {
+			int newSelectedBlock = this.selectedBlockID + 1;
+			if (newSelectedBlock > (Block.blocksCount)) {
+				newSelectedBlock = 1;
+			}
+
+			this.setSelectedBlockID(newSelectedBlock);
 		}
 
-		if (Keyboard.isKeyDown(Keyboard.KEY_2)
-				|| Keyboard.isKeyDown(Keyboard.KEY_NUMPAD2)) {
-			setSelectedBlockID(2);
-		}
+		if (wh < 0) {
+			int newSelectedBlock = this.selectedBlockID - 1;
+			if (newSelectedBlock < 1) {
+				newSelectedBlock = Block.blocksCount;
+			}
 
-		if (Keyboard.isKeyDown(Keyboard.KEY_3)
-				|| Keyboard.isKeyDown(Keyboard.KEY_NUMPAD3)) {
-			setSelectedBlockID(3);
-		}
-
-		if (Keyboard.isKeyDown(Keyboard.KEY_4)
-				|| Keyboard.isKeyDown(Keyboard.KEY_NUMPAD4)) {
-			setSelectedBlockID(4);
-		}
-
-		if (Keyboard.isKeyDown(Keyboard.KEY_5)
-				|| Keyboard.isKeyDown(Keyboard.KEY_NUMPAD5)) {
-			setSelectedBlockID(5);
-		}
-
-		if (Keyboard.isKeyDown(Keyboard.KEY_6)
-				|| Keyboard.isKeyDown(Keyboard.KEY_NUMPAD6)) {
-			setSelectedBlockID(6);
-		}
-
-		if (Keyboard.isKeyDown(Keyboard.KEY_7)
-				|| Keyboard.isKeyDown(Keyboard.KEY_NUMPAD7)) {
-			setSelectedBlockID(7);
-		}
-
-		if (Keyboard.isKeyDown(Keyboard.KEY_8)
-				|| Keyboard.isKeyDown(Keyboard.KEY_NUMPAD8)) {
-			setSelectedBlockID(8);
-		}
-
-		if (Keyboard.isKeyDown(Keyboard.KEY_9)
-				|| Keyboard.isKeyDown(Keyboard.KEY_NUMPAD9)) {
-			setSelectedBlockID(9);
-		}
-
-		if (Keyboard.isKeyDown(Keyboard.KEY_0)
-				|| Keyboard.isKeyDown(Keyboard.KEY_NUMPAD0)) {
-			setSelectedBlockID(10);
+			this.setSelectedBlockID(newSelectedBlock);
 		}
 	}
 

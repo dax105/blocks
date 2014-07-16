@@ -27,6 +27,7 @@ import dax.blocks.gui.GuiScreenMenu;
 import dax.blocks.profiler.Profiler;
 import dax.blocks.render.IRenderable;
 import dax.blocks.render.RenderEngine;
+import dax.blocks.settings.Keyconfig;
 import dax.blocks.settings.Settings;
 import dax.blocks.sound.SoundManager;
 import dax.blocks.world.World;
@@ -169,6 +170,8 @@ public class Game implements Runnable {
 		TextureManager.load();
 		displayLoadingScreen("Loading models...");
 		ModelManager.load();
+		displayLoadingScreen("Loading keyconfig...");
+		Keyconfig.load();
 		displayLoadingScreen("Loading sounds...");
 
 		lastFPS = getTime();
@@ -214,11 +217,11 @@ public class Game implements Runnable {
 
 		while (Keyboard.next()) {
 			if (Keyboard.getEventKeyState()) {
-				if (Keyboard.getEventKey() == Keyboard.KEY_F2) {
+				if (Keyboard.getEventKey() == Keyconfig.screenshot) {
 					GameUtil.screenshot();
 				}
 
-				if (Keyboard.getEventKey() == Keyboard.KEY_GRAVE) {
+				if (Keyboard.getEventKey() == Keyconfig.console) {
 					consoleOpen = !consoleOpen ? true : false;
 					if (!consoleOpen) {
 						console.clearInput();
@@ -230,12 +233,12 @@ public class Game implements Runnable {
 							Keyboard.getEventKey());
 				}
 
-				if (Keyboard.getEventKey() == Keyboard.KEY_F
+				if (Keyboard.getEventKey() == Keyconfig.fullscreen
 						&& this.guiScreen == null && !consoleOpen) {
 					toggleFullscreen();
 				}
 
-				if (Keyboard.getEventKey() == Keyboard.KEY_ESCAPE) {
+				if (Keyboard.getEventKey() == Keyconfig.exit) {
 					if (!consoleOpen) {
 						if (this.guiScreen != null) {
 							closeGuiScreen();
