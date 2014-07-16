@@ -9,8 +9,41 @@ public class AABB {
    public float x1;
    public float y1;
    public float z1;
+   
+   public float offsetX = 0;
+   public float offsetY = 0;
+   public float offsetZ = 0;
 
-
+   public void setOffset(float x, float y, float z) {
+	   this.offsetX = x;
+	   this.offsetY = y;
+	   this.offsetZ = z;
+	   
+	   this.x0 += offsetX;
+	   this.x1 += offsetX;
+	   
+	   this.y0 += offsetY;
+	   this.y1 += offsetY;
+	   
+	   this.z0 += offsetZ;
+	   this.z1 += offsetZ;
+   }
+   
+   public void resetOffset() {
+	   this.x0 -= offsetX;
+	   this.x1 -= offsetX;
+	   
+	   this.y0 -= offsetY;
+	   this.y1 -= offsetY;
+	   
+	   this.z0 -= offsetZ;
+	   this.z1 -= offsetZ;
+	   
+	   this.offsetX = 0;
+	   this.offsetY = 0;
+	   this.offsetZ = 0;
+   }
+   
    public AABB(float x0, float y0, float z0, float x1, float y1, float z1) {
       this.x0 = x0;
       this.y0 = y0;
