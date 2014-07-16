@@ -12,6 +12,7 @@ public class BlockPlant extends Block {
 		setOpaque(false);
 		setOccluder(false);
 		setRenderPass(RenderPass.PASS_TRANSPARENT);
+		setCollidable(false);
 	}
 	
 	@Override

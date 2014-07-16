@@ -14,6 +14,7 @@ public class BlockFluid extends BlockBasic {
 		setOpaque(false);
 		setOccluder(false);
 		setRenderPass(RenderPass.PASS_TRANSLUCENT);
+		setCollidable(false);
 	}
 	
 	@Override

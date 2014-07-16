@@ -3,6 +3,7 @@ package dax.blocks.block;
 import org.lwjgl.opengl.GL11;
 
 import dax.blocks.Game;
+import dax.blocks.collisions.AABB;
 import dax.blocks.render.IRenderableBlock;
 import dax.blocks.render.RenderPass;
 import dax.blocks.sound.SoundManager;
@@ -26,6 +27,8 @@ public abstract class Block implements IRenderableBlock {
 	protected String[] footStep = SoundManager.footstep_dirt;
 	protected String fall = "fall_hard";
 	protected static int lastAO = -1;
+	protected AABB aabb = new AABB(0, 0, 0, 1, 1, 1);
+	protected boolean collidable = true;
 	
 	public Block(int id) {
 		this.id = id;
@@ -118,12 +121,18 @@ public abstract class Block implements IRenderableBlock {
 		return this;
 	}
 
-	public float getDensity() {
-		return density;
-	}
-
 	public Block setDensity(float density) {
 		this.density = density;
+		return this;
+	}
+	
+	public Block setAABB(AABB bb) {
+		this.aabb = bb;
+		return this;
+	}
+	
+	public Block setCollidable(boolean collidable) {
+		this.collidable = true;
 		return this;
 	}
 
@@ -184,8 +193,27 @@ public abstract class Block implements IRenderableBlock {
 		return this.opaque;
 	}
 
+	public float getDensity() {
+		return density;
+	}
+
 	public int getRenderPass() {
 		return renderPass;
+	}
+	
+	public AABB getAABB() {
+		this.aabb.resetOffset();
+		return this.aabb;
+	}
+	
+	public AABB getOffsetAABB(float x, float y, float z) {
+		this.aabb.resetOffset();
+		this.aabb.setOffset(x, y, z);
+		return this.aabb;
+	}
+	
+	public boolean isCollidable() {
+		return this.collidable;
 	}
 
 	/**
