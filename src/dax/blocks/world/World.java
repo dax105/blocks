@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 import java.util.Random;
 
 import dax.blocks.Coord2D;
@@ -45,6 +46,7 @@ public class World implements IRenderable {
 	Random rand = new Random();
 	private int vertices;
 
+	public DataManager blockDataManager;
 	public TreeGenerator treeGen;
 
 	Frustum frustum;
@@ -260,13 +262,49 @@ public class World implements IRenderable {
 		return this.renderables;
 	}
 
+	public void setData(int x, int y, int z, String key, String value) {
+		Map<String, DataValue> coordData = blockDataManager.getValuesForCoord(x, y, z);
+		if(coordData.containsKey(key))
+			coordData.get(key).setData(value);
+		else
+			coordData.put(key, new DataValue(value));
+	}
+	
+	public String getDataString(int x, int y, int z, String key) {
+		if(blockDataManager.getValuesForCoord(x, y, z).containsKey(key))
+			return blockDataManager.getValuesForCoord(x, y, z).get(key).getDataString();
+		
+		return null;
+	}
+	
+	public int getDataInt(int x, int y, int z, String key) {
+		if(blockDataManager.getValuesForCoord(x, y, z).containsKey(key))
+			return blockDataManager.getValuesForCoord(x, y, z).get(key).getDataInt();
+		
+		return 0;
+	}
+	
+	public float getDataFloat(int x, int y, int z, String key) {
+		if(blockDataManager.getValuesForCoord(x, y, z).containsKey(key))
+			return blockDataManager.getValuesForCoord(x, y, z).get(key).getDataFloat();
+		
+		return 0;
+	}
+	
+	public boolean getDataBoolean(int x, int y, int z, String key) {
+		if(blockDataManager.getValuesForCoord(x, y, z).containsKey(key))
+			return blockDataManager.getValuesForCoord(x, y, z).get(key).getDataBoolean();
+		
+		return false;
+	}
+	
 	@Override
 	public void onTick() {
 		player.onTick();
 		
-		for (Block b : Block.blocks) {
-			if(b != null && b.isRequiringTick())
-				b.onTick();
+		for(int i = 0; i < Block.blocksCount; i++) {
+			if(Block.blocks[i] != null && Block.blocks[i].isRequiringTick())
+				Block.blocks[i].onTick();
 		}
 		
 		int size = particles.size();
@@ -313,9 +351,10 @@ public class World implements IRenderable {
 	@Override
 	public void onRenderTick(float partialTickTime) {
 		player.onRenderTick(partialTickTime);
-		for (Block b : Block.blocks) {
-			if(b != null && b.isRequiringRenderTick())
-				b.onRenderTick(partialTickTime);
+		
+		for(int i = 0; i < Block.blocksCount; i++) {
+			if(Block.blocks[i] != null && Block.blocks[i].isRequiringRenderTick())
+				Block.blocks[i].onRenderTick(partialTickTime);
 		}
 	}
 

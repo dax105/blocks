@@ -8,12 +8,14 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.Iterator;
 import java.util.Map.Entry;
+import java.util.logging.Logger;
 
 import org.xerial.snappy.Snappy;
 
 import dax.blocks.Coord2D;
 import dax.blocks.Game;
 import dax.blocks.WorldsManager;
+import dax.blocks.world.DataManager;
 import dax.blocks.world.World;
 import dax.blocks.world.WorldInfo;
 
@@ -50,6 +52,12 @@ public class ChunkSaveManager {
 				return;
 			}
 
+			try {
+				world.blockDataManager = new DataManager(new File(dir, "bdf"));
+			} catch (IOException e) {
+				Logger.getGlobal().warning("Can't create data file!");
+			}
+			
 			File file = new File(dir, "world" + ".txt");
 
 			if (!file.exists()) {
@@ -109,6 +117,12 @@ public class ChunkSaveManager {
 		i.setWorldVersion("" + WORLD_VERSION);
 		
 		i.saveWorldInfo();
+		
+		try {
+			world.blockDataManager.save();
+		} catch (IOException e) {
+			Logger.getGlobal().warning("Can't save data file!");
+		}
 		Game.getInstance().closeGuiScreen();
 	}
 

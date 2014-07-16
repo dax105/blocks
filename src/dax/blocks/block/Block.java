@@ -6,7 +6,6 @@ import dax.blocks.Game;
 import dax.blocks.render.IRenderableBlock;
 import dax.blocks.render.RenderPass;
 import dax.blocks.sound.SoundManager;
-import dax.blocks.world.World;
 
 public abstract class Block implements IRenderableBlock {
 
@@ -140,7 +139,7 @@ public abstract class Block implements IRenderableBlock {
 	public static final Block wood = new BlockBasic(4).setAllTextures(2).setStepSound(SoundManager.footstep_wood).setFallSound("fall_hard");
 	public static final Block stoneMossy = new BlockBasic(5).setAllTextures(1).setStepSound(SoundManager.footstep_stone).setFallSound("fall_hard");
 	public static final Block bricks = new BlockBasic(6).setAllTextures(8).setStepSound(SoundManager.footstep_stone).setFallSound("fall_hard");
-	public static final Block sand = new BlockBasic(7).setAllTextures(6).setStepSound(SoundManager.footstep_dirt).setFallSound("fall_sotf");
+	public static final Block sand = new BlockSand();
 	public static final Block log = new BlockBasic(8).setAllTextures(11).setSideTexture(7).setStepSound(SoundManager.footstep_wood).setFallSound("fall_hard");
 	public static final Block glass = new BlockBasic(9).setAllTextures(9).setOpaque(false).setCullSame(true).setStepSound(SoundManager.footstep_stone).setFallSound("fall_hard").setRenderPass(RenderPass.PASS_TRANSPARENT);
 	public static final Block leaves = new BlockBasic(10).setAllTextures(Game.settings.transparent_leaves.getValue() ? 10 : 19).setOpaque(!Game.settings.transparent_leaves.getValue()).setStepSound(SoundManager.footstep_grass).setFallSound("fall_soft").setRenderPass(Game.settings.transparent_leaves.getValue() ? RenderPass.PASS_TRANSPARENT : RenderPass.PASS_OPAQUE);

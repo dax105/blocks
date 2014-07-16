@@ -79,6 +79,7 @@ public class Game implements Runnable {
 		return instance;
 	}
 
+	
 	//.... RUN METHODS ....
 	
 	@Override
@@ -93,7 +94,7 @@ public class Game implements Runnable {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-
+		
 		GLHelper.setDisplayMode(width, height, isFullscreen);
 		init();
 		load(true);

@@ -1,7 +1,6 @@
 package dax.blocks.block;
 
 import org.lwjgl.opengl.GL11;
-
 import dax.blocks.TextureManager;
 import dax.blocks.render.RenderPass;
 import dax.blocks.world.World;
@@ -98,10 +97,11 @@ public class BlockPlant extends Block {
 
 	@Override
 	public void onTick() {
+		
 	}
 
 	@Override
-	public void onRenderTick(float partialTickTime) {	
+	public void onRenderTick(float partialTickTime) {
 	}
 
 	@Override
