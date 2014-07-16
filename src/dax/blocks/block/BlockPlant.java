@@ -80,7 +80,6 @@ public class BlockPlant extends Block {
 	public void onClicked(int button, int x, int y, int z, World world) {
 		world.setData(x, y, z, "spec_tex", "true");
 		world.setChunkDirty(x >> 4, y/16, z >> 4);
-		System.out.println("click");
 	}
 
 

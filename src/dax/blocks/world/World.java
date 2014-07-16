@@ -23,8 +23,6 @@ import dax.blocks.world.chunk.Chunk;
 import dax.blocks.world.chunk.ChunkProvider;
 import dax.blocks.world.generator.TreeGenerator;
 
-import org.lwjgl.input.Keyboard;
-
 public class World implements IRenderable {
 
 	public static final float GRAVITY = 0.06f;
@@ -56,10 +54,6 @@ public class World implements IRenderable {
 	public int chunksDrawn;
 
 	boolean trees;
-
-	float emitterX = 0;
-	float emitterY = 40;
-	float emitterZ = 0;
 
 	public int getVertices() {
 		return this.vertices;
@@ -345,12 +339,6 @@ public class World implements IRenderable {
 				updateBlock(s.x, s.y, s.z);
 				updateIterator.remove();
 			}
-		}
-
-		if (Keyboard.isKeyDown(Keyboard.KEY_Q)) {
-			emitterX = player.getPosX();
-			emitterY = player.getPosY();
-			emitterZ = player.getPosZ();
 		}
 		
 		chunkProvider.updateLoadedChunksInRadius(
