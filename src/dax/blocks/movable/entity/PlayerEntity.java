@@ -352,7 +352,9 @@ public class PlayerEntity extends Entity {
 
 		float yab = ya;
 
-		ArrayList<AABB> aABBs = this.world.getBBs(this.bb.expand(xa, ya, za));
+		ya = world.clipMovement(this.bb, xa, ya, za);
+		
+		/*ArrayList<AABB> aABBs = this.world.getBBs(this.bb.expand(xa, ya, za));
 
 		for (int i = 0; i < aABBs.size(); ++i) {
 			ya = aABBs.get(i).clipYCollide(this.bb, ya);
@@ -370,7 +372,7 @@ public class PlayerEntity extends Entity {
 			za = aABBs.get(i).clipZCollide(this.bb, za);
 		}
 
-		this.bb.move(0.0F, 0.0F, za);
+		this.bb.move(0.0F, 0.0F, za);*/
 
 		this.onGround = yab != ya && yab < 0.0F;
 

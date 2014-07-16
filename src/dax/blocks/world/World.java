@@ -241,6 +241,67 @@ public class World implements IRenderable {
 
 		return aABBs;
 	}
+	
+	public float clipMovement(AABB bb, float xm, float ym, float zm) {
+		AABB area = bb.expand(xm, ym, zm);
+		
+		int x0 = (int) (area.x0 - 1.0F);
+		int x1 = (int) (area.x1 + 1.0F);
+		int y0 = (int) (area.y0 - 1.0F);
+		int y1 = (int) (area.y1 + 1.0F);
+		int z0 = (int) (area.z0 - 1.0F);
+		int z1 = (int) (area.z1 + 1.0F);
+		
+		for (int x = x0; x < x1; ++x) {
+			for (int y = y0; y < y1; ++y) {
+				for (int z = z0; z < z1; ++z) {
+					int blockId = getBlock(x, y, z);
+					if (blockId > 0) {
+						Block block = Block.getBlock(blockId);
+						if (block.isCollidable()) {
+							AABB blockBB = block.getOffsetAABB(x, y, z);
+							xm = blockBB.clipXCollide(bb, xm);			
+						}
+					}
+				}
+			}
+		}
+		bb.move(xm, 0.0F, 0.0F);
+		
+		for (int x = x0; x < x1; ++x) {
+			for (int y = y0; y < y1; ++y) {
+				for (int z = z0; z < z1; ++z) {
+					int blockId = getBlock(x, y, z);
+					if (blockId > 0) {
+						Block block = Block.getBlock(blockId);
+						if (block.isCollidable()) {
+							AABB blockBB = block.getOffsetAABB(x, y, z);
+							ym = blockBB.clipYCollide(bb, ym);			
+						}
+					}
+				}
+			}
+		}
+		bb.move(0.0F, ym, 0.0F);
+		
+		for (int x = x0; x < x1; ++x) {
+			for (int y = y0; y < y1; ++y) {
+				for (int z = z0; z < z1; ++z) {
+					int blockId = getBlock(x, y, z);
+					if (blockId > 0) {
+						Block block = Block.getBlock(blockId);
+						if (block.isCollidable()) {
+							AABB blockBB = block.getOffsetAABB(x, y, z);
+							zm = blockBB.clipZCollide(bb, zm);			
+						}
+					}
+				}
+			}
+		}
+		bb.move(0.0F, 0.0F, zm);
+		
+		return ym;
+	}
 
 	public void setAllChunksDirty() {
 		for (Chunk c : chunkProvider.getAllLoadedChunks()) {
