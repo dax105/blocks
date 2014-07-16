@@ -460,7 +460,7 @@ public class RenderEngine {
 		sDisable(FLAG_FOG);
 
 		if (Game.settings.clouds.getValue()) {
-			renderClouds(world.player.getPosXPartial(), world.player.getPosYPartial());
+			renderClouds(world.player.getPosXPartial(), world.player.getPosZPartial());
 		}	
 
 		// Render selection box
