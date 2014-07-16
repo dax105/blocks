@@ -5,7 +5,7 @@
 bin/
 .settings/
 screenshots/
-.saves/
+saves/
 saved.png
 
 # Package Files #
