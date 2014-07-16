@@ -7,9 +7,11 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Random;
 
 import dax.blocks.Coord2D;
+import dax.blocks.Coord3D;
 import dax.blocks.Game;
 import dax.blocks.Particle;
 import dax.blocks.block.Block;
@@ -194,6 +196,9 @@ public class World implements IRenderable {
 
 		if (chunkProvider.isChunkLoaded(coord)) {
 			Chunk c = chunkProvider.getChunk(coord);
+			
+			Block.blocks[c.getBlock(x, y, z)].onRemoved(x, y, z, this);
+			
 			c.setBlock(icx, y, icz, id, true);
 			c.changed = artificial;
 			if (artificial) {
@@ -201,6 +206,9 @@ public class World implements IRenderable {
 				updateNeighbours(x, y, z);
 			}
 		}
+		
+		if(id != 0)
+			Block.blocks[id].onPlaced(x, y, z, this);
 	}
 
 	public void setBlockNoRebuild(int x, int y, int z, byte id) {
@@ -298,13 +306,17 @@ public class World implements IRenderable {
 		return false;
 	}
 	
+	public void removeData(int x, int y, int z) {
+		blockDataManager.getValuesForCoord(x, y, z).clear();
+	}
+	
 	@Override
 	public void onTick() {
 		player.onTick();
 		
-		for(int i = 0; i < Block.blocksCount; i++) {
-			if(Block.blocks[i] != null && Block.blocks[i].isRequiringTick())
-				Block.blocks[i].onTick();
+		for(Entry<Coord3D, Block> b : Block.tickingBlocks.entrySet()) {
+			if(b.getValue().isRequiringTick())
+				b.getValue().onTick(b.getKey().x, b.getKey().y, b.getKey().z, this);
 		}
 		
 		int size = particles.size();
@@ -352,9 +364,9 @@ public class World implements IRenderable {
 	public void onRenderTick(float partialTickTime) {
 		player.onRenderTick(partialTickTime);
 		
-		for(int i = 0; i < Block.blocksCount; i++) {
-			if(Block.blocks[i] != null && Block.blocks[i].isRequiringRenderTick())
-				Block.blocks[i].onRenderTick(partialTickTime);
+		for(Entry<Coord3D, Block> b : Block.tickingBlocks.entrySet()) {
+			if(b.getValue().isRequiringRenderTick())
+				b.getValue().onRenderTick(partialTickTime, b.getKey().x, b.getKey().y, b.getKey().z, this);	
 		}
 	}
 

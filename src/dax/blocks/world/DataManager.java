@@ -21,7 +21,7 @@ public class DataManager {
 	public DataManager(File dataFile) throws IOException {
 		this.data = dataFile;
 		values = new HashMap<>();
-		
+
 		if (dataFile.exists()) {
 			load();
 		} else {
@@ -56,14 +56,14 @@ public class DataManager {
 				br.close();
 				throw new UnsupportedDataTypeException("Invalid file start");
 			}
-			
+
 			if (!started && line.charAt(0) == 's') {
 				started = true;
 				continue;
 			}
 
 			if (started && line.charAt(0) == 'e') {
-				if(currentCoords != null && !currentMap.isEmpty())
+				if (currentCoords != null && !currentMap.isEmpty())
 					values.put(currentCoords, currentMap);
 				break;
 			}
@@ -72,11 +72,12 @@ public class DataManager {
 
 			switch (parts[0]) {
 			case "c":
-				if(currentCoords == null && !currentMap.isEmpty()) {
+				if (currentCoords == null && !currentMap.isEmpty()) {
 					br.close();
-					throw new UnsupportedDataTypeException("Invalid file contents");
+					throw new UnsupportedDataTypeException(
+							"Invalid file contents");
 				}
-				
+
 				if (!currentMap.isEmpty()) {
 					values.put(currentCoords, currentMap);
 					currentMap.clear();
@@ -97,21 +98,29 @@ public class DataManager {
 	public void save() throws IOException {
 		if (data.exists()) {
 			BufferedWriter bw = new BufferedWriter(new FileWriter(data));
-			
+
 			bw.write("s");
 			bw.newLine();
-			for(Entry<Coord3D, Map<String, DataValue>> entry : this.values.entrySet()) {
-				bw.write(String.format("c;%1$d;%2$d;%3$d", (int)entry.getKey().x, (int)entry.getKey().y, (int)entry.getKey().z));
-				bw.newLine();
-				
-				for(Entry<String, DataValue> dataEntry : entry.getValue().entrySet()) {
-					bw.write(String.format("d;%1$s;%2$s", dataEntry.getKey(), dataEntry.getValue().getDataAsString()));
+			for (Entry<Coord3D, Map<String, DataValue>> entry : this.values
+					.entrySet()) {
+				if (!entry.getValue().isEmpty()) {
+					bw.write(String.format("c;%1$d;%2$d;%3$d",
+							(int) entry.getKey().x, (int) entry.getKey().y,
+							(int) entry.getKey().z));
 					bw.newLine();
+
+					for (Entry<String, DataValue> dataEntry : entry.getValue()
+							.entrySet()) {
+						bw.write(String.format("d;%1$s;%2$s", dataEntry
+								.getKey(), dataEntry.getValue()
+								.getDataAsString()));
+						bw.newLine();
+					}
 				}
 			}
 			bw.write("e");
 			bw.newLine();
-			
+
 			bw.close();
 		}
 	}

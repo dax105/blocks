@@ -119,7 +119,7 @@ public class ChunkMeshGenerator {
 										
 										visible = true;
 
-										block.renderTop(calcX, calcY, calcZ, xnzn, zn, xpzn, xn, xp, xnzp, zp, xpzp);
+										block.renderTop(calcX, calcY, calcZ, xnzn, zn, xpzn, xn, xp, xnzp, zp, xpzp, c.world);
 									}
 
 									if (blockIdBelow == 0 || !blockBelow.isOpaque()) {
@@ -134,7 +134,7 @@ public class ChunkMeshGenerator {
 										
 										visible = true;
 
-										block.renderBottom(calcX, calcY, calcZ, xnzn, zn, xpzn, xn, xp, xnzp, zp, xpzp);
+										block.renderBottom(calcX, calcY, calcZ, xnzn, zn, xpzn, xn, xp, xnzp, zp, xpzp, c.world);
 									}
 
 									if (blockIdInFront == 0 || !blockInFront.isOpaque()) {
@@ -149,7 +149,7 @@ public class ChunkMeshGenerator {
 										
 										visible = true;
 
-										block.renderFront(calcX, calcY, calcZ, xnzn, zn, xpzn, xn, xp, xnzp, zp, xpzp);
+										block.renderFront(calcX, calcY, calcZ, xnzn, zn, xpzn, xn, xp, xnzp, zp, xpzp, c.world);
 									}
 
 									if (blockIdBehind == 0 || !blockBehind.isOpaque()) {
@@ -164,7 +164,7 @@ public class ChunkMeshGenerator {
 										
 										visible = true;
 
-										block.renderBack(calcX, calcY, calcZ, xnzn, zn, xpzn, xn, xp, xnzp, zp, xpzp);
+										block.renderBack(calcX, calcY, calcZ, xnzn, zn, xpzn, xn, xp, xnzp, zp, xpzp, c.world);
 									}
 
 									if (blockIdOnRight == 0 || !blockOnRight.isOpaque()) {
@@ -179,7 +179,7 @@ public class ChunkMeshGenerator {
 										
 										visible = true;
 
-										block.renderRight(calcX, calcY, calcZ, xnzn, zn, xpzn, xn, xp, xnzp, zp, xpzp);
+										block.renderRight(calcX, calcY, calcZ, xnzn, zn, xpzn, xn, xp, xnzp, zp, xpzp, c.world);
 									}
 
 									if (blockIdOnLeft == 0 || !blockOnLeft.isOpaque()) {
@@ -194,11 +194,11 @@ public class ChunkMeshGenerator {
 										
 										visible = true;
 
-										block.renderLeft(calcX, calcY, calcZ, xnzn, zn, xpzn, xn, xp, xnzp, zp, xpzp);
+										block.renderLeft(calcX, calcY, calcZ, xnzn, zn, xpzn, xn, xp, xnzp, zp, xpzp, c.world);
 									}
 									
 									if (visible) {
-										block.renderIndependent(calcX, calcY, calcZ);
+										block.renderIndependent(calcX, calcY, calcZ, c.world);
 									}
 
 								}
@@ -269,7 +269,7 @@ public class ChunkMeshGenerator {
 										
 										visible = true;
 
-										block.renderTop(calcX, calcY, calcZ, xnzn, zn, xpzn, xn, xp, xnzp, zp, xpzp);
+										block.renderTop(calcX, calcY, calcZ, xnzn, zn, xpzn, xn, xp, xnzp, zp, xpzp, c.world);
 									}
 
 									if (blockIdBelow == 0 || !blockBelow.isOpaque() && !(blockID == blockIdBelow && blockBelow.shouldCullSame())) {
@@ -284,7 +284,7 @@ public class ChunkMeshGenerator {
 										
 										visible = true;
 
-										block.renderBottom(calcX, calcY, calcZ, xnzn, zn, xpzn, xn, xp, xnzp, zp, xpzp);
+										block.renderBottom(calcX, calcY, calcZ, xnzn, zn, xpzn, xn, xp, xnzp, zp, xpzp, c.world);
 									}
 
 									if (blockIdInFront == 0 || !blockInFront.isOpaque() && !(blockID == blockIdInFront && blockInFront.shouldCullSame())) {
@@ -299,7 +299,7 @@ public class ChunkMeshGenerator {
 										
 										visible = true;
 
-										block.renderFront(calcX, calcY, calcZ, xnzn, zn, xpzn, xn, xp, xnzp, zp, xpzp);
+										block.renderFront(calcX, calcY, calcZ, xnzn, zn, xpzn, xn, xp, xnzp, zp, xpzp, c.world);
 									}
 
 									if (blockIdBehind == 0 || !blockBehind.isOpaque() && !(blockID == blockIdBehind && blockBehind.shouldCullSame())) {
@@ -314,7 +314,7 @@ public class ChunkMeshGenerator {
 										
 										visible = true;
 
-										block.renderBack(calcX, calcY, calcZ, xnzn, zn, xpzn, xn, xp, xnzp, zp, xpzp);
+										block.renderBack(calcX, calcY, calcZ, xnzn, zn, xpzn, xn, xp, xnzp, zp, xpzp, c.world);
 									}
 
 									if (blockIdOnRight == 0 || !blockOnRight.isOpaque() && !(blockID == blockIdOnRight && blockOnRight.shouldCullSame())) {
@@ -329,7 +329,7 @@ public class ChunkMeshGenerator {
 										
 										visible = true;
 
-										block.renderRight(calcX, calcY, calcZ, xnzn, zn, xpzn, xn, xp, xnzp, zp, xpzp);
+										block.renderRight(calcX, calcY, calcZ, xnzn, zn, xpzn, xn, xp, xnzp, zp, xpzp, c.world);
 									}
 
 									if (blockIdOnLeft == 0 || !blockOnLeft.isOpaque() && !(blockID == blockIdOnLeft && blockOnLeft.shouldCullSame())) {
@@ -344,11 +344,11 @@ public class ChunkMeshGenerator {
 										
 										visible = true;
 
-										block.renderLeft(calcX, calcY, calcZ, xnzn, zn, xpzn, xn, xp, xnzp, zp, xpzp);
+										block.renderLeft(calcX, calcY, calcZ, xnzn, zn, xpzn, xn, xp, xnzp, zp, xpzp, c.world);
 									}
 									
 									if (visible) {
-										block.renderIndependent(calcX, calcY, calcZ);
+										block.renderIndependent(calcX, calcY, calcZ, c.world);
 									}
 
 								}
@@ -420,7 +420,7 @@ public class ChunkMeshGenerator {
 										
 										visible = true;
 
-										block.renderTop(calcX, calcY, calcZ, xnzn, zn, xpzn, xn, xp, xnzp, zp, xpzp);
+										block.renderTop(calcX, calcY, calcZ, xnzn, zn, xpzn, xn, xp, xnzp, zp, xpzp, c.world);
 									}
 
 									if (blockIdBelow == 0 || !blockBelow.isOpaque() && !(blockID == blockIdBelow && blockBelow.shouldCullSame())) {
@@ -435,7 +435,7 @@ public class ChunkMeshGenerator {
 										
 										visible = true;
 
-										block.renderBottom(calcX, calcY, calcZ, xnzn, zn, xpzn, xn, xp, xnzp, zp, xpzp);
+										block.renderBottom(calcX, calcY, calcZ, xnzn, zn, xpzn, xn, xp, xnzp, zp, xpzp, c.world);
 									}
 
 									if (blockIdInFront == 0 || !blockInFront.isOpaque() && !(blockID == blockIdInFront && blockInFront.shouldCullSame())) {
@@ -450,7 +450,7 @@ public class ChunkMeshGenerator {
 										
 										visible = true;
 
-										block.renderFront(calcX, calcY, calcZ, xnzn, zn, xpzn, xn, xp, xnzp, zp, xpzp);
+										block.renderFront(calcX, calcY, calcZ, xnzn, zn, xpzn, xn, xp, xnzp, zp, xpzp, c.world);
 									}
 
 									if (blockIdBehind == 0 || !blockBehind.isOpaque() && !(blockID == blockIdBehind && blockBehind.shouldCullSame())) {
@@ -465,7 +465,7 @@ public class ChunkMeshGenerator {
 										
 										visible = true;
 
-										block.renderBack(calcX, calcY, calcZ, xnzn, zn, xpzn, xn, xp, xnzp, zp, xpzp);
+										block.renderBack(calcX, calcY, calcZ, xnzn, zn, xpzn, xn, xp, xnzp, zp, xpzp, c.world);
 									}
 
 									if (blockIdOnRight == 0 || !blockOnRight.isOpaque() && !(blockID == blockIdOnRight && blockOnRight.shouldCullSame())) {
@@ -480,7 +480,7 @@ public class ChunkMeshGenerator {
 										
 										visible = true;
 
-										block.renderRight(calcX, calcY, calcZ, xnzn, zn, xpzn, xn, xp, xnzp, zp, xpzp);
+										block.renderRight(calcX, calcY, calcZ, xnzn, zn, xpzn, xn, xp, xnzp, zp, xpzp, c.world);
 									}
 
 									if (blockIdOnLeft == 0 || !blockOnLeft.isOpaque() && !(blockID == blockIdOnLeft && blockOnLeft.shouldCullSame())) {
@@ -495,11 +495,11 @@ public class ChunkMeshGenerator {
 										
 										visible = true;
 
-										block.renderLeft(calcX, calcY, calcZ, xnzn, zn, xpzn, xn, xp, xnzp, zp, xpzp);
+										block.renderLeft(calcX, calcY, calcZ, xnzn, zn, xpzn, xn, xp, xnzp, zp, xpzp, c.world);
 									}
 									
 									if (visible) {
-										block.renderIndependent(calcX, calcY, calcZ);
+										block.renderIndependent(calcX, calcY, calcZ, c.world);
 									}
 
 								}

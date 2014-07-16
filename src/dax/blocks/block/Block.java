@@ -1,13 +1,17 @@
 package dax.blocks.block;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import org.lwjgl.opengl.GL11;
 
+import dax.blocks.Coord3D;
 import dax.blocks.Game;
-import dax.blocks.render.IRenderableBlock;
 import dax.blocks.render.RenderPass;
 import dax.blocks.sound.SoundManager;
+import dax.blocks.world.World;
 
-public abstract class Block implements IRenderableBlock {
+public abstract class Block {
 
 	public int topTexture = 0;
 	public int sideTexture = 0;
@@ -26,6 +30,8 @@ public abstract class Block implements IRenderableBlock {
 	protected String[] footStep = SoundManager.footstep_dirt;
 	protected String fall = "fall_hard";
 	protected static int lastAO = -1;
+	
+	public static Map<Coord3D, Block> tickingBlocks = new HashMap<>();
 	
 	public Block(int id) {
 		this.id = id;
@@ -224,12 +230,30 @@ public abstract class Block implements IRenderableBlock {
 	}
 
 	
-	public abstract void renderIndependent(int x, int y, int z);
-	public abstract void renderFront(int x, int y, int z, boolean xnzn, boolean zn, boolean xpzn, boolean xn, boolean xp, boolean xnzp, boolean zp, boolean xpzp);
-	public abstract void renderBack(int x, int y, int z, boolean xnzn, boolean zn, boolean xpzn, boolean xn, boolean xp, boolean xnzp, boolean zp, boolean xpzp);
-	public abstract void renderRight(int x, int y, int z, boolean xnzn, boolean zn, boolean xpzn, boolean xn, boolean xp, boolean xnzp, boolean zp, boolean xpzp);
-	public abstract void renderLeft(int x, int y, int z, boolean xnzn, boolean zn, boolean xpzn, boolean xn, boolean xp, boolean xnzp, boolean zp, boolean xpzp);
-	public abstract void renderTop(int x, int y, int z, boolean xnzn, boolean zn, boolean xpzn, boolean xn, boolean xp, boolean xnzp, boolean zp, boolean xpzp);
-	public abstract void renderBottom(int x, int y, int z, boolean xnzn, boolean zn, boolean xpzn, boolean xn, boolean xp, boolean xnzp, boolean zp, boolean xpzp);
+	public void onPlaced(int x, int y, int z, World world) {
+		if(this.isRequiringTick() || this.isRequiringRenderTick()) {
+			Block.tickingBlocks.put(new Coord3D(x, y, z), this);
+		}
+	}
+	
+	public void onRemoved(int x, int y, int z, World world) {
+		Coord3D c = new Coord3D(x, y, z);
+		if(Block.tickingBlocks.containsKey(c)) {
+			Block.tickingBlocks.remove(c);
+		}
+		
+		world.removeData(x, y, z);
+	}
+	
+	public abstract void renderIndependent(int x, int y, int z, World world);
+	public abstract void renderFront(int x, int y, int z, boolean xnzn, boolean zn, boolean xpzn, boolean xn, boolean xp, boolean xnzp, boolean zp, boolean xpzp, World world);
+	public abstract void renderBack(int x, int y, int z, boolean xnzn, boolean zn, boolean xpzn, boolean xn, boolean xp, boolean xnzp, boolean zp, boolean xpzp, World world);
+	public abstract void renderRight(int x, int y, int z, boolean xnzn, boolean zn, boolean xpzn, boolean xn, boolean xp, boolean xnzp, boolean zp, boolean xpzp, World world);
+	public abstract void renderLeft(int x, int y, int z, boolean xnzn, boolean zn, boolean xpzn, boolean xn, boolean xp, boolean xnzp, boolean zp, boolean xpzp, World world);
+	public abstract void renderTop(int x, int y, int z, boolean xnzn, boolean zn, boolean xpzn, boolean xn, boolean xp, boolean xnzp, boolean zp, boolean xpzp, World world);
+	public abstract void renderBottom(int x, int y, int z, boolean xnzn, boolean zn, boolean xpzn, boolean xn, boolean xp, boolean xnzp, boolean zp, boolean xpzp, World world);
 
+	public abstract void onTick(int x, int y, int z, World world);
+	public abstract void onRenderTick(float partialTickTime, int x, int y, int z, World world);
+	public abstract void onClicked(int button, int x, int y, int z, World world);
 }
