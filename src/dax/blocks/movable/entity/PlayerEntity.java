@@ -1,11 +1,8 @@
 package dax.blocks.movable.entity;
 
-import java.util.ArrayList;
 import java.util.Random;
-
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
-
 import dax.blocks.GLHelper;
 import dax.blocks.Game;
 import dax.blocks.TextureManager;

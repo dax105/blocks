@@ -42,7 +42,7 @@ public class WorldsManager {
 				worlds.add(WorldInfo
 						.constructFromFile(new File(d, "world.txt")));
 			} catch (FileNotFoundException e) {
-				Logger.getGlobal().warning("World definition file doesn't exist");
+				Logger.getGlobal().info("World definition file doesn't exist");
 			}
 		}
 

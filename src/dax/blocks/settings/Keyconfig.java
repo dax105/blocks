@@ -18,7 +18,7 @@ public class Keyconfig {
 	public static int particleFirework;
 	
 	public static int screenshot;
-	public static int console;
+	public static int[] console;
 	public static int fullscreen;
 	public static int exit;
 	
@@ -33,7 +33,7 @@ public class Keyconfig {
 		explosion = Keyboard.KEY_E;
 		particleFirework = Keyboard.KEY_P;
 		screenshot = Keyboard.KEY_F2;
-		console = Keyboard.KEY_GRAVE;
+		console = new int[] { Keyboard.KEY_C, Keyboard.KEY_GRAVE };
 		fullscreen = Keyboard.KEY_F;
 		exit = Keyboard.KEY_ESCAPE;
 	}
@@ -45,6 +45,15 @@ public class Keyconfig {
 	public static boolean isDown(int[] keys) {
 		for(int k : keys) {
 			if(Keyboard.isKeyDown(k))
+				return true;
+		}
+		
+		return false;
+	}
+	
+	public static boolean isDownEvent(int[] keys) {
+		for(int k : keys) {
+			if(Keyboard.getEventKey() == k)
 				return true;
 		}
 		

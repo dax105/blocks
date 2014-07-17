@@ -94,22 +94,22 @@ public class ChunkMeshGenerator {
 									int calcZ = z + blockOffsetZ;
 
 									int blockIdAbove = c.world.getBlock(calcX, calcY + 1, calcZ);
-									Block blockAbove = Block.getBlock((byte) blockIdAbove);
+									Block blockAbove = Block.getBlock(blockIdAbove);
 
 									int blockIdBelow = c.world.getBlock(calcX, calcY - 1, calcZ);
-									Block blockBelow = Block.getBlock((byte) blockIdBelow);
+									Block blockBelow = Block.getBlock(blockIdBelow);
 
 									int blockIdInFront = c.world.getBlock(calcX, calcY, calcZ + 1);
-									Block blockInFront = Block.getBlock((byte) blockIdInFront);
+									Block blockInFront = Block.getBlock(blockIdInFront);
 
 									int blockIdBehind = c.world.getBlock(calcX, calcY, calcZ - 1);
-									Block blockBehind = Block.getBlock((byte) blockIdBehind);
+									Block blockBehind = Block.getBlock(blockIdBehind);
 
 									int blockIdOnRight = c.world.getBlock(calcX + 1, calcY, calcZ);
-									Block blockOnRight = Block.getBlock((byte) blockIdOnRight);
+									Block blockOnRight = Block.getBlock(blockIdOnRight);
 
 									int blockIdOnLeft = c.world.getBlock(calcX - 1, calcY, calcZ);
-									Block blockOnLeft = Block.getBlock((byte) blockIdOnLeft);
+									Block blockOnLeft = Block.getBlock(blockIdOnLeft);
 
 									//TODO GL20.glVertexAttrib1f(attrib, blockID);
 									
