@@ -1,7 +1,6 @@
 package dax.blocks.world;
 
 import dax.blocks.collisions.AABB;
-
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -9,13 +8,11 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Random;
-
 import dax.blocks.Coord2D;
 import dax.blocks.Coord3D;
 import dax.blocks.Game;
 import dax.blocks.Particle;
 import dax.blocks.block.Block;
-import dax.blocks.block.BlockPlant;
 import dax.blocks.movable.entity.PlayerEntity;
 import dax.blocks.render.Frustum;
 import dax.blocks.render.IRenderable;

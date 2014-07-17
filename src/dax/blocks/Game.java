@@ -226,11 +226,11 @@ public class Game implements Runnable {
 					GameUtil.screenshot();
 				}
 
-				if (Keyboard.getEventKey() == Keyconfig.console) {
-					consoleOpen = !consoleOpen ? true : false;
+				if (Keyconfig.isDownEvent(Keyconfig.console)) {
 					if (!consoleOpen) {
 						console.clearInput();
 					}
+					consoleOpen = !consoleOpen;				
 				}
 
 				if (consoleOpen) {
