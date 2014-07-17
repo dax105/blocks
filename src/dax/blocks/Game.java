@@ -225,19 +225,20 @@ public class Game implements Runnable {
 				if (Keyboard.getEventKey() == Keyconfig.screenshot) {
 					GameUtil.screenshot();
 				}
-
-				if (Keyconfig.isDownEvent(Keyconfig.console)) {
-					if (!consoleOpen) {
-						console.clearInput();
-					}
-					consoleOpen = !consoleOpen;				
-				}
-
+				
 				if (consoleOpen) {
 					console.charTyped(Keyboard.getEventCharacter(),
 							Keyboard.getEventKey());
 				}
 
+
+				if (Keyconfig.isDownEvent(Keyconfig.console)) {
+					if (!consoleOpen) {
+						console.clearInput();
+						consoleOpen = true;
+					}		
+				}
+				
 				if (Keyboard.getEventKey() == Keyconfig.fullscreen
 						&& this.guiScreen == null && !consoleOpen) {
 					toggleFullscreen();
