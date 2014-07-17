@@ -14,7 +14,7 @@ public abstract class GuiScreen {
 	
 	public GuiScreen(Game game) {
 		if (game.ingame) {
-			objects.add(new GuiObjectRectangle(0, 0, game.width, game.height, 0xA0000000));
+			objects.add(new GuiObjectRectangle(0, 0, Game.settings.windowWidth.getValue(), Game.settings.windowHeight.getValue(), 0xA0000000));
 		}
 		this.game = game;
 		parent = null;
@@ -23,7 +23,7 @@ public abstract class GuiScreen {
 
 	public GuiScreen(GuiScreen parent) {
 		if (parent.game.ingame) {
-			objects.add(new GuiObjectRectangle(0, 0, parent.game.width, parent.game.height, 0xA0000000));
+			objects.add(new GuiObjectRectangle(0, 0, Game.settings.windowWidth.getValue(), Game.settings.windowHeight.getValue(), 0xA0000000));
 		}
 		this.game = parent.game;
 		this.parent = parent;

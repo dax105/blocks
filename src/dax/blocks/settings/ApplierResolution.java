@@ -7,26 +7,29 @@ public class ApplierResolution extends Applier {
 
 	@Override
 	public boolean apply(Object val) {
-		String[] res = val.toString().split("x");
-		if (res.length < 2)
-			return false;
+		int width = Game.settings.windowWidth.getValue();
+		int height = Game.settings.windowHeight.getValue();
 
-		try {
-			int width = Integer.parseInt(res[0]);
-			int height = Integer.parseInt(res[1]);
-			
-			if(width < 100 || height < 100)
-				return false;
-			
-			Game.getInstance().width = width;
-			Game.getInstance().height = height;
-			GLHelper.setDisplayMode(width, height, Game.getInstance().isFullscreen);
-			
-			return true;
-			
-		} catch (NumberFormatException e) {
-			return false;
+		if (this.applyingObject == Game.settings.windowWidth) {
+			width = (Integer) val;
 		}
-	}
 
+		if (this.applyingObject == Game.settings.windowHeight) {
+			height = (Integer) val;
+		}
+
+		if (width > 200 && height > 200) {
+
+			GLHelper.setDisplayMode(width, height, Game.settings.fullscreen.getValue());
+
+			if (Game.getInstance().guiScreen != null) {
+				Game.getInstance().closeGuiScreen();
+			}
+		}
+		
+		Game.settings.resolution.setValue(width + "x" + height, false);
+
+		return true;
+
+	}
 }

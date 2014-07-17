@@ -238,7 +238,7 @@ public class PlayerEntity extends Entity {
 	@Override
 	public void renderGui(float ptt) {
 		int heartsX = 80;
-		int heartsY = Game.getInstance().height - 43;
+		int heartsY = Game.settings.windowHeight.getValue() - 43;
 
 		GLHelper.drawTexture(TextureManager.life_zero, heartsX, heartsY);
 		GLHelper.drawTextureCropped(TextureManager.life_full, heartsX, heartsY,

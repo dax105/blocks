@@ -15,35 +15,35 @@ public class GuiScreenSettings extends GuiScreen {
 		ingame = game.ingame;
 	
 		//Rectangle
-		objects.add(new GuiObjectRectangle((game.width - width - overflow) / 2, (game.height - height - overflow) / 2, (game.width + width + overflow) / 2, (game.height + height + overflow) / 2, 0xA0000000));
-		objects.add(new GuiObjectTitleBar((game.width - width) / 2, (game.height - height) / 2, (game.width + width) / 2, ((game.height - height) / 2) + 30, this.f, "Options"));
+		objects.add(new GuiObjectRectangle((Game.settings.windowWidth.getValue() - width - overflow) / 2, (Game.settings.windowHeight.getValue() - height - overflow) / 2, (Game.settings.windowWidth.getValue() + width + overflow) / 2, (Game.settings.windowHeight.getValue() + height + overflow) / 2, 0xA0000000));
+		objects.add(new GuiObjectTitleBar((Game.settings.windowWidth.getValue() - width) / 2, (Game.settings.windowHeight.getValue() - height) / 2, (Game.settings.windowWidth.getValue() + width) / 2, ((Game.settings.windowHeight.getValue() - height) / 2) + 30, this.f, "Options"));
 
 		//Render distance [INTEGER SETTINGS SLIDER][ID 3]
-		objects.add(new GuiObjectSettingsIntegerSlider((game.width - width) / 2, (game.height - height) / 2 + 34, (game.width + width) / 2, ((game.height - height) / 2) + 58, this.f, "Render distance: %v chunks", 3, this, 2, 30, Game.settings.drawDistance));
+		objects.add(new GuiObjectSettingsIntegerSlider((Game.settings.windowWidth.getValue() - width) / 2, (Game.settings.windowHeight.getValue() - height) / 2 + 34, (Game.settings.windowWidth.getValue() + width) / 2, ((Game.settings.windowHeight.getValue() - height) / 2) + 58, this.f, "Render distance: %v chunks", 3, this, 2, 30, Game.settings.drawDistance));
 		
 		//Sound on/off [SETTINGS BUTTON][ID 4]
-		objects.add(new GuiObjectSettingsBooleanButton((game.width - width) / 2, (game.height - height) / 2 + 62, (game.width - width - 8) / 2 + 128, (game.height - height) / 2 + 86, this.f, 4, this, Game.settings.sound));
+		objects.add(new GuiObjectSettingsBooleanButton((Game.settings.windowWidth.getValue() - width) / 2, (Game.settings.windowHeight.getValue() - height) / 2 + 62, (Game.settings.windowWidth.getValue() - width - 8) / 2 + 128, (Game.settings.windowHeight.getValue() - height) / 2 + 86, this.f, 4, this, Game.settings.sound));
 		
 		//Sound volume [FLOAT SETTINGS SLIDER][ID 2]
-		objects.add(new GuiObjectSettingsFloatSlider((game.width - width) / 2 + 128, (game.height - height) / 2 + 62, (game.width + width) / 2, ((game.height - height) / 2) + 86, this.f, "Volume: %v", 2, this, 0f, 1f, Game.settings.sound_volume));
+		objects.add(new GuiObjectSettingsFloatSlider((Game.settings.windowWidth.getValue() - width) / 2 + 128, (Game.settings.windowHeight.getValue() - height) / 2 + 62, (Game.settings.windowWidth.getValue() + width) / 2, ((Game.settings.windowHeight.getValue() - height) / 2) + 86, this.f, "Volume: %v", 2, this, 0f, 1f, Game.settings.sound_volume));
 		
 		//Linear filtering [SETTINGS BUTTON][ID 3]
-		objects.add(new GuiObjectSettingsBooleanButton((game.width - width) / 2, (game.height - height) / 2 + 118, game.width / 2 - 2, ((game.height - height) / 2) + 144, this.f, 3, this, Game.settings.linear_filtering));
+		objects.add(new GuiObjectSettingsBooleanButton((Game.settings.windowWidth.getValue() - width) / 2, (Game.settings.windowHeight.getValue() - height) / 2 + 118, Game.settings.windowWidth.getValue() / 2 - 2, ((Game.settings.windowHeight.getValue() - height) / 2) + 144, this.f, 3, this, Game.settings.linear_filtering));
 		
 		//Transparent leaves [SETTINGS BUTTON][ID 2]
-		objects.add(new GuiObjectSettingsBooleanButton(game.width / 2 + 2, (game.height - height) / 2 + 118, (game.width + width) / 2, ((game.height - height) / 2) + 144, this.f, 2, this, Game.settings.transparent_leaves));
+		objects.add(new GuiObjectSettingsBooleanButton(Game.settings.windowWidth.getValue() / 2 + 2, (Game.settings.windowHeight.getValue() - height) / 2 + 118, (Game.settings.windowWidth.getValue() + width) / 2, ((Game.settings.windowHeight.getValue() - height) / 2) + 144, this.f, 2, this, Game.settings.transparent_leaves));
 		
 		//Two pass transl. [SETTINGS BUTTON][ID 5]
-		objects.add(new GuiObjectSettingsBooleanButton((game.width - width) / 2, (game.height - height) / 2 + 148, game.width / 2 - 2, ((game.height - height) / 2) + 172, this.f, 5, this, Game.settings.two_pass_translucent));
+		objects.add(new GuiObjectSettingsBooleanButton((Game.settings.windowWidth.getValue() - width) / 2, (Game.settings.windowHeight.getValue() - height) / 2 + 148, Game.settings.windowWidth.getValue() / 2 - 2, ((Game.settings.windowHeight.getValue() - height) / 2) + 172, this.f, 5, this, Game.settings.two_pass_translucent));
 				
 		//Peaceful [SETTINGS BUTTON][ID 6]
-		objects.add(new GuiObjectSettingsBooleanButton(game.width / 2 + 2, (game.height - height) / 2 + 148, (game.width + width) / 2, ((game.height - height) / 2) + 172, this.f, 6, this, Game.settings.peaceful_mode));
+		objects.add(new GuiObjectSettingsBooleanButton(Game.settings.windowWidth.getValue() / 2 + 2, (Game.settings.windowHeight.getValue() - height) / 2 + 148, (Game.settings.windowWidth.getValue() + width) / 2, ((Game.settings.windowHeight.getValue() - height) / 2) + 172, this.f, 6, this, Game.settings.peaceful_mode));
 
 		//FOV [FLOAT SETTINGS SLIDER][ID 1]
-		objects.add(new GuiObjectSettingsFloatSlider((game.width - width) / 2, (game.height - height) / 2 + 90, (game.width + width) / 2, ((game.height - height) / 2) + 114, this.f, "FOV: %v", 1, this, 30, 160, Game.settings.fov));
+		objects.add(new GuiObjectSettingsFloatSlider((Game.settings.windowWidth.getValue() - width) / 2, (Game.settings.windowHeight.getValue() - height) / 2 + 90, (Game.settings.windowWidth.getValue() + width) / 2, ((Game.settings.windowHeight.getValue() - height) / 2) + 114, this.f, "FOV: %v", 1, this, 30, 160, Game.settings.fov));
 		
 		//Apply/close [BUTTON][ID 1]
-		objects.add(new GuiObjectButton((game.width - width) / 2, (game.height + height) / 2 - 24, ((game.width + width) / 2), ((game.height + height) / 2), this.f, "Close", 1, this));
+		objects.add(new GuiObjectButton((Game.settings.windowWidth.getValue() - width) / 2, (Game.settings.windowHeight.getValue() + height) / 2 - 24, ((Game.settings.windowWidth.getValue() + width) / 2), ((Game.settings.windowHeight.getValue() + height) / 2), this.f, "Close", 1, this));
 	}
 
 	@Override
