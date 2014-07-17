@@ -2,12 +2,19 @@ package dax.blocks.render;
 
 import org.lwjgl.opengl.GL11;
 
+import dax.blocks.Game;
 import dax.blocks.block.Block;
+import dax.blocks.profiler.Profiler;
 import dax.blocks.world.chunk.Chunk;
 
 public class ChunkMeshGenerator {
 
 	public static ChunkDisplayList genDisplayList(Chunk c, int cy) {
+		
+		Profiler profiler = Game.getInstance().getProfiler();
+		
+		profiler.build.start();
+		
 		if (c != null) {
 
 			int startY = cy * 16;
@@ -53,6 +60,7 @@ public class ChunkMeshGenerator {
 				listsNeeded++;
 
 			if (listsNeeded == 0) {
+				profiler.build.end();
 				return new ChunkDisplayList();
 			}
 
@@ -515,9 +523,11 @@ public class ChunkMeshGenerator {
 				GL11.glEndList();
 			}
 
+			profiler.build.end();
 			return cdl;
 
 		}
+		profiler.build.end();
 		return null;
 	}
 

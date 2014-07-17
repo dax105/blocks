@@ -25,6 +25,7 @@ import dax.blocks.gui.GuiScreenLoading;
 import dax.blocks.gui.GuiScreenMainMenu;
 import dax.blocks.gui.GuiScreenMenu;
 import dax.blocks.profiler.Profiler;
+import dax.blocks.profiler.Section;
 import dax.blocks.render.IRenderable;
 import dax.blocks.render.RenderEngine;
 import dax.blocks.settings.Keyconfig;
@@ -80,6 +81,10 @@ public class Game implements Runnable {
 	public static Game getInstance() {
 		return instance;
 	}
+	
+	public Profiler getProfiler() {
+		return this.profiler;
+	}
 
 	//.... RUN METHODS ....
 	
@@ -110,9 +115,9 @@ public class Game implements Runnable {
 			time = System.nanoTime();
 			while (time - lastTime >= TICK_TIME * 1000000000) {
 				ticks++;
-				profiler.startTick();
+				profiler.tick.start();
 				onTick();
-				profiler.endTick();
+				profiler.tick.end();
 				lastTime += TICK_TIME * 1000000000;
 			}
 
@@ -124,14 +129,14 @@ public class Game implements Runnable {
 				Game.sound.getMusicProvider().updateMusic();
 			}
 			
-			profiler.startRender();
+			profiler.render.start();
 			float partialTickTime = (time - lastTime) / ((float) TICK_TIME * 1000000000);
 
 			onRender(partialTickTime);
 			render(partialTickTime);
 
 			Display.update();
-			profiler.endRender();
+			profiler.render.end();
 			
 			if(Game.settings.fps_limit.getValue() > 0)
 				Display.sync(Game.settings.fps_limit.getValue());
@@ -400,12 +405,14 @@ public class Game implements Runnable {
 			
 			GL11.glBegin(GL11.GL_LINES);
 			
-			int offset = Display.getWidth() - Profiler.MAX_RECORDS;
+			int offset = Display.getWidth() - Section.MAX_RECORDS;
 			
-			float[] tick = this.profiler.getTickTimes();
-			float[] render = this.profiler.getRenderTimes();
+			float[] tick = this.profiler.tick.getTimes();
+			float[] render = this.profiler.render.getTimes();
+			float[] total = this.profiler.total.getTimes();
+			float[] build = this.profiler.build.getTimes();
 			
-			for (int i = 0; i < Profiler.MAX_RECORDS; i++) {
+			for (int i = 0; i < Section.MAX_RECORDS; i++) {
 				GL11.glColor4f(0, 1, 0, 1.0f);
 				GL11.glVertex2f(offset+i, Display.getHeight());
 				GL11.glVertex2f(offset+i, Display.getHeight()-tick[i]*10);
@@ -414,18 +421,26 @@ public class Game implements Runnable {
 				GL11.glVertex2f(offset+i, Display.getHeight());
 				GL11.glVertex2f(offset+i, Display.getHeight()-render[i]*10);
 				
+				GL11.glColor4f(1, 0, 0, 0.4f);
+				GL11.glVertex2f(offset+i, Display.getHeight());
+				GL11.glVertex2f(offset+i, Display.getHeight()-build[i]*10);
 			}
 			
-			float avgTick = this.profiler.avgTick();
-			float avgRender = this.profiler.avgRender();
+			float avgTick = this.profiler.tick.avg();
+			float avgRender = this.profiler.render.avg();
+			float avgBuild = this.profiler.build.avg();
 			
 			GL11.glColor4f(0.3f, 1.0f, 0, 1.0f);
-			GL11.glVertex2f(Display.getWidth()-Profiler.MAX_RECORDS, Display.getHeight()-avgTick*10);
+			GL11.glVertex2f(Display.getWidth()-Section.MAX_RECORDS, Display.getHeight()-avgTick*10);
 			GL11.glVertex2f(Display.getWidth(), Display.getHeight()-avgTick*10);
 			
 			GL11.glColor4f(0.3f, 0, 1.0f, 1.0f);
-			GL11.glVertex2f(Display.getWidth()-Profiler.MAX_RECORDS, Display.getHeight()-avgRender*10);
+			GL11.glVertex2f(Display.getWidth()-Section.MAX_RECORDS, Display.getHeight()-avgRender*10);
 			GL11.glVertex2f(Display.getWidth(), Display.getHeight()-avgRender*10);
+			
+			GL11.glColor4f(1.0f, 0, 0.3f, 1.0f);
+			GL11.glVertex2f(Display.getWidth()-Section.MAX_RECORDS, Display.getHeight()-avgBuild*10);
+			GL11.glVertex2f(Display.getWidth(), Display.getHeight()-avgBuild*10);
 			
 			GL11.glEnd(); 
 			
@@ -434,6 +449,9 @@ public class Game implements Runnable {
 			
 			String renderText = "avg render " + String.format(Locale.ENGLISH, "%.2f", avgRender) + "ms";
 			FontManager.text.drawString(offset-FontManager.text.getWidth(renderText)-2, (int)(Display.getHeight()-avgRender*10-FontManager.text.getLineHeight()*0.75f), renderText);
+			
+			String buildText = "avg build" + String.format(Locale.ENGLISH, "%.2f", avgBuild) + "ms";
+			FontManager.text.drawString(offset-FontManager.text.getWidth(buildText)-2, (int)(Display.getHeight()-avgBuild*10-FontManager.text.getLineHeight()*0.75f), buildText);
 		}
 		
 		Block b = Block.getBlock(world.player.getSelectedBlockID());
