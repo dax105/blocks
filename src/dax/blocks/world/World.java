@@ -190,7 +190,11 @@ public class World implements IRenderable {
 		if (chunkProvider.isChunkLoaded(coord)) {
 			Chunk c = chunkProvider.getChunk(coord);
 			
-			Block.blocks[c.getBlock(x, y, z)].onRemoved(x, y, z, this);
+			Block before = Block.getBlock(getBlock(x, y, z));
+			
+			if (before != null) { 
+				before.onRemoved(x, y, z, this);
+			}
 			
 			c.setBlock(icx, y, icz, id, true);
 			c.changed = artificial;
@@ -201,7 +205,7 @@ public class World implements IRenderable {
 		}
 		
 		if(id != 0)
-			Block.blocks[id].onPlaced(x, y, z, this);
+			Block.getBlock(id).onPlaced(x, y, z, this);
 	}
 
 	public void setBlockNoRebuild(int x, int y, int z, byte id) {
