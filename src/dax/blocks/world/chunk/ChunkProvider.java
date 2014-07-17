@@ -4,11 +4,13 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Random;
+
 import dax.blocks.Coord2D;
 import dax.blocks.Game;
 import dax.blocks.GameMath;
@@ -26,9 +28,9 @@ public class ChunkProvider {
 	private static final int SAMPLE_RATE_VERTICAL = 4;
 
 	public boolean loading = false;
-	//Shall I load the world from files?
-	public boolean loadingWorld = true;
+
 	Map<Coord2D, Chunk> loadedChunks;
+	LinkedHashMap<Coord2D, Chunk> cachedChunks;
 
 	SimplexNoise simplex3D_1;
 	SimplexNoise simplex3D_2;
@@ -90,12 +92,13 @@ public class ChunkProvider {
 			int ydist = Math.abs(y - c.z);
 
 			if ((xdist > r || ydist > r) && loadedChunks.containsKey(coord)) {
-				loader.saveChunk(c);
-				c.deleteAllRenderChunks();
+				//loader.saveChunk(c);
+				//c.deleteAllRenderChunks();
+				cacheChunk(c);
 				it.remove();
 			} 
 			
-			if (!c.populated && loadedChunks.containsKey(coord)){
+			if (!c.populated && loadedChunks.get(coord) != null){
 				
 				unpopulated.add(c);
 				
@@ -153,6 +156,10 @@ public class ChunkProvider {
 		}
 	}
 
+	public void cacheChunk(Chunk c) {
+		cachedChunks.put(new Coord2D(c.x, c.z), c);
+	}
+	
 	public void unloadChunk(Coord2D coord) {
 		Chunk c = loadedChunks.get(coord);
 		c.deleteAllRenderChunks();
@@ -183,13 +190,24 @@ public class ChunkProvider {
 
 	public ChunkProvider(int seed, World world, boolean shouldLoad) {
 		this.loadedChunks = new HashMap<Coord2D, Chunk>();
+		this.cachedChunks = new LinkedHashMap<Coord2D, Chunk>() {
+			private static final long serialVersionUID = 1L;
+
+			@Override
+			protected boolean removeEldestEntry(Map.Entry<Coord2D, Chunk> eldest) {
+				if (size() > Game.settings.chunk_cache_size.getValue()) {
+					eldest.getValue().deleteAllRenderChunks();
+					loader.saveChunk(eldest.getValue());
+				}
+				
+				return size() > Game.settings.chunk_cache_size.getValue();
+			}
+		};
 		this.seed = seed;
 		this.world = world;
 		this.loader = new ChunkSaveManager(this, world.name);
 		
-		this.loadingWorld = shouldLoad;
-			loader.tryToLoadWorld();
-		
+		loader.tryToLoadWorld();
 
 		this.simplex3D_1 = new SimplexNoise(512, 0.425, this.seed);
 		this.simplex3D_2 = new SimplexNoise(512, 0.525, this.seed*2);
@@ -200,7 +218,7 @@ public class ChunkProvider {
 	}
 
 	public void loadChunk(Coord2D coord) {
-		loadedChunks.put(coord, getChunk(coord.x, coord.y, loadingWorld));
+		loadedChunks.put(coord, getChunk(coord.x, coord.y));
 	}
 
 	public double[][][] getChunkDensityMap(int cx, int cz) {
@@ -385,8 +403,15 @@ public class ChunkProvider {
 
 	}
 
-	public Chunk getChunk(int xc, int zc, boolean canLoad) {
-		if (loader.isChunkSaved(xc, zc) && canLoad) {
+	public boolean isChunkCached(int x, int z) {
+		return cachedChunks.get(new Coord2D(x, z)) != null;
+	}
+	
+	public Chunk getChunk(int xc, int zc) {
+		if (isChunkCached(xc, zc)) {
+			System.out.println("yeah");
+			return cachedChunks.get(new Coord2D(xc, zc));
+		} else if (loader.isChunkSaved(xc, zc)) {
 			System.out.println("Loading " + xc + ":" + zc);
 			return loader.loadChunk(xc, zc);
 			

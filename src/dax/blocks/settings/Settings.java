@@ -21,6 +21,7 @@ public class Settings {
 	public SettingsObject<Integer> rebuilds_pf = (SettingsObject<Integer>) registerObject(new SettingsObject<Integer>("rebuilds_pf", 5, "Chunk geometry rebuilds per frame", null, null));
 	public SettingsObject<Integer> loads_pt = (SettingsObject<Integer>) registerObject(new SettingsObject<Integer>("loads_pt", 3, "Loaded chunks per tick", "%v chunks", null));
 	public SettingsObject<Integer> decorations_pt = (SettingsObject<Integer>) registerObject(new SettingsObject<Integer>("decorations_pt", 3, "Decorations per tick", null, null));
+	public SettingsObject<Integer> chunk_cache_size = (SettingsObject<Integer>) registerObject(new SettingsObject<Integer>("chunk_cache_size", 500, "Chunk cache size", null, null));
 	
 	public SettingsObject<Boolean> debug = (SettingsObject<Boolean>) registerObject(new SettingsObject<Boolean>("debug", false, "Show debug info", "%o", null));
 	public SettingsObject<Boolean> fullscreen = (SettingsObject<Boolean>) registerObject(new SettingsObject<Boolean>("fullscreen", false, "Fullscreen mode", "%o", null));

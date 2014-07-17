@@ -26,31 +26,12 @@ public class ChunkSaveManager {
 	
 	public static final int WORLD_VERSION = 1;
 	
-	private void deleteFolder(File folder) {
-	    File[] files = folder.listFiles();
-	    if(files!=null) { 
-	        for(File f: files) {
-	            if(f.isDirectory()) {
-	                deleteFolder(f);
-	            } else {
-	                f.delete();
-	            }
-	        }
-	    }
-	    
-	}
-	
 	public void tryToLoadWorld() {
 			File dir = new File(WorldsManager.SAVES_DIR, name);
 			
 			if (!dir.exists()) {
 				dir.mkdir();
 			}	
-			
-			if(dir.exists() && !provider.loadingWorld) {
-				deleteFolder(dir);
-				return;
-			}
 
 			try {
 				world.blockDataManager = new DataManager(new File(dir, "bdf"));
