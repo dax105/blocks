@@ -35,14 +35,9 @@ public class Explosion {
 						float radiusFuzzed = radius - fuzz * fuzzyness;
 
 						if (distSq < radiusFuzzed * radiusFuzzed) {
-							world.setBlock(x, y, z, (byte) 0, true);
+							world.setBlock(x, y, z, (byte) 0, true, false);
 
-							if (rand.nextFloat() > 0.9f) {
-								world.spawnParticleWithRandomDirectionFast(x
-										+ rand.nextFloat(),
-										y + rand.nextFloat(),
-										z + rand.nextFloat(), 2, 0.5f);
-							}
+
 						}
 
 					}

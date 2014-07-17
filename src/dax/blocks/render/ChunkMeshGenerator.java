@@ -24,7 +24,7 @@ public class ChunkMeshGenerator {
 			int blockOffsetZ = c.z * 16;
 
 			int opaqueCount = 0, transparentCount = 0, translucentCount = 0;
-
+			
 			for (int x = 0; x < 16; x++) {
 				for (int z = 0; z < 16; z++) {
 					for (int y = startY; y < endY; y++) {

@@ -104,7 +104,7 @@ public class PlayerEntity extends Entity {
 				} else if (Mouse.getEventButton() == 0) {
 					if (hasSelected) {
 						world.setBlock(lookingAtX, lookingAtY, lookingAtZ, 0,
-								true);
+								true, true);
 					}
 				}
 				if (Mouse.getEventButton() == 1) {
@@ -112,7 +112,7 @@ public class PlayerEntity extends Entity {
 							&& (lookingAtX != placesAtX
 									|| lookingAtY != placesAtY || lookingAtZ != placesAtZ)) {
 						world.setBlock(placesAtX, placesAtY, placesAtZ,
-								selectedBlockID, true);
+								selectedBlockID, true, true);
 					}
 				}
 			}

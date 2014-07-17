@@ -68,7 +68,7 @@ public class BlockPlant extends Block {
 	@Override
 	public void onTick(int x, int y, int z, World world) {
 		if (world.getBlock(x, y-1, z) == 0) {
-			world.setBlock(x, y, z, 0, true);
+			world.setBlock(x, y, z, 0, true, true);
 		}
 	}
 

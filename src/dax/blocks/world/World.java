@@ -98,8 +98,7 @@ public class World implements IRenderable {
 		float velZ = velhalf - rand.nextFloat() * vel - rand.nextFloat()
 				* velFuzziness;
 
-		Particle p = new Particle(this, x, y, z, velX, velY, velZ, 100,
-				rand.nextFloat(), rand.nextFloat(), rand.nextFloat());
+		Particle p = new Particle(this, x, y, z, velX, velY, velZ, 100, rand.nextFloat(), rand.nextFloat(), rand.nextFloat());
 		particles.add(p);
 
 	}
@@ -178,7 +177,7 @@ public class World implements IRenderable {
 		return c != null ? c.getBlock(icx, y, icz) : 0;
 	}
 
-	public void setBlock(int x, int y, int z, int id, boolean artificial) {
+	public void setBlock(int x, int y, int z, int id, boolean artificial, boolean notify) {
 		int icx = x & 15;
 		int icz = z & 15;
 
@@ -190,10 +189,12 @@ public class World implements IRenderable {
 		if (chunkProvider.isChunkLoaded(coord)) {
 			Chunk c = chunkProvider.getChunk(coord);
 			
+			if (notify) {
 			Block before = Block.getBlock(getBlock(x, y, z));
 			
 			if (before != null) { 
 				before.onRemoved(x, y, z, this);
+			}
 			}
 			
 			c.setBlock(icx, y, icz, id, true);
@@ -204,8 +205,9 @@ public class World implements IRenderable {
 			}
 		}
 		
-		if(id != 0)
-			Block.getBlock(id).onPlaced(x, y, z, this);
+		if (notify) {
+			if(id != 0) Block.getBlock(id).onPlaced(x, y, z, this);
+		}
 	}
 
 	public void setBlockNoRebuild(int x, int y, int z, byte id) {

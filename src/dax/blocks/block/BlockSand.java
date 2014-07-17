@@ -15,8 +15,8 @@ public class BlockSand extends BlockBasic {
 		super.onTick(x, y, z, world);
 		int below = world.getBlock(x, y - 1, z);
 		if(below == 0 || !Block.getBlock(below).isCollidable()) {
-			world.setBlock(x, y - 1, z, 7, true);
-			world.setBlock(x, y, z, 0, true);
+			world.setBlock(x, y - 1, z, 7, true, true);
+			world.setBlock(x, y, z, 0, true, true);
 		}
 	}
 

@@ -23,11 +23,11 @@ public class TreeGenerator {
 		fill(x-2, y+leavesStart, z-2, x+2, y+leavesEnd-2, z+2, Block.leaves.getId());
 		fill(x-2, y+leavesStart+2, z-1, x+2, y+leavesEnd-1, z+1, Block.leaves.getId());
 		fill(x-1, y+leavesStart+2, z-2, x+1, y+leavesEnd-1, z+2, Block.leaves.getId());
-		world.setBlock(x-1, y+leavesEnd, z, Block.leaves.getId(), false);
-		world.setBlock(x+1, y+leavesEnd, z, Block.leaves.getId(), false);
-		world.setBlock(x, y+leavesEnd, z-1, Block.leaves.getId(), false);
-		world.setBlock(x, y+leavesEnd, z+1, Block.leaves.getId(), false);
-		world.setBlock(x, y+leavesEnd, z, Block.leaves.getId(), false);
+		world.setBlock(x-1, y+leavesEnd, z, Block.leaves.getId(), false, true);
+		world.setBlock(x+1, y+leavesEnd, z, Block.leaves.getId(), false, true);
+		world.setBlock(x, y+leavesEnd, z-1, Block.leaves.getId(), false, true);
+		world.setBlock(x, y+leavesEnd, z+1, Block.leaves.getId(), false, true);
+		world.setBlock(x, y+leavesEnd, z, Block.leaves.getId(), false, true);
 		
 		fill(x, y, z, x, y+trunkHeight, z, Block.log.getId());
 	}
@@ -36,7 +36,7 @@ public class TreeGenerator {
 		for (int x = x0; x <= x1; x++) {
 			for (int y = y0; y <= y1; y++) {
 				for (int z = z0; z <= z1; z++) {
-					world.setBlock(x, y, z, id, false);
+					world.setBlock(x, y, z, id, false, true);
 				}
 			}
 		}
