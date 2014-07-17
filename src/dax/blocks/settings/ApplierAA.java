@@ -8,7 +8,7 @@ import dax.blocks.Game;
 public class ApplierAA extends Applier {
 
 	@Override
-	public void apply() {	
+	public boolean apply(Object val) {	
 		Display.destroy();
 		
 		GLHelper.setDisplayMode(Game.getInstance().width, Game.getInstance().height, Game.getInstance().isFullscreen);
@@ -18,6 +18,7 @@ public class ApplierAA extends Applier {
 		
 		Game.getInstance().world.deleteAllDisplayLists();
 		
+		return true;
 	}
 
 }

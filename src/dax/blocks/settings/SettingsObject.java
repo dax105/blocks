@@ -17,6 +17,8 @@ public class SettingsObject<T> {
 			return "[FLOAT]";
 		case BOOLEAN:
 			return "[BOOL]";
+		case STRING:
+			return "[STRING]";
 		default:
 			return "[?]";
 		}
@@ -49,6 +51,9 @@ public class SettingsObject<T> {
 		if(type == Boolean.class)
 			return ObjectType.BOOLEAN;
 		
+		if(type == String.class)
+			return ObjectType.STRING;
+		
 		return null;
 	}
 	
@@ -72,9 +77,11 @@ public class SettingsObject<T> {
 	}
 	
 	public void setValue(T value, boolean applyApplier) {
-		this.value = value;
 		if (applier != null && applyApplier) {
-			applier.apply();
+			if(applier.apply(value))
+				this.value = value;
+		} else {
+			this.value = value;
 		}
 	}
 	

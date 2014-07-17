@@ -7,7 +7,7 @@ import dax.blocks.render.RenderPass;
 public class ApplierLeaves extends Applier {
 
 	@Override
-	public void apply() {
+	public boolean apply(Object val) {
 		boolean transp = Game.settings.transparent_leaves.getValue();
 		
 		Block.leaves.setOpaque(!transp);
@@ -18,6 +18,7 @@ public class ApplierLeaves extends Applier {
 			Game.getInstance().world.setAllChunksDirty();
 		}
 		
+		return true;
 	}
 
 }

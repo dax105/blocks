@@ -28,9 +28,9 @@ public class Settings {
 	public SettingsObject<Boolean> mipmaps = (SettingsObject<Boolean>) registerObject(new SettingsObject<Boolean>("mipmaps", true, "Mipmapping", "%o", null));
 	public SettingsObject<Boolean> sound = (SettingsObject<Boolean>) registerObject(new SettingsObject<Boolean>("sound", true, "Sound", "%o", new Applier() {
 		@Override
-		public void apply() {
+		public boolean apply(Object val) {
 			Game.sound.updateVolume();
-			
+			return true;
 		}
 	}));
 	public SettingsObject<Boolean> tree_generation = (SettingsObject<Boolean>) registerObject(new SettingsObject<Boolean>("tree_generation", true, "Tree generator", "%o", null));
@@ -45,11 +45,13 @@ public class Settings {
 	public SettingsObject<Float> ao_intensity = (SettingsObject<Float>) registerObject(new SettingsObject<Float>("ao_intensity", 0.25f, "AO Intensity", null, new ApplierAO()));
 	public SettingsObject<Float> sound_volume = (SettingsObject<Float>) registerObject(new SettingsObject<Float>("sound_volume", 1f, "Sound volume (0.0 - 1.0)", null, new Applier() {
 		@Override
-		public void apply() {
+		public boolean apply(Object val) {
 			Game.sound.updateVolume();
-			
+			return true;
 		}
 	}));
+	
+	public SettingsObject<String> resolution = (SettingsObject<String>) registerObject(new SettingsObject<String>("resolution", "800x480", "Window resolution", null, new ApplierResolution()));
 	
 	
 	public SettingsObject<Integer> fps_limit = (SettingsObject<Integer>) registerObject(new SettingsObject<Integer>("fps_limit", 0, "FPS Limit", null, null));
@@ -127,6 +129,10 @@ public class Settings {
 				case BOOLEAN:
 					((SettingsObject<Boolean>)getObject(name)).setValue(Boolean.parseBoolean(value), apply);
 					Game.console.out("Set value of boolean " + name + " to " + Boolean.parseBoolean(value));
+					break;
+				case STRING:
+					((SettingsObject<String>)getObject(name)).setValue(value, apply);
+					Game.console.out("Set value of string " + name + " to " + value);
 					break;
 				default:
 					break;

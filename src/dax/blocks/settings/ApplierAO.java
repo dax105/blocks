@@ -7,7 +7,7 @@ import dax.blocks.world.World;
 public class ApplierAO extends Applier {
 
 	@Override
-	public void apply() {
+	public boolean apply(Object val) {
 
 		if (Game.getInstance().ingame) {
 			Game.getInstance().world.saveAllChunks();
@@ -17,6 +17,8 @@ public class ApplierAO extends Applier {
 		Game.getInstance().displayLoadingScreen();
 		ModelManager.load();
 		Game.getInstance().closeGuiScreen();
+		
+		return true;
 	}
 
 }
