@@ -96,7 +96,7 @@ public class SoundManager {
 	}
 	
 	public void playMusic(String name, boolean loop) {
-		if (music.containsKey(name)) {
+		if (music.get(name) != null) {
 			stopMusic();
 			musicPlaying = name;
 			isMusicPlaying = true;
@@ -172,7 +172,7 @@ public class SoundManager {
 
 	public void playSound(String name, float pitch, float volume, float x,
 			float y, float z, boolean loop) {
-		if (sounds.containsKey(name)) {
+		if (sounds.get(name) != null) {
 			system.setVolume(name, volume);
 			system.setPitch(name, pitch);
 			system.setPosition(name, x, y, z);

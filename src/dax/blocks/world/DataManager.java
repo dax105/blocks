@@ -30,7 +30,7 @@ public class DataManager {
 	}
 
 	public Map<String, DataValue> getValuesForCoord(Coord3D position) {
-		if (values.containsKey(position)) {
+		if (values.get(position) != null) {
 			return values.get(position);
 		} else {
 			Map<String, DataValue> dataMap = new HashMap<String, DataValue>();
@@ -80,7 +80,7 @@ public class DataManager {
 
 				if (!currentMap.isEmpty()) {
 					values.put(currentCoords, currentMap);
-					currentMap.clear();
+					currentMap = new HashMap<>();
 				}
 				currentCoords = new Coord3D(Integer.parseInt(parts[1]),
 						Integer.parseInt(parts[2]), Integer.parseInt(parts[3]));

@@ -15,16 +15,16 @@ public class GuiScreenLoading extends GuiScreen {
 
 	public GuiScreenLoading(Game game, String text) {
 		super(game);
-		objects.add(new GuiObjectRectangle((game.width - width - overflow) / 2, (game.height - height - overflow) / 2, (game.width + width + overflow) / 2, (game.height + height + overflow) / 2, 0xA0000000));
+		objects.add(new GuiObjectRectangle((Game.settings.windowWidth.getValue() - width - overflow) / 2, (Game.settings.windowHeight.getValue() - height - overflow) / 2, (Game.settings.windowWidth.getValue() + width + overflow) / 2, (Game.settings.windowHeight.getValue() + height + overflow) / 2, 0xA0000000));
 
-		titleBar = new GuiObjectTitleBar((game.width - width) / 2, (game.height - height) / 2, (game.width + width) / 2, ((game.height - height) / 2) + 30, this.f, text);
+		titleBar = new GuiObjectTitleBar((Game.settings.windowWidth.getValue() - width) / 2, (Game.settings.windowHeight.getValue() - height) / 2, (Game.settings.windowWidth.getValue() + width) / 2, ((Game.settings.windowHeight.getValue() - height) / 2) + 30, this.f, text);
 	}
 	
 	public GuiScreenLoading(Game game) {
 		super(game);
-		objects.add(new GuiObjectRectangle((game.width - width - overflow) / 2, (game.height - height - overflow) / 2, (game.width + width + overflow) / 2, (game.height + height + overflow) / 2, 0xA0000000));
+		objects.add(new GuiObjectRectangle((Game.settings.windowWidth.getValue() - width - overflow) / 2, (Game.settings.windowHeight.getValue() - height - overflow) / 2, (Game.settings.windowWidth.getValue() + width + overflow) / 2, (Game.settings.windowHeight.getValue() + height + overflow) / 2, 0xA0000000));
 
-		titleBar = new GuiObjectTitleBar((game.width - width) / 2, (game.height - height) / 2, (game.width + width) / 2, ((game.height - height) / 2) + 30, this.f, "Loading...");
+		titleBar = new GuiObjectTitleBar((Game.settings.windowWidth.getValue() - width) / 2, (Game.settings.windowHeight.getValue() - height) / 2, (Game.settings.windowWidth.getValue() + width) / 2, ((Game.settings.windowHeight.getValue() - height) / 2) + 30, this.f, "Loading...");
 	}
 
 	public void update(String text) {

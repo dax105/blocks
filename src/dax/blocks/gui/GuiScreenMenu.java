@@ -12,14 +12,14 @@ public class GuiScreenMenu extends GuiScreen {
 
 	public GuiScreenMenu(Game game) {
 		super(game);
-		objects.add(new GuiObjectRectangle((game.width - width - overflow) / 2, (game.height - height - overflow) / 2, (game.width + width + overflow) / 2, (game.height + height + overflow) / 2, 0xA0000000));
+		objects.add(new GuiObjectRectangle((Game.settings.windowWidth.getValue() - width - overflow) / 2, (Game.settings.windowHeight.getValue() - height - overflow) / 2, (Game.settings.windowWidth.getValue() + width + overflow) / 2, (Game.settings.windowHeight.getValue() + height + overflow) / 2, 0xA0000000));
 
-		objects.add(new GuiObjectTitleBar((game.width - width) / 2, (game.height - height) / 2, (game.width + width) / 2, ((game.height - height) / 2) + 30, this.f, "Menu"));
+		objects.add(new GuiObjectTitleBar((Game.settings.windowWidth.getValue() - width) / 2, (Game.settings.windowHeight.getValue() - height) / 2, (Game.settings.windowWidth.getValue() + width) / 2, ((Game.settings.windowHeight.getValue() - height) / 2) + 30, this.f, "Menu"));
 
-		objects.add(new GuiObjectButton((game.width - width) / 2, (game.height - height) / 2 + 34, (game.width + width) / 2, ((game.height - height) / 2) + 58, this.f, "Back to game", 0, this));
-		objects.add(new GuiObjectButton((game.width - width) / 2, (game.height - height) / 2 + 62, (game.width + width) / 2, ((game.height - height) / 2) + 86, this.f, "Regenerate world", 1, this));
-		objects.add(new GuiObjectButton((game.width - width) / 2, (game.height - height) / 2 + 90, (game.width + width) / 2, ((game.height - height) / 2) + 114, this.f, "Options", 2, this));
-		objects.add(new GuiObjectButton((game.width - width) / 2, (game.height - height) / 2 + 118, (game.width + width) / 2, ((game.height - height) / 2) + 142, this.f, "Quit to title", 3, this));
+		objects.add(new GuiObjectButton((Game.settings.windowWidth.getValue() - width) / 2, (Game.settings.windowHeight.getValue() - height) / 2 + 34, (Game.settings.windowWidth.getValue() + width) / 2, ((Game.settings.windowHeight.getValue() - height) / 2) + 58, this.f, "Back to game", 0, this));
+		objects.add(new GuiObjectButton((Game.settings.windowWidth.getValue() - width) / 2, (Game.settings.windowHeight.getValue() - height) / 2 + 62, (Game.settings.windowWidth.getValue() + width) / 2, ((Game.settings.windowHeight.getValue() - height) / 2) + 86, this.f, "Regenerate world", 1, this));
+		objects.add(new GuiObjectButton((Game.settings.windowWidth.getValue() - width) / 2, (Game.settings.windowHeight.getValue() - height) / 2 + 90, (Game.settings.windowWidth.getValue() + width) / 2, ((Game.settings.windowHeight.getValue() - height) / 2) + 114, this.f, "Options", 2, this));
+		objects.add(new GuiObjectButton((Game.settings.windowWidth.getValue() - width) / 2, (Game.settings.windowHeight.getValue() - height) / 2 + 118, (Game.settings.windowWidth.getValue() + width) / 2, ((Game.settings.windowHeight.getValue() - height) / 2) + 142, this.f, "Quit to title", 3, this));
 	}
 
 	@Override

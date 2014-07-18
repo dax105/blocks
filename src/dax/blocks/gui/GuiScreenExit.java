@@ -1,5 +1,7 @@
 package dax.blocks.gui;
 
+import dax.blocks.Game;
+
 public class GuiScreenExit extends GuiScreen {
 
 	int width = 400;
@@ -9,12 +11,12 @@ public class GuiScreenExit extends GuiScreen {
 
 	public GuiScreenExit(GuiScreen parent) {
 		super(parent);
-		objects.add(new GuiObjectRectangle((game.width - width - overflow) / 2, (game.height - height - overflow) / 2, (game.width + width + overflow) / 2, (game.height + height + overflow) / 2, 0xA0000000));
+		objects.add(new GuiObjectRectangle((Game.settings.windowWidth.getValue() - width - overflow) / 2, (Game.settings.windowHeight.getValue() - height - overflow) / 2, (Game.settings.windowWidth.getValue() + width + overflow) / 2, (Game.settings.windowHeight.getValue() + height + overflow) / 2, 0xA0000000));
 
-		objects.add(new GuiObjectTitleBar((game.width - width) / 2, (game.height - height) / 2, (game.width + width) / 2, ((game.height - height) / 2) + 30, this.f, "Do you really want to exit?"));
+		objects.add(new GuiObjectTitleBar((Game.settings.windowWidth.getValue() - width) / 2, (Game.settings.windowHeight.getValue() - height) / 2, (Game.settings.windowWidth.getValue() + width) / 2, ((Game.settings.windowHeight.getValue() - height) / 2) + 30, this.f, "Do you really want to exit?"));
 
-		objects.add(new GuiObjectButton((game.width - width) / 2, (game.height + height) / 2 - 24, (game.width) / 2, ((game.height + height) / 2), this.f, "No", 0, this));
-		objects.add(new GuiObjectButton((game.width + 8) / 2, (game.height + height) / 2 - 24, (game.width + width) / 2, ((game.height + height) / 2), this.f, "Yes", 1, this));
+		objects.add(new GuiObjectButton((Game.settings.windowWidth.getValue() - width) / 2, (Game.settings.windowHeight.getValue() + height) / 2 - 24, (Game.settings.windowWidth.getValue()) / 2, ((Game.settings.windowHeight.getValue() + height) / 2), this.f, "No", 0, this));
+		objects.add(new GuiObjectButton((Game.settings.windowWidth.getValue() + 8) / 2, (Game.settings.windowHeight.getValue() + height) / 2 - 24, (Game.settings.windowWidth.getValue() + width) / 2, ((Game.settings.windowHeight.getValue() + height) / 2), this.f, "Yes", 1, this));
 	}
 
 	@Override

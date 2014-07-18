@@ -11,9 +11,9 @@ public class ApplierAA extends Applier {
 	public boolean apply(Object val) {	
 		Display.destroy();
 		
-		GLHelper.setDisplayMode(Game.getInstance().width, Game.getInstance().height, Game.getInstance().isFullscreen);
+		GLHelper.setDisplayMode(Game.settings.windowWidth.getValue(), Game.settings.windowHeight.getValue(), Game.settings.fullscreen.getValue());
 		
-		GLHelper.initGL(Game.getInstance().width, Game.getInstance().height);
+		GLHelper.initGL(Game.settings.windowWidth.getValue(), Game.settings.windowHeight.getValue());
 		Game.getInstance().load(!Game.getInstance().ingame);
 		
 		Game.getInstance().world.deleteAllDisplayLists();

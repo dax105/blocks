@@ -409,7 +409,6 @@ public class ChunkProvider {
 	
 	public Chunk getChunk(int xc, int zc) {
 		if (isChunkCached(xc, zc)) {
-			System.out.println("yeah");
 			return cachedChunks.get(new Coord2D(xc, zc));
 		} else if (loader.isChunkSaved(xc, zc)) {
 			System.out.println("Loading " + xc + ":" + zc);

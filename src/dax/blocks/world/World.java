@@ -335,14 +335,14 @@ public class World implements IRenderable {
 	public void setData(int x, int y, int z, String key, String value) {
 		Map<String, DataValue> coordData = blockDataManager.getValuesForCoord(
 				x, y, z);
-		if (coordData.containsKey(key))
+		if (coordData.get(key) != null)
 			coordData.get(key).setData(value);
 		else
 			coordData.put(key, new DataValue(value));
 	}
 
 	public String getDataString(int x, int y, int z, String key) {
-		if (blockDataManager.getValuesForCoord(x, y, z).containsKey(key))
+		if (containsData(x, y, z, key))
 			return blockDataManager.getValuesForCoord(x, y, z).get(key)
 					.getDataString();
 
@@ -350,7 +350,7 @@ public class World implements IRenderable {
 	}
 
 	public int getDataInt(int x, int y, int z, String key) {
-		if (blockDataManager.getValuesForCoord(x, y, z).containsKey(key))
+		if (containsData(x, y, z, key))
 			return blockDataManager.getValuesForCoord(x, y, z).get(key)
 					.getDataInt();
 
@@ -358,7 +358,7 @@ public class World implements IRenderable {
 	}
 
 	public float getDataFloat(int x, int y, int z, String key) {
-		if (blockDataManager.getValuesForCoord(x, y, z).containsKey(key))
+		if (containsData(x, y, z, key))
 			return blockDataManager.getValuesForCoord(x, y, z).get(key)
 					.getDataFloat();
 
@@ -366,13 +366,17 @@ public class World implements IRenderable {
 	}
 
 	public boolean getDataBoolean(int x, int y, int z, String key) {
-		if (blockDataManager.getValuesForCoord(x, y, z).containsKey(key))
+		if (containsData(x, y, z, key))
 			return blockDataManager.getValuesForCoord(x, y, z).get(key)
 					.getDataBoolean();
 
 		return false;
 	}
 
+	public boolean containsData(int x, int y, int z, String key) {
+		return (blockDataManager.getValuesForCoord(x, y, z).get(key) != null);
+	}
+	
 	public void removeData(int x, int y, int z) {
 		blockDataManager.getValuesForCoord(x, y, z).clear();
 	}
