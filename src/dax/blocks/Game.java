@@ -212,6 +212,7 @@ public class Game implements Runnable {
 	
 	//.... RENDER/UPDATE METHODS ....
 
+	float lastFov = 0;
 	public void onTick() {
 
 		while (Keyboard.next()) {
@@ -250,6 +251,18 @@ public class Game implements Runnable {
 					}
 				}
 
+			}
+		}
+		
+		if (Keyboard.isKeyDown(Keyconfig.zoom)) {
+			if(lastFov == 0) {
+				lastFov = Game.settings.fov.getValue();
+				Game.settings.fov.setValue(15f);
+			}
+		} else {
+			if(lastFov > 0) {
+				Game.settings.fov.setValue(lastFov);
+				lastFov = 0;
 			}
 		}
 
