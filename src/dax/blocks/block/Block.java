@@ -270,7 +270,7 @@ public abstract class Block {
 	
 	public void onRemoved(int x, int y, int z, World world) {
 		Coord3D c = new Coord3D(x, y, z);
-		if(Block.tickingBlocks.containsKey(c)) {
+		if(Block.tickingBlocks.get(c) != null) {
 			Block.tickingBlocks.remove(c);
 		}
 		

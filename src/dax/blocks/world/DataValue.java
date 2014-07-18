@@ -9,6 +9,26 @@ public class DataValue {
 	private float data_Float;
 	private boolean data_Boolean;
 
+	
+	@Override
+	public boolean equals(Object obj) {
+		if(obj instanceof DataValue) {
+			DataValue sVal = (DataValue)obj;
+			switch (sVal.objectType) {
+			case BOOLEAN:
+				return sVal.data_Boolean == this.data_Boolean;
+			case FLOAT:
+				return sVal.data_Float == this.data_Float;
+			case INTEGER:
+				return sVal.data_Integer == this.data_Integer;
+			case STRING:
+				return sVal.data_String.equals(this.data_String);
+			}
+		}
+		
+		return false;
+	}
+
 	public DataValue(String data) {
 		this.setData(data);
 	}

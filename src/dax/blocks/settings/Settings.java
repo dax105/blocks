@@ -148,7 +148,7 @@ public class Settings {
 	}
 
 	public SettingsObject<?> getObject(String name) {
-		if (objects.containsKey(name))
+		if (objects.get(name) != null)
 			return objects.get(name);
 
 		return null;

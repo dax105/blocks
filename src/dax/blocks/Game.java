@@ -1,8 +1,6 @@
 package dax.blocks;
 
-import java.awt.Dimension;
 import java.awt.Font;
-import java.awt.Toolkit;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -466,11 +464,11 @@ public class Game implements Runnable {
 		font.drawString(Game.settings.windowWidth.getValue() - stringWidth - 2, font.getHeight() * 2,
 				fpsString);
 
-		font.drawString(2, 0, "X Position: " + world.player.getPosX());
+		font.drawString(2, 0, "X Position: " + world.player.getPosX() + " (laX: " + world.player.getLookingAtX() + ")");
 		font.drawString(2, font.getHeight(),
-				"Y Position: " + world.player.getPosY());
+				"Y Position: " + world.player.getPosY() + " (laY: " + world.player.getLookingAtY() + ")");
 		font.drawString(2, font.getHeight() * 2,
-				"Z Position: " + world.player.getPosZ());
+				"Z Position: " + world.player.getPosZ() + " (laZ: " + world.player.getLookingAtZ() + ")");
 		font.drawString(
 				2,
 				font.getHeight() * 3,

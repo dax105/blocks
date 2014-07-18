@@ -335,7 +335,7 @@ public class World implements IRenderable {
 	public void setData(int x, int y, int z, String key, String value) {
 		Map<String, DataValue> coordData = blockDataManager.getValuesForCoord(
 				x, y, z);
-		if (coordData.containsKey(key))
+		if (coordData.get(key) != null)
 			coordData.get(key).setData(value);
 		else
 			coordData.put(key, new DataValue(value));
@@ -374,7 +374,7 @@ public class World implements IRenderable {
 	}
 
 	public boolean containsData(int x, int y, int z, String key) {
-		return blockDataManager.getValuesForCoord(x, y, z).containsKey(key);
+		return (blockDataManager.getValuesForCoord(x, y, z).get(key) != null);
 	}
 	
 	public void removeData(int x, int y, int z) {

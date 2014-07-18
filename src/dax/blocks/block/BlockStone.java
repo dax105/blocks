@@ -14,10 +14,11 @@ public class BlockStone extends BlockBasic {
 	}
 
 	private void setColor(int x, int y, int z, World w) {
-		if(w.containsData(x, y, z, "recolor_r") && w.containsData(x, y, z, "recolor_g") && w.containsData(x, y, z, "recolor_b")) {
+		if(w.containsData(x, y, z, "recolor_r")) {
 			this.lightColorR = w.getDataFloat(x, y, z, "recolor_r");
 			this.lightColorG = w.getDataFloat(x, y, z, "recolor_g");
 			this.lightColorB = w.getDataFloat(x, y, z, "recolor_b");
+			//GL11.glColor3f(w.getDataFloat(x, y, z, "recolor_r"), w.getDataFloat(x, y, z, "recolor_g"), w.getDataFloat(x, y, z, "recolor_b"));
 		}
 	}
 	
@@ -74,6 +75,7 @@ public class BlockStone extends BlockBasic {
 		world.setData(x, y, z, "recolor_r", "" + rnd.nextFloat());
 		world.setData(x, y, z, "recolor_g", "" + rnd.nextFloat());
 		world.setData(x, y, z, "recolor_b", "" + rnd.nextFloat());
+		
 		world.setChunkDirty(x >> 4, y/16, z >> 4);
 	}
 	
