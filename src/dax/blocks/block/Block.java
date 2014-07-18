@@ -150,7 +150,7 @@ public abstract class Block {
 	
 	public static final Block grass = new BlockBasic(1).setTopTexture(4).setSideTexture(5).setBottomTexture(3).setStepSound(SoundManager.footstep_grass).setFallSound("fall_soft");
 	public static final Block dirt = new BlockBasic(2).setAllTextures(3).setStepSound(SoundManager.footstep_dirt).setFallSound("fall_soft");
-	public static final Block stone = new BlockBasic(3).setAllTextures(0).setStepSound(SoundManager.footstep_stone).setFallSound("fall_hard");
+	public static final Block stone = new BlockStone();
 	public static final Block wood = new BlockBasic(4).setAllTextures(2).setStepSound(SoundManager.footstep_wood).setFallSound("fall_hard");
 	public static final Block stoneMossy = new BlockBasic(5).setAllTextures(1).setStepSound(SoundManager.footstep_stone).setFallSound("fall_hard");
 	public static final Block bricks = new BlockBasic(6).setAllTextures(8).setStepSound(SoundManager.footstep_stone).setFallSound("fall_hard");
@@ -232,6 +232,10 @@ public abstract class Block {
 	 * @param c occlusion of the corner
 	 */
 	public void addVertexWithAO(float x, float y, float z, boolean s1, boolean s2, boolean c) {
+		addVertexWithAO(x, y, z, s1, s2, c, 1, 1, 1);
+	}
+
+	public void addVertexWithAO(float x, float y, float z, boolean s1, boolean s2, boolean c, float r, float g, float b) {
 		float ao;
 	
 		if (s1 && s2) {
@@ -251,12 +255,12 @@ public abstract class Block {
 		float aom = ao * Game.settings.ao_intensity.getValue();
 	
 		if (ao != lastAO) {
-			GL11.glColor3f(1.0f - aom, 1.0f - aom, 1.0f - aom);
+			GL11.glColor3f(r - aom, g - aom, b - aom);
 		}	
 		
 		GL11.glVertex3f(x, y, z);
 	}
-
+	
 	
 	public void onPlaced(int x, int y, int z, World world) {
 		if(this.isRequiringTick() || this.isRequiringRenderTick()) {
