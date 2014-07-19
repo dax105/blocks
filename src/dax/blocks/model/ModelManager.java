@@ -1,4 +1,4 @@
-package dax.blocks;
+package dax.blocks.model;
 
 import java.awt.Color;
 import java.awt.image.BufferedImage;
@@ -17,11 +17,25 @@ import org.newdawn.slick.util.ResourceLoader;
 
 public class ModelManager {
 
-	public static final int BUFFER = 1024;
-	
-	public static Model character;
+	private final int BUFFER = 1024;
+	private Map<String, Model> models;
 
-	public static Model loadModel(String path) {
+	public ModelManager() {
+		this.models = new HashMap<>();
+	}
+	
+	public void load() {
+		models.put("char", loadModel("dax/blocks/res/models/char.zip"));
+		
+		for(Model m : models.values())
+			m.generateDisplayList();
+	}
+	
+	public Model getModel(String name) {
+		return models.get(name);
+	}
+	
+	private Model loadModel(String path) {
 		try {
 			Model m = new Model();
 			Map<String, byte[]> streams = new HashMap<String, byte[]>();
@@ -70,14 +84,14 @@ public class ModelManager {
 				img = ImageIO.read(bain);
 				
 				if (i == 0) {
-					m.width = img.getWidth() + 1;
-					m.height = img.getHeight() + 1;
-					m.depth = maxl + 1;
+					m.setWidth(img.getWidth() + 1);
+					m.setHeight(img.getHeight() + 1);
+					m.setDepth(maxl + 1);
 					m.createArray();
 				}
 
-				for (int x = 0; x < m.width-1; x++) {
-					for (int y = 0; y < m.height-1; y++) {
+				for (int x = 0; x < m.getWidth() - 1; x++) {
+					for (int y = 0; y < m.getHeight() - 1; y++) {
 
 						int col = img.getRGB(x, y);
 
@@ -98,10 +112,4 @@ public class ModelManager {
 			return null;
 		}
 	}
-
-	public static void load() {
-		character = loadModel("dax/blocks/res/models/char.zip");
-		character.generateDisplayList();
-	}
-
 }

@@ -5,11 +5,8 @@ import java.util.Random;
 import dax.blocks.Game;
 
 public class MusicProvider {
-	public String[] gameMusic;
-	public String[] menuMusic;
-
-	// private boolean isMenuPlaying;
-	// private boolean isGamePlaying;
+	private String[] gameMusic;
+	private String[] menuMusic;
 
 	private String[] menuQueue;
 	private String[] gameQueue;

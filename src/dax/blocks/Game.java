@@ -22,6 +22,7 @@ import dax.blocks.gui.GuiScreen;
 import dax.blocks.gui.GuiScreenLoading;
 import dax.blocks.gui.GuiScreenMainMenu;
 import dax.blocks.gui.GuiScreenMenu;
+import dax.blocks.model.ModelManager;
 import dax.blocks.profiler.Profiler;
 import dax.blocks.profiler.Section;
 import dax.blocks.render.IRenderable;
@@ -37,6 +38,8 @@ public class Game implements Runnable {
 	public static Console console = new Console();
 	public static WorldsManager worlds = new WorldsManager();
 	public static SoundManager sound = new SoundManager();
+	public static ModelManager models = new ModelManager();
+	
 	public static final String TITLE = Start.GAME_NAME + " v" + Start.GAME_VERSION;
 	
 	private File configFile = new File("settings.txt");
@@ -168,7 +171,7 @@ public class Game implements Runnable {
 		displayLoadingScreen("Loading textures...");
 		TextureManager.load();
 		displayLoadingScreen("Loading models...");
-		ModelManager.load();
+		Game.models.load();
 		displayLoadingScreen("Loading keyconfig...");
 		Keyconfig.load();
 		displayLoadingScreen("Loading sounds...");
@@ -417,7 +420,6 @@ public class Game implements Runnable {
 			
 			float[] tick = this.profiler.tick.getTimes();
 			float[] render = this.profiler.render.getTimes();
-			float[] total = this.profiler.total.getTimes();
 			float[] build = this.profiler.build.getTimes();
 			
 			for (int i = 0; i < Section.MAX_RECORDS; i++) {
@@ -462,7 +464,7 @@ public class Game implements Runnable {
 			FontManager.text.drawString(offset-FontManager.text.getWidth(buildText)-2, (int)(Display.getHeight()-avgBuild*10-FontManager.text.getLineHeight()*0.75f), buildText);
 		}
 		
-		Block b = Block.getBlock(world.player.getSelectedBlockID());
+		Block b = Block.getBlock(world.getPlayer().getSelectedBlockID());
 		int textureid = b.sideTexture;
 
 		GLHelper.drawFromAtlas(textureid, 25, 75, Game.settings.windowHeight.getValue() - 75, Game.settings.windowHeight.getValue() - 25);
@@ -477,20 +479,20 @@ public class Game implements Runnable {
 		font.drawString(Game.settings.windowWidth.getValue() - stringWidth - 2, font.getHeight() * 2,
 				fpsString);
 
-		font.drawString(2, 0, "X Position: " + world.player.getPosX() + " (laX: " + world.player.getLookingAtX() + ")");
+		font.drawString(2, 0, "X Position: " + world.getPlayer().getPosX() + " (laX: " + world.getPlayer().getLookingAtX() + ")");
 		font.drawString(2, font.getHeight(),
-				"Y Position: " + world.player.getPosY() + " (laY: " + world.player.getLookingAtY() + ")");
+				"Y Position: " + world.getPlayer().getPosY() + " (laY: " + world.getPlayer().getLookingAtY() + ")");
 		font.drawString(2, font.getHeight() * 2,
-				"Z Position: " + world.player.getPosZ() + " (laZ: " + world.player.getLookingAtZ() + ")");
+				"Z Position: " + world.getPlayer().getPosZ() + " (laZ: " + world.getPlayer().getLookingAtZ() + ")");
 		font.drawString(
 				2,
 				font.getHeight() * 3,
 				"Biome: "
-						+ world.chunkProvider.getBiomeAtLocation(
-								(int) world.player.getPosX(),
-								(int) world.player.getPosZ()).getName());
+						+ world.getChunkProvider().getBiomeAtLocation(
+								(int) world.getPlayer().getPosX(),
+								(int) world.getPlayer().getPosZ()).getName());
 		font.drawString(2, font.getHeight() * 4, "Lives: "
-				+ ((int) (world.player.getLifes() * 100)));
+				+ ((int) (world.getPlayer().getLifes() * 100)));
 
 		String memory = "Used memory: "
 				+ (allocatedMemory / (1024 * 1024) - freeMemory / (1024 * 1024))
@@ -503,7 +505,7 @@ public class Game implements Runnable {
 		font.drawString(Game.settings.windowWidth.getValue() - font.getWidth(chunks) - 2, font.getHeight(),
 				chunks);
 
-		if (world.chunkProvider.loading) {
+		if (world.getChunkProvider().loading) {
 			font.drawString(Game.settings.windowWidth.getValue() - font.getWidth("Loading chunks...") - 2,
 					Game.settings.windowHeight.getValue() - font.getHeight(), "Loading chunks...",
 					new org.newdawn.slick.Color(255, 255, 255, 255));
@@ -512,7 +514,7 @@ public class Game implements Runnable {
 		if (renderEngine.building) {
 			font.drawString(Game.settings.windowWidth.getValue() - font.getWidth("Building chunks...") - 2,
 					Game.settings.windowHeight.getValue() - font.getHeight()
-							* (world.chunkProvider.loading ? 2 : 1),
+							* (world.getChunkProvider().loading ? 2 : 1),
 					"Building chunks...", new org.newdawn.slick.Color(255, 255,
 							255, 255));
 		}

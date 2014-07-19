@@ -30,7 +30,7 @@ public class CommandTele extends Command {
 					return false;
 				}
 				
-				game.world.player.setPosition(x, y, z);
+				game.world.getPlayer().setPosition(x, y, z);
 				
 				return true;
 			} catch (NumberFormatException e) {
