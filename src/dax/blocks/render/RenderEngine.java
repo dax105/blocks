@@ -7,7 +7,6 @@ import java.nio.FloatBuffer;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
-
 import org.lwjgl.BufferUtils;
 import org.lwjgl.opengl.ARBFragmentShader;
 import org.lwjgl.opengl.ARBShaderObjects;
@@ -15,10 +14,8 @@ import org.lwjgl.opengl.ARBVertexShader;
 import org.lwjgl.opengl.Display;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL20;
-
 import dax.blocks.Coord2D;
 import dax.blocks.Game;
-import dax.blocks.ModelManager;
 import dax.blocks.Particle;
 import dax.blocks.TextureManager;
 import dax.blocks.block.Block;
@@ -273,7 +270,7 @@ public class RenderEngine {
 				Game.settings.drawDistance.getValue() * 16 - 8);
 
 		this.ptt = ptt;
-		pushPlayerMatrix(world.player);
+		pushPlayerMatrix(world.getPlayer());
 		updateBeforeRendering(ptt);
 
 
@@ -289,9 +286,9 @@ public class RenderEngine {
 		sEnable(FLAG_TEXTURE);
 		sEnable(FLAG_FOG);
 
-		renderSkybox(world.player.getPosXPartial(),
-				world.player.getPosYPartial() + PlayerEntity.EYES_HEIGHT,
-				world.player.getPosZPartial());
+		renderSkybox(world.getPlayer().getPosXPartial(),
+				world.getPlayer().getPosYPartial() + PlayerEntity.EYES_HEIGHT,
+				world.getPlayer().getPosZPartial());
 
 		TextureManager.atlas.bind();
 
@@ -313,7 +310,7 @@ public class RenderEngine {
 			GL11.glPushMatrix();
 			GL11.glTranslatef(i - 0.0625f, 49, 10);
 			GL11.glScalef(0.5f, 0.5f, 0.5f);
-			GL11.glCallList(ModelManager.character.displayList);
+			GL11.glCallList(Game.models.getModel("char").getDisplayList());
 			GL11.glPopMatrix();
 		}
 
@@ -325,10 +322,10 @@ public class RenderEngine {
 		GL11.glEnable(GL11.GL_LIGHTING);
 		GL11.glEnable(GL11.GL_TEXTURE_2D);
 
-		int pcx = (int) Math.floor(world.player.getPosX()) >> 4;
-		int pcz = (int) Math.floor(world.player.getPosZ()) >> 4;
+		int pcx = (int) Math.floor(world.getPlayer().getPosX()) >> 4;
+		int pcz = (int) Math.floor(world.getPlayer().getPosZ()) >> 4;
 
-		List<Chunk> visibleChunks = world.chunkProvider.getChunksInRadius(pcx,
+		List<Chunk> visibleChunks = world.getChunkProvider().getChunksInRadius(pcx,
 				pcz, Game.settings.drawDistance.getValue());
 
 		for (Iterator<Chunk> iter = visibleChunks.iterator(); iter.hasNext();) {
@@ -356,7 +353,7 @@ public class RenderEngine {
 
 					if (!c.renderChunks[y].isGenerated()
 							|| c.renderChunks[y].isDirty()) {
-						ChunkProvider cp = world.chunkProvider;
+						ChunkProvider cp = world.getChunkProvider();
 						if (cp.isChunkLoaded(new Coord2D(c.x + 1, c.z))
 								&& cp.isChunkLoaded(new Coord2D(c.x - 1, c.z))
 								&& cp.isChunkLoaded(new Coord2D(c.x, c.z + 1))
@@ -460,30 +457,30 @@ public class RenderEngine {
 		sDisable(FLAG_FOG);
 
 		if (Game.settings.clouds.getValue()) {
-			renderClouds(world.player.getPosXPartial(), world.player.getPosZPartial());
+			renderClouds(world.getPlayer().getPosXPartial(), world.getPlayer().getPosZPartial());
 		}	
 
 		// Render selection box
-		if (world.player.hasSelectedBlock()) {
+		if (world.getPlayer().hasSelectedBlock()) {
 			GL11.glDisable(GL11.GL_DEPTH_TEST);
 			GL11.glDepthMask(false);
 			GL11.glLineWidth(2);
 			GL11.glColor4f(0.0F, 0.0F, 0.0F, 0.25F);
-			renderLinedBox(world.player.getLookingAtX() - 0.002f,
-					world.player.getLookingAtY() - 0.002f,
-					world.player.getLookingAtZ() - 0.002f,
-					world.player.getLookingAtX() + 1 + 0.002f,
-					world.player.getLookingAtY() + 1 + 0.002f,
-					world.player.getLookingAtZ() + 1 + 0.002f);
+			renderLinedBox(world.getPlayer().getLookingAtX() - 0.002f,
+					world.getPlayer().getLookingAtY() - 0.002f,
+					world.getPlayer().getLookingAtZ() - 0.002f,
+					world.getPlayer().getLookingAtX() + 1 + 0.002f,
+					world.getPlayer().getLookingAtY() + 1 + 0.002f,
+					world.getPlayer().getLookingAtZ() + 1 + 0.002f);
 			GL11.glEnable(GL11.GL_DEPTH_TEST);
 			GL11.glLineWidth(4);
 			GL11.glColor4f(0.0F, 0.0F, 0.0F, 0.5F);
-			renderLinedBox(world.player.getLookingAtX() - 0.002f,
-					world.player.getLookingAtY() - 0.002f,
-					world.player.getLookingAtZ() - 0.002f,
-					world.player.getLookingAtX() + 1 + 0.002f,
-					world.player.getLookingAtY() + 1 + 0.002f,
-					world.player.getLookingAtZ() + 1 + 0.002f);
+			renderLinedBox(world.getPlayer().getLookingAtX() - 0.002f,
+					world.getPlayer().getLookingAtY() - 0.002f,
+					world.getPlayer().getLookingAtZ() - 0.002f,
+					world.getPlayer().getLookingAtX() + 1 + 0.002f,
+					world.getPlayer().getLookingAtY() + 1 + 0.002f,
+					world.getPlayer().getLookingAtZ() + 1 + 0.002f);
 			GL11.glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
 			GL11.glDepthMask(true);
 		}

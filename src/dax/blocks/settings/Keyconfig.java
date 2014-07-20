@@ -22,6 +22,8 @@ public class Keyconfig {
 	public static int fullscreen;
 	public static int exit;
 	
+	public static int zoom;
+	
 	public static void load() {
 		ahead = new int[] { Keyboard.KEY_W, Keyboard.KEY_UP };
 		back = new int[] { Keyboard.KEY_S, Keyboard.KEY_DOWN };
@@ -36,6 +38,7 @@ public class Keyconfig {
 		console = new int[] { Keyboard.KEY_C, Keyboard.KEY_GRAVE };
 		fullscreen = Keyboard.KEY_F;
 		exit = Keyboard.KEY_ESCAPE;
+		zoom = Keyboard.KEY_Z;
 	}
 	
 	public static void save(File config) {

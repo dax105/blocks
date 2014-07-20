@@ -38,7 +38,7 @@ public class AtlasBuilder {
 			
 			texSize = tex.getWidth();
 			
-			if (!isPowerOfTwo(texSize)) {
+			if (!GameMath.isPowerOfTwo(texSize)) {
 				Game.console.out("Texture size is not power of two! Exiting!");
 				System.exit(1);
 			}
@@ -106,10 +106,6 @@ public class AtlasBuilder {
 		Game.console.out("Texture atlas built successfully!");
 		
 		return atlas;
-	}
-	
-	public static boolean isPowerOfTwo(int x) {
-	    return (x != 0) && ((x & (x - 1)) == 0);
 	}
 	
 }

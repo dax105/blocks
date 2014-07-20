@@ -1,12 +1,15 @@
 package dax.blocks.world;
 
 import dax.blocks.collisions.AABB;
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.logging.Logger;
 import java.util.Random;
 import dax.blocks.Coord2D;
 import dax.blocks.Coord3D;
@@ -14,11 +17,9 @@ import dax.blocks.Game;
 import dax.blocks.Particle;
 import dax.blocks.block.Block;
 import dax.blocks.movable.entity.PlayerEntity;
-import dax.blocks.render.Frustum;
 import dax.blocks.render.IRenderable;
 import dax.blocks.world.chunk.Chunk;
 import dax.blocks.world.chunk.ChunkProvider;
-import dax.blocks.world.generator.TreeGenerator;
 
 public class World implements IRenderable {
 
@@ -30,11 +31,13 @@ public class World implements IRenderable {
 	private List<IRenderable> renderables;
 
 	private Coord2D c2d;
+	private PlayerEntity player;
+	private ChunkProvider chunkProvider;
+	private DataManager blockDataManager;
 
 	public int size;
 	public int sizeBlocks;
-	public PlayerEntity player;
-	public ChunkProvider chunkProvider;
+
 	public String name;
 
 	float[] rightMod = new float[3];
@@ -42,11 +45,6 @@ public class World implements IRenderable {
 
 	Random rand = new Random();
 	private int vertices;
-
-	public DataManager blockDataManager;
-	public TreeGenerator treeGen;
-
-	Frustum frustum;
 
 	public int chunksDrawn;
 
@@ -59,14 +57,12 @@ public class World implements IRenderable {
 	public World(boolean trees, Game game, boolean load, String worldName) {
 		this.name = worldName;
 		player = new PlayerEntity(this, 0, 128, 0);
-		this.treeGen = new TreeGenerator(this);
 
 		this.renderables = new ArrayList<IRenderable>();
 		this.renderables.add(this.player);
 
 		chunkProvider = new ChunkProvider(this, load);
 
-		this.frustum = new Frustum();
 		this.c2d = new Coord2D(-1, -1);
 
 		this.scheduledUpdates = new LinkedList<ScheduledUpdate>();
@@ -81,8 +77,28 @@ public class World implements IRenderable {
 		return this.c2d;
 	}
 
+	public PlayerEntity getPlayer() {
+		return this.player;
+	}
+	
+	public ChunkProvider getChunkProvider() {
+		return this.chunkProvider;
+	}
+	
+	public DataManager getDataManager() {
+		return this.blockDataManager;
+	}
+	
+	public void createDataManager(File file) {
+		try {
+			this.blockDataManager = new DataManager(file);
+		} catch (IOException e) {
+			Logger.getGlobal().warning("Can't create data file!");
+		}
+	}
+	
 	public List<Particle> particles = new LinkedList<Particle>();
-
+	
 	public void spawnParticleWithRandomDirectionFast(float x, float y, float z,
 			float vel, float velFuzziness) {
 

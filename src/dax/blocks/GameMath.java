@@ -26,4 +26,8 @@ public class GameMath {
 		return lerp(z, z1, z2, r0, r1);
 	}
 
+	public static boolean isPowerOfTwo(int x) {
+	    return (x != 0) && ((x & (x - 1)) == 0);
+	}
+
 }

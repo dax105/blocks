@@ -21,6 +21,7 @@ import dax.blocks.world.CoordDistanceComparator;
 import dax.blocks.world.World;
 import dax.blocks.world.generator.Biome;
 import dax.blocks.world.generator.SimplexNoise;
+import dax.blocks.world.generator.TreeGenerator;
 
 public class ChunkProvider {
 
@@ -29,6 +30,7 @@ public class ChunkProvider {
 
 	public boolean loading = false;
 
+	private TreeGenerator treeGen;
 	Map<Coord2D, Chunk> loadedChunks;
 	LinkedHashMap<Coord2D, Chunk> cachedChunks;
 
@@ -144,7 +146,7 @@ public class ChunkProvider {
 						if (block == Block.grass.getId()) {
 							
 							if(Game.settings.tree_generation.getValue())
-								world.treeGen.generateTree(tx, h+1, tz);
+								this.treeGen.generateTree(tx, h+1, tz);
 							
 						} else if (block != 0 && !(Block.getBlock((byte) block) instanceof BlockPlant)) {
 							break;
@@ -206,6 +208,7 @@ public class ChunkProvider {
 		this.seed = seed;
 		this.world = world;
 		this.loader = new ChunkSaveManager(this, world.name);
+		this.treeGen = new TreeGenerator(this.world);
 		
 		loader.tryToLoadWorld();
 
