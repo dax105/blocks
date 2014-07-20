@@ -79,7 +79,6 @@ public class SoundManager {
 		
 		system = new SoundSystem();
 		SoundManager.loadSounds(this.system);
-		this.updateVolume();
 		provider = new MusicProvider(this);
 	}
 	
@@ -142,9 +141,9 @@ public class SoundManager {
 		}
 	}
 
-	public void updateVolume() {
-		if (Game.settings.sound.getValue()) {
-			system.setMasterVolume(Game.settings.sound_volume.getValue());
+	public void updateVolume(boolean soundOn, float soundVolume) {
+		if (soundOn) {
+			system.setMasterVolume(soundVolume);
 			this.playMusic();
 		} else {
 			system.setMasterVolume(0);

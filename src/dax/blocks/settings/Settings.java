@@ -43,7 +43,7 @@ public class Settings {
 			"sound", true, "Sound", "%o", new Applier() {
 				@Override
 				public boolean apply(Object val) {
-					Game.sound.updateVolume();
+					Game.sound.updateVolume((boolean) val, sound_volume.getValue());
 					return true;
 				}
 			}));
@@ -72,7 +72,7 @@ public class Settings {
 			new Applier() {
 				@Override
 				public boolean apply(Object val) {
-					Game.sound.updateVolume();
+					Game.sound.updateVolume(sound.getValue(), (float) val);
 					return true;
 				}
 			}));
