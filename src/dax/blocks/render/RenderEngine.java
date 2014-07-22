@@ -7,6 +7,7 @@ import java.nio.FloatBuffer;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
+
 import org.lwjgl.BufferUtils;
 import org.lwjgl.opengl.ARBFragmentShader;
 import org.lwjgl.opengl.ARBShaderObjects;
@@ -14,6 +15,7 @@ import org.lwjgl.opengl.ARBVertexShader;
 import org.lwjgl.opengl.Display;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL20;
+
 import dax.blocks.Coord2D;
 import dax.blocks.Game;
 import dax.blocks.Particle;
@@ -297,11 +299,16 @@ public class RenderEngine {
 		GL11.glDisable(GL11.GL_TEXTURE_2D);
 
 		// Render particles
-		GL11.glBegin(GL11.GL_QUADS);
-		for (Particle p : world.particles) {
-			renderParticle(p, ptt);
+		/*GL11.glBegin(GL11.GL_QUADS);
+		for (IRenderable r : world.getRenderables()) {
+			if(r instanceof Particle)
+				renderParticle((Particle)r, ptt);
 		}
-		GL11.glEnd();
+		GL11.glEnd();*/
+		
+		for(IRenderable r : world.getRenderables()) {
+			r.renderWorld(ptt);
+		}
 
 		sEnable(FLAG_LIGHTING);
 		GL11.glEnable(GL11.GL_LIGHTING);

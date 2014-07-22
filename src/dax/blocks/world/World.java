@@ -29,6 +29,8 @@ public class World implements IRenderable {
 	private List<ScheduledUpdate> scheduledUpdates;
 	private List<ScheduledUpdate> newlyScheduledUpdates;
 	private List<IRenderable> renderables;
+	private List<IRenderable> scheduledRenderablesRemoval;
+	private List<IRenderable> scheduledRenderablesAdding;
 
 	private Coord2D c2d;
 	private PlayerEntity player;
@@ -67,6 +69,8 @@ public class World implements IRenderable {
 
 		this.scheduledUpdates = new LinkedList<ScheduledUpdate>();
 		this.newlyScheduledUpdates = new LinkedList<ScheduledUpdate>();
+		this.scheduledRenderablesAdding = new LinkedList<IRenderable>();
+		this.scheduledRenderablesRemoval = new LinkedList<IRenderable>();
 
 		chunkProvider.updateLoadedChunksInRadius((int) player.getPosX(),
 				(int) player.getPosZ(), Game.settings.drawDistance.getValue());
@@ -97,7 +101,16 @@ public class World implements IRenderable {
 		}
 	}
 	
-	public List<Particle> particles = new LinkedList<Particle>();
+	public void registerNewRenderable(IRenderable renderable) {
+		if(!this.scheduledRenderablesAdding.contains(renderable))
+			this.scheduledRenderablesAdding.add(renderable);
+	}
+	
+	public void registerNewRenderableRemoval(IRenderable renderable) {
+		if(!this.scheduledRenderablesRemoval.contains(renderable) && this.renderables.contains(renderable))
+			this.scheduledRenderablesRemoval.add(renderable);
+	}
+
 	
 	public void spawnParticleWithRandomDirectionFast(float x, float y, float z,
 			float vel, float velFuzziness) {
@@ -112,7 +125,7 @@ public class World implements IRenderable {
 				* velFuzziness;
 
 		Particle p = new Particle(this, x, y, z, velX, velY, velZ, 100, rand.nextFloat(), rand.nextFloat(), rand.nextFloat());
-		particles.add(p);
+		this.registerNewRenderable(p);
 
 	}
 
@@ -130,7 +143,7 @@ public class World implements IRenderable {
 		Particle p = new Particle(this, x, y, z, velX, velY, velZ,
 				50 + rand.nextInt(20), rand.nextFloat(), rand.nextFloat(),
 				rand.nextFloat());
-		particles.add(p);
+		this.registerNewRenderable(p);
 
 	}
 
@@ -398,25 +411,29 @@ public class World implements IRenderable {
 	}
 	
 	@Override
-	public void onTick() {
-		player.onTick();
+	public void onTick() {	
+		for(IRenderable r : this.renderables) {
+			r.onTick();
+		}
+		
+		for (Iterator<IRenderable> it = this.scheduledRenderablesAdding.iterator(); it
+				.hasNext();) {
+			this.renderables.add(it.next());
+			it.remove();
+		}
+		
+		for (Iterator<IRenderable> it = this.scheduledRenderablesRemoval.iterator(); it
+				.hasNext();) {
+			this.renderables.remove(it.next());
+			it.remove();
+		}
 		
 		for(Entry<Coord3D, Block> b : Block.tickingBlocks.entrySet()) {
 			if(b.getValue().isRequiringTick())
 				b.getValue().onTick(b.getKey().x, b.getKey().y, b.getKey().z, this);
 		}
 
-		int size = particles.size();
-
-		for (Iterator<Particle> iter = particles.iterator(); iter.hasNext();) {
-			Particle pt = iter.next();
-			pt.update();
-			if (pt.dead || size > MAX_PARTICLES) {
-				iter.remove();
-				size--;
-			}
-		}
-
+		
 		for (Iterator<ScheduledUpdate> it = newlyScheduledUpdates.iterator(); it
 				.hasNext();) {
 			scheduledUpdates.add(it.next());
@@ -433,6 +450,8 @@ public class World implements IRenderable {
 				updateIterator.remove();
 			}
 		}
+		
+		
 
 		chunkProvider.updateLoadedChunksInRadius(
 				((int) Math.floor(player.getPosX())) >> 4,
@@ -443,7 +462,9 @@ public class World implements IRenderable {
 
 	@Override
 	public void onRenderTick(float partialTickTime) {
-		player.onRenderTick(partialTickTime);
+		for(IRenderable r : this.renderables) {
+			r.onRenderTick(partialTickTime);
+		}
 		
 		for(Entry<Coord3D, Block> b : Block.tickingBlocks.entrySet()) {
 			if(b.getValue().isRequiringRenderTick())
@@ -453,12 +474,16 @@ public class World implements IRenderable {
 
 	@Override
 	public void renderWorld(float partialTickTime) {
-
+		for(IRenderable r : this.renderables) {
+			r.renderWorld(partialTickTime);
+		}
 	}
 
 	@Override
 	public void renderGui(float partialTickTime) {
-
+		for(IRenderable r : this.renderables) {
+			r.renderGui(partialTickTime);
+		}
 	}
 
 }

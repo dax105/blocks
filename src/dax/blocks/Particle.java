@@ -1,10 +1,14 @@
 package dax.blocks;
 
 import java.util.Random;
+
+import org.lwjgl.opengl.GL11;
+
 import dax.blocks.collisions.AABB;
+import dax.blocks.render.IRenderable;
 import dax.blocks.world.World;
 
-public class Particle {
+public class Particle implements IRenderable {
 
 	public static final float BOUNCE_MAX = 0.5f;
 	public static final float BOUNCE_MIN = 0.1f;
@@ -71,7 +75,7 @@ public class Particle {
 		return lastZ + delta*ptt;
 	}
 	
-	public void update() {
+	public void onTick() {
 		lastX = x;
 		lastY = y;
 		lastZ = z;
@@ -80,6 +84,7 @@ public class Particle {
 		
 		if (age > lifetime) {
 			this.dead = true;
+			this.world.registerNewRenderableRemoval(this);
 			return;
 		}
 		
@@ -132,6 +137,26 @@ public class Particle {
 		if (collidedZ) {
 			this.velZ = (float) (-velZ*(BOUNCE_MIN+rand.nextDouble()*(BOUNCE_MAX-BOUNCE_MIN)));
 		}
+		
+	}
+	
+
+	@Override
+	public void onRenderTick(float partialTickTime) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void renderWorld(float partialTickTime) {
+		GL11.glBegin(GL11.GL_QUADS);
+		Game.getInstance().renderEngine.renderParticle(this, partialTickTime);
+		GL11.glEnd();
+	}
+
+	@Override
+	public void renderGui(float partialTickTime) {
+		// TODO Auto-generated method stub
 		
 	}
 	

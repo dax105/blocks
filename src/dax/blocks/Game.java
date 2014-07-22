@@ -314,10 +314,6 @@ public class Game implements Runnable {
 			TextureManager.atlas.bind();
 
 			renderEngine.renderWorld(world, ptt);
-
-			for(IRenderable r : world.getRenderables()) {
-				r.renderWorld(ptt);
-			}
 			
 			GLHelper.setOrtho(Game.settings.windowWidth.getValue(), Game.settings.windowHeight.getValue());
 			
