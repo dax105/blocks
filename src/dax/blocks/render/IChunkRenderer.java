@@ -1,0 +1,19 @@
+package dax.blocks.render;
+
+public interface IChunkRenderer {
+
+	public void begin();
+	public void end();
+	
+	public int getHandle();
+	public void delete(int handle);
+	
+	public void render(int handle);
+	
+	public void vertex(float x, float y, float z);
+	public void color(float r, float b, float g);
+	public void color(float r, float b, float g, float a);
+	public void normal(float nx, float ny, float nz);
+	public void texCoord(float s, float t);
+	
+}
