@@ -11,6 +11,7 @@ public interface IChunkRenderer {
 	public void render(int handle);
 	
 	public void vertex(float x, float y, float z);
+	public void vertexWithAO(float x, float y, float z, boolean s1, boolean s2, boolean c);
 	public void color(float r, float b, float g);
 	public void color(float r, float b, float g, float a);
 	public void normal(float nx, float ny, float nz);

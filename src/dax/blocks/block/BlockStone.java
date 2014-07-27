@@ -10,10 +10,11 @@ public class BlockStone extends BlockBasic {
 	public BlockStone() {
 		super(3);
 		rnd = new Random();
-		this.setAllTextures(0).setStepSound(SoundManager.footstep_stone)
-				.setFallSound("fall_hard");
+		this.setAllTextures(0).setStepSound(SoundManager.footstep_stone).setFallSound("fall_hard");
 	}
 
+	/*
+	
 	private void setColor(int x, int y, int z, World w) {
 		if (w.containsData(x, y, z, "recolor_r")) {
 			this.lightColorR = w.getDataFloat(x, y, z, "recolor_r");
@@ -109,5 +110,5 @@ public class BlockStone extends BlockBasic {
 
 		world.setChunkDirty(x >> 4, y / 16, z >> 4);
 	}
-
+*/
 }

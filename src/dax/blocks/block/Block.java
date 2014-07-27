@@ -144,6 +144,11 @@ public abstract class Block {
 		this.collidable = collidable;
 		return this;
 	}
+	
+	public Block setRenderer(IBlockRenderer renderer) {
+		this.renderer = renderer;
+		return this;
+	}
 
 	/**
 	 * This array holds all the possible block instances.
@@ -153,7 +158,7 @@ public abstract class Block {
 	
 	public static final Block grass = new BlockBasic(1).setTopTexture(4).setSideTexture(5).setBottomTexture(3).setStepSound(SoundManager.footstep_grass).setFallSound("fall_soft");
 	public static final Block dirt = new BlockBasic(2).setAllTextures(3).setStepSound(SoundManager.footstep_dirt).setFallSound("fall_soft");
-	public static final Block stone = new BlockStone();
+	public static final Block stone = new BlockBasic(3).setAllTextures(0).setStepSound(SoundManager.footstep_stone).setFallSound("fall_hard");;
 	public static final Block wood = new BlockBasic(4).setAllTextures(2).setStepSound(SoundManager.footstep_wood).setFallSound("fall_hard");
 	public static final Block stoneMossy = new BlockBasic(5).setAllTextures(1).setStepSound(SoundManager.footstep_stone).setFallSound("fall_hard");
 	public static final Block bricks = new BlockBasic(6).setAllTextures(8).setStepSound(SoundManager.footstep_stone).setFallSound("fall_hard");
@@ -226,6 +231,10 @@ public abstract class Block {
 	public boolean isCollidable() {
 		return this.collidable;
 	}
+	
+	public IBlockRenderer getRenderer() {
+		return this.renderer;
+	}
 
 	/**
 	 * Draws a vertex with color based on the occluding sides and corner.
@@ -282,14 +291,6 @@ public abstract class Block {
 		world.removeData(x, y, z);
 	}
 	
-	public abstract void renderIndependent(int x, int y, int z, World world);
-	public abstract void renderFront(int x, int y, int z, boolean xnzn, boolean zn, boolean xpzn, boolean xn, boolean xp, boolean xnzp, boolean zp, boolean xpzp, World world);
-	public abstract void renderBack(int x, int y, int z, boolean xnzn, boolean zn, boolean xpzn, boolean xn, boolean xp, boolean xnzp, boolean zp, boolean xpzp, World world);
-	public abstract void renderRight(int x, int y, int z, boolean xnzn, boolean zn, boolean xpzn, boolean xn, boolean xp, boolean xnzp, boolean zp, boolean xpzp, World world);
-	public abstract void renderLeft(int x, int y, int z, boolean xnzn, boolean zn, boolean xpzn, boolean xn, boolean xp, boolean xnzp, boolean zp, boolean xpzp, World world);
-	public abstract void renderTop(int x, int y, int z, boolean xnzn, boolean zn, boolean xpzn, boolean xn, boolean xp, boolean xnzp, boolean zp, boolean xpzp, World world);
-	public abstract void renderBottom(int x, int y, int z, boolean xnzn, boolean zn, boolean xpzn, boolean xn, boolean xp, boolean xnzp, boolean zp, boolean xpzp, World world);
-
 	public abstract void onTick(int x, int y, int z, World world);
 	public abstract void onRenderTick(float partialTickTime, int x, int y, int z, World world);
 	public abstract void onClicked(int button, int x, int y, int z, World world);
