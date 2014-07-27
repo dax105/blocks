@@ -2,9 +2,6 @@ package dax.blocks.block;
 
 import java.util.HashMap;
 import java.util.Map;
-
-import org.lwjgl.opengl.GL11;
-
 import dax.blocks.Coord3D;
 import dax.blocks.Game;
 import dax.blocks.block.renderer.BlockRendererBasic;

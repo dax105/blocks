@@ -361,8 +361,8 @@ public class World implements IRenderable {
 		return this.renderables;
 	}
 
-	public void setData(int x, int y, int z, String key, String value) {
-		Map<String, DataValue> coordData = blockDataManager.getValuesForCoord(
+	public void setData(int x, int y, int z, int key, String value) {
+		Map<Integer, DataValue> coordData = blockDataManager.getValuesForCoord(
 				x, y, z);
 		if (coordData.get(key) != null)
 			coordData.get(key).setData(value);
@@ -370,7 +370,7 @@ public class World implements IRenderable {
 			coordData.put(key, new DataValue(value));
 	}
 
-	public String getDataString(int x, int y, int z, String key) {
+	public String getDataString(int x, int y, int z, int key) {
 		if (containsData(x, y, z, key))
 			return blockDataManager.getValuesForCoord(x, y, z).get(key)
 					.getDataString();
@@ -378,7 +378,7 @@ public class World implements IRenderable {
 		return null;
 	}
 
-	public int getDataInt(int x, int y, int z, String key) {
+	public int getDataInt(int x, int y, int z, int key) {
 		if (containsData(x, y, z, key))
 			return blockDataManager.getValuesForCoord(x, y, z).get(key)
 					.getDataInt();
@@ -386,7 +386,7 @@ public class World implements IRenderable {
 		return 0;
 	}
 
-	public float getDataFloat(int x, int y, int z, String key) {
+	public float getDataFloat(int x, int y, int z, int key) {
 		if (containsData(x, y, z, key))
 			return blockDataManager.getValuesForCoord(x, y, z).get(key)
 					.getDataFloat();
@@ -394,7 +394,7 @@ public class World implements IRenderable {
 		return 0;
 	}
 
-	public boolean getDataBoolean(int x, int y, int z, String key) {
+	public boolean getDataBoolean(int x, int y, int z, int key) {
 		if (containsData(x, y, z, key))
 			return blockDataManager.getValuesForCoord(x, y, z).get(key)
 					.getDataBoolean();
@@ -402,7 +402,7 @@ public class World implements IRenderable {
 		return false;
 	}
 
-	public boolean containsData(int x, int y, int z, String key) {
+	public boolean containsData(int x, int y, int z, int key) {
 		if(!blockDataManager.containsData(x, y, z))
 			return false;
 		

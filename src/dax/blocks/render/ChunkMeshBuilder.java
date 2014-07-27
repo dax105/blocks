@@ -1,7 +1,5 @@
 package dax.blocks.render;
 
-import org.lwjgl.opengl.GL11;
-
 import dax.blocks.Game;
 import dax.blocks.block.Block;
 import dax.blocks.profiler.Profiler;

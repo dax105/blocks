@@ -16,7 +16,7 @@ import dax.blocks.Coord3D;
 
 public class DataManager {
 	File data;
-	private Map<Coord3D, Map<String, DataValue>> values;
+	private Map<Coord3D, Map<Integer, DataValue>> values;
 
 	public DataManager(File dataFile) throws IOException {
 		this.data = dataFile;
@@ -37,17 +37,17 @@ public class DataManager {
 		return (values.get(new Coord3D(x, y, z)) != null);
 	}
 	
-	public Map<String, DataValue> getValuesForCoord(Coord3D position) {
+	public Map<Integer, DataValue> getValuesForCoord(Coord3D position) {
 		if (values.get(position) != null) {
 			return values.get(position);
 		} else {
-			Map<String, DataValue> dataMap = new HashMap<String, DataValue>();
+			Map<Integer, DataValue> dataMap = new HashMap<Integer, DataValue>();
 			values.put(position, dataMap);
 			return dataMap;
 		}
 	}
 
-	public Map<String, DataValue> getValuesForCoord(int x, int y, int z) {
+	public Map<Integer, DataValue> getValuesForCoord(int x, int y, int z) {
 		return getValuesForCoord(new Coord3D(x, y, z));
 	}
 
@@ -57,7 +57,7 @@ public class DataManager {
 		String line;
 		boolean started = false;
 		Coord3D currentCoords = null;
-		Map<String, DataValue> currentMap = new HashMap<>();
+		Map<Integer, DataValue> currentMap = new HashMap<>();
 
 		while ((line = br.readLine()) != null) {
 			if (!started && line.charAt(0) != 's') {
@@ -94,7 +94,7 @@ public class DataManager {
 						Integer.parseInt(parts[2]), Integer.parseInt(parts[3]));
 				break;
 			case "d":
-				currentMap.put(parts[1], new DataValue(parts[2]));
+				currentMap.put(Integer.parseInt(parts[1]), new DataValue(parts[2]));
 				break;
 			}
 
@@ -109,7 +109,7 @@ public class DataManager {
 
 			bw.write("s");
 			bw.newLine();
-			for (Entry<Coord3D, Map<String, DataValue>> entry : this.values
+			for (Entry<Coord3D, Map<Integer, DataValue>> entry : this.values
 					.entrySet()) {
 				if (!entry.getValue().isEmpty()) {
 					bw.write(String.format("c;%1$d;%2$d;%3$d",
@@ -117,7 +117,7 @@ public class DataManager {
 							(int) entry.getKey().z));
 					bw.newLine();
 
-					for (Entry<String, DataValue> dataEntry : entry.getValue()
+					for (Entry<Integer, DataValue> dataEntry : entry.getValue()
 							.entrySet()) {
 						bw.write(String.format("d;%1$s;%2$s", dataEntry
 								.getKey(), dataEntry.getValue()

@@ -1,7 +1,9 @@
 package dax.blocks.block;
 
 import java.util.Random;
+
 import dax.blocks.sound.SoundManager;
+import dax.blocks.world.DataFlags;
 import dax.blocks.world.World;
 
 public class BlockStone extends BlockBasic {
@@ -14,17 +16,17 @@ public class BlockStone extends BlockBasic {
 	}
 
 	public void setColor(int x, int y, int z, World w) {
-		if (w.containsData(x, y, z, "recolor_r")) {
-			this.colorR = w.getDataFloat(x, y, z, "recolor_r");
-			this.colorG = w.getDataFloat(x, y, z, "recolor_g");
-			this.colorB = w.getDataFloat(x, y, z, "recolor_b");
+		if (w.containsData(x, y, z, DataFlags.RECOLOR_R)) {
+			this.colorR = w.getDataFloat(x, y, z, DataFlags.RECOLOR_R);
+			this.colorG = w.getDataFloat(x, y, z, DataFlags.RECOLOR_G);
+			this.colorB = w.getDataFloat(x, y, z, DataFlags.RECOLOR_B);
 		}
 	}
 
 	private void recolor(int x, int y, int z, World w) {
-		w.setData(x, y, z, "recolor_r", "" + rnd.nextFloat());
-		w.setData(x, y, z, "recolor_g", "" + rnd.nextFloat());
-		w.setData(x, y, z, "recolor_b", "" + rnd.nextFloat());
+		w.setData(x, y, z, DataFlags.RECOLOR_R, "" + rnd.nextFloat());
+		w.setData(x, y, z, DataFlags.RECOLOR_G, "" + rnd.nextFloat());
+		w.setData(x, y, z, DataFlags.RECOLOR_B, "" + rnd.nextFloat());
 	}
 
 	@Override
