@@ -112,6 +112,11 @@ public class ChunkRendererDisplayList implements IChunkRenderer {
 
 	@Override
 	public void vertexWithAO(float x, float y, float z, boolean s1, boolean s2, boolean c) {
+		vertexWithColoredAO(x, y, z, 1, 1, 1, s1, s2, c);
+	}
+	
+	@Override
+	public void vertexWithColoredAO(float x, float y, float z, float r, float g, float b, boolean s1, boolean s2, boolean c) {
 		float ao;
 		
 		if (s1 && s2) {
@@ -130,7 +135,7 @@ public class ChunkRendererDisplayList implements IChunkRenderer {
 		
 		float aom = ao * Game.settings.ao_intensity.getValue();
 	
-		color(1 - aom, 1 - aom, 1 - aom);
+		color(r - aom, g - aom, b - aom);
 		vertex(x, y, z);
 	}
 

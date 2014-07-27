@@ -12,7 +12,7 @@ public class ApplierFullscreen extends Applier {
 	
 	@Override
 	public boolean apply(Object value) {
-		if (!((boolean)this.applyingObject.getValue()) && ((boolean)value)) {
+		if (!((Boolean)this.applyingObject.getValue()) && (Boolean)value) {
 			this.lastWidth = Game.settings.windowWidth.getValue();
 			this.lastHeight = Game.settings.windowHeight.getValue();
 			
@@ -20,13 +20,13 @@ public class ApplierFullscreen extends Applier {
 			Dimension screensize = toolkit.getScreenSize();
 			Game.settings.windowWidth.setValue(screensize.width, false);
 			Game.settings.windowHeight.setValue(screensize.height, false);
-		} else if((boolean)this.applyingObject.getValue() && !((boolean)value)) {
+		} else if((Boolean)this.applyingObject.getValue() && (Boolean)value) {
 			Game.settings.windowWidth.setValue(lastWidth, false);
 			Game.settings.windowHeight.setValue(lastHeight, false);
 		}
 		
 		
-		GLHelper.setDisplayMode(Game.settings.windowWidth.getValue(), Game.settings.windowHeight.getValue(), (boolean)value);
+		GLHelper.setDisplayMode(Game.settings.windowWidth.getValue(), Game.settings.windowHeight.getValue(), (Boolean)value);
 		Game.getInstance().init();
 		return true;
 	}

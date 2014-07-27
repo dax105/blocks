@@ -43,13 +43,13 @@ public class BlockRendererBasic implements IBlockRenderer {
 			
 			renderer.normal(0, 1, 0);
 			renderer.texCoord(TextureManager.getX2(block.topTexture), TextureManager.getY1(block.topTexture));
-			renderer.vertexWithAO(x+1, y+1, z, xp, zn, xpzn);
+			renderer.vertexWithColoredAO(x+1, y+1, z, block.getColorR(), block.getColorG(), block.getColorB(), xp, zn, xpzn);
 			renderer.texCoord(TextureManager.getX2(block.topTexture), TextureManager.getY2(block.topTexture));
-			renderer.vertexWithAO(x, y+1, z, xn, zn, xnzn);
+			renderer.vertexWithColoredAO(x, y+1, z, block.getColorR(), block.getColorG(), block.getColorB(), xn, zn, xnzn);
 			renderer.texCoord(TextureManager.getX1(block.topTexture), TextureManager.getY2(block.topTexture));
-			renderer.vertexWithAO(x, y+1, z+1, xn, zp, xnzp);
+			renderer.vertexWithColoredAO(x, y+1, z+1, block.getColorR(), block.getColorG(), block.getColorB(), xn, zp, xnzp);
 			renderer.texCoord(TextureManager.getX1(block.topTexture), TextureManager.getY1(block.topTexture));
-			renderer.vertexWithAO(x+1, y+1, z+1, xp, zp, xpzp);
+			renderer.vertexWithColoredAO(x+1, y+1, z+1, block.getColorR(), block.getColorG(), block.getColorB(), xp, zp, xpzp);
 		}
 
 		if (blockIdBelow == 0 || !blockBelow.isOpaque() && !(blockID == blockIdBelow && blockBelow.shouldCullSame())) {
@@ -64,13 +64,13 @@ public class BlockRendererBasic implements IBlockRenderer {
 			
 			renderer.normal(0, -1, 0);
 			renderer.texCoord(TextureManager.getX1(block.bottomTexture), TextureManager.getY2(block.bottomTexture));
-			renderer.vertexWithAO(x+1, y, z+1, xp, zp, xpzp);
+			renderer.vertexWithColoredAO(x+1, y, z+1, block.getColorR(), block.getColorG(), block.getColorB(), xp, zp, xpzp);
 			renderer.texCoord(TextureManager.getX1(block.bottomTexture), TextureManager.getY1(block.bottomTexture));
-			renderer.vertexWithAO(x, y, z+1, xn, zp, xnzp);
+			renderer.vertexWithColoredAO(x, y, z+1, block.getColorR(), block.getColorG(), block.getColorB(), xn, zp, xnzp);
 			renderer.texCoord(TextureManager.getX2(block.bottomTexture), TextureManager.getY1(block.bottomTexture));
-			renderer.vertexWithAO(x, y, z, xn, zn, xnzn);
+			renderer.vertexWithColoredAO(x, y, z, block.getColorR(), block.getColorG(), block.getColorB(), xn, zn, xnzn);
 			renderer.texCoord(TextureManager.getX2(block.bottomTexture), TextureManager.getY2(block.bottomTexture));
-			renderer.vertexWithAO(x+1, y, z, xp, zn, xpzn);
+			renderer.vertexWithColoredAO(x+1, y, z, block.getColorR(), block.getColorG(), block.getColorB(), xp, zn, xpzn);
 		}
 
 		if (blockIdInFront == 0 || !blockInFront.isOpaque() && !(blockID == blockIdInFront && blockInFront.shouldCullSame())) {
@@ -85,13 +85,13 @@ public class BlockRendererBasic implements IBlockRenderer {
 			
 			renderer.normal(0, 0, 1);
 			renderer.texCoord(TextureManager.getX2(block.sideTexture), TextureManager.getY1(block.sideTexture));
-			renderer.vertexWithAO(x+1, y+1, z+1, xp, zp, xpzp);
+			renderer.vertexWithColoredAO(x+1, y+1, z+1, block.getColorR(), block.getColorG(), block.getColorB(), xp, zp, xpzp);
 			renderer.texCoord(TextureManager.getX1(block.sideTexture), TextureManager.getY1(block.sideTexture));
-			renderer.vertexWithAO(x, y+1, z+1, xn, zp, xnzp);
+			renderer.vertexWithColoredAO(x, y+1, z+1, block.getColorR(), block.getColorG(), block.getColorB(), xn, zp, xnzp);
 			renderer.texCoord(TextureManager.getX1(block.sideTexture), TextureManager.getY2(block.sideTexture));
-			renderer.vertexWithAO(x, y, z+1, xn, zn, xnzn);
+			renderer.vertexWithColoredAO(x, y, z+1, block.getColorR(), block.getColorG(), block.getColorB(), xn, zn, xnzn);
 			renderer.texCoord(TextureManager.getX2(block.sideTexture), TextureManager.getY2(block.sideTexture));
-			renderer.vertexWithAO(x+1, y, z+1, xp, zn, xpzn);
+			renderer.vertexWithColoredAO(x+1, y, z+1, block.getColorR(), block.getColorG(), block.getColorB(), xp, zn, xpzn);
 		}
 
 		if (blockIdBehind == 0 || !blockBehind.isOpaque() && !(blockID == blockIdBehind && blockBehind.shouldCullSame())) {
@@ -106,13 +106,13 @@ public class BlockRendererBasic implements IBlockRenderer {
 			
 			renderer.normal(0, 0, -1);
 			renderer.texCoord(TextureManager.getX1(block.sideTexture), TextureManager.getY2(block.sideTexture));
-			renderer.vertexWithAO(x+1, y, z, xp, zn, xpzn);
+			renderer.vertexWithColoredAO(x+1, y, z, block.getColorR(), block.getColorG(), block.getColorB(), xp, zn, xpzn);
 			renderer.texCoord(TextureManager.getX2(block.sideTexture), TextureManager.getY2(block.sideTexture));
-			renderer.vertexWithAO(x, y, z, xn, zn, xnzn);
+			renderer.vertexWithColoredAO(x, y, z, block.getColorR(), block.getColorG(), block.getColorB(), xn, zn, xnzn);
 			renderer.texCoord(TextureManager.getX2(block.sideTexture), TextureManager.getY1(block.sideTexture));
-			renderer.vertexWithAO(x, y+1, z, xn, zp, xnzp);
+			renderer.vertexWithColoredAO(x, y+1, z, block.getColorR(), block.getColorG(), block.getColorB(), xn, zp, xnzp);
 			renderer.texCoord(TextureManager.getX1(block.sideTexture), TextureManager.getY1(block.sideTexture));
-			renderer.vertexWithAO(x+1, y+1, z, xp, zp, xpzp);
+			renderer.vertexWithColoredAO(x+1, y+1, z, block.getColorR(), block.getColorG(), block.getColorB(), xp, zp, xpzp);
 		}
 
 		if (blockIdOnRight == 0 || !blockOnRight.isOpaque() && !(blockID == blockIdOnRight && blockOnRight.shouldCullSame())) {
@@ -127,13 +127,13 @@ public class BlockRendererBasic implements IBlockRenderer {
 			
 			renderer.normal(1, 0, 0);
 			renderer.texCoord(TextureManager.getX2(block.sideTexture), TextureManager.getY1(block.sideTexture));
-			renderer.vertexWithAO(x+1, y+1, z, xn, zn, xnzn);
+			renderer.vertexWithColoredAO(x+1, y+1, z, block.getColorR(), block.getColorG(), block.getColorB(), xn, zn, xnzn);
 			renderer.texCoord(TextureManager.getX1(block.sideTexture), TextureManager.getY1(block.sideTexture));
-			renderer.vertexWithAO(x+1, y+1, z+1, xp, zn, xpzn);
+			renderer.vertexWithColoredAO(x+1, y+1, z+1, block.getColorR(), block.getColorG(), block.getColorB(), xp, zn, xpzn);
 			renderer.texCoord(TextureManager.getX1(block.sideTexture), TextureManager.getY2(block.sideTexture));
-			renderer.vertexWithAO(x+1, y, z+1, xp, zp, xpzp);
+			renderer.vertexWithColoredAO(x+1, y, z+1, block.getColorR(), block.getColorG(), block.getColorB(), xp, zp, xpzp);
 			renderer.texCoord(TextureManager.getX2(block.sideTexture), TextureManager.getY2(block.sideTexture));
-			renderer.vertexWithAO(x+1, y, z, xn, zp, xnzp);
+			renderer.vertexWithColoredAO(x+1, y, z, block.getColorR(), block.getColorG(), block.getColorB(), xn, zp, xnzp);
 		}
 
 		if (blockIdOnLeft == 0 || !blockOnLeft.isOpaque() && !(blockID == blockIdOnLeft && blockOnLeft.shouldCullSame())) {
@@ -148,15 +148,25 @@ public class BlockRendererBasic implements IBlockRenderer {
 
 			renderer.normal(-1, 0, 0);
 			renderer.texCoord(TextureManager.getX2(block.sideTexture), TextureManager.getY1(block.sideTexture));
-			renderer.vertexWithAO(x, y+1, z+1, xp, zn, xpzn);
+			renderer.vertexWithColoredAO(x, y+1, z+1, block.getColorR(), block.getColorG(), block.getColorB(), xp, zn, xpzn);
 			renderer.texCoord(TextureManager.getX1(block.sideTexture), TextureManager.getY1(block.sideTexture));
-			renderer.vertexWithAO(x, y+1, z, xn, zn, xnzn);
+			renderer.vertexWithColoredAO(x, y+1, z, block.getColorR(), block.getColorG(), block.getColorB(), xn, zn, xnzn);
 			renderer.texCoord(TextureManager.getX1(block.sideTexture), TextureManager.getY2(block.sideTexture));
-			renderer.vertexWithAO(x, y, z, xn, zp, xnzp);
+			renderer.vertexWithColoredAO(x, y, z, block.getColorR(), block.getColorG(), block.getColorB(), xn, zp, xnzp);
 			renderer.texCoord(TextureManager.getX2(block.sideTexture), TextureManager.getY2(block.sideTexture));
-			renderer.vertexWithAO(x, y, z+1, xp, zp, xpzp);
+			renderer.vertexWithColoredAO(x, y, z+1, block.getColorR(), block.getColorG(), block.getColorB(), xp, zp, xpzp);
 		}
 		
+	}
+
+	@Override
+	public void preRender(World world, Block block, int x, int y, int z) {
+		block.setColor(x, y, z, world);
+	}
+
+	@Override
+	public void postRender(World world, Block block, int x, int y, int z) {
+		block.restoreColor();
 	}
 
 }

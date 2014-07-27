@@ -84,7 +84,9 @@ public class ChunkMeshBuilder {
 									int calcY = y;
 									int calcZ = z + blockOffsetZ;
 									
+									block.getRenderer().preRender(c.world, block, calcX, calcY, calcZ);
 									block.getRenderer().render(renderer, c.world, block, calcX, calcY, calcZ);
+									block.getRenderer().postRender(c.world, block, calcX, calcY, calcZ);
 
 								}
 								
@@ -118,7 +120,9 @@ public class ChunkMeshBuilder {
 									int calcY = y;
 									int calcZ = z + blockOffsetZ;
 
+									block.getRenderer().preRender(c.world, block, calcX, calcY, calcZ);
 									block.getRenderer().render(renderer, c.world, block, calcX, calcY, calcZ);
+									block.getRenderer().postRender(c.world, block, calcX, calcY, calcZ);
 
 								}
 								
@@ -148,7 +152,9 @@ public class ChunkMeshBuilder {
 									int calcY = y;
 									int calcZ = z + blockOffsetZ;
 
+									block.getRenderer().preRender(c.world, block, calcX, calcY, calcZ);
 									block.getRenderer().render(renderer, c.world, block, calcX, calcY, calcZ);
+									block.getRenderer().postRender(c.world, block, calcX, calcY, calcZ);
 
 								}
 								

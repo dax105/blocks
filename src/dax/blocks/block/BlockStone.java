@@ -13,83 +13,18 @@ public class BlockStone extends BlockBasic {
 		this.setAllTextures(0).setStepSound(SoundManager.footstep_stone).setFallSound("fall_hard");
 	}
 
-	/*
-	
-	private void setColor(int x, int y, int z, World w) {
+	public void setColor(int x, int y, int z, World w) {
 		if (w.containsData(x, y, z, "recolor_r")) {
-			this.lightColorR = w.getDataFloat(x, y, z, "recolor_r");
-			this.lightColorG = w.getDataFloat(x, y, z, "recolor_g");
-			this.lightColorB = w.getDataFloat(x, y, z, "recolor_b");
-			// GL11.glColor3f(w.getDataFloat(x, y, z, "recolor_r"),
-			// w.getDataFloat(x, y, z, "recolor_g"), w.getDataFloat(x, y, z,
-			// "recolor_b"));
+			this.colorR = w.getDataFloat(x, y, z, "recolor_r");
+			this.colorG = w.getDataFloat(x, y, z, "recolor_g");
+			this.colorB = w.getDataFloat(x, y, z, "recolor_b");
 		}
-	}
-
-	private void restoreColor() {
-		this.lightColorR = 1;
-		this.lightColorG = 1;
-		this.lightColorB = 1;
 	}
 
 	private void recolor(int x, int y, int z, World w) {
 		w.setData(x, y, z, "recolor_r", "" + rnd.nextFloat());
 		w.setData(x, y, z, "recolor_g", "" + rnd.nextFloat());
 		w.setData(x, y, z, "recolor_b", "" + rnd.nextFloat());
-	}
-
-	@Override
-	public void renderFront(int x, int y, int z, boolean xnzn, boolean zn,
-			boolean xpzn, boolean xn, boolean xp, boolean xnzp, boolean zp,
-			boolean xpzp, World w) {
-		setColor(x, y, z, w);
-		super.renderFront(x, y, z, xnzn, zn, xpzn, xn, xp, xnzp, zp, xpzp, w);
-		restoreColor();
-	}
-
-	@Override
-	public void renderBack(int x, int y, int z, boolean xnzn, boolean zn,
-			boolean xpzn, boolean xn, boolean xp, boolean xnzp, boolean zp,
-			boolean xpzp, World w) {
-		setColor(x, y, z, w);
-		super.renderBack(x, y, z, xnzn, zn, xpzn, xn, xp, xnzp, zp, xpzp, w);
-		restoreColor();
-	}
-
-	@Override
-	public void renderRight(int x, int y, int z, boolean xnzn, boolean zn,
-			boolean xpzn, boolean xn, boolean xp, boolean xnzp, boolean zp,
-			boolean xpzp, World w) {
-		setColor(x, y, z, w);
-		super.renderRight(x, y, z, xnzn, zn, xpzn, xn, xp, xnzp, zp, xpzp, w);
-		restoreColor();
-	}
-
-	@Override
-	public void renderLeft(int x, int y, int z, boolean xnzn, boolean zn,
-			boolean xpzn, boolean xn, boolean xp, boolean xnzp, boolean zp,
-			boolean xpzp, World w) {
-		setColor(x, y, z, w);
-		super.renderLeft(x, y, z, xnzn, zn, xpzn, xn, xp, xnzp, zp, xpzp, w);
-		restoreColor();
-	}
-
-	@Override
-	public void renderTop(int x, int y, int z, boolean xnzn, boolean zn,
-			boolean xpzn, boolean xn, boolean xp, boolean xnzp, boolean zp,
-			boolean xpzp, World w) {
-		setColor(x, y, z, w);
-		super.renderTop(x, y, z, xnzn, zn, xpzn, xn, xp, xnzp, zp, xpzp, w);
-		restoreColor();
-	}
-
-	@Override
-	public void renderBottom(int x, int y, int z, boolean xnzn, boolean zn,
-			boolean xpzn, boolean xn, boolean xp, boolean xnzp, boolean zp,
-			boolean xpzp, World w) {
-		setColor(x, y, z, w);
-		super.renderBottom(x, y, z, xnzn, zn, xpzn, xn, xp, xnzp, zp, xpzp, w);
-		restoreColor();
 	}
 
 	@Override
@@ -110,5 +45,4 @@ public class BlockStone extends BlockBasic {
 
 		world.setChunkDirty(x >> 4, y / 16, z >> 4);
 	}
-*/
 }

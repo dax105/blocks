@@ -27,15 +27,18 @@ public abstract class Block {
 	private boolean cullSame = false;
 	private boolean occluder = true;
 	private float density = 1.0f;
-	private boolean requiresData = false;
 	private boolean requiresTick = false;
 	private boolean requiresRenderTick = false;
 	private String[] footStep = SoundManager.footstep_dirt;
 	private String fall = "fall_hard";
-	private static int lastAO = -1;
+	//private static int lastAO = -1;
 	private AABB aabb = new AABB(0, 0, 0, 1, 1, 1);
 	private boolean collidable = true;
 	private IBlockRenderer renderer = new BlockRendererBasic();
+	
+	protected float colorR = 1f;
+	protected float colorG = 1f;
+	protected float colorB = 1f;
 	
 	public static Map<Coord3D, Block> tickingBlocks = new HashMap<>();
 	
@@ -43,11 +46,6 @@ public abstract class Block {
 		this.id = id;
 		blocks[id] = this;
 		blocksCount++;
-	}
-	
-	public Block requiresExtendedData() {
-		this.requiresData = true;
-		return this;
 	}
 	
 	public Block requiresTick() {
@@ -158,7 +156,7 @@ public abstract class Block {
 	
 	public static final Block grass = new BlockBasic(1).setTopTexture(4).setSideTexture(5).setBottomTexture(3).setStepSound(SoundManager.footstep_grass).setFallSound("fall_soft");
 	public static final Block dirt = new BlockBasic(2).setAllTextures(3).setStepSound(SoundManager.footstep_dirt).setFallSound("fall_soft");
-	public static final Block stone = new BlockBasic(3).setAllTextures(0).setStepSound(SoundManager.footstep_stone).setFallSound("fall_hard");;
+	public static final Block stone = new BlockStone();
 	public static final Block wood = new BlockBasic(4).setAllTextures(2).setStepSound(SoundManager.footstep_wood).setFallSound("fall_hard");
 	public static final Block stoneMossy = new BlockBasic(5).setAllTextures(1).setStepSound(SoundManager.footstep_stone).setFallSound("fall_hard");
 	public static final Block bricks = new BlockBasic(6).setAllTextures(8).setStepSound(SoundManager.footstep_stone).setFallSound("fall_hard");
@@ -235,46 +233,18 @@ public abstract class Block {
 	public IBlockRenderer getRenderer() {
 		return this.renderer;
 	}
-
-	/**
-	 * Draws a vertex with color based on the occluding sides and corner.
-	 * @param x x position of the vertex
-	 * @param y y position of the vertex
-	 * @param z z position of the vertex
-	 * @param s1 occlusion of the first side
-	 * @param s2 occlusion of the second side
-	 * @param c occlusion of the corner
-	 */
-	public void addVertexWithAO(float x, float y, float z, boolean s1, boolean s2, boolean c) {
-		addVertexWithAO(x, y, z, s1, s2, c, 1, 1, 1);
-	}
-
-	public void addVertexWithAO(float x, float y, float z, boolean s1, boolean s2, boolean c, float r, float g, float b) {
-		float ao;
 	
-		if (s1 && s2) {
-			ao = 3;
-		} else {
-			ao = 0;
-			if (s1)
-				ao++;
-			if (s2)
-				ao++;
-			if (c)
-				ao++;
-		}
-	
-		if (ao == 1) ao += 0.5f;
-		
-		float aom = ao * Game.settings.ao_intensity.getValue();
-	
-		if (ao != lastAO) {
-			GL11.glColor3f(r - aom, g - aom, b - aom);
-		}	
-		
-		GL11.glVertex3f(x, y, z);
+	public float getColorR() {
+		return this.colorR;
 	}
 	
+	public float getColorG() {
+		return this.colorG;
+	}
+	
+	public float getColorB() {
+		return this.colorB;
+	}
 	
 	public void onPlaced(int x, int y, int z, World world) {
 		if(this.isRequiringTick() || this.isRequiringRenderTick()) {
@@ -289,6 +259,17 @@ public abstract class Block {
 		}
 		
 		world.removeData(x, y, z);
+	}
+	
+
+	public void setColor(int x, int y, int z, World w) {
+
+	}
+
+	public void restoreColor() {
+		this.colorR = 1;
+		this.colorG = 1;
+		this.colorB = 1;
 	}
 	
 	public abstract void onTick(int x, int y, int z, World world);

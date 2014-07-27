@@ -1,7 +1,5 @@
 package dax.blocks.block.renderer;
 
-import org.lwjgl.opengl.GL11;
-
 import dax.blocks.TextureManager;
 import dax.blocks.block.Block;
 import dax.blocks.render.IChunkRenderer;
@@ -56,6 +54,18 @@ public class BlockRendererPlant implements IBlockRenderer {
 		renderer.vertex(x+1, y+1, z+0);
 		
 		block.setSideTexture(lastTexture);
+	}
+
+	@Override
+	public void preRender(World world, Block block, int x, int y, int z) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void postRender(World world, Block block, int x, int y, int z) {
+		// TODO Auto-generated method stub
+		
 	}
 
 }

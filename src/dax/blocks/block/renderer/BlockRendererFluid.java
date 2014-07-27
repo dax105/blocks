@@ -14,7 +14,7 @@ public class BlockRendererFluid implements IBlockRenderer {
 		float height = 0.85f;
 		
 		int blockIdAbove = world.getBlock(x, y + 1, z);
-		Block blockAbove = Block.getBlock(blockIdAbove);
+		//Block blockAbove = Block.getBlock(blockIdAbove);
 
 		int blockIdBelow = world.getBlock(x, y - 1, z);
 		Block blockBelow = Block.getBlock(blockIdBelow);
@@ -248,6 +248,18 @@ public class BlockRendererFluid implements IBlockRenderer {
 			renderer.texCoord(TextureManager.getX2(block.sideTexture), TextureManager.getY2(block.sideTexture));
 			renderer.vertex(x, y + height, z+1);
 		}
+		
+	}
+
+	@Override
+	public void preRender(World world, Block block, int x, int y, int z) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void postRender(World world, Block block, int x, int y, int z) {
+		// TODO Auto-generated method stub
 		
 	}
 	
