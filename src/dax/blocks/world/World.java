@@ -403,6 +403,9 @@ public class World implements IRenderable {
 	}
 
 	public boolean containsData(int x, int y, int z, String key) {
+		if(!blockDataManager.containsData(x, y, z))
+			return false;
+		
 		return (blockDataManager.getValuesForCoord(x, y, z).get(key) != null);
 	}
 	

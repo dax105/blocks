@@ -28,7 +28,15 @@ public class DataManager {
 			dataFile.createNewFile();
 		}
 	}
+	
+	public boolean containsData(Coord3D position) {
+		return (values.get(position) != null);
+	}
 
+	public boolean containsData(int x, int y, int z) {
+		return (values.get(new Coord3D(x, y, z)) != null);
+	}
+	
 	public Map<String, DataValue> getValuesForCoord(Coord3D position) {
 		if (values.get(position) != null) {
 			return values.get(position);
