@@ -3,17 +3,17 @@ package dax.blocks.render;
 public class RenderChunk {
 	
 	private boolean dirty = true;
-	private boolean generated = false;
+	private boolean built = false;
 	
-	private ChunkDisplayList cdl;
+	private ChunkMesh cm;
 	
-	public ChunkDisplayList getCdl() {
-		return cdl;
+	public ChunkMesh getCm() {
+		return cm;
 	}
 	
-	public void setCdl(ChunkDisplayList cdl) {
+	public void setCm(ChunkMesh cm) {
 		setGenerated();
-		this.cdl = cdl;
+		this.cm = cm;
 	}
 	
 	public boolean isDirty() {
@@ -24,18 +24,18 @@ public class RenderChunk {
 		this.dirty = dirty;
 	}
 	
-	public boolean isGenerated() {
-		return generated;
+	public boolean isBuilt() {
+		return built;
 	}
 	
 	public void clear() {
-		cdl.delete();
-		this.generated = false;
+		cm.delete();
+		this.built = false;
 		this.dirty = true;
 	}
 	
 	public void setGenerated() {
-		this.generated = true;
+		this.built = true;
 		this.dirty = false;
 	}	
 		

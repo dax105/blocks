@@ -231,9 +231,8 @@ public class RenderEngine {
 		GL11.glPushMatrix();
 		GL11.glRotatef(-player.getTilt(), 1f, 0f, 0f);
 		GL11.glRotatef(player.getHeading(), 0f, 1f, 0f);
-		GL11.glTranslated(-player.getPosXPartial(),
-				-player.getPosYPartial() - PlayerEntity.EYES_HEIGHT,
-				-player.getPosZPartial());
+		GL11.glTranslated(-player.getPosXPartial(), -player.getPosYPartial()
+				- PlayerEntity.EYES_HEIGHT, -player.getPosZPartial());
 	}
 
 	public static final String FLAG_LIGHTING = "lighting";
@@ -264,7 +263,7 @@ public class RenderEngine {
 
 		GL11.glColor3f(1, 1, 1);
 
-		if(enableShaders)
+		if (enableShaders)
 			ARBShaderObjects.glUseProgramObjectARB(program);
 
 		sSetFloat(UNIFORM_TIME, System.nanoTime() / 1000000000f);
@@ -274,7 +273,6 @@ public class RenderEngine {
 		this.ptt = ptt;
 		pushPlayerMatrix(world.getPlayer());
 		updateBeforeRendering(ptt);
-
 
 		FloatBuffer lp = BufferUtils.createFloatBuffer(4);
 		lp.put(-1000).put(1000).put(-1000).put(0).flip();
@@ -288,9 +286,9 @@ public class RenderEngine {
 		sEnable(FLAG_TEXTURE);
 		sEnable(FLAG_FOG);
 
-		renderSkybox(world.getPlayer().getPosXPartial(),
-				world.getPlayer().getPosYPartial() + PlayerEntity.EYES_HEIGHT,
-				world.getPlayer().getPosZPartial());
+		renderSkybox(world.getPlayer().getPosXPartial(), world.getPlayer()
+				.getPosYPartial() + PlayerEntity.EYES_HEIGHT, world.getPlayer()
+				.getPosZPartial());
 
 		TextureManager.atlas.bind();
 
@@ -299,14 +297,13 @@ public class RenderEngine {
 		GL11.glDisable(GL11.GL_TEXTURE_2D);
 
 		// Render particles
-		/*GL11.glBegin(GL11.GL_QUADS);
+		/*
+		 * GL11.glBegin(GL11.GL_QUADS); for (IRenderable r :
+		 * world.getRenderables()) { if(r instanceof Particle)
+		 * renderParticle((Particle)r, ptt); } GL11.glEnd();
+		 */
+
 		for (IRenderable r : world.getRenderables()) {
-			if(r instanceof Particle)
-				renderParticle((Particle)r, ptt);
-		}
-		GL11.glEnd();*/
-		
-		for(IRenderable r : world.getRenderables()) {
 			r.renderWorld(ptt);
 		}
 
@@ -332,8 +329,8 @@ public class RenderEngine {
 		int pcx = (int) Math.floor(world.getPlayer().getPosX()) >> 4;
 		int pcz = (int) Math.floor(world.getPlayer().getPosZ()) >> 4;
 
-		List<Chunk> visibleChunks = world.getChunkProvider().getChunksInRadius(pcx,
-				pcz, Game.settings.drawDistance.getValue());
+		List<Chunk> visibleChunks = world.getChunkProvider().getChunksInRadius(
+				pcx, pcz, Game.settings.drawDistance.getValue());
 
 		for (Iterator<Chunk> iter = visibleChunks.iterator(); iter.hasNext();) {
 			Chunk c = iter.next();
@@ -358,7 +355,7 @@ public class RenderEngine {
 						building = false;
 					}
 
-					if (!c.renderChunks[y].isGenerated()
+					if (!c.renderChunks[y].isBuilt()
 							|| c.renderChunks[y].isDirty()) {
 						ChunkProvider cp = world.getChunkProvider();
 						if (cp.isChunkLoaded(new Coord2D(c.x + 1, c.z))
@@ -384,14 +381,13 @@ public class RenderEngine {
 		for (Chunk c : visibleChunks) {
 			if (c != null) {
 				for (int y = 0; y < 8; y++) {
-					if (c.renderChunks[y].isGenerated()
-							&& c.renderChunks[y].getCdl().isPresent(
+					if (c.renderChunks[y].isBuilt()
+							&& c.renderChunks[y].getCm().isPresent(
 									RenderPass.OPAQUE)
 							&& frustum.cuboidInFrustum(c.x * 16, y * 16,
 									c.z * 16, c.x * 16 + 16, y * 16 + 16,
 									c.z * 16 + 16)) {
-						GL11.glCallList(c.renderChunks[y].getCdl().getListID(
-								RenderPass.OPAQUE));
+						c.renderChunks[y].getCm().render(RenderPass.OPAQUE);
 						chunksDrawn++;
 					}
 				}
@@ -402,14 +398,13 @@ public class RenderEngine {
 		for (Chunk c : visibleChunks) {
 			if (c != null) {
 				for (int y = 0; y < 8; y++) {
-					if (c.renderChunks[y].isGenerated()
-							&& c.renderChunks[y].getCdl().isPresent(
+					if (c.renderChunks[y].isBuilt()
+							&& c.renderChunks[y].getCm().isPresent(
 									RenderPass.TRANSPARENT)
 							&& frustum.cuboidInFrustum(c.x * 16, y * 16,
 									c.z * 16, c.x * 16 + 16, y * 16 + 16,
 									c.z * 16 + 16)) {
-						GL11.glCallList(c.renderChunks[y].getCdl().getListID(
-								RenderPass.TRANSPARENT));
+						c.renderChunks[y].getCm().render(RenderPass.TRANSPARENT);
 						chunksDrawn++;
 					}
 				}
@@ -419,40 +414,38 @@ public class RenderEngine {
 		GL11.glDisable(GL11.GL_ALPHA_TEST);
 
 		if (Game.settings.two_pass_translucent.getValue()) {
-		
-		GL11.glColorMask(false, false, false, false);
 
-		for (Chunk c : visibleChunks) {
-			if (c != null) {
-				for (int y = 0; y < 8; y++) {
-					if (c.renderChunks[y].isGenerated()
-							&& c.renderChunks[y].getCdl().isPresent(
-									RenderPass.TRANSLUCENT)
-							&& frustum.cuboidInFrustum(c.x * 16, y * 16,
-									c.z * 16, c.x * 16 + 16, y * 16 + 16,
-									c.z * 16 + 16)) {
-						GL11.glCallList(c.renderChunks[y].getCdl().getListID(
-								RenderPass.TRANSLUCENT));
-						chunksDrawn++;
+			GL11.glColorMask(false, false, false, false);
+
+			for (Chunk c : visibleChunks) {
+				if (c != null) {
+					for (int y = 0; y < 8; y++) {
+						if (c.renderChunks[y].isBuilt()
+								&& c.renderChunks[y].getCm().isPresent(
+										RenderPass.TRANSLUCENT)
+								&& frustum.cuboidInFrustum(c.x * 16, y * 16,
+										c.z * 16, c.x * 16 + 16, y * 16 + 16,
+										c.z * 16 + 16)) {
+							c.renderChunks[y].getCm().render(RenderPass.TRANSLUCENT);
+							chunksDrawn++;
+						}
 					}
 				}
 			}
+
+			GL11.glColorMask(true, true, true, true);
 		}
 
-		GL11.glColorMask(true, true, true, true);
-		}
-		
 		for (Chunk c : visibleChunks) {
 			if (c != null) {
 				for (int y = 0; y < 8; y++) {
-					if (c.renderChunks[y].isGenerated()
-							&& c.renderChunks[y].getCdl().isPresent(
+					if (c.renderChunks[y].isBuilt()
+							&& c.renderChunks[y].getCm().isPresent(
 									RenderPass.TRANSLUCENT)
 							&& frustum.cuboidInFrustum(c.x * 16, y * 16,
 									c.z * 16, c.x * 16 + 16, y * 16 + 16,
 									c.z * 16 + 16)) {
-						GL11.glCallList(c.renderChunks[y].getCdl().getListID(
-								RenderPass.TRANSLUCENT));
+						c.renderChunks[y].getCm().render(RenderPass.TRANSLUCENT);
 						chunksDrawn++;
 					}
 				}
@@ -464,8 +457,9 @@ public class RenderEngine {
 		sDisable(FLAG_FOG);
 
 		if (Game.settings.clouds.getValue()) {
-			renderClouds(world.getPlayer().getPosXPartial(), world.getPlayer().getPosZPartial());
-		}	
+			renderClouds(world.getPlayer().getPosXPartial(), world.getPlayer()
+					.getPosZPartial());
+		}
 
 		// Render selection box
 		if (world.getPlayer().hasSelectedBlock()) {
@@ -473,21 +467,21 @@ public class RenderEngine {
 			GL11.glDepthMask(false);
 			GL11.glLineWidth(2);
 			GL11.glColor4f(0.0F, 0.0F, 0.0F, 0.25F);
-			renderLinedBox(world.getPlayer().getLookingAtX() - 0.002f,
-					world.getPlayer().getLookingAtY() - 0.002f,
-					world.getPlayer().getLookingAtZ() - 0.002f,
-					world.getPlayer().getLookingAtX() + 1 + 0.002f,
-					world.getPlayer().getLookingAtY() + 1 + 0.002f,
-					world.getPlayer().getLookingAtZ() + 1 + 0.002f);
+			renderLinedBox(world.getPlayer().getLookingAtX() - 0.002f, world
+					.getPlayer().getLookingAtY() - 0.002f, world.getPlayer()
+					.getLookingAtZ() - 0.002f, world.getPlayer()
+					.getLookingAtX() + 1 + 0.002f, world.getPlayer()
+					.getLookingAtY() + 1 + 0.002f, world.getPlayer()
+					.getLookingAtZ() + 1 + 0.002f);
 			GL11.glEnable(GL11.GL_DEPTH_TEST);
 			GL11.glLineWidth(4);
 			GL11.glColor4f(0.0F, 0.0F, 0.0F, 0.5F);
-			renderLinedBox(world.getPlayer().getLookingAtX() - 0.002f,
-					world.getPlayer().getLookingAtY() - 0.002f,
-					world.getPlayer().getLookingAtZ() - 0.002f,
-					world.getPlayer().getLookingAtX() + 1 + 0.002f,
-					world.getPlayer().getLookingAtY() + 1 + 0.002f,
-					world.getPlayer().getLookingAtZ() + 1 + 0.002f);
+			renderLinedBox(world.getPlayer().getLookingAtX() - 0.002f, world
+					.getPlayer().getLookingAtY() - 0.002f, world.getPlayer()
+					.getLookingAtZ() - 0.002f, world.getPlayer()
+					.getLookingAtX() + 1 + 0.002f, world.getPlayer()
+					.getLookingAtY() + 1 + 0.002f, world.getPlayer()
+					.getLookingAtZ() + 1 + 0.002f);
 			GL11.glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
 			GL11.glDepthMask(true);
 		}

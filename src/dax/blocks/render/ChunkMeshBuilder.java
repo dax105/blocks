@@ -7,9 +7,9 @@ import dax.blocks.block.Block;
 import dax.blocks.profiler.Profiler;
 import dax.blocks.world.chunk.Chunk;
 
-public class ChunkMeshGenerator {
+public class ChunkMeshBuilder {
 
-	public static ChunkDisplayList genDisplayList(Chunk c, int cy) {
+	public static ChunkMesh genDisplayList(Chunk c, int cy) {
 		
 		Profiler profiler = Game.getInstance().getProfiler();
 		
@@ -17,6 +17,9 @@ public class ChunkMeshGenerator {
 		
 		if (c != null) {
 
+			IChunkRenderer renderer = Game.getInstance().chunkRenderer;
+			ChunkMesh cm = new ChunkMesh(renderer);
+			
 			int startY = cy * 16;
 			int endY = startY + 16;
 
@@ -50,35 +53,23 @@ public class ChunkMeshGenerator {
 				}
 			}
 
-			int listsNeeded = 0;
-
-			if (opaqueCount > 0)
-				listsNeeded++;
-			if (transparentCount > 0)
-				listsNeeded++;
-			if (translucentCount > 0)
-				listsNeeded++;
-
-			if (listsNeeded == 0) {
+			if (opaqueCount == 0 && transparentCount == 0 && translucentCount == 0) {
 				profiler.build.end();
-				return new ChunkDisplayList();
+				return cm;
 			}
 
-			ChunkDisplayList cdl = new ChunkDisplayList();
-
-			int listIDs = GL11.glGenLists(listsNeeded);
-			int currentOffset = 0;
+			//int listIDs = GL11.glGenLists(listsNeeded);
+			//int currentOffset = 0;
 
 			//int attrib = Game.getInstance().renderEngine.blockAttributeID;
 			
 			if (opaqueCount > 0) {
-				GL11.glNewList(listIDs + currentOffset, GL11.GL_COMPILE);
-				cdl.setListID(RenderPass.OPAQUE, listIDs + currentOffset);
-				currentOffset++;
+				//GL11.glNewList(listIDs + currentOffset, GL11.GL_COMPILE);
+				renderer.begin();
+				cm.setHandle(RenderPass.OPAQUE, renderer.getHandle());
+				//currentOffset++;
 
 				// All gl calls to draw the chunk (OPAQUE PASS) should be here
-
-				GL11.glBegin(GL11.GL_QUADS);
 
 				for (int x = 0; x < 16; x++) {
 					for (int z = 0; z < 16; z++) {
@@ -207,7 +198,7 @@ public class ChunkMeshGenerator {
 									
 									if (visible) {
 										block.renderIndependent(calcX, calcY, calcZ, c.world);
-									}
+									}			
 
 								}
 								
@@ -217,18 +208,16 @@ public class ChunkMeshGenerator {
 					}
 				}
 
-				GL11.glEnd();
-				GL11.glEndList();
+				renderer.end();
+				
 			}
 
 			if (transparentCount > 0) {
-				GL11.glNewList(listIDs + currentOffset, GL11.GL_COMPILE);
-				cdl.setListID(RenderPass.TRANSPARENT, listIDs + currentOffset);
-				currentOffset++;
+				renderer.begin();
+				cm.setHandle(RenderPass.TRANSPARENT, renderer.getHandle());
+
 
 				// All gl calls to draw the chunk (TRANSPARENT PASS) should be here
-
-				GL11.glBegin(GL11.GL_QUADS);
 
 				for (int x = 0; x < 16; x++) {
 					for (int z = 0; z < 16; z++) {
@@ -366,21 +355,14 @@ public class ChunkMeshGenerator {
 						}
 					}
 				}
-
-				GL11.glEnd();
-
-				GL11.glEndList();
+				renderer.end();
 			}
 			
 			if (translucentCount > 0) {
-				GL11.glNewList(listIDs + currentOffset, GL11.GL_COMPILE);
-				cdl.setListID(RenderPass.TRANSLUCENT, listIDs + currentOffset);
-				currentOffset++;
+				renderer.begin();
+				cm.setHandle(RenderPass.TRANSLUCENT, renderer.getHandle());
 
 				// All gl calls to draw the chunk (TRANSLUCENT PASS) should be here
-
-				GL11.glBegin(GL11.GL_QUADS);
-
 				for (int x = 0; x < 16; x++) {
 					for (int z = 0; z < 16; z++) {
 						for (int y = startY; y < endY; y++) {
@@ -517,14 +499,11 @@ public class ChunkMeshGenerator {
 						}
 					}
 				}
-
-				GL11.glEnd();
-
-				GL11.glEndList();
+				renderer.end();
 			}
 
 			profiler.build.end();
-			return cdl;
+			return cm;
 
 		}
 		profiler.build.end();

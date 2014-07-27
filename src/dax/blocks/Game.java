@@ -25,6 +25,8 @@ import dax.blocks.gui.GuiScreenMenu;
 import dax.blocks.model.ModelManager;
 import dax.blocks.profiler.Profiler;
 import dax.blocks.profiler.Section;
+import dax.blocks.render.ChunkRendererDisplayList;
+import dax.blocks.render.IChunkRenderer;
 import dax.blocks.render.IRenderable;
 import dax.blocks.render.RenderEngine;
 import dax.blocks.settings.Keyconfig;
@@ -52,6 +54,7 @@ public class Game implements Runnable {
 	public GuiScreen guiScreen;
 	public TrueTypeFont font;
 	public World world;
+	public IChunkRenderer chunkRenderer = new ChunkRendererDisplayList();
 
 	
 	public static final int TPS = 20;

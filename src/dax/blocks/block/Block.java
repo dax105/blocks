@@ -7,6 +7,8 @@ import org.lwjgl.opengl.GL11;
 
 import dax.blocks.Coord3D;
 import dax.blocks.Game;
+import dax.blocks.block.renderer.BlockRendererBasic;
+import dax.blocks.block.renderer.IBlockRenderer;
 import dax.blocks.collisions.AABB;
 import dax.blocks.render.RenderPass;
 import dax.blocks.sound.SoundManager;
@@ -18,21 +20,22 @@ public abstract class Block {
 	public int sideTexture = 0;
 	public int bottomTexture = 0;
 	
-	protected int fallHurt = 5;
-	protected int id;
-	protected boolean opaque = true;
-	protected int renderPass = RenderPass.OPAQUE;
-	protected boolean cullSame = false;
-	protected boolean occluder = true;
-	protected float density = 1.0f;
-	protected boolean requiresData = false;
-	protected boolean requiresTick = false;
-	protected boolean requiresRenderTick = false;
-	protected String[] footStep = SoundManager.footstep_dirt;
-	protected String fall = "fall_hard";
-	protected static int lastAO = -1;
-	protected AABB aabb = new AABB(0, 0, 0, 1, 1, 1);
-	protected boolean collidable = true;
+	private int fallHurt = 5;
+	private int id;
+	private boolean opaque = true;
+	private int renderPass = RenderPass.OPAQUE;
+	private boolean cullSame = false;
+	private boolean occluder = true;
+	private float density = 1.0f;
+	private boolean requiresData = false;
+	private boolean requiresTick = false;
+	private boolean requiresRenderTick = false;
+	private String[] footStep = SoundManager.footstep_dirt;
+	private String fall = "fall_hard";
+	private static int lastAO = -1;
+	private AABB aabb = new AABB(0, 0, 0, 1, 1, 1);
+	private boolean collidable = true;
+	private IBlockRenderer renderer = new BlockRendererBasic();
 	
 	public static Map<Coord3D, Block> tickingBlocks = new HashMap<>();
 	
@@ -166,6 +169,8 @@ public abstract class Block {
 	public static final Block flower_2 = new BlockPlant(16).setAllTextures(17);
 	public static final Block flower_3 = new BlockPlant(17).setAllTextures(18);
 
+	
+	
 	/**
 	 * Returns an instance of block based on the id
 	 * @param id

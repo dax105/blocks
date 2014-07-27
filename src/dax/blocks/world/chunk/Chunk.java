@@ -2,7 +2,7 @@ package dax.blocks.world.chunk;
 
 import java.nio.ShortBuffer;
 
-import dax.blocks.render.ChunkMeshGenerator;
+import dax.blocks.render.ChunkMeshBuilder;
 import dax.blocks.render.RenderChunk;
 import dax.blocks.world.World;
 
@@ -101,7 +101,7 @@ public class Chunk {
 	}
 
 	public void deleteRenderChunk(int y) {
-		if (renderChunks[y].isGenerated()) { 
+		if (renderChunks[y].isBuilt()) { 
 			renderChunks[y].clear();
 		}
 	}
@@ -109,10 +109,10 @@ public class Chunk {
 	public void rebuild(int y) {
 		if (y > 0 || y < renderChunks.length) {
 			
-			if (renderChunks[y].isGenerated()) {
+			if (renderChunks[y].isBuilt()) {
 				deleteRenderChunk(y);
 			}		
-			renderChunks[y].setCdl(ChunkMeshGenerator.genDisplayList(this, y));
+			renderChunks[y].setCm(ChunkMeshBuilder.genDisplayList(this, y));
 		}
 	}
 
