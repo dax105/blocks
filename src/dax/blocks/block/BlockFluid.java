@@ -1,8 +1,6 @@
 package dax.blocks.block;
 
-import org.lwjgl.opengl.GL11;
-
-import dax.blocks.TextureManager;
+import dax.blocks.block.renderer.BlockRendererFluid;
 import dax.blocks.render.RenderPass;
 import dax.blocks.world.World;
 
@@ -15,6 +13,7 @@ public class BlockFluid extends BlockBasic {
 		setOccluder(false);
 		setRenderPass(RenderPass.TRANSLUCENT);
 		setCollidable(false);
+		setRenderer(new BlockRendererFluid());
 	}
 	
 	@Override
