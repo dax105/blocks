@@ -6,15 +6,16 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ListIterator;
 import java.util.Locale;
-
 import org.lwjgl.Sys;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
 import org.lwjgl.openal.AL;
 import org.lwjgl.opengl.Display;
 import org.lwjgl.opengl.GL11;
+import org.newdawn.slick.Color;
 import org.newdawn.slick.TrueTypeFont;
 
+import dax.blocks.auth.AuthManager;
 import dax.blocks.block.Block;
 import dax.blocks.console.Console;
 import dax.blocks.gui.GuiObjectBlank;
@@ -55,7 +56,8 @@ public class Game implements Runnable {
 	public TrueTypeFont font;
 	public World world;
 	public IChunkRenderer chunkRenderer = new ChunkRendererDisplayList();
-
+	public AuthManager authManager;
+	
 	
 	public static final int TPS = 20;
 	public static final double TICK_TIME = 1.0D / TPS;
@@ -70,6 +72,9 @@ public class Game implements Runnable {
 	long lastFPS;
 	int vertices = 0;
 
+	private String loginString = "Unlogged";
+	private String versionString = "version " + Start.GAME_VERSION;
+	
 	private Profiler profiler = new Profiler();
 	
 	private static Game instance;
@@ -357,7 +362,9 @@ public class Game implements Runnable {
 						GLHelper.drawTexture(TextureManager.logo, (Game.settings.windowWidth.getValue() / 2) - (TextureManager.logo.getImageWidth() / 2) , 32);
 
 						font.drawString(5, Game.settings.windowHeight.getValue() - font.getHeight(),
-								"version " + Start.GAME_VERSION);
+								this.versionString);
+						font.drawString(15 + font.getWidth(this.versionString), Game.settings.windowHeight.getValue() - font.getHeight(), this.loginString, 
+									authManager.isAuthenticated() ? Color.white : Color.red);
 					}
 					guiScreen.render();
 				}
@@ -579,6 +586,22 @@ public class Game implements Runnable {
 
 	public void toggleFullscreen() {
 		Game.settings.fullscreen.setValue(!Game.settings.fullscreen.getValue());
+	}
+
+
+	//.... LOGIN METHODS ....
+	public void doLogin(String userName, String password, String token) {
+		this.authManager = new AuthManager(userName, password, token);
+	
+		if(authManager.isAuthenticated())
+			this.loginString = userName + " is logged in with token " + token;
+		else
+			this.loginString = "Bad login for " + userName;
+	}
+	
+	public void dummyLogin() {
+		this.authManager = new AuthManager();
+		this.loginString = "User is not logged in, using name Player";
 	}
 
 }
