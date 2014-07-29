@@ -34,7 +34,15 @@ public class AuthManager {
 			Logger.getGlobal().info("User " + userName + " is not authenticated! -- " + a.toString());
 		}
 	}
-
+	
+	public void setDummyName(String name) {
+		if (this.currentUser == null)
+			this.currentUser = new User(name, "badpassword");
+		else {
+			this.currentUser.setUserName(name);
+		}
+	}
+	
 	public String getUserName() {
 		if(currentUser == null)
 			return "Player";
@@ -62,7 +70,7 @@ public class AuthManager {
 		
 		String result = this.excutePost(AUTHSERVICE_URL, par);
 		
-		if(result == null)
+		if(result == null || result.isEmpty())
 			return AuthStatus.ERROR_OTHER;
 		
 		try {

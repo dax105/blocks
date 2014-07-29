@@ -601,6 +601,7 @@ public class Game implements Runnable {
 	
 	public void dummyLogin() {
 		this.authManager = new AuthManager();
+		this.authManager.setDummyName("Player");
 		this.loginString = "User is not logged in, using name Player";
 	}
 
