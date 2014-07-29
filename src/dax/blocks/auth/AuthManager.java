@@ -15,8 +15,8 @@ public class AuthManager {
 		ERROR_TIMEOUT, ERROR_BAD, ERROR_UNLOGGED, ERROR_OTHER, FINE
 	}
 	
-	private final String AUTHSERVICE_URL = "authTokenServ";
-	private final String CHECKSERVICE_URL = "checkTokenServ";
+	private final String AUTHSERVICE_URL = "http://ondryasondra.aspone.cz/tokengen.ashx";
+	private final String CHECKSERVICE_URL = "http://ondryasondra.aspone.cz/tokencheck.ashx";
 
 	private User currentUser;
 
@@ -115,12 +115,12 @@ public class AuthManager {
 	}
 	
 
-	private String excutePost(String url, String params) {
+	/*private String excutePost(String url, String params) {
 		Logger.getGlobal().info("POST: " + url + ", params " + params);
 		return "FINE";
-	}
+	}*/
 
-	/*
+	
 	private String excutePost(String targetURL, String urlParameters) {
 		URL url;
 		HttpURLConnection connection = null;
@@ -172,5 +172,5 @@ public class AuthManager {
 		}
 	}
 
-*/
+
 }
