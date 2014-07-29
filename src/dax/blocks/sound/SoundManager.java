@@ -3,6 +3,8 @@ package dax.blocks.sound;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.logging.Logger;
+
 import dax.blocks.Game;
 import paulscode.sound.ListenerData;
 import paulscode.sound.SoundSystem;
@@ -14,6 +16,7 @@ import paulscode.sound.libraries.LibraryLWJGLOpenAL;
 public class SoundManager {
 	private SoundSystem system;
 	private MusicProvider provider;
+	private boolean isWorking = true;
 	
 	public static Map<String, String> sounds;
 	public static Map<String, String> music;
@@ -73,8 +76,9 @@ public class SoundManager {
 			SoundSystemConfig.setCodec("wav", CodecWav.class);
 			SoundSystemConfig.setSoundFilesPackage("dax/blocks/res/sound/");
 		} catch (SoundSystemException e) {
-			// TODO Sound system fail message
-			e.printStackTrace();
+			Logger.getGlobal().warning("Sound system cannot be initialized!");
+			this.isWorking = false;
+			return;
 		}
 		
 		system = new SoundSystem();
@@ -99,7 +103,8 @@ public class SoundManager {
 			stopMusic();
 			musicPlaying = name;
 			isMusicPlaying = true;
-			system.backgroundMusic(name, music.get(name), loop);
+			if(this.isWorking)
+				system.backgroundMusic(name, music.get(name), loop);
 		} else {
 			Game.console.out("Music called " + name + " does not exist");
 		}
@@ -111,7 +116,7 @@ public class SoundManager {
 			return;
 		}
 		
-		if(!system.playing(musicPlaying) && !this.isMusicPaused) {
+		if(this.isWorking && !system.playing(musicPlaying) && !this.isMusicPaused) {
 			isMusicPlaying = false;
 			return;
 		}
@@ -121,39 +126,45 @@ public class SoundManager {
 
 	public void pauseMusic() {
 		if (isMusicPlaying && !isMusicPaused) {
-			system.pause(musicPlaying);
+			if(this.isWorking)
+				system.pause(musicPlaying);
 			this.isMusicPaused = true;
 		}
 	}
 
 	public void playMusic() {
 		if (musicPlaying != null && isMusicPaused) {
-			system.play(musicPlaying);
+			if(this.isWorking)
+				system.play(musicPlaying);
 			this.isMusicPaused = false;
 		}
 	}
 
 	public void stopMusic() {
 		if (isMusicPlaying) {
-			system.stop(musicPlaying);
+			if(this.isWorking)
+				system.stop(musicPlaying);
 			musicPlaying = null;
 			isMusicPlaying = false;
 		}
 	}
 
 	public void updateVolume(boolean soundOn, float soundVolume) {
-		if (soundOn) {
-			system.setMasterVolume(soundVolume);
-			this.playMusic();
-		} else {
-			system.setMasterVolume(0);
-			this.pauseMusic();
+		if (this.isWorking) {
+			if (soundOn) {
+				system.setMasterVolume(soundVolume);
+				this.playMusic();
+			} else {
+				system.setMasterVolume(0);
+				this.pauseMusic();
+			}
 		}
 	}
 
 	public void shutdown() {
 		stopMusic();
-		system.cleanup();
+		if(this.isWorking)
+			system.cleanup();
 	}
 	
 	public void playSound(String name) {
@@ -171,7 +182,7 @@ public class SoundManager {
 
 	public void playSound(String name, float pitch, float volume, float x,
 			float y, float z, boolean loop) {
-		if (sounds.get(name) != null) {
+		if (this.isWorking && sounds.get(name) != null) {
 			system.setVolume(name, volume);
 			system.setPitch(name, pitch);
 			system.setPosition(name, x, y, z);
