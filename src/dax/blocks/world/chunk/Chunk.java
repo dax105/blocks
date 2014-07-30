@@ -128,8 +128,8 @@ public class Chunk {
 		this.x = cX;
 		this.z = cZ;
 		
-		for (int i = 0; i < 8; i++) {
-			renderChunks[i] = new RenderChunk();
+		for (int y = 0; y < 8; y++) {
+			renderChunks[y] = new RenderChunk(cX, y, cZ);
 		}
 		
 	}

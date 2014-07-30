@@ -36,4 +36,11 @@ public class ChunkMesh {
 		}
 	}
 
+	public boolean isEmpty() {
+		for (int i = 0; i < RenderPass.TOTAL_PASSES; i++)
+			if (present[i]) 
+				return false;
+		return true;
+	}
+
 }

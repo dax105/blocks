@@ -4,6 +4,7 @@ import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.nio.FloatBuffer;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
@@ -21,6 +22,7 @@ import dax.blocks.Game;
 import dax.blocks.Particle;
 import dax.blocks.TextureManager;
 import dax.blocks.block.Block;
+import dax.blocks.console.CommandCullLock;
 import dax.blocks.movable.entity.PlayerEntity;
 import dax.blocks.world.ChunkDistanceComparator;
 import dax.blocks.world.World;
@@ -215,7 +217,8 @@ public class RenderEngine {
 	}
 
 	public void updateBeforeRendering(float ptt) {
-		this.frustum.calculateFrustum();
+		if (!CommandCullLock.locked)
+			this.frustum.calculateFrustum();
 
 		FloatBuffer modelviewMatrix = BufferUtils.createFloatBuffer(16);
 		GL11.glGetFloat(GL11.GL_MODELVIEW_MATRIX, modelviewMatrix);
@@ -378,77 +381,53 @@ public class RenderEngine {
 
 		}
 
+		List<RenderChunk> builtRenderChunks = new ArrayList<RenderChunk>();
+
 		for (Chunk c : visibleChunks) {
-			if (c != null) {
-				for (int y = 0; y < 8; y++) {
-					if (c.renderChunks[y].isBuilt()
-							&& c.renderChunks[y].getCm().isPresent(
-									RenderPass.OPAQUE)
-							&& frustum.cuboidInFrustum(c.x * 16, y * 16,
-									c.z * 16, c.x * 16 + 16, y * 16 + 16,
-									c.z * 16 + 16)) {
-						c.renderChunks[y].getCm().render(RenderPass.OPAQUE);
-						chunksDrawn++;
-					}
+			RenderChunk[] crcs = c.renderChunks;
+
+			for (int y = 0; y < 8; y++) {
+				if (crcs[y].isBuilt()) {
+					builtRenderChunks.add(crcs[y]);
 				}
+			}
+
+		}
+
+		List<RenderChunk> culledRenderChunks = ChunkCull.cull(
+				builtRenderChunks, this.frustum);
+
+		for (RenderChunk r : culledRenderChunks) {
+			if (r.getCm().isPresent(RenderPass.OPAQUE)) {
+				r.getCm().render(RenderPass.OPAQUE);
+				chunksDrawn++;
 			}
 		}
 
 		GL11.glEnable(GL11.GL_ALPHA_TEST);
-		for (Chunk c : visibleChunks) {
-			if (c != null) {
-				for (int y = 0; y < 8; y++) {
-					if (c.renderChunks[y].isBuilt()
-							&& c.renderChunks[y].getCm().isPresent(
-									RenderPass.TRANSPARENT)
-							&& frustum.cuboidInFrustum(c.x * 16, y * 16,
-									c.z * 16, c.x * 16 + 16, y * 16 + 16,
-									c.z * 16 + 16)) {
-						c.renderChunks[y].getCm().render(RenderPass.TRANSPARENT);
-						chunksDrawn++;
-					}
-				}
+		for (RenderChunk r : culledRenderChunks) {
+			if (r.getCm().isPresent(RenderPass.TRANSPARENT)) {
+				r.getCm().render(RenderPass.TRANSPARENT);
+				chunksDrawn++;
 			}
 		}
-
 		GL11.glDisable(GL11.GL_ALPHA_TEST);
 
 		if (Game.settings.two_pass_translucent.getValue()) {
-
 			GL11.glColorMask(false, false, false, false);
-
-			for (Chunk c : visibleChunks) {
-				if (c != null) {
-					for (int y = 0; y < 8; y++) {
-						if (c.renderChunks[y].isBuilt()
-								&& c.renderChunks[y].getCm().isPresent(
-										RenderPass.TRANSLUCENT)
-								&& frustum.cuboidInFrustum(c.x * 16, y * 16,
-										c.z * 16, c.x * 16 + 16, y * 16 + 16,
-										c.z * 16 + 16)) {
-							c.renderChunks[y].getCm().render(RenderPass.TRANSLUCENT);
-							chunksDrawn++;
-						}
-					}
+			for (RenderChunk r : culledRenderChunks) {
+				if (r.getCm().isPresent(RenderPass.TRANSLUCENT)) {
+					r.getCm().render(RenderPass.TRANSLUCENT);
+					chunksDrawn++;
 				}
 			}
-
 			GL11.glColorMask(true, true, true, true);
 		}
 
-		for (Chunk c : visibleChunks) {
-			if (c != null) {
-				for (int y = 0; y < 8; y++) {
-					if (c.renderChunks[y].isBuilt()
-							&& c.renderChunks[y].getCm().isPresent(
-									RenderPass.TRANSLUCENT)
-							&& frustum.cuboidInFrustum(c.x * 16, y * 16,
-									c.z * 16, c.x * 16 + 16, y * 16 + 16,
-									c.z * 16 + 16)) {
-						c.renderChunks[y].getCm().render(RenderPass.TRANSLUCENT);
-						chunksDrawn++;
-					}
-				}
+		for (RenderChunk r : culledRenderChunks) {
+			if (r.getCm().isPresent(RenderPass.TRANSLUCENT)) {
+				r.getCm().render(RenderPass.TRANSLUCENT);
+				chunksDrawn++;
 			}
 		}
 
