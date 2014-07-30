@@ -28,7 +28,7 @@ What can it do
 * Sounds and background music
 * Basic physics
 * Font managing (we are using Roboto font by Google)
-* [Authentification](http://ondryasondra.aspone.cz/Register.html)
+* [Authentification](https://github.com/dax105/blocks/wiki/Auth-system) (our/default implementation: [Register](http://ondryasondra.aspone.cz/Register.html))
 * AABB Collisions
 * Saving custom data for blocks
 * Really nice profiler!
