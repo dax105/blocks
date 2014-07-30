@@ -5,6 +5,7 @@ import dax.blocks.movable.entity.PlayerEntity;
 
 public class CommandCullLock extends Command {
 
+	// I know, this is ugly, but I DONT CARE!
 	public static boolean locked = false;
 	public static float lockedX;
 	public static float lockedY;
@@ -12,7 +13,7 @@ public class CommandCullLock extends Command {
 	
 	@Override
 	public String getName() {
-		return "cullLock";
+		return "culllock";
 	}
 
 	@Override
@@ -27,9 +28,13 @@ public class CommandCullLock extends Command {
 			lockedX = player.getPosX();
 			lockedY = player.getPosY();
 			lockedZ = player.getPosZ();
+			
+			Game.console.out("Culling locked!");
+			locked = true;
+		} else {
+			Game.console.out("Culling unlocked!");
+			locked = false;
 		}
-		
-		locked = !locked;
 		
 		return true;
 	}
