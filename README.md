@@ -15,7 +15,7 @@ What can it do
 * Particles
 * 65 536 block positions (working on usage!)
 * Epic secret features included
-* Turn itself on
+* Turn itself on (with a little bit of help from [launcher](https://github.com/dax105/launcher))
 * Nearest/Linear filtering
 * Loading and saving world (we hope)
 * Infinite world
@@ -28,31 +28,35 @@ What can it do
 * Sounds and background music
 * Basic physics
 * Font managing (we are using Roboto font by Google)
+* [Authentification](http://ondryasondra.aspone.cz/Register.html)
+* AABB Collisions
+* Saving custom data for blocks
+* Really nice profiler!
 
 WIP
 ---
-* Collisions
 * Blocks of different shapes
 * Biomes
 * AA, AF
 * Shaders (mostly unused)
+* Modelse
 
 Controls
 --------
 * WSAD, mouse - movement
 * Shift - boost
+* Ctrl+click - click action on block - try it on stone!
 * Mouse buttons - placing/breaking blocks
 * F - fullscreen
 * ESC - menu
-* ; - console
-* 0-9/mouse wheel - block selection
+* ;/C - console
+* mouse wheel - block selection
 
 Libraries
 ---------
 * LWJGL (lwjgl, lwjgl_util)
 * SLICK-UTIL
 * SNAPPY-JAVA
-* JORBIS
 * PAULSCODE SOUNDSYSTEM (SoundSystem, CodecWav, CodecJOrbis, LibraryLWJGLOpenAL)
 
 #####Made by Dax105 and LeOndryasO, textures by Tomix
