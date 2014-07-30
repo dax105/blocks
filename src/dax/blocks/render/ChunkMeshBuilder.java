@@ -7,7 +7,7 @@ import dax.blocks.world.chunk.Chunk;
 
 public class ChunkMeshBuilder {
 
-	public static ChunkMesh genDisplayList(Chunk c, int cy) {
+	public static ChunkMesh generateMesh(Chunk c, int cy) {
 		
 		Profiler profiler = Game.getInstance().getProfiler();
 		

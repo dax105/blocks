@@ -112,7 +112,7 @@ public class Chunk {
 			if (renderChunks[y].isBuilt()) {
 				deleteRenderChunk(y);
 			}		
-			renderChunks[y].setCm(ChunkMeshBuilder.genDisplayList(this, y));
+			renderChunks[y].setCm(ChunkMeshBuilder.generateMesh(this, y));
 		}
 	}
 
