@@ -19,6 +19,7 @@ public class CommandManager {
 		registerCommand(new CommandTele()); 
 		registerCommand(new CommandVariables());
 		registerCommand(new CommandDeleteWorld());
+		registerCommand(new CommandCullLock());
 	}
 	
 	private void registerCommand(Command command) {
