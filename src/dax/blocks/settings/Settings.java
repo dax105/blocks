@@ -29,10 +29,9 @@ public class Settings {
 	public SettingsObject<Integer> loads_pt = (SettingsObject<Integer>) registerObject(new SettingsObject<Integer>(
 			"loads_pt", 3, "Loaded chunks per tick", "%v chunks", null));
 	public SettingsObject<Integer> decorations_pt = (SettingsObject<Integer>) registerObject(new SettingsObject<Integer>(
-			"decorations_pt", 3, "Decorations per tick", null, null));
+			"decorations_pt", 3, "Chunks decorated per tick", null, null));
 	public SettingsObject<Integer> chunk_cache_size = (SettingsObject<Integer>) registerObject(new SettingsObject<Integer>(
 			"chunk_cache_size", 500, "Chunk cache size", null, null));
-
 	public SettingsObject<Boolean> debug = (SettingsObject<Boolean>) registerObject(new SettingsObject<Boolean>(
 			"debug", false, "Show debug info", "%o", null));
 	public SettingsObject<Boolean> fullscreen = (SettingsObject<Boolean>) registerObject(new SettingsObject<Boolean>(
@@ -46,7 +45,11 @@ public class Settings {
 					Game.sound.updateVolume((boolean) val, sound_volume.getValue());
 					return true;
 				}
-			}));
+			}));	
+	public SettingsObject<Boolean> culling_frustum = (SettingsObject<Boolean>) registerObject(new SettingsObject<Boolean>(
+			"culling_frustum", true, "Frustum culling", "%o", null));
+	public SettingsObject<Boolean> culling_advanced = (SettingsObject<Boolean>) registerObject(new SettingsObject<Boolean>(
+			"culling_advanced", true, "Advanced culling", "%o", null));
 	public SettingsObject<Boolean> tree_generation = (SettingsObject<Boolean>) registerObject(new SettingsObject<Boolean>(
 			"tree_generation", true, "Tree generator", "%o", null));
 	public SettingsObject<Boolean> linear_filtering = (SettingsObject<Boolean>) registerObject(new SettingsObject<Boolean>(
@@ -60,7 +63,6 @@ public class Settings {
 			"two_pass_translucent", true, "Two pass rendering", "%o", null));
 	public SettingsObject<Boolean> clouds = (SettingsObject<Boolean>) registerObject(new SettingsObject<Boolean>(
 			"clouds", true, "Enable clouds", "%o", null));
-
 	public SettingsObject<Float> fov = (SettingsObject<Float>) registerObject(new SettingsObject<Float>(
 			"fov", 80.0f, "FOV", null, null));
 	public SettingsObject<Float> reach = (SettingsObject<Float>) registerObject(new SettingsObject<Float>(
@@ -76,7 +78,6 @@ public class Settings {
 					return true;
 				}
 			}));
-
 	public SettingsObject<String> resolution = (SettingsObject<String>) registerObject(new SettingsObject<String>(
 			"resolution", "800x480", "Window resolution", null, new Applier() {
 
@@ -104,12 +105,10 @@ public class Settings {
 				}
 
 			}));
-	
 	public SettingsObject<Integer> windowWidth = (SettingsObject<Integer>) registerObject(new SettingsObject<Integer>(
 			"width", 800, "Window width", "px", new ApplierResolution()));
 	public SettingsObject<Integer> windowHeight = (SettingsObject<Integer>) registerObject(new SettingsObject<Integer>(
 			"height", 480, "Window height", "px", new ApplierResolution()));
-
 	public SettingsObject<Integer> fps_limit = (SettingsObject<Integer>) registerObject(new SettingsObject<Integer>(
 			"fps_limit", 0, "FPS Limit", null, null));
 	public SettingsObject<Boolean> peaceful_mode = (SettingsObject<Boolean>) registerObject(new SettingsObject<Boolean>(
