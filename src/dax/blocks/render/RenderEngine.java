@@ -395,8 +395,8 @@ public class RenderEngine {
 		}
 
 		List<RenderChunk> culledRenderChunks = ChunkCull.cull(
-				builtRenderChunks, this.frustum);
-
+				builtRenderChunks, this.frustum, Game.settings.culling_frustum.getValue(), Game.settings.culling_advanced.getValue());
+		
 		for (RenderChunk r : culledRenderChunks) {
 			if (r.getCm().isPresent(RenderPass.OPAQUE)) {
 				r.getCm().render(RenderPass.OPAQUE);
