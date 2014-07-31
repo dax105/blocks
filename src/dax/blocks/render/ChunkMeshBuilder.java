@@ -26,6 +26,14 @@ public class ChunkMeshBuilder {
 
 			int opaqueCount = 0, transparentCount = 0, translucentCount = 0;
 			
+			int minX = 100;
+			int minY = 100;
+			int minZ = 100;
+			
+			int maxX = -100;
+			int maxY = -100;
+			int maxZ = -100;
+			
 			for (int x = 0; x < 16; x++) {
 				for (int z = 0; z < 16; z++) {
 					for (int y = startY; y < endY; y++) {
@@ -34,6 +42,14 @@ public class ChunkMeshBuilder {
 						if (blockID > 0) {
 							Block block = Block.getBlock(blockID);
 
+							if(x < minX) minX = x;
+							if(y-startY < minY) minY = y-startY;
+							if(z < minZ) minZ = z;
+							
+							if(x > maxX) maxX = x;
+							if(y-startY > maxY) maxY = y-startY;
+							if(z > maxZ) maxZ = z;
+							
 							switch (block.getRenderPass()) {
 							case RenderPass.OPAQUE:
 								opaqueCount++;
@@ -51,6 +67,9 @@ public class ChunkMeshBuilder {
 				}
 			}
 
+			System.out.println(minY + " " + maxY);
+			cm.setBounds(minX, minY, minZ, maxX, maxY, maxZ);
+			
 			if (opaqueCount == 0 && transparentCount == 0 && translucentCount == 0) {
 				profiler.build.end();
 				return cm;

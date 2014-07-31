@@ -11,8 +11,9 @@ public class ChunkCull {
 			RenderChunk r = iterator.next();		
 			int x = r.getX() * 16;
 			int y = r.getY() * 16;
-			int z = r.getZ() * 16;			
-			if (!r.isBuilt() || r.isEmpty() || (frustumCulling && !frustum.cuboidInFrustum(x, y, z, x+16, y+16, z+16))) {
+			int z = r.getZ() * 16;	
+			ChunkMesh cm = r.getCm();
+			if (!r.isBuilt() || r.isEmpty() || (frustumCulling && !frustum.cuboidInFrustum(x+cm.minX, y+cm.minY, z+cm.minZ, x+1+cm.maxX, y+1+cm.maxY, z+1+cm.maxZ))) {
 				iterator.remove();
 			}
 		}
