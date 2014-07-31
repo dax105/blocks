@@ -8,7 +8,7 @@ public class ApplierLeaves extends Applier {
 
 	@Override
 	public boolean apply(Object val) {
-		boolean transp = Game.settings.transparent_leaves.getValue();
+		boolean transp = (boolean) val;
 		
 		Block.leaves.setOpaque(!transp);
 		Block.leaves.setRenderPass(transp ? RenderPass.TRANSPARENT : RenderPass.OPAQUE);
