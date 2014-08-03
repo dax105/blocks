@@ -45,6 +45,7 @@ Controls
 * Ctrl+click - click action on block - try it on stone!
 * Mouse buttons - placing/breaking blocks
 * F - fullscreen toggle
+* Z - zoom
 * ESC - menu
 * ;/C - console
 * mouse wheel - block selection
