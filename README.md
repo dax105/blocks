@@ -58,6 +58,7 @@ Libraries
 
 #####Made by Dax105 and LeOndryasO, textures by Tomix
 
-**Background music:**<br>
+**Background music:**
+
 Game of Thrones music by Ramin Djawadi, we do not claim ownership over these songs nor are we profiting by them. Owned by HBO.  
 Other music is made by us
