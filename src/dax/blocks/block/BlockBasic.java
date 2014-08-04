@@ -10,6 +10,19 @@ public class BlockBasic extends Block {
 	
 	public BlockBasic(int id) {
 		super(id);
+		dax.blocks.Game.ingameGuiManager.registerNewScreen(new dax.blocks.gui.ingame.GuiScreen(0, 0, 450, 450, dax.blocks.Game.ingameGuiManager) {
+
+			@Override
+			public void onOpening() {
+				System.out.println("OPENING");
+			}
+
+			@Override
+			public void onClosing() {
+				System.out.println("CLOSING");
+			}
+			
+		});
 	}
 
 	@Override
@@ -23,6 +36,12 @@ public class BlockBasic extends Block {
 
 	@Override
 	public void onClicked(int button, int x, int y, int z, World world) {
+		dax.blocks.Game.ingameGuiManager.setCurrentScreen(0);
+		
+		if(dax.blocks.Game.ingameGuiManager.isOpened())
+			dax.blocks.Game.ingameGuiManager.closeScreen();
+		else
+			dax.blocks.Game.ingameGuiManager.openScreen();
 	}
 
 }

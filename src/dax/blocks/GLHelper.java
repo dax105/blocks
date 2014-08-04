@@ -219,8 +219,8 @@ public class GLHelper {
 				TextureManager.getY2(id), x1, x2, y1, y2);
 	}
 	
-	public static void drawRectangle(float r, float g, float b, float x1, float x2, float y1, float y2) {
-		GL11.glColor3f(r, g, b);
+	public static void drawRectangle(float r, float g, float b, float a, float x1, float x2, float y1, float y2) {
+		GL11.glColor4f(r, g, b, a);
 
 		GL11.glDisable(GL11.GL_TEXTURE_2D);
 
@@ -235,6 +235,10 @@ public class GLHelper {
 		GL11.glVertex2f(x1, y2);
 
 		GL11.glEnd();
+	}
+	
+	public static void drawRectangle(float r, float g, float b, float x1, float x2, float y1, float y2) {
+		drawRectangle(r, g, b, 1, x1, x2, y1, y2);
 	}
 	
 	public static void updateFiltering(boolean linear) {

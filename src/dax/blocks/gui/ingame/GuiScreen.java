@@ -2,7 +2,7 @@ package dax.blocks.gui.ingame;
 
 import dax.blocks.render.IRenderable;
 
-public class GuiScreen implements IRenderable {
+public abstract class GuiScreen implements IRenderable {
 
 	private int x, y, width, height;
 	private float backColorR, backColorG, backColorB, backColorA;
@@ -23,6 +23,9 @@ public class GuiScreen implements IRenderable {
 		this.backColorA = a;
 		this.guiManager = guiManager;
 	}
+	
+	public abstract void onOpening();
+	public abstract void onClosing();
 	
 	@Override
 	public void onTick() {

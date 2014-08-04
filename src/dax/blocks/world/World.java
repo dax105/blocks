@@ -1,6 +1,8 @@
 package dax.blocks.world;
 
 import dax.blocks.collisions.AABB;
+import dax.blocks.gui.ingame.GuiManager;
+
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -11,6 +13,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.logging.Logger;
 import java.util.Random;
+
 import dax.blocks.Coord2D;
 import dax.blocks.Coord3D;
 import dax.blocks.Game;
@@ -36,7 +39,7 @@ public class World implements IRenderable {
 	private PlayerEntity player;
 	private ChunkProvider chunkProvider;
 	private DataManager blockDataManager;
-
+	
 	public int size;
 	public int sizeBlocks;
 
@@ -58,6 +61,7 @@ public class World implements IRenderable {
 
 	public World(boolean trees, Game game, boolean load, String worldName) {
 		this.name = worldName;
+		
 		player = new PlayerEntity(this, 0, 128, 0);
 
 		this.renderables = new ArrayList<IRenderable>();
@@ -80,6 +84,7 @@ public class World implements IRenderable {
 		this.c2d.set(x, y);
 		return this.c2d;
 	}
+	
 
 	public PlayerEntity getPlayer() {
 		return this.player;

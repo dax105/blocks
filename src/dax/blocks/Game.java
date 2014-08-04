@@ -6,6 +6,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ListIterator;
 import java.util.Locale;
+
 import org.lwjgl.Sys;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
@@ -23,6 +24,7 @@ import dax.blocks.gui.GuiScreen;
 import dax.blocks.gui.GuiScreenLoading;
 import dax.blocks.gui.GuiScreenMainMenu;
 import dax.blocks.gui.GuiScreenMenu;
+import dax.blocks.gui.ingame.GuiManager;
 import dax.blocks.model.ModelManager;
 import dax.blocks.profiler.Profiler;
 import dax.blocks.profiler.Section;
@@ -42,6 +44,7 @@ public class Game implements Runnable {
 	public static WorldsManager worlds = new WorldsManager();
 	public static SoundManager sound = new SoundManager();
 	public static ModelManager models = new ModelManager();
+	public static GuiManager ingameGuiManager = new GuiManager();
 	
 	public static final String TITLE = Start.GAME_NAME + " v" + Start.GAME_VERSION;
 	
@@ -219,7 +222,6 @@ public class Game implements Runnable {
 		ingame = false;
 		openGuiScreen(new GuiScreenMainMenu(this));
 	}
-
 	
 	//.... RENDER/UPDATE METHODS ....
 
