@@ -60,11 +60,7 @@ public abstract class Block extends Item {
 	
 	public static Block getBlock(int id) {
 		Item i = Item.getItem(id);
-		if(i != null && i instanceof Block) {
-			return (Block) i;
-		}
-		
-		return null;
+		return (Block) i;
 	}
 	
 	public Block(int id) {
