@@ -94,8 +94,8 @@ public class PlayerEntity extends Entity {
 				if (Mouse.getEventButton() == 0
 						&& Keyconfig.isDown(Keyconfig.crouch)) {
 					if (hasSelected) {
-						Block.blocks[world.getBlock(lookingAtX, lookingAtY,
-								lookingAtZ)].onClicked(0, lookingAtX,
+						Block.getBlock(world.getBlock(lookingAtX, lookingAtY,
+								lookingAtZ)).onClicked(0, lookingAtX,
 								lookingAtY, lookingAtZ, world);
 					}
 				} else if (Mouse.getEventButton() == 0) {
