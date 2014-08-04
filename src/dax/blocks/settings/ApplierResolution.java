@@ -29,6 +29,9 @@ public class ApplierResolution extends Applier {
 		
 		Game.settings.resolution.setValue(width + "x" + height, false);
 
+		if(Game.ingameGuiManager.getCurrentScreen() != null)
+			Game.ingameGuiManager.getCurrentScreen().updateCenteredPosition(width, height);
+		
 		return true;
 
 	}

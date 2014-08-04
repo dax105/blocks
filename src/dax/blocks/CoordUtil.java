@@ -10,6 +10,10 @@ public class CoordUtil {
 		return add(child, parent);
 	}
 	
+	public static Coord2D getCenteredRectanglePosition(int rectWidth, int rectHeight, int parentWidth, int parentHeight) {
+		return new Coord2D(((parentWidth - rectWidth) / 2), (parentHeight - rectHeight) / 2);
+	}
+	
 	public static Coord2D add(Coord2D... coords) {
 		Coord2D c = new Coord2D(0, 0);
 		for(Coord2D coord : coords) {

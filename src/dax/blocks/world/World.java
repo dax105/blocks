@@ -420,6 +420,8 @@ public class World implements IRenderable {
 	
 	@Override
 	public void onTick() {	
+		Game.ingameGuiManager.onTick();
+		
 		for(IRenderable r : this.renderables) {
 			r.onTick();
 		}
@@ -478,6 +480,8 @@ public class World implements IRenderable {
 			if(b.getValue().isRequiringRenderTick())
 				b.getValue().onRenderTick(partialTickTime, b.getKey().x, b.getKey().y, b.getKey().z, this);	
 		}
+		
+		Game.ingameGuiManager.onRenderTick(partialTickTime);
 	}
 
 	@Override
@@ -485,6 +489,8 @@ public class World implements IRenderable {
 		for(IRenderable r : this.renderables) {
 			r.renderWorld(partialTickTime);
 		}
+		
+		Game.ingameGuiManager.renderWorld(partialTickTime);
 	}
 
 	@Override
@@ -492,6 +498,8 @@ public class World implements IRenderable {
 		for(IRenderable r : this.renderables) {
 			r.renderGui(partialTickTime);
 		}
+		
+		Game.ingameGuiManager.renderGui(partialTickTime);
 	}
 
 }

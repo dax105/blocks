@@ -67,7 +67,6 @@ public class ChunkMeshBuilder {
 				}
 			}
 
-			System.out.println(minY + " " + maxY);
 			cm.setBounds(minX, minY, minZ, maxX, maxY, maxZ);
 			
 			if (opaqueCount == 0 && transparentCount == 0 && translucentCount == 0) {

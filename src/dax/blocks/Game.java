@@ -254,10 +254,14 @@ public class Game implements Runnable {
 
 				if (Keyboard.getEventKey() == Keyconfig.exit) {
 					if (!consoleOpen) {
-						if (this.guiScreen != null) {
-							closeGuiScreen();
+						if (Game.ingameGuiManager.isOpened()) {
+							Game.ingameGuiManager.closeScreen();
 						} else {
-							openGuiScreen(new GuiScreenMenu(this));
+							if (this.guiScreen != null) {
+								closeGuiScreen();
+							} else {
+								openGuiScreen(new GuiScreenMenu(this));
+							}
 						}
 					} else {
 						consoleOpen = false;
@@ -327,9 +331,7 @@ public class Game implements Runnable {
 			
 			GLHelper.setOrtho(Game.settings.windowWidth.getValue(), Game.settings.windowHeight.getValue());
 			
-			for(IRenderable r : world.getRenderables()) {
-				r.renderGui(ptt);
-			}
+			world.renderGui(ptt);
 		
 			renderOverlay();
 

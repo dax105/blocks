@@ -18,11 +18,11 @@ public class ApplierFullscreen extends Applier {
 			
 			Toolkit toolkit = Toolkit.getDefaultToolkit();
 			Dimension screensize = toolkit.getScreenSize();
-			Game.settings.windowWidth.setValue(screensize.width, false);
-			Game.settings.windowHeight.setValue(screensize.height, false);
+			Game.settings.windowWidth.setValue(screensize.width, true);
+			Game.settings.windowHeight.setValue(screensize.height, true);
 		} else if((Boolean)this.applyingObject.getValue() && (Boolean)value) {
-			Game.settings.windowWidth.setValue(lastWidth, false);
-			Game.settings.windowHeight.setValue(lastHeight, false);
+			Game.settings.windowWidth.setValue(lastWidth, true);
+			Game.settings.windowHeight.setValue(lastHeight, true);
 		}
 		
 		

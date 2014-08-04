@@ -2,7 +2,10 @@ package dax.blocks.gui.ingame;
 
 import java.util.ArrayList;
 import java.util.List;
+
 import org.lwjgl.input.Mouse;
+
+import dax.blocks.Game;
 import dax.blocks.render.IRenderable;
 
 public class GuiManager implements IRenderable {
@@ -12,6 +15,14 @@ public class GuiManager implements IRenderable {
 	
 	public GuiManager() {
 		this.screenList = new ArrayList<>();
+	}
+	
+	public int getScreenWidth() {
+		return Game.settings.windowWidth.getValue();
+	}
+	
+	public int getScreenHeight() {
+		return Game.settings.windowHeight.getValue();
 	}
 
 	public int registerNewScreen(GuiScreen screen) {
@@ -46,8 +57,26 @@ public class GuiManager implements IRenderable {
 		}
 	}
 	
+	public GuiScreen getCurrentScreen() {
+		return this.currentGuiScreen;
+	}
+	
 	public boolean isOpened() {
 		return this.isScreenOpened;
+	}
+	
+	public void checkMouseClosing() {
+		int x = Mouse.getX();
+		int y = Game.settings.windowHeight.getValue() - Mouse.getY();
+		
+		boolean left  = (x < this.currentGuiScreen.getX());
+		boolean right = (x > (this.currentGuiScreen.getX() + this.currentGuiScreen.getWidth()));
+		boolean top = (y < this.currentGuiScreen.getY());
+		boolean bottom = (y > (this.currentGuiScreen.getY() + this.currentGuiScreen.getHeight()));
+		
+		if(left || right || top || bottom) {
+			this.closeScreen();
+		}
 	}
 	
 	@Override

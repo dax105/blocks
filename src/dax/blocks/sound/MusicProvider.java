@@ -32,6 +32,7 @@ public class MusicProvider {
 		SoundManager.music.put("menu2", "got_north.ogg");
 		SoundManager.music.put("music2", "piano1.ogg");
 		SoundManager.music.put("music3", "got_kta.ogg");
+		SoundManager.music.put("69", "s.ogg");
 	}
 
 	private void sortMusic() {
@@ -71,6 +72,10 @@ public class MusicProvider {
 		}
 
 		if (!sound.isMusicPlaying()) {
+			if(rand.nextInt(500) == 69) {
+				sound.playMusic("69", false);
+			} else {
+			
 			if (isGame) {
 				if (rand.nextInt(this.startGameMusicProbability) == 1) {
 					sound.playMusic(gameQueue[gameIndex], false);
@@ -89,6 +94,7 @@ public class MusicProvider {
 				if (menuIndex > (menuQueue.length - 1)) {
 					menuIndex = 0;
 				}
+			}
 			}
 
 		}

@@ -91,7 +91,7 @@ public class Settings {
 						int width = Integer.parseInt(res[0]);
 						int height = Integer.parseInt(res[1]);
 
-						windowWidth.setValue(width, false);
+						windowWidth.setValue(width, true);
 						windowHeight.setValue(height, true);
 						
 						GLHelper.setDisplayMode(windowWidth.getValue(), windowHeight.getValue(),
@@ -106,9 +106,9 @@ public class Settings {
 
 			}));
 	public SettingsObject<Integer> windowWidth = (SettingsObject<Integer>) registerObject(new SettingsObject<Integer>(
-			"width", 800, "Window width", "px", new ApplierResolution()));
+			"width", 800, "Window width", "%v px", new ApplierResolution()));
 	public SettingsObject<Integer> windowHeight = (SettingsObject<Integer>) registerObject(new SettingsObject<Integer>(
-			"height", 480, "Window height", "px", new ApplierResolution()));
+			"height", 480, "Window height", "%v px", new ApplierResolution()));
 	public SettingsObject<Integer> fps_limit = (SettingsObject<Integer>) registerObject(new SettingsObject<Integer>(
 			"fps_limit", 0, "FPS Limit", null, null));
 	public SettingsObject<Boolean> peaceful_mode = (SettingsObject<Boolean>) registerObject(new SettingsObject<Boolean>(

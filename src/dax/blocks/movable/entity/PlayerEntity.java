@@ -90,32 +90,42 @@ public class PlayerEntity extends Entity {
 		}
 
 		while (Mouse.next()) {
-			if (Mouse.getEventButtonState()) {
-				if (Mouse.getEventButton() == 0
-						&& Keyconfig.isDown(Keyconfig.crouch)) {
-					if (hasSelected) {
-						Block.getBlock(world.getBlock(lookingAtX, lookingAtY,
-								lookingAtZ)).onClicked(0, lookingAtX,
-								lookingAtY, lookingAtZ, world);
+			if (Mouse.isGrabbed()) {
+				if (Mouse.getEventButtonState()) {
+					if (Mouse.getEventButton() == 0
+							&& Keyconfig.isDown(Keyconfig.crouch)) {
+						if (hasSelected) {
+							Block.getBlock(
+									world.getBlock(lookingAtX, lookingAtY,
+											lookingAtZ)).onClicked(0,
+									lookingAtX, lookingAtY, lookingAtZ, world);
+						}
+					} else if (Mouse.getEventButton() == 0) {
+						if (hasSelected) {
+							world.setBlock(lookingAtX, lookingAtY, lookingAtZ,
+									0, true, true);
+						}
 					}
-				} else if (Mouse.getEventButton() == 0) {
-					if (hasSelected) {
-						world.setBlock(lookingAtX, lookingAtY, lookingAtZ, 0,
-								true, true);
+					if (Mouse.getEventButton() == 1) {
+						if (hasSelected
+								&& (lookingAtX != placesAtX
+										|| lookingAtY != placesAtY || lookingAtZ != placesAtZ)) {
+							world.setBlock(placesAtX, placesAtY, placesAtZ,
+									selectedBlockID, true, true);
+						}
 					}
 				}
-				if (Mouse.getEventButton() == 1) {
-					if (hasSelected
-							&& (lookingAtX != placesAtX
-									|| lookingAtY != placesAtY || lookingAtZ != placesAtZ)) {
-						world.setBlock(placesAtX, placesAtY, placesAtZ,
-								selectedBlockID, true, true);
-					}
+
+				updateBlock();
+			} else {
+				if(Mouse.getEventButtonState() && Mouse.getEventButton() == 0) {
+					if(Game.ingameGuiManager.isOpened())
+						Game.ingameGuiManager.checkMouseClosing();
 				}
 			}
-
-			updateBlock();
 		}
+		
+		
 
 		if (!wasOnGround && onGround) {
 
@@ -350,26 +360,6 @@ public class PlayerEntity extends Entity {
 		float[] clipped = world.clipMovement(this.bb, xa, ya, za);	
 		ya = clipped[1];
 		
-		/*ArrayList<AABB> aABBs = this.world.getBBs(this.bb.expand(xa, ya, za));
-
-		for (int i = 0; i < aABBs.size(); ++i) {
-			ya = aABBs.get(i).clipYCollide(this.bb, ya);
-		}
-
-		this.bb.move(0.0F, ya, 0.0F);
-
-		for (int i = 0; i < aABBs.size(); ++i) {
-			xa = aABBs.get(i).clipXCollide(this.bb, xa);
-		}
-
-		this.bb.move(xa, 0.0F, 0.0F);
-
-		for (int i = 0; i < aABBs.size(); ++i) {
-			za = aABBs.get(i).clipZCollide(this.bb, za);
-		}
-
-		this.bb.move(0.0F, 0.0F, za);*/
-
 		this.onGround = yab != ya && yab < 0.0F;
 
 		if (this.onGround) {
