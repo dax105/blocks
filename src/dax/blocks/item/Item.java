@@ -1,11 +1,14 @@
 package dax.blocks.item;
 
 public abstract class Item {
+	//Special positions: 0 - null item; 1 - null block; 2 - air
 	private static Item[] allItems = new Item[512];
 	private static int itemsCount;
 	
+	public static Item nullItem = new ItemEmpty();
+	
 	public static void registerItem(Item i, int id) throws RegisterException {
-		if(id < allItems.length && id != 0) {
+		if(id < allItems.length) {
 			if(allItems[id] == null) {
 				allItems[id] = i;
 				itemsCount++;
@@ -44,4 +47,6 @@ public abstract class Item {
 		return this.id;
 
 	}
+	
+	public abstract void onTick(int itemIdentifier);
 }
