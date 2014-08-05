@@ -82,7 +82,6 @@ public class ChunkMeshBuilder {
 			if (opaqueCount > 0) {
 				//GL11.glNewList(listIDs + currentOffset, GL11.GL_COMPILE);
 				renderer.begin();
-				cm.setHandle(RenderPass.OPAQUE, renderer.getHandle());
 				//currentOffset++;
 
 				// All gl calls to draw the chunk (OPAQUE PASS) should be here
@@ -114,15 +113,18 @@ public class ChunkMeshBuilder {
 
 				renderer.end();
 				
+				if (renderer.getVertexCount() == 0) {
+					renderer.delete(renderer.getHandle());
+				} else {
+					cm.setHandle(RenderPass.OPAQUE, renderer.getHandle());
+				}
+				
 			}
 
 			if (transparentCount > 0) {
 				renderer.begin();
-				cm.setHandle(RenderPass.TRANSPARENT, renderer.getHandle());
-
 
 				// All gl calls to draw the chunk (TRANSPARENT PASS) should be here
-
 				for (int x = 0; x < 16; x++) {
 					for (int z = 0; z < 16; z++) {
 						for (int y = startY; y < endY; y++) {
@@ -148,11 +150,17 @@ public class ChunkMeshBuilder {
 					}
 				}
 				renderer.end();
+				
+				if (renderer.getVertexCount() == 0) {
+					renderer.delete(renderer.getHandle());
+				} else {
+					cm.setHandle(RenderPass.TRANSPARENT, renderer.getHandle());
+				}
+				
 			}
 			
 			if (translucentCount > 0) {
 				renderer.begin();
-				cm.setHandle(RenderPass.TRANSLUCENT, renderer.getHandle());
 
 				// All gl calls to draw the chunk (TRANSLUCENT PASS) should be here
 				for (int x = 0; x < 16; x++) {
@@ -180,6 +188,13 @@ public class ChunkMeshBuilder {
 					}
 				}
 				renderer.end();
+				
+				if (renderer.getVertexCount() == 0) {
+					renderer.delete(renderer.getHandle());
+				} else {
+					cm.setHandle(RenderPass.TRANSLUCENT, renderer.getHandle());
+				}
+				
 			}
 
 			profiler.build.end();
