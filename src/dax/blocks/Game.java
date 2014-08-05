@@ -80,14 +80,18 @@ public class Game implements Runnable {
 	
 	private Profiler profiler = new Profiler();
 	
-	private static Game instance;
+	private static Game instance = null;
 
-	public Game() {
+	private Game() {
 		instance = this;
 	}
 
 	public static Game getInstance() {
-		return instance;
+		if(Game.instance == null) {
+			new Game();
+		}
+
+		return Game.instance;
 	}
 	
 	public Profiler getProfiler() {
