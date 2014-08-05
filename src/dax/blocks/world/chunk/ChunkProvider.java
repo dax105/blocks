@@ -10,9 +10,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Random;
-
-import dax.blocks.Game;
-import dax.blocks.block.Block;
 import dax.blocks.block.BlockPlant;
 import dax.blocks.settings.Settings;
 import dax.blocks.util.Coord2D;
