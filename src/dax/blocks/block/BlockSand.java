@@ -6,7 +6,7 @@ import dax.blocks.world.World;
 public class BlockSand extends BlockBasic {
 
 	public BlockSand() {
-		super(7);
+		super(9);
 		this.setAllTextures(6).setStepSound(SoundManager.footstep_dirt).setFallSound("fall_soft");
 	}
 

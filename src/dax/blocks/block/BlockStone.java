@@ -10,7 +10,7 @@ public class BlockStone extends BlockBasic {
 	Random rnd;
 
 	public BlockStone() {
-		super(3);
+		super(5);
 		rnd = new Random();
 		this.setAllTextures(0).setStepSound(SoundManager.footstep_stone).setFallSound("fall_hard");
 	}
