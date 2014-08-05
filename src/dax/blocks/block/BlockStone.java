@@ -16,7 +16,7 @@ public class BlockStone extends BlockBasic {
 		this.setAllTextures(0).setFootStepSound(SoundManager.footstep_stone).setFallSound("fall_hard");
 	}
 
-	public void setColor(int x, int y, int z, World w) {
+	public void updateColor(int x, int y, int z, World w) {
 		if (w.containsData(x, y, z, DataFlags.RECOLOR_R)) {
 			this.setColor(w.getDataFloat(x, y, z, DataFlags.RECOLOR_R),
 			w.getDataFloat(x, y, z, DataFlags.RECOLOR_G),

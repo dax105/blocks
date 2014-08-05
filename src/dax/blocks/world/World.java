@@ -10,8 +10,10 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.logging.Logger;
 import java.util.Random;
+
 import dax.blocks.Game;
 import dax.blocks.Particle;
 import dax.blocks.block.Block;
@@ -19,6 +21,7 @@ import dax.blocks.movable.entity.PlayerEntity;
 import dax.blocks.render.IRenderable;
 import dax.blocks.settings.Settings;
 import dax.blocks.util.Coord2D;
+import dax.blocks.util.Coord3D;
 import dax.blocks.world.chunk.Chunk;
 import dax.blocks.world.chunk.ChunkProvider;
 
@@ -463,11 +466,11 @@ public class World implements IRenderable {
 			it.remove();
 		}
 		
-		/*
+		
 		for(Entry<Coord3D, Block> b : Block.tickingBlocks.entrySet()) {
 			if(b.getValue().isRequiringTick())
 				b.getValue().onTick(b.getKey().x, b.getKey().y, b.getKey().z, this);
-		}*/
+		}
 
 		
 		for (Iterator<ScheduledUpdate> it = newlyScheduledUpdates.iterator(); it
@@ -502,11 +505,11 @@ public class World implements IRenderable {
 			r.onRenderTick(partialTickTime);
 		}
 		
-		/*
+		
 		for(Entry<Coord3D, Block> b : Block.tickingBlocks.entrySet()) {
 			if(b.getValue().isRequiringRenderTick())
 				b.getValue().onRenderTick(partialTickTime, b.getKey().x, b.getKey().y, b.getKey().z, this);	
-		}*/
+		}
 		
 		GuiManager.getInstance().onRenderTick(partialTickTime);
 	}

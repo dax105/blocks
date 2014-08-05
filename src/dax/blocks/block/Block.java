@@ -1,10 +1,14 @@
 package dax.blocks.block;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import dax.blocks.block.renderer.BlockRendererBasic;
 import dax.blocks.block.renderer.IBlockRenderer;
 import dax.blocks.collisions.AABB;
 import dax.blocks.render.RenderPass;
 import dax.blocks.sound.SoundManager;
+import dax.blocks.util.Coord3D;
 import dax.blocks.world.IDRegister;
 import dax.blocks.world.World;
 
@@ -30,6 +34,8 @@ public abstract class Block {
 	
 	private AABB aabb = new AABB(0, 0, 0, 1, 1, 1);
 	private IBlockRenderer renderer;
+	
+	public static Map<Coord3D, Block> tickingBlocks = new HashMap<>();
 
 	private int id;
 	
@@ -47,12 +53,47 @@ public abstract class Block {
 	public abstract void onRenderTick(float ptt, int x, int y, int z, World world);
 	public abstract void onClick(int mouseButton, int x, int y, int z, World world);
 	
+	public void onPlaced(int x, int y, int z, World world) {
+		if(this.isRequiringTick() || this.isRequiringRenderTick()) {
+			Block.tickingBlocks.put(new Coord3D(x, y, z), this);
+		}
+	}
+	
 	public void onRemoved(int x, int y, int z, World world) {
+		Coord3D c = new Coord3D(x, y, z);
+		if(Block.tickingBlocks.get(c) != null) {
+			Block.tickingBlocks.remove(c);
+		}
+		
+		world.removeData(x, y, z);
+	}
+	
+	public void updateColor(int x, int y, int z, World world) {
 		
 	}
 	
-	public void onPlaced(int x, int y, int z, World world) {
-		
+	public void restoreColor() {
+		this.colorR = 1;
+		this.colorG = 1;
+		this.colorB = 1;
+	}
+	
+	public boolean isRequiringTick() {
+		return this.requiresTick;
+	}
+	
+	public boolean isRequiringRenderTick() {
+		return this.requiresRenderTick;
+	}
+	
+	public Block requireTick() {
+		this.requiresTick = true;
+		return this;
+	}
+	
+	public Block requireRenderTick() {
+		this.requiresRenderTick = true;
+		return this;
 	}
 	
 	public Block setCullSame(boolean cull) {

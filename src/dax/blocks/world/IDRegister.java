@@ -132,6 +132,9 @@ public class IDRegister {
 	}
 
 	public void loadIDs(File file) throws IOException {
+		if(!file.exists())
+			return;
+		
 		BufferedReader br = new BufferedReader(new FileReader(file));
 
 		String line;
