@@ -5,7 +5,6 @@ import java.util.Random;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
 
-import dax.blocks.GLHelper;
 import dax.blocks.Game;
 import dax.blocks.TextureManager;
 import dax.blocks.block.Block;
@@ -14,7 +13,9 @@ import dax.blocks.gui.ingame.GuiManager;
 import dax.blocks.settings.Keyconfig;
 import dax.blocks.settings.Settings;
 import dax.blocks.sound.SoundManager;
+import dax.blocks.util.GLHelper;
 import dax.blocks.world.Explosion;
+import dax.blocks.world.IDRegister;
 import dax.blocks.world.World;
 
 public class PlayerEntity extends Entity {
@@ -100,9 +101,9 @@ public class PlayerEntity extends Entity {
 					if (Mouse.getEventButton() == 0
 							&& Keyconfig.isDown(Keyconfig.crouch)) {
 						if (hasSelected) {
-							Block.getBlock(
+							world.getBlockObject(
 									world.getBlock(lookingAtX, lookingAtY,
-											lookingAtZ)).onClicked(0,
+											lookingAtZ)).onClick(0,
 									lookingAtX, lookingAtY, lookingAtZ, world);
 						}
 					} else if (Mouse.getEventButton() == 0) {
@@ -157,7 +158,7 @@ public class PlayerEntity extends Entity {
 		if (stepTimer <= 0 && onGround) {
 			Block block = this.standingOn;
 			if (block != null) {
-				SoundManager.getInstance().playSound(block.getStepSound(),
+				SoundManager.getInstance().playSound(block.getFootStepSound(),
 						1.0f - (rand.nextFloat() * 0.2f));
 			}
 
@@ -218,7 +219,7 @@ public class PlayerEntity extends Entity {
 
 		}
 
-		this.standingOn = Block.getBlock(b);
+		this.standingOn = world.getBlockObject(b);
 
 	}
 
@@ -272,17 +273,15 @@ public class PlayerEntity extends Entity {
 		int blockPosY = (int) Math.floor(this.posY);
 		int blockPosZ = (int) Math.floor(this.posZ);
 
-		boolean inWater = ((world.getBlock(blockPosX, blockPosY, blockPosZ) == Block.water
-				.getId()) || (world.getBlock(blockPosX, blockPosY + 1,
-				blockPosZ) == Block.water.getId()));
-		float d0 = Block.getBlock(world.getBlock(blockPosX, blockPosY,
-				blockPosZ)) != null ? Block.getBlock(
-				world.getBlock(blockPosX, blockPosY, blockPosZ)).getDensity()
-				: 1;
-		float d1 = Block.getBlock(world.getBlock(blockPosX, blockPosY + 1,
-				blockPosZ)) != null ? Block.getBlock(
-				world.getBlock(blockPosX, blockPosY + 1, blockPosZ))
-				.getDensity() : 1;
+		boolean inWater = ((world.getBlockObject(blockPosX, blockPosY, blockPosZ) == IDRegister.water) || 
+				(world.getBlockObject(blockPosX, blockPosY + 1, blockPosZ) == IDRegister.water));
+		
+		float d0 = world.getBlockObject(blockPosX, blockPosY, blockPosZ) != null ? 
+				world.getBlockObject(blockPosX, blockPosY, blockPosZ).getDensity() : 1;
+				
+		float d1 = world.getBlockObject(blockPosX, blockPosY + 1, blockPosZ) != null ? 
+				world.getBlockObject(blockPosX, blockPosY + 1, blockPosZ).getDensity() : 1;
+				
 		float density = (d0 + d1) / 2f;
 		float frictionMultipler = 1f / density;
 
@@ -387,7 +386,7 @@ public class PlayerEntity extends Entity {
 
 		if (wh > 0) {
 			int newSelectedBlock = this.selectedBlockID + 1;
-			if (newSelectedBlock > (Block.blocksCount)) {
+			if (newSelectedBlock > (world.getRegister().getBlockCount())) {
 				newSelectedBlock = 1;
 			}
 
@@ -397,7 +396,7 @@ public class PlayerEntity extends Entity {
 		if (wh < 0) {
 			int newSelectedBlock = this.selectedBlockID - 1;
 			if (newSelectedBlock < 1) {
-				newSelectedBlock = Block.blocksCount;
+				newSelectedBlock = world.getRegister().getBlockCount();
 			}
 
 			this.setSelectedBlockID(newSelectedBlock);

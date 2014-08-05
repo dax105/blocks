@@ -3,7 +3,7 @@ package dax.blocks.console;
 import java.io.File;
 
 import dax.blocks.Game;
-import dax.blocks.GameUtil;
+import dax.blocks.util.GameUtil;
 
 public class CommandDeleteWorld extends Command {
 

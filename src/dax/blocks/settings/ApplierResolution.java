@@ -1,8 +1,8 @@
 package dax.blocks.settings;
 
-import dax.blocks.GLHelper;
 import dax.blocks.Game;
 import dax.blocks.gui.ingame.GuiManager;
+import dax.blocks.util.GLHelper;
 
 public class ApplierResolution extends Applier {
 

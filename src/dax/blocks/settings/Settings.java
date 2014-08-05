@@ -6,9 +6,10 @@ import java.io.PrintWriter;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Scanner;
-import dax.blocks.GLHelper;
+
 import dax.blocks.console.Console;
 import dax.blocks.sound.SoundManager;
+import dax.blocks.util.GLHelper;
 
 @SuppressWarnings("unchecked")
 public class Settings {
@@ -144,7 +145,7 @@ public class Settings {
 
 			if (words.length >= 2) {
 				if (words[0].equalsIgnoreCase("ao_intensity")
-						|| words[0].equalsIgnoreCase("aa_samples"))
+						|| words[0].equalsIgnoreCase("aa_samples") || words[0].equalsIgnoreCase("transparent_leaves"))
 					setValue(words[0], words[1], false);
 				else
 					setValue(words[0], words[1], true);

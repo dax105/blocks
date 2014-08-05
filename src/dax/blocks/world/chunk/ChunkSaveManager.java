@@ -12,12 +12,12 @@ import java.util.logging.Logger;
 
 import org.xerial.snappy.Snappy;
 
-import dax.blocks.Coord2D;
 import dax.blocks.Game;
-import dax.blocks.WorldsManager;
 import dax.blocks.console.Console;
+import dax.blocks.util.Coord2D;
 import dax.blocks.world.World;
 import dax.blocks.world.WorldInfo;
+import dax.blocks.world.WorldsManager;
 
 public class ChunkSaveManager {
 	World world;

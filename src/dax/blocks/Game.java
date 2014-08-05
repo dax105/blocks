@@ -6,6 +6,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ListIterator;
 import java.util.Locale;
+
 import org.lwjgl.Sys;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
@@ -14,6 +15,7 @@ import org.lwjgl.opengl.Display;
 import org.lwjgl.opengl.GL11;
 import org.newdawn.slick.Color;
 import org.newdawn.slick.TrueTypeFont;
+
 import dax.blocks.auth.AuthManager;
 import dax.blocks.block.Block;
 import dax.blocks.console.Console;
@@ -32,6 +34,8 @@ import dax.blocks.render.RenderEngine;
 import dax.blocks.settings.Keyconfig;
 import dax.blocks.settings.Settings;
 import dax.blocks.sound.SoundManager;
+import dax.blocks.util.GLHelper;
+import dax.blocks.util.GameUtil;
 import dax.blocks.world.World;
 
 public class Game implements Runnable {
@@ -463,8 +467,8 @@ public class Game implements Runnable {
 			FontManager.getFont().drawString(offset-FontManager.getFont().getWidth(buildText)-2, (int)(Display.getHeight()-avgBuild*10-FontManager.getFont().getLineHeight()*0.75f), buildText);
 		}
 		
-		Block b = Block.getBlock(world.getPlayer().getSelectedBlockID());
-		int textureid = b.sideTexture;
+		Block b = world.getBlockObject(world.getPlayer().getSelectedBlockID());
+		int textureid = b.getSideTexture();
 
 		GLHelper.drawFromAtlas(textureid, 25, 75, Settings.getInstance().windowHeight.getValue() - 75, Settings.getInstance().windowHeight.getValue() - 25);
 

@@ -1,12 +1,10 @@
-package dax.blocks;
+package dax.blocks.world;
 
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Logger;
-
-import dax.blocks.world.WorldInfo;
 
 public class WorldsManager {
 	private static WorldsManager _instance;

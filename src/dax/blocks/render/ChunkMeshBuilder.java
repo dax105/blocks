@@ -40,7 +40,7 @@ public class ChunkMeshBuilder {
 						int blockID = c.getBlock(x, y, z);
 
 						if (blockID > 0) {
-							Block block = Block.getBlock(blockID);
+							Block block = c.world.getBlockObject(blockID);
 
 							if(x < minX) minX = x;
 							if(y-startY < minY) minY = y-startY;
@@ -92,7 +92,7 @@ public class ChunkMeshBuilder {
 						for (int y = startY; y < endY; y++) {
 							int blockID = c.getBlock(x, y, z);
 							if (blockID > 0) {
-								Block block = Block.getBlock(blockID);
+								Block block = c.world.getBlockObject(blockID);
 
 								if (block.getRenderPass() == RenderPass.OPAQUE) {
 									
@@ -128,7 +128,7 @@ public class ChunkMeshBuilder {
 						for (int y = startY; y < endY; y++) {
 							int blockID = c.getBlock(x, y, z);
 							if (blockID > 0) {
-								Block block = Block.getBlock(blockID);
+								Block block = c.world.getBlockObject(blockID);
 
 								if (block.getRenderPass() == RenderPass.TRANSPARENT) {
 
@@ -160,7 +160,7 @@ public class ChunkMeshBuilder {
 						for (int y = startY; y < endY; y++) {
 							int blockID = c.getBlock(x, y, z);
 							if (blockID > 0) {
-								Block block = Block.getBlock(blockID);
+								Block block = c.world.getBlockObject(blockID);
 
 								if (block.getRenderPass() == RenderPass.TRANSLUCENT) {
 

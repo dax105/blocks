@@ -1,4 +1,4 @@
-package dax.blocks;
+package dax.blocks.util;
 
 public class Coord3D extends Coord2D {
 	public int z;

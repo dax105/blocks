@@ -2,7 +2,7 @@ package dax.blocks.world;
 
 import java.util.Comparator;
 
-import dax.blocks.Coord2D;
+import dax.blocks.util.Coord2D;
 
 public class CoordDistanceComparator implements Comparator<Coord2D> {
 

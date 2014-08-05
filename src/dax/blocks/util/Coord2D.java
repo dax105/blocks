@@ -1,4 +1,4 @@
-package dax.blocks;
+package dax.blocks.util;
 
 public class Coord2D {
 

@@ -4,22 +4,23 @@ import java.util.Random;
 
 import dax.blocks.sound.SoundManager;
 import dax.blocks.world.DataFlags;
+import dax.blocks.world.IDRegister;
 import dax.blocks.world.World;
 
 public class BlockStone extends BlockBasic {
 	Random rnd;
 
-	public BlockStone() {
-		super(5);
+	public BlockStone(IDRegister r) {
+		super("oots/blockStone", r);
 		rnd = new Random();
-		this.setAllTextures(0).setStepSound(SoundManager.footstep_stone).setFallSound("fall_hard");
+		this.setAllTextures(0).setFootStepSound(SoundManager.footstep_stone).setFallSound("fall_hard");
 	}
 
 	public void setColor(int x, int y, int z, World w) {
 		if (w.containsData(x, y, z, DataFlags.RECOLOR_R)) {
-			this.colorR = w.getDataFloat(x, y, z, DataFlags.RECOLOR_R);
-			this.colorG = w.getDataFloat(x, y, z, DataFlags.RECOLOR_G);
-			this.colorB = w.getDataFloat(x, y, z, DataFlags.RECOLOR_B);
+			this.setColor(w.getDataFloat(x, y, z, DataFlags.RECOLOR_R),
+			w.getDataFloat(x, y, z, DataFlags.RECOLOR_G),
+			w.getDataFloat(x, y, z, DataFlags.RECOLOR_B));
 		}
 	}
 
@@ -30,15 +31,15 @@ public class BlockStone extends BlockBasic {
 	}
 
 	@Override
-	public void onClicked(int button, int x, int y, int z, World world) {
+	public void onClick(int button, int x, int y, int z, World world) {
 		recolor(x, y, z, world);
 
 		if (button != 10) {
 			for (int x2 = (x - 1); x2 < (x + 2); x2++) {
 				for (int y2 = (y - 1); y2 < (y + 2); y2++) {
 					for (int z2 = (z - 1); z2 < (z + 2); z2++) {
-						if (world.getBlock(x2, y2, z2) == this.getId()) {
-							Block.stone.onClicked(10, x2, y2, z2, world);
+						if (world.getBlock(x2, y2, z2) == this.getID()) {
+							IDRegister.stone.onClick(10, x2, y2, z2, world);
 						}
 					}
 				}
