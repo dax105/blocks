@@ -1,7 +1,16 @@
 package dax.blocks.world;
 
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Map.Entry;
+
+import javax.activation.UnsupportedDataTypeException;
 
 import dax.blocks.block.Block;
 import dax.blocks.block.BlockBasic;
@@ -19,6 +28,8 @@ public class IDRegister {
 	private Block[] blocks;
 	private int blockCount;
 	private Map<String, Integer> ids;
+	
+	public static File dataFile;
 
 	public static Block bedrock;
 	public static Block grass;
@@ -41,7 +52,15 @@ public class IDRegister {
 	public IDRegister(World world) {
 		ids = new HashMap<>();
 		blocks = new Block[512];
-		setBlockCount(0);
+		this.blockCount = 0;
+		
+		IDRegister.dataFile = new File(new File(WorldsManager.SAVES_DIR, world.name), "ids");
+		
+		try {
+			this.loadIDs(IDRegister.dataFile);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 
 	public void registerDefaultBlocks() {
@@ -112,6 +131,40 @@ public class IDRegister {
 		}
 	}
 
+	public void loadIDs(File file) throws IOException {
+		BufferedReader br = new BufferedReader(new FileReader(file));
+
+		String line;
+
+		while ((line = br.readLine()) != null) {
+			String[] parts = line.split(";");
+			if(parts.length != 2) {
+				br.close();
+				throw new UnsupportedDataTypeException("Invalid file!");
+			}
+			
+			int finalID = Integer.parseInt(parts[1]);
+			
+			this.ids.put(parts[0], finalID);
+		}
+		
+		br.close();
+	}
+	
+	public void saveIDs(File file) throws IOException {
+		if(!file.exists()) {
+			file.createNewFile();
+		}
+		
+		BufferedWriter bw = new BufferedWriter(new FileWriter(file));
+		for(Entry<String, Integer> id : ids.entrySet()) {
+			bw.write(id.getKey() + ";" + id.getValue().toString());
+			bw.newLine();
+		}
+		
+		bw.close();
+	}
+	
 	public int getIDForName(String name) {
 		if (ids.get(name) == null) {
 
@@ -144,7 +197,7 @@ public class IDRegister {
 	public Block registerBlock(Block block) throws RegisterException {
 		if (blocks[block.getID()] == null) {
 			blocks[block.getID()] = block;
-			setBlockCount(getBlockCount() + 1);
+			this.blockCount = (getBlockCount() + 1);
 			return block;
 		} else {
 			throw new RegisterException(block.getID());
@@ -155,8 +208,5 @@ public class IDRegister {
 		return blockCount;
 	}
 
-	public void setBlockCount(int blockCount) {
-		this.blockCount = blockCount;
-	}
 
 }

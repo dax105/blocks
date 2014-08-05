@@ -59,11 +59,11 @@ public class World implements IRenderable {
 	}
 
 	public World(boolean trees, Game game, boolean load, String worldName) {
-		this.blockRegister = new IDRegister(this);
-		this.blockRegister.registerDefaultBlocks();
-		
 		this.name = worldName;
 		
+		this.blockRegister = new IDRegister(this);
+		this.blockRegister.registerDefaultBlocks();
+
 		this.player = new PlayerEntity(this, 0, 128, 0);
 
 		this.renderables = new ArrayList<IRenderable>();
@@ -376,6 +376,12 @@ public class World implements IRenderable {
 
 	public void saveAllChunks() {
 		chunkProvider.loader.saveAll();
+		
+		try {
+			this.blockRegister.saveIDs(IDRegister.dataFile);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 
 	public List<IRenderable> getRenderables() {

@@ -1,8 +1,6 @@
 package dax.blocks.model;
 
 import org.lwjgl.opengl.GL11;
-
-import dax.blocks.Game;
 import dax.blocks.settings.Settings;
 
 public class Model {
