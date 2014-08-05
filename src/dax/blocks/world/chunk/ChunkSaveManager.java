@@ -9,10 +9,13 @@ import java.io.IOException;
 import java.util.Iterator;
 import java.util.Map.Entry;
 import java.util.logging.Logger;
+
 import org.xerial.snappy.Snappy;
+
 import dax.blocks.Coord2D;
 import dax.blocks.Game;
 import dax.blocks.WorldsManager;
+import dax.blocks.console.Console;
 import dax.blocks.world.World;
 import dax.blocks.world.WorldInfo;
 
@@ -35,17 +38,17 @@ public class ChunkSaveManager {
 			File file = new File(dir, "world" + ".txt");
 
 			if (!file.exists()) {
-				Game.console.out("World save not found!");
+				Console.println("World save not found!");
 				return;
 			}
 
-			WorldInfo i = Game.worlds.getWorld(name);
+			WorldInfo i = WorldsManager.getInstance().getWorld(name);
 			this.world.getPlayer().setPosition(i.getPlayerX(), i.getPlayerY(), i.getPlayerZ());
 			this.world.getPlayer().setTilt(i.getPlayerTilt());
 			this.world.getPlayer().setHeading(i.getPlayerHeading());
 			this.provider.seed = i.getWorldSeed();
 			
-			Game.console.out("World info sucessfully loaded!");
+			Console.println("World info sucessfully loaded!");
 	}
 	
 	public ChunkSaveManager(ChunkProvider provider, String saveName) {
@@ -78,7 +81,7 @@ public class ChunkSaveManager {
 			saveChunk(c);
 		}
 
-		WorldInfo i = Game.worlds.getWorld(name);
+		WorldInfo i = WorldsManager.getInstance().getWorld(name);
 		if (i == null)
 			i = new WorldInfo(name);
 		

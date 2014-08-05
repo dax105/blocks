@@ -21,6 +21,7 @@ import dax.blocks.Particle;
 import dax.blocks.block.Block;
 import dax.blocks.movable.entity.PlayerEntity;
 import dax.blocks.render.IRenderable;
+import dax.blocks.settings.Settings;
 import dax.blocks.world.chunk.Chunk;
 import dax.blocks.world.chunk.ChunkProvider;
 
@@ -77,7 +78,7 @@ public class World implements IRenderable {
 		this.scheduledRenderablesRemoval = new LinkedList<IRenderable>();
 
 		chunkProvider.updateLoadedChunksInRadius((int) player.getPosX(),
-				(int) player.getPosZ(), Game.settings.drawDistance.getValue());
+				(int) player.getPosZ(), Settings.getInstance().drawDistance.getValue());
 	}
 
 	public Coord2D getCoord2D(int x, int y) {
@@ -184,7 +185,7 @@ public class World implements IRenderable {
 		chunkProvider.updateLoadedChunksInRadius(
 				((int) Math.floor(player.getPosX())) >> 4,
 				((int) Math.floor(player.getPosZ())) >> 4,
-				Game.settings.drawDistance.getValue() + 1);
+				Settings.getInstance().drawDistance.getValue() + 1);
 	}
 
 	public void setChunkDirty(int x, int y, int z) {
@@ -420,7 +421,7 @@ public class World implements IRenderable {
 	
 	@Override
 	public void onTick() {	
-		Game.ingameGuiManager.onTick();
+		GuiManager.getInstance().onTick();
 		
 		for(IRenderable r : this.renderables) {
 			r.onTick();
@@ -466,7 +467,7 @@ public class World implements IRenderable {
 		chunkProvider.updateLoadedChunksInRadius(
 				((int) Math.floor(player.getPosX())) >> 4,
 				((int) Math.floor(player.getPosZ())) >> 4,
-				Game.settings.drawDistance.getValue() + 1);
+				Settings.getInstance().drawDistance.getValue() + 1);
 
 	}
 
@@ -481,7 +482,7 @@ public class World implements IRenderable {
 				b.getValue().onRenderTick(partialTickTime, b.getKey().x, b.getKey().y, b.getKey().z, this);	
 		}
 		
-		Game.ingameGuiManager.onRenderTick(partialTickTime);
+		GuiManager.getInstance().onRenderTick(partialTickTime);
 	}
 
 	@Override
@@ -490,7 +491,7 @@ public class World implements IRenderable {
 			r.renderWorld(partialTickTime);
 		}
 		
-		Game.ingameGuiManager.renderWorld(partialTickTime);
+		GuiManager.getInstance().renderWorld(partialTickTime);
 	}
 
 	@Override
@@ -499,7 +500,7 @@ public class World implements IRenderable {
 			r.renderGui(partialTickTime);
 		}
 		
-		Game.ingameGuiManager.renderGui(partialTickTime);
+		GuiManager.getInstance().renderGui(partialTickTime);
 	}
 
 }

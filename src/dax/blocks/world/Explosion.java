@@ -1,18 +1,19 @@
 package dax.blocks.world;
 
 import java.util.Random;
-import dax.blocks.Game;
 import dax.blocks.block.Block;
+import dax.blocks.settings.Settings;
+import dax.blocks.sound.SoundManager;
 
 public class Explosion {
 
 	static Random rand = new Random();
 
 	public static void explode(World world, float ex, float ey, float ez) {
-		int radius = Game.settings.explosion_radius.getValue();
+		int radius = Settings.getInstance().explosionRadius.getValue();
 		float fuzzyness = 1.5f;
 
-		Game.sound.playSound("explosion", 0.8f + rand.nextFloat() * 0.4f);
+		SoundManager.getInstance().playSound("explosion", 0.8f + rand.nextFloat() * 0.4f);
 
 		for (int x = (int) ex - radius; x < ex + radius; x++) {
 			for (int y = (int) ey - radius; y < ey + radius; y++) {

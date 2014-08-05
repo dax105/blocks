@@ -2,14 +2,13 @@ package dax.blocks.block;
 
 import java.util.HashMap;
 import java.util.Map;
-
 import dax.blocks.Coord3D;
-import dax.blocks.Game;
 import dax.blocks.block.renderer.BlockRendererBasic;
 import dax.blocks.block.renderer.IBlockRenderer;
 import dax.blocks.collisions.AABB;
 import dax.blocks.item.Item;
 import dax.blocks.render.RenderPass;
+import dax.blocks.settings.Settings;
 import dax.blocks.sound.SoundManager;
 import dax.blocks.world.World;
 
@@ -51,7 +50,11 @@ public abstract class Block extends Item {
 	public static final Block sand = new BlockSand();
 	public static final Block log = new BlockBasic(10).setAllTextures(11).setSideTexture(7).setStepSound(SoundManager.footstep_wood).setFallSound("fall_hard");
 	public static final Block glass = new BlockBasic(11).setAllTextures(9).setOpaque(false).setCullSame(true).setStepSound(SoundManager.footstep_stone).setFallSound("fall_hard").setRenderPass(RenderPass.TRANSPARENT);
-	public static final Block leaves = new BlockBasic(12).setAllTextures(Game.settings.transparent_leaves.getValue() ? 10 : 19).setOpaque(!Game.settings.transparent_leaves.getValue()).setStepSound(SoundManager.footstep_grass).setFallSound("fall_soft").setRenderPass(Game.settings.transparent_leaves.getValue() ? RenderPass.TRANSPARENT : RenderPass.OPAQUE);
+	public static final Block leaves = new BlockBasic(12)
+		.setAllTextures(Settings.getInstance().transparentLeaves.getValue() ? 10 : 19)
+		.setOpaque(!Settings.getInstance().transparentLeaves.getValue())
+		.setStepSound(SoundManager.footstep_grass).setFallSound("fall_soft")
+		.setRenderPass(Settings.getInstance().transparentLeaves.getValue() ? RenderPass.TRANSPARENT : RenderPass.OPAQUE);
 	public static final Block bedrock = new BlockBasic(13).setAllTextures(12).setStepSound(SoundManager.footstep_stone).setFallSound("fall_hard");
 	public static final Block water = new BlockFluid(14).setAllTextures(13).setCullSame(true).setOccluder(false).setOpaque(false).setDensity(1.175f);
 	public static final Block ice = new BlockBasic(15).setAllTextures(14).setOpaque(false).setCullSame(true).setRenderPass(RenderPass.TRANSLUCENT);

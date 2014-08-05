@@ -1,8 +1,6 @@
 package dax.blocks.console;
 
 import java.util.Map.Entry;
-
-import dax.blocks.Game;
 import dax.blocks.settings.Settings;
 import dax.blocks.settings.SettingsObject;
 
@@ -21,13 +19,11 @@ public class CommandVariables extends Command {
 	@Override
 	public boolean execute(String[] args) {
 
-		Settings settings = Game.settings;
+		Console.println("List of all variables and their types:");
 
-		Game.console.out("List of all variables and their types:");
-
-		for (Entry<String, SettingsObject<?>> e : settings.objects.entrySet()) {
+		for (Entry<String, SettingsObject<?>> e : Settings.getInstance().objects.entrySet()) {
 			SettingsObject<?> o = e.getValue();
-			Game.console.out(SettingsObject.getConsoleRepresentation(o
+			Console.println(SettingsObject.getConsoleRepresentation(o
 					.getObjectType())
 					+ " "
 					+ o.getReadableName() + " (" + o.getName() + "): " + o.getReadableValue());

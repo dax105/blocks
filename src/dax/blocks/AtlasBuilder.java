@@ -12,6 +12,8 @@ import javax.imageio.ImageIO;
 import org.newdawn.slick.opengl.Texture;
 import org.newdawn.slick.util.BufferedImageUtil;
 
+import dax.blocks.console.Console;
+
 public class AtlasBuilder {
 
 	public static final int ATLAS_SIZE = 8;
@@ -32,19 +34,19 @@ public class AtlasBuilder {
 			isEmpty = false;	
 			
 			if (tex.getWidth() != tex.getHeight()) {
-				Game.console.out("Texture w/h mismatch, ratio must be 1:1! Exiting!");
+				Console.println("Texture w/h mismatch, ratio must be 1:1! Exiting!");
 				System.exit(1);
 			}	
 			
 			texSize = tex.getWidth();
 			
 			if (!GameMath.isPowerOfTwo(texSize)) {
-				Game.console.out("Texture size is not power of two! Exiting!");
+				Console.getInstance().out("Texture size is not power of two! Exiting!");
 				System.exit(1);
 			}
 			
 		} else if (tex.getWidth() != texSize || tex.getHeight() != texSize){
-			Game.console.out("Texture size mismatch while building texture atlas! Exiting!");
+			Console.println("Texture size mismatch while building texture atlas! Exiting!");
 			System.exit(1);
 		}
 		
@@ -52,19 +54,19 @@ public class AtlasBuilder {
 	}
 	
 	public Texture buildAtlas(boolean avoidBleeding) {
-		Game.console.out("Building texture atlas...");
+		Console.println("Building texture atlas...");
 		if (textures.size() == 0) {
-			Game.console.out("No textures added, cannot return empty texture atlas! Exiting!");
+			Console.println("No textures added, cannot return empty texture atlas! Exiting!");
 			System.exit(1);
 		}
 		
 		BufferedImage img = new BufferedImage(ATLAS_SIZE*(int)Math.round((EXPAND_RATIO*2+1))*texSize, ATLAS_SIZE*(int)Math.round((EXPAND_RATIO*2+1))*texSize, BufferedImage.TYPE_INT_ARGB);
 		Graphics2D g = (Graphics2D) img.getGraphics();
 		
-		Game.console.out("Atlas size: " + img.getWidth() + "px"); 
+		Console.println("Atlas size: " + img.getWidth() + "px"); 
 		
 		for (int i = 0; i < textures.size(); i++) {
-			Game.console.out("Adding texture with index " + i + " to the texture atlas image!");
+			Console.println("Adding texture with index " + i + " to the texture atlas image!");
 			BufferedImage tex = textures.get(i);
 			
 			int offsetX = (int) ((i % 8) * (EXPAND_RATIO*2+1) * texSize);
@@ -103,7 +105,7 @@ public class AtlasBuilder {
 		    e.printStackTrace();
 		}
 		
-		Game.console.out("Texture atlas built successfully!");
+		Console.println("Texture atlas built successfully!");
 		
 		return atlas;
 	}

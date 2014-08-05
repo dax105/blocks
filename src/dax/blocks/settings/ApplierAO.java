@@ -1,6 +1,7 @@
 package dax.blocks.settings;
 
 import dax.blocks.Game;
+import dax.blocks.model.ModelManager;
 import dax.blocks.world.World;
 
 public class ApplierAO extends Applier {
@@ -14,7 +15,7 @@ public class ApplierAO extends Applier {
 		}
 		
 		Game.getInstance().displayLoadingScreen();
-		Game.models.load();
+		ModelManager.getInstance().load();
 		Game.getInstance().closeGuiScreen();
 		
 		return true;

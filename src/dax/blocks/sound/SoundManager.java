@@ -4,8 +4,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.logging.Logger;
-
-import dax.blocks.Game;
+import dax.blocks.console.Console;
 import paulscode.sound.ListenerData;
 import paulscode.sound.SoundSystem;
 import paulscode.sound.SoundSystemConfig;
@@ -26,6 +25,15 @@ public class SoundManager {
 	public static String[] footstep_wood;
 	public static String[] footstep_stone;
 
+	private static SoundManager _instance;
+	public static SoundManager getInstance() {
+		if(_instance == null) {
+			_instance = new SoundManager();
+		}
+		
+		return _instance;
+	}
+	
 	private static void loadSounds(SoundSystem system) {
 		sounds = new HashMap<>();
 		music = new HashMap<>();
@@ -69,7 +77,7 @@ public class SoundManager {
 		footstep_stone = new String[] { "footstep_stone_0", "footstep_stone_1" };
 	}
 
-	public SoundManager() {
+	private SoundManager() {
 		try {
 			SoundSystemConfig.addLibrary(LibraryLWJGLOpenAL.class);
 			SoundSystemConfig.setCodec("ogg", paulscode.sound.codecs.CodecJOrbis.class);
@@ -106,7 +114,7 @@ public class SoundManager {
 			if(this.isWorking)
 				system.backgroundMusic(name, music.get(name), loop);
 		} else {
-			Game.console.out("Music called " + name + " does not exist");
+			Console.println("Music called " + name + " does not exist");
 		}
 	}
 	

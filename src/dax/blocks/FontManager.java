@@ -8,13 +8,30 @@ import org.newdawn.slick.util.ResourceLoader;
 
 public class FontManager {
 
-	public static TrueTypeFont text;
+	private static FontManager _instance;
+	public static FontManager getInstance() {
+		if(_instance == null) {
+			_instance = new FontManager();
+		}
+		
+		return _instance;
+	}
 	
-	public static void load() {
+	public static TrueTypeFont getFont() {
+		return getInstance().text;
+	}
+	
+	private FontManager() {
+		
+	}
+	
+	public TrueTypeFont text;
+	
+	public void load() {
 		text = loadFont(ResourceLoader.getResourceAsStream("dax/blocks/res/fonts/roboto.ttf"), Font.PLAIN, 12, true);
 	}
 	
-	public static TrueTypeFont loadFont(InputStream in, int style, int size, boolean antiAlias) {
+	public TrueTypeFont loadFont(InputStream in, int style, int size, boolean antiAlias) {
 		Font font = null;
 		try {
 			font = Font.createFont(Font.TRUETYPE_FONT, in);
@@ -25,12 +42,12 @@ public class FontManager {
 		return loadFont(font, antiAlias);
 	}
 	
-	public static TrueTypeFont loadFont(String name, int style, int size, boolean antiAlias) {
+	public TrueTypeFont loadFont(String name, int style, int size, boolean antiAlias) {
 		Font font = new Font(name, style, size);
 		return loadFont(font, antiAlias);
 	}
 	
-	public static TrueTypeFont loadFont(Font font, boolean antiAlias) {
+	public TrueTypeFont loadFont(Font font, boolean antiAlias) {
 		return new TrueTypeFont(font, antiAlias);
 	}
 	

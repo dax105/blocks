@@ -2,8 +2,6 @@ package dax.blocks.console;
 
 import java.util.Map.Entry;
 
-import dax.blocks.Game;
-
 public class CommandHelp extends Command {
 
 	@Override
@@ -19,10 +17,10 @@ public class CommandHelp extends Command {
 	@Override
 	public boolean execute(String[] args) {
 
-		Game.console.out("List of available commands:");
+		Console.println("List of available commands:");
 		
-		for (Entry<String, Command> e : Game.console.manager.commands.entrySet()) {
-			Game.console.out(e.getValue().getName());
+		for (Entry<String, Command> e : Console.getInstance().manager.commands.entrySet()) {
+			Console.println(e.getValue().getName());
 		}
 		
 		return true;

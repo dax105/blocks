@@ -20,7 +20,16 @@ public class ModelManager {
 	private final int BUFFER = 1024;
 	private Map<String, Model> models;
 
-	public ModelManager() {
+	private static ModelManager _instance;
+	public static ModelManager getInstance() {
+		if(_instance == null) {
+			_instance = new ModelManager();
+		}
+		
+		return _instance;
+	}
+	
+	private ModelManager() {
 		this.models = new HashMap<>();
 	}
 	

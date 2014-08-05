@@ -12,6 +12,9 @@ import org.lwjgl.opengl.PixelFormat;
 import org.lwjgl.util.glu.GLU;
 import org.newdawn.slick.opengl.Texture;
 
+import dax.blocks.console.Console;
+import dax.blocks.settings.Settings;
+
 public class GLHelper {
 	public static void setOrtho(int width, int height) {
 		GL11.glMatrixMode(GL11.GL_PROJECTION);
@@ -27,7 +30,7 @@ public class GLHelper {
 	public static void setPerspective(int width, int height) {
 		GL11.glMatrixMode(GL11.GL_PROJECTION);
 		GL11.glLoadIdentity();
-		GLU.gluPerspective(Game.settings.fov.getValue(), (float) width
+		GLU.gluPerspective(Settings.getInstance().fov.getValue(), (float) width
 				/ (float) height, 0.05F, 1000);
 		GL11.glViewport(0, 0, width, height);
 		GL11.glMatrixMode(GL11.GL_MODELVIEW);
@@ -135,7 +138,7 @@ public class GLHelper {
 			}
 
 			if (targetDisplayMode == null) {
-				Game.console.out("Failed to find value mode: " + width + "x"
+				Console.println("Failed to find value mode: " + width + "x"
 						+ height + " fs=" + fullscreen);
 				return;
 			}
@@ -146,9 +149,9 @@ public class GLHelper {
 			if (!Display.isCreated()) {
 				;
 				try {
-					Display.create(new PixelFormat(8, 8, 0, Game.settings.aa_samples
+					Display.create(new PixelFormat(8, 8, 0, Settings.getInstance().aaSamples
 							.getValue()));
-					Game.console.out("Display created!");
+					Console.println("Display created!");
 					// Display.create();
 				} catch (LWJGLException e) {
 					e.printStackTrace();
@@ -156,7 +159,7 @@ public class GLHelper {
 			}
 
 		} catch (LWJGLException e) {
-			Game.console.out("Unable to setup mode " + width + "x" + height
+			Console.println("Unable to setup mode " + width + "x" + height
 					+ " fullscreen=" + fullscreen + e);
 		}
 	}

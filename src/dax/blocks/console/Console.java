@@ -11,6 +11,18 @@ import dax.blocks.Game;
 
 public class Console {
 
+	private static Console _instance;
+	public static Console getInstance() {
+		if(_instance == null)
+			_instance = new Console();
+		
+		return _instance;
+	}
+	
+	public static void println(String ln) {
+		getInstance().out(ln);
+	}
+	
 	public static final int MAX_LINES = 100;
 	public static final int MAX_MEMORY = 100;
 	
@@ -27,6 +39,10 @@ public class Console {
 	private Date now = new Date();
 	
 	private String characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789._-!,=%()[]{}<>#&@* ";
+	
+	private Console() {
+		
+	}
 	
 	public void clearInput() {
 		this.currentCommand = "";

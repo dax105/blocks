@@ -23,7 +23,7 @@ public class CommandReload extends Command {
 			game.makeNewWorld(true, game.world.name);
 			return true;
 		} else {
-			Game.console.out("You must be ingame to use command " + getName());
+			Console.println("You must be ingame to use command " + getName());
 			return false;
 		}
 	}

@@ -8,7 +8,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
-
 import org.lwjgl.BufferUtils;
 import org.lwjgl.opengl.ARBFragmentShader;
 import org.lwjgl.opengl.ARBShaderObjects;
@@ -16,14 +15,15 @@ import org.lwjgl.opengl.ARBVertexShader;
 import org.lwjgl.opengl.Display;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL20;
-
 import dax.blocks.Coord2D;
-import dax.blocks.Game;
 import dax.blocks.Particle;
 import dax.blocks.TextureManager;
 import dax.blocks.block.Block;
 import dax.blocks.console.CommandCullLock;
+import dax.blocks.console.Console;
+import dax.blocks.model.ModelManager;
 import dax.blocks.movable.entity.PlayerEntity;
+import dax.blocks.settings.Settings;
 import dax.blocks.world.ChunkDistanceComparator;
 import dax.blocks.world.World;
 import dax.blocks.world.chunk.Chunk;
@@ -125,7 +125,7 @@ public class RenderEngine {
 			}
 
 			blockAttributeID = GL20.glGetAttribLocation(program, "blockid");
-			Game.console.out("Shader seems to be loaded!");
+			Console.println("Shader seems to be loaded!");
 		}
 	}
 
@@ -271,7 +271,7 @@ public class RenderEngine {
 
 		sSetFloat(UNIFORM_TIME, System.nanoTime() / 1000000000f);
 		sSetFloat(UNIFORM_FOG_DISTANCE,
-				Game.settings.drawDistance.getValue() * 16 - 8);
+				Settings.getInstance().drawDistance.getValue() * 16 - 8);
 
 		this.ptt = ptt;
 		pushPlayerMatrix(world.getPlayer());
@@ -317,7 +317,7 @@ public class RenderEngine {
 			GL11.glPushMatrix();
 			GL11.glTranslatef(i - 0.0625f, 49, 10);
 			GL11.glScalef(0.5f, 0.5f, 0.5f);
-			GL11.glCallList(Game.models.getModel("char").getDisplayList());
+			GL11.glCallList(ModelManager.getInstance().getModel("char").getDisplayList());
 			GL11.glPopMatrix();
 		}
 
@@ -333,7 +333,7 @@ public class RenderEngine {
 		int pcz = (int) Math.floor(world.getPlayer().getPosZ()) >> 4;
 
 		List<Chunk> visibleChunks = world.getChunkProvider().getChunksInRadius(
-				pcx, pcz, Game.settings.drawDistance.getValue());
+				pcx, pcz, Settings.getInstance().drawDistance.getValue());
 
 		for (Iterator<Chunk> iter = visibleChunks.iterator(); iter.hasNext();) {
 			Chunk c = iter.next();
@@ -351,7 +351,7 @@ public class RenderEngine {
 			if (c != null) {
 				for (int y = 0; y < 8; y++) {
 
-					if (generatedMeshes >= Game.settings.rebuilds_pf.getValue()) {
+					if (generatedMeshes >= Settings.getInstance().rebuildsPerFrame.getValue()) {
 						building = true;
 						break;
 					} else {
@@ -372,7 +372,7 @@ public class RenderEngine {
 				}
 			}
 
-			if (generatedMeshes >= Game.settings.rebuilds_pf.getValue()) {
+			if (generatedMeshes >= Settings.getInstance().rebuildsPerFrame.getValue()) {
 				building = true;
 				break;
 			} else {
@@ -395,7 +395,7 @@ public class RenderEngine {
 		}
 
 		List<RenderChunk> culledRenderChunks = ChunkCull.cull(
-				builtRenderChunks, this.frustum, Game.settings.culling_frustum.getValue(), Game.settings.culling_advanced.getValue());
+				builtRenderChunks, this.frustum, Settings.getInstance().frustumCulling.getValue(), Settings.getInstance().advancedCulling.getValue());
 		
 		for (RenderChunk r : culledRenderChunks) {
 			if (r.getCm().isPresent(RenderPass.OPAQUE)) {
@@ -413,7 +413,7 @@ public class RenderEngine {
 		}
 		GL11.glDisable(GL11.GL_ALPHA_TEST);
 
-		if (Game.settings.two_pass_translucent.getValue()) {
+		if (Settings.getInstance().twoPassTranslucent.getValue()) {
 			GL11.glColorMask(false, false, false, false);
 			for (RenderChunk r : culledRenderChunks) {
 				if (r.getCm().isPresent(RenderPass.TRANSLUCENT)) {
@@ -435,7 +435,7 @@ public class RenderEngine {
 		sDisable(FLAG_LIGHTING);
 		sDisable(FLAG_FOG);
 
-		if (Game.settings.clouds.getValue()) {
+		if (Settings.getInstance().clouds.getValue()) {
 			renderClouds(world.getPlayer().getPosXPartial(), world.getPlayer()
 					.getPosZPartial());
 		}

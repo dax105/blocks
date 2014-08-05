@@ -2,8 +2,10 @@ package dax.blocks;
 
 import java.awt.image.BufferedImage;
 import java.io.IOException;
+
 import javax.imageio.ImageIO;
 import javax.swing.JOptionPane;
+
 import org.lwjgl.opengl.EXTFramebufferObject;
 import org.lwjgl.opengl.EXTTextureFilterAnisotropic;
 import org.lwjgl.opengl.GL11;
@@ -11,6 +13,9 @@ import org.lwjgl.opengl.GL12;
 import org.newdawn.slick.opengl.Texture;
 import org.newdawn.slick.opengl.TextureLoader;
 import org.newdawn.slick.util.ResourceLoader;
+
+import dax.blocks.console.Console;
+import dax.blocks.settings.Settings;
 
 public class TextureManager {
 
@@ -37,7 +42,7 @@ public class TextureManager {
 	private static Texture loadTex(String path) {
 		try {
 			Texture tex = TextureLoader.getTexture("PNG", ResourceLoader.getResourceAsStream(path));
-			Game.console.out("Successfully loaded texture from " + path);
+			Console.println("Successfully loaded texture from " + path);
 			return tex;
 		} catch (IOException e) {
 			System.err.println("Can't load texture from " + path + ", perhaps the file doesn't exist?");
@@ -49,7 +54,7 @@ public class TextureManager {
 	public static BufferedImage loadImage(String path) {
 		try {
 			BufferedImage image = ImageIO.read(ResourceLoader.getResourceAsStream(path));
-			Game.console.out("Successfully loaded texture as image from " + path);
+			Console.println("Successfully loaded texture as image from " + path);
 			return image;
 		} catch (IOException e) {
 			System.err.println("Can't load texture as image from " + path + ", perhaps the file doesn't exist?");
@@ -129,7 +134,7 @@ public class TextureManager {
 		textureSizeCoord = atlas.getWidth() / ATLAS_SIZE / (AtlasBuilder.EXPAND_RATIO*2+1);
 		texSize = atlas.getWidth();
 		
-		if (Game.settings.mipmaps.getValue()) {
+		if (Settings.getInstance().mipmaps.getValue()) {
 			GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MIN_FILTER, GL11.GL_LINEAR_MIPMAP_LINEAR);
 			GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MAG_FILTER, GL11.GL_NEAREST);
 		}
@@ -147,7 +152,7 @@ public class TextureManager {
 			e.printStackTrace();
 		}
 		
-		GL11.glTexParameteri(GL11.GL_TEXTURE_2D, EXTTextureFilterAnisotropic.GL_TEXTURE_MAX_ANISOTROPY_EXT, Game.settings.anisotropic.getValue());
+		GL11.glTexParameteri(GL11.GL_TEXTURE_2D, EXTTextureFilterAnisotropic.GL_TEXTURE_MAX_ANISOTROPY_EXT, Settings.getInstance().anisotropic.getValue());
 		
 		//GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL14.GL_GENERATE_MIPMAP, GL11.GL_TRUE);
 		//GL11.glTexParameteri (GL11.GL_TEXTURE_2D, GL12.GL_TEXTURE_MAX_LEVEL, 2-1);
