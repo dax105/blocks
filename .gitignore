@@ -11,6 +11,7 @@ saved.png
 build.gradle
 build/
 libs/
+.vim.custom
 
 # Package Files #
 *.jar
