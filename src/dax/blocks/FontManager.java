@@ -11,7 +11,7 @@ public class FontManager {
 	public static TrueTypeFont text;
 	
 	public static void load() {
-		text = loadFont(ResourceLoader.getResourceAsStream("dax/blocks/res/fonts/roboto.ttf"), Font.PLAIN, 12, true);
+		FontManager.text = FontManager.loadFont(ResourceLoader.getResourceAsStream("dax/blocks/res/fonts/roboto.ttf"), Font.PLAIN, 12, true);
 	}
 	
 	public static TrueTypeFont loadFont(InputStream in, int style, int size, boolean antiAlias) {
@@ -22,12 +22,12 @@ public class FontManager {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		return loadFont(font, antiAlias);
+		return FontManager.loadFont(font, antiAlias);
 	}
 	
 	public static TrueTypeFont loadFont(String name, int style, int size, boolean antiAlias) {
 		Font font = new Font(name, style, size);
-		return loadFont(font, antiAlias);
+		return FontManager.loadFont(font, antiAlias);
 	}
 	
 	public static TrueTypeFont loadFont(Font font, boolean antiAlias) {
