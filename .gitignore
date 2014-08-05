@@ -7,6 +7,10 @@ bin/
 screenshots/
 saves/
 saved.png
+.gradle/
+build.gradle
+build/
+libs/
 
 # Package Files #
 *.jar
