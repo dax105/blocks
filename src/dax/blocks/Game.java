@@ -62,18 +62,18 @@ public class Game implements Runnable {
 	public AuthManager authManager;
 	
 	
-	public static final int TPS = 20;
-	public static final double TICK_TIME = 1.0D / TPS;
-	public int ticks = 0;
-	String ticksString = "N/A";
+	private static final int TPS = 20;
+	private static final double TICK_TIME = 1.0D / TPS;
+	private int ticks = 0;
+	private String ticksString = "N/A";
 
-	float animationProgress = 0;
-	float lastProgress = 0;
-	long lastFrame;
-	int fpsCounter;
-	int fps = 0;
-	long lastFPS;
-	int vertices = 0;
+	private float animationProgress = 0;
+	private float lastProgress = 0;
+	private long lastFrame;
+	private int fpsCounter;
+	private int fps = 0;
+	private long lastFPS;
+	private int vertices = 0;
 
 	private String loginString = "Unlogged";
 	private String versionString = "version " + Start.GAME_VERSION;
