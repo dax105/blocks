@@ -1,6 +1,7 @@
 package dax.blocks;
 
 public class Coord3D extends Coord2D {
+
 	public int z;
 	
 	public Coord3D(int x, int y, int z) {

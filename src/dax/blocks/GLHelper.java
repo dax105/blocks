@@ -13,6 +13,7 @@ import org.lwjgl.util.glu.GLU;
 import org.newdawn.slick.opengl.Texture;
 
 public class GLHelper {
+
 	public static void setOrtho(int width, int height) {
 		GL11.glMatrixMode(GL11.GL_PROJECTION);
 		GL11.glLoadIdentity();
@@ -219,7 +220,8 @@ public class GLHelper {
 				TextureManager.getY2(id), x1, x2, y1, y2);
 	}
 	
-	public static void drawRectangle(float r, float g, float b, float a, float x1, float x2, float y1, float y2) {
+	public static void drawRectangle(float r, float g, float b, float a, float x1, 
+			float x2, float y1, float y2) {
 		GL11.glColor4f(r, g, b, a);
 
 		GL11.glDisable(GL11.GL_TEXTURE_2D);
@@ -237,7 +239,8 @@ public class GLHelper {
 		GL11.glEnd();
 	}
 	
-	public static void drawRectangle(float r, float g, float b, float x1, float x2, float y1, float y2) {
+	public static void drawRectangle(float r, float g, float b, float x1, float x2, 
+			float y1, float y2) {
 		drawRectangle(r, g, b, 1, x1, x2, y1, y2);
 	}
 	
@@ -256,7 +259,8 @@ public class GLHelper {
 		}
 	}
 
-	public static void drawLine(float x1, float x2, float y1, float y2, int thickness, float r, float g, float b, float a) {
+	public static void drawLine(float x1, float x2, float y1, float y2, int thickness, 
+			float r, float g, float b, float a) {
 		GL11.glColor4f(r, g, b, a);
 		GL11.glLineWidth(thickness);
 		

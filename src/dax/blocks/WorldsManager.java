@@ -9,9 +9,10 @@ import java.util.logging.Logger;
 import dax.blocks.world.WorldInfo;
 
 public class WorldsManager {
-	public static final String SAVES_DIR = "saves";
 
+	public static final String SAVES_DIR = "saves";
 	private File savesDir;
+
 	public WorldsManager() {
 		savesDir = new File(SAVES_DIR);
 		if(!savesDir.exists())

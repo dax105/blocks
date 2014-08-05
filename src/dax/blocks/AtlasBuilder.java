@@ -58,7 +58,11 @@ public class AtlasBuilder {
 			System.exit(1);
 		}
 		
-		BufferedImage img = new BufferedImage(ATLAS_SIZE*(int)Math.round((EXPAND_RATIO*2+1))*texSize, ATLAS_SIZE*(int)Math.round((EXPAND_RATIO*2+1))*texSize, BufferedImage.TYPE_INT_ARGB);
+		BufferedImage img = new BufferedImage(
+				ATLAS_SIZE*(int)Math.round((EXPAND_RATIO*2+1))*texSize, 
+				ATLAS_SIZE*(int)Math.round((EXPAND_RATIO*2+1))*texSize, 
+				BufferedImage.TYPE_INT_ARGB
+		);
 		Graphics2D g = (Graphics2D) img.getGraphics();
 		
 		Game.console.out("Atlas size: " + img.getWidth() + "px"); 

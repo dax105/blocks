@@ -2,6 +2,7 @@ package dax.blocks;
 
 
 public class CoordUtil {
+
 	public static Coord2D relativeToAbsolute(int x, int y, int parentX, int parentY) {
 		return new Coord2D(Math.abs(parentX) + Math.abs(x), Math.abs(parentY) + Math.abs(y));
 	}
@@ -10,7 +11,8 @@ public class CoordUtil {
 		return add(child, parent);
 	}
 	
-	public static Coord2D getCenteredRectanglePosition(int rectWidth, int rectHeight, int parentWidth, int parentHeight) {
+	public static Coord2D getCenteredRectanglePosition(int rectWidth, int rectHeight, 
+			int parentWidth, int parentHeight) {
 		return new Coord2D(((parentWidth - rectWidth) / 2), (parentHeight - rectHeight) / 2);
 	}
 	

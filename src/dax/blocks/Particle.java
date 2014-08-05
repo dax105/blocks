@@ -43,7 +43,8 @@ public class Particle implements IRenderable {
 	
 	public World world;
 	
-	public Particle(World world, float x, float y, float z, float velX, float velY, float velZ, int lifetime, float r, float g, float b) {
+	public Particle(World world, float x, float y, float z, float velX, float velY, 
+			float velZ, int lifetime, float r, float g, float b) {
 		this.world = world;
 		this.x = x;
 		this.y = y;
@@ -54,7 +55,14 @@ public class Particle implements IRenderable {
 		this.lifetime = lifetime;
 		this.dead = false;
 		this.ground = false;
-		this.aabb = new AABB(x-PARTICLE_SIZE*0.5f, y-PARTICLE_SIZE*0.5f, z-PARTICLE_SIZE*0.5f, x+PARTICLE_SIZE*0.5f, y+PARTICLE_SIZE*0.5f, z+PARTICLE_SIZE*0.5f);
+		this.aabb = new AABB(
+				x-PARTICLE_SIZE*0.5f, 
+				y-PARTICLE_SIZE*0.5f, 
+				z-PARTICLE_SIZE*0.5f, 
+				x+PARTICLE_SIZE*0.5f, 
+				y+PARTICLE_SIZE*0.5f, 
+				z+PARTICLE_SIZE*0.5f
+		);
 		this.r = r;
 		this.g = g;
 		this.b = b;
