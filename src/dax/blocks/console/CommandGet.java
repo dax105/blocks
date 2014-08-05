@@ -1,6 +1,6 @@
 package dax.blocks.console;
 
-import dax.blocks.Game;
+import dax.blocks.settings.Settings;
 import dax.blocks.settings.SettingsObject;
 
 public class CommandGet extends Command {
@@ -19,13 +19,13 @@ public class CommandGet extends Command {
 	public boolean execute(String[] args) {
 
 		if (args.length >= 1) {
-			SettingsObject<?> o = Game.settings.getObject(args[0]);
+			SettingsObject<?> o = Settings.getInstance().getObject(args[0]);
 			if(o != null) {
-				Game.console.out("Variable " + o.getName() + ": " + o.getReadableValue());
+				Console.println("Variable " + o.getName() + ": " + o.getReadableValue());
 			}
 		} else {
-			Game.console.out("Not enough arguments, correct usage:");
-			Game.console.out(getUsage());			
+			Console.println("Not enough arguments, correct usage:");
+			Console.println(getUsage());			
 		}
 		
 		return false;

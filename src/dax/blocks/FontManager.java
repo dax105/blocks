@@ -8,13 +8,31 @@ import org.newdawn.slick.util.ResourceLoader;
 
 public class FontManager {
 
-	public static TrueTypeFont text;
-	
-	public static void load() {
-		FontManager.text = FontManager.loadFont(ResourceLoader.getResourceAsStream("dax/blocks/res/fonts/roboto.ttf"), Font.PLAIN, 12, true);
+	private static FontManager _instance;
+	public TrueTypeFont text;
+
+	public static FontManager getInstance() {
+		if(_instance == null) {
+			_instance = new FontManager();
+		}
+		
+		return _instance;
 	}
 	
-	public static TrueTypeFont loadFont(InputStream in, int style, int size, boolean antiAlias) {
+	public static TrueTypeFont getFont() {
+		return getInstance().text;
+	}
+	
+	private FontManager() {
+		
+	}
+	
+	
+	public static void load() {
+		FontManager.getInstance().text = FontManager.getInstance().loadFont(ResourceLoader.getResourceAsStream("dax/blocks/res/fonts/roboto.ttf"), Font.PLAIN, 12, true);
+	}
+	
+	public TrueTypeFont loadFont(InputStream in, int style, int size, boolean antiAlias) {
 		Font font = null;
 		try {
 			font = Font.createFont(Font.TRUETYPE_FONT, in);
@@ -22,15 +40,15 @@ public class FontManager {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		return FontManager.loadFont(font, antiAlias);
+		return FontManager.getInstance().loadFont(font, antiAlias);
 	}
 	
-	public static TrueTypeFont loadFont(String name, int style, int size, boolean antiAlias) {
+	public TrueTypeFont loadFont(String name, int style, int size, boolean antiAlias) {
 		Font font = new Font(name, style, size);
-		return FontManager.loadFont(font, antiAlias);
+		return FontManager.getInstance().loadFont(font, antiAlias);
 	}
 	
-	public static TrueTypeFont loadFont(Font font, boolean antiAlias) {
+	public TrueTypeFont loadFont(Font font, boolean antiAlias) {
 		return new TrueTypeFont(font, antiAlias);
 	}
 	

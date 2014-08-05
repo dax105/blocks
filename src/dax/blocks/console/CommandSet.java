@@ -1,7 +1,7 @@
 package dax.blocks.console;
 
-import dax.blocks.Game;
 import dax.blocks.settings.ObjectType;
+import dax.blocks.settings.Settings;
 import dax.blocks.settings.SettingsObject;
 
 public class CommandSet extends Command {
@@ -15,27 +15,27 @@ public class CommandSet extends Command {
 	public boolean execute(String[] args) {
 		
 		if (args.length >= 2) {
-			SettingsObject<?> o = Game.settings.getObject(args[0]);
+			SettingsObject<?> o = Settings.getInstance().getObject(args[0]);
 			if(o != null) {
 				if(o.getObjectType() == ObjectType.BOOLEAN) {
 					if(args[1].equalsIgnoreCase("ON")) {
-						Game.settings.setValue(o.getName(), true);
+						Settings.getInstance().setValue(o.getName(), true);
 						return true;
 					}
 					
 					if(args[0].equalsIgnoreCase("OFF")) {
-						Game.settings.setValue(o.getName(), false);
+						Settings.getInstance().setValue(o.getName(), false);
 						return true;
 					}
 				}
-				Game.settings.setValue(o.getName(), args[1]);
+				Settings.getInstance().setValue(o.getName(), args[1]);
 				return true;
 			} else {
-				Game.console.out("Unknown variable \"" + args[0] + "\"");
+				Console.println("Unknown variable \"" + args[0] + "\"");
 			}
 		} else {
-			Game.console.out("Not enough arguments, correct usage:");
-			Game.console.out(getUsage());
+			Console.println("Not enough arguments, correct usage:");
+			Console.println(getUsage());
 			
 		}
 		

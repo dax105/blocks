@@ -1,6 +1,7 @@
 package dax.blocks.gui;
 
 import dax.blocks.Game;
+import dax.blocks.settings.Settings;
 
 import java.util.ArrayList;
 
@@ -14,7 +15,7 @@ public abstract class GuiScreen {
 	
 	public GuiScreen(Game game) {
 		if (game.ingame) {
-			objects.add(new GuiObjectRectangle(0, 0, Game.settings.windowWidth.getValue(), Game.settings.windowHeight.getValue(), 0xA0000000));
+			objects.add(new GuiObjectRectangle(0, 0, Settings.getInstance().windowWidth.getValue(), Settings.getInstance().windowHeight.getValue(), 0xA0000000));
 		}
 		this.game = game;
 		parent = null;
@@ -23,7 +24,7 @@ public abstract class GuiScreen {
 
 	public GuiScreen(GuiScreen parent) {
 		if (parent.game.ingame) {
-			objects.add(new GuiObjectRectangle(0, 0, Game.settings.windowWidth.getValue(), Game.settings.windowHeight.getValue(), 0xA0000000));
+			objects.add(new GuiObjectRectangle(0, 0, Settings.getInstance().windowWidth.getValue(), Settings.getInstance().windowHeight.getValue(), 0xA0000000));
 		}
 		this.game = parent.game;
 		this.parent = parent;

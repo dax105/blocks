@@ -3,6 +3,7 @@ package dax.blocks.model;
 import org.lwjgl.opengl.GL11;
 
 import dax.blocks.Game;
+import dax.blocks.settings.Settings;
 
 public class Model {
 
@@ -106,7 +107,7 @@ public class Model {
 				ao++;
 		}
 
-		float aom = ao * Game.settings.ao_intensity.getValue();
+		float aom = ao * Settings.getInstance().aoIntensity.getValue();
 
 		GL11.glColor3f(r * (1.0f - aom), g * (1.0f - aom), b * (1.0f - aom));
 		GL11.glVertex3f(x, y, z);

@@ -1,14 +1,19 @@
 package dax.blocks.movable.entity;
 
 import java.util.Random;
+
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
+
 import dax.blocks.GLHelper;
 import dax.blocks.Game;
 import dax.blocks.TextureManager;
 import dax.blocks.block.Block;
 import dax.blocks.collisions.AABB;
+import dax.blocks.gui.ingame.GuiManager;
 import dax.blocks.settings.Keyconfig;
+import dax.blocks.settings.Settings;
+import dax.blocks.sound.SoundManager;
 import dax.blocks.world.Explosion;
 import dax.blocks.world.World;
 
@@ -119,8 +124,8 @@ public class PlayerEntity extends Entity {
 				updateBlock();
 			} else {
 				if(Mouse.getEventButtonState() && Mouse.getEventButton() == 0) {
-					if(Game.ingameGuiManager.isOpened())
-						Game.ingameGuiManager.checkMouseClosing();
+					if(GuiManager.getInstance().isOpened())
+						GuiManager.getInstance().checkMouseClosing();
 				}
 			}
 		}
@@ -133,7 +138,7 @@ public class PlayerEntity extends Entity {
 
 			if (block != null) {
 
-				Game.sound.playSound(block.getFallSound(),
+				SoundManager.getInstance().playSound(block.getFallSound(),
 						0.7f + rand.nextFloat() * 0.25f);
 
 				if (fallVelocity > 0.7f) {
@@ -152,14 +157,14 @@ public class PlayerEntity extends Entity {
 		if (stepTimer <= 0 && onGround) {
 			Block block = this.standingOn;
 			if (block != null) {
-				Game.sound.playSound(block.getStepSound(),
+				SoundManager.getInstance().playSound(block.getStepSound(),
 						1.0f - (rand.nextFloat() * 0.2f));
 			}
 
 			stepTimer += STEP_TIMER_FULL;
 		}
 
-		if (!this.alive && !Game.settings.peaceful_mode.getValue()) {
+		if (!this.alive && !Settings.getInstance().peacefulMode.getValue()) {
 			Game.getInstance().exitGame();
 		}
 	}
@@ -248,7 +253,7 @@ public class PlayerEntity extends Entity {
 	@Override
 	public void renderGui(float ptt) {
 		int heartsX = 80;
-		int heartsY = Game.settings.windowHeight.getValue() - 43;
+		int heartsY = Settings.getInstance().windowHeight.getValue() - 43;
 
 		GLHelper.drawTexture(TextureManager.life_zero, heartsX, heartsY);
 		GLHelper.drawTextureCropped(TextureManager.life_full, heartsX, heartsY,
@@ -400,7 +405,7 @@ public class PlayerEntity extends Entity {
 	}
 
 	private void updateLookingAt() {
-		float reach = Game.settings.reach.getValue();
+		float reach = Settings.getInstance().reach.getValue();
 
 		float xn = (float) getPosXPartial();
 		float yn = (float) getPosYPartial() + PLAYER_HEIGHT;

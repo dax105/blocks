@@ -29,10 +29,10 @@ public class CommandCullLock extends Command {
 			lockedY = player.getPosY();
 			lockedZ = player.getPosZ();
 			
-			Game.console.out("Culling locked!");
+			Console.println("Culling locked!");
 			locked = true;
 		} else {
-			Game.console.out("Culling unlocked!");
+			Console.println("Culling unlocked!");
 			locked = false;
 		}
 		

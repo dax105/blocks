@@ -1,8 +1,7 @@
 package dax.blocks.render;
 
 import org.lwjgl.opengl.GL11;
-
-import dax.blocks.Game;
+import dax.blocks.settings.Settings;
 
 public class ChunkRendererDisplayList implements IChunkRenderer {
 
@@ -133,7 +132,7 @@ public class ChunkRendererDisplayList implements IChunkRenderer {
 	
 		if (ao == 1) ao += 0.5f;
 		
-		float aom = ao * Game.settings.ao_intensity.getValue();
+		float aom = ao * Settings.getInstance().aoIntensity.getValue();
 	
 		color(r - aom, g - aom, b - aom);
 		vertex(x, y, z);

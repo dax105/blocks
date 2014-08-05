@@ -6,31 +6,44 @@ import java.io.PrintWriter;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Scanner;
-
 import dax.blocks.GLHelper;
-import dax.blocks.Game;
+import dax.blocks.console.Console;
+import dax.blocks.sound.SoundManager;
 
 @SuppressWarnings("unchecked")
 public class Settings {
+	
+	private static volatile Settings _instance;
+	public static Settings getInstance() {
+		if(_instance == null) {
+			synchronized(Settings.class) {
+				if(_instance == null) {
+					_instance = new Settings();
+				}
+			}
+		}
+			
+		return _instance;
+	}
+	
 	public Map<String, SettingsObject<?>> objects = new HashMap<String, SettingsObject<?>>();
-
 	public SettingsObject<Integer> drawDistance = (SettingsObject<Integer>) registerObject(new SettingsObject<Integer>(
 			"draw_distance", 10, "Render distance", "%v chunks", null));
 	public SettingsObject<Integer> consoleHeight = (SettingsObject<Integer>) registerObject(new SettingsObject<Integer>(
 			"console_height", 200, "Console height", "%v px", null));
-	public SettingsObject<Integer> aa_samples = (SettingsObject<Integer>) registerObject(new SettingsObject<Integer>(
+	public SettingsObject<Integer> aaSamples = (SettingsObject<Integer>) registerObject(new SettingsObject<Integer>(
 			"aa_samples", 0, "AA samples", null, new ApplierAA()));
 	public SettingsObject<Integer> anisotropic = (SettingsObject<Integer>) registerObject(new SettingsObject<Integer>(
 			"anisotropic", 0, "AF value", null, null));
-	public SettingsObject<Integer> explosion_radius = (SettingsObject<Integer>) registerObject(new SettingsObject<Integer>(
+	public SettingsObject<Integer> explosionRadius = (SettingsObject<Integer>) registerObject(new SettingsObject<Integer>(
 			"explosion_radius", 5, "Explosion radius", null, null));
-	public SettingsObject<Integer> rebuilds_pf = (SettingsObject<Integer>) registerObject(new SettingsObject<Integer>(
+	public SettingsObject<Integer> rebuildsPerFrame = (SettingsObject<Integer>) registerObject(new SettingsObject<Integer>(
 			"rebuilds_pf", 5, "Chunk geometry rebuilds per frame", null, null));
-	public SettingsObject<Integer> loads_pt = (SettingsObject<Integer>) registerObject(new SettingsObject<Integer>(
+	public SettingsObject<Integer> loadsPerTick = (SettingsObject<Integer>) registerObject(new SettingsObject<Integer>(
 			"loads_pt", 3, "Loaded chunks per tick", "%v chunks", null));
-	public SettingsObject<Integer> decorations_pt = (SettingsObject<Integer>) registerObject(new SettingsObject<Integer>(
+	public SettingsObject<Integer> decorationsPerTick = (SettingsObject<Integer>) registerObject(new SettingsObject<Integer>(
 			"decorations_pt", 3, "Chunks decorated per tick", null, null));
-	public SettingsObject<Integer> chunk_cache_size = (SettingsObject<Integer>) registerObject(new SettingsObject<Integer>(
+	public SettingsObject<Integer> chunkCacheSize = (SettingsObject<Integer>) registerObject(new SettingsObject<Integer>(
 			"chunk_cache_size", 500, "Chunk cache size", null, null));
 	public SettingsObject<Boolean> debug = (SettingsObject<Boolean>) registerObject(new SettingsObject<Boolean>(
 			"debug", false, "Show debug info", "%o", null));
@@ -42,24 +55,24 @@ public class Settings {
 			"sound", true, "Sound", "%o", new Applier() {
 				@Override
 				public boolean apply(Object val) {
-					Game.sound.updateVolume((boolean) val, sound_volume.getValue());
+					SoundManager.getInstance().updateVolume((boolean) val, soundVolume.getValue());
 					return true;
 				}
 			}));	
-	public SettingsObject<Boolean> culling_frustum = (SettingsObject<Boolean>) registerObject(new SettingsObject<Boolean>(
+	public SettingsObject<Boolean> frustumCulling = (SettingsObject<Boolean>) registerObject(new SettingsObject<Boolean>(
 			"culling_frustum", true, "Frustum culling", "%o", null));
-	public SettingsObject<Boolean> culling_advanced = (SettingsObject<Boolean>) registerObject(new SettingsObject<Boolean>(
+	public SettingsObject<Boolean> advancedCulling = (SettingsObject<Boolean>) registerObject(new SettingsObject<Boolean>(
 			"culling_advanced", true, "Advanced culling", "%o", null));
-	public SettingsObject<Boolean> tree_generation = (SettingsObject<Boolean>) registerObject(new SettingsObject<Boolean>(
+	public SettingsObject<Boolean> treeGeneration = (SettingsObject<Boolean>) registerObject(new SettingsObject<Boolean>(
 			"tree_generation", true, "Tree generator", "%o", null));
-	public SettingsObject<Boolean> linear_filtering = (SettingsObject<Boolean>) registerObject(new SettingsObject<Boolean>(
+	public SettingsObject<Boolean> linearFiltering = (SettingsObject<Boolean>) registerObject(new SettingsObject<Boolean>(
 			"linear_filtering", false, "Linear filtering", "%o", null));
-	public SettingsObject<Boolean> enable_shaders = (SettingsObject<Boolean>) registerObject(new SettingsObject<Boolean>(
+	public SettingsObject<Boolean> shaders = (SettingsObject<Boolean>) registerObject(new SettingsObject<Boolean>(
 			"enable_shaders", false, "Enable shaders", "%o", null));
-	public SettingsObject<Boolean> transparent_leaves = (SettingsObject<Boolean>) registerObject(new SettingsObject<Boolean>(
+	public SettingsObject<Boolean> transparentLeaves = (SettingsObject<Boolean>) registerObject(new SettingsObject<Boolean>(
 			"transparent_leaves", true, "Transparent leaves", "%o",
 			new ApplierLeaves()));
-	public SettingsObject<Boolean> two_pass_translucent = (SettingsObject<Boolean>) registerObject(new SettingsObject<Boolean>(
+	public SettingsObject<Boolean> twoPassTranslucent = (SettingsObject<Boolean>) registerObject(new SettingsObject<Boolean>(
 			"two_pass_translucent", true, "Two pass rendering", "%o", null));
 	public SettingsObject<Boolean> clouds = (SettingsObject<Boolean>) registerObject(new SettingsObject<Boolean>(
 			"clouds", true, "Enable clouds", "%o", null));
@@ -67,14 +80,14 @@ public class Settings {
 			"fov", 80.0f, "FOV", null, null));
 	public SettingsObject<Float> reach = (SettingsObject<Float>) registerObject(new SettingsObject<Float>(
 			"reach", 20.0f, "Block reach radius", "%v blocks", null));
-	public SettingsObject<Float> ao_intensity = (SettingsObject<Float>) registerObject(new SettingsObject<Float>(
+	public SettingsObject<Float> aoIntensity = (SettingsObject<Float>) registerObject(new SettingsObject<Float>(
 			"ao_intensity", 0.25f, "AO Intensity", null, new ApplierAO()));
-	public SettingsObject<Float> sound_volume = (SettingsObject<Float>) registerObject(new SettingsObject<Float>(
+	public SettingsObject<Float> soundVolume = (SettingsObject<Float>) registerObject(new SettingsObject<Float>(
 			"sound_volume", 1f, "Sound volume (0.0 - 1.0)", null,
 			new Applier() {
 				@Override
 				public boolean apply(Object val) {
-					Game.sound.updateVolume(sound.getValue(), (float) val);
+					SoundManager.getInstance().updateVolume(sound.getValue(), (float) val);
 					return true;
 				}
 			}));
@@ -109,11 +122,15 @@ public class Settings {
 			"width", 800, "Window width", "%v px", new ApplierResolution()));
 	public SettingsObject<Integer> windowHeight = (SettingsObject<Integer>) registerObject(new SettingsObject<Integer>(
 			"height", 480, "Window height", "%v px", new ApplierResolution()));
-	public SettingsObject<Integer> fps_limit = (SettingsObject<Integer>) registerObject(new SettingsObject<Integer>(
+	public SettingsObject<Integer> fpsLimit = (SettingsObject<Integer>) registerObject(new SettingsObject<Integer>(
 			"fps_limit", 0, "FPS Limit", null, null));
-	public SettingsObject<Boolean> peaceful_mode = (SettingsObject<Boolean>) registerObject(new SettingsObject<Boolean>(
+	public SettingsObject<Boolean> peacefulMode = (SettingsObject<Boolean>) registerObject(new SettingsObject<Boolean>(
 			"peaceful", false, "What is dead may never die", "%o", null));
 
+	private Settings() {
+		
+	}
+	
 	private SettingsObject<?> registerObject(SettingsObject<?> object) {
 		objects.put(object.getName(), object);
 		return object;
@@ -177,32 +194,32 @@ public class Settings {
 				case INTEGER:
 					((SettingsObject<Integer>) getObject(name)).setValue(
 							Integer.parseInt(value), apply);
-					Game.console.out("Set value of int " + name + " to "
+					Console.println("Set value of int " + name + " to "
 							+ Integer.parseInt(value));
 					break;
 				case FLOAT:
 					((SettingsObject<Float>) getObject(name)).setValue(
 							Float.parseFloat(value), apply);
-					Game.console.out("Set value of float " + name + " to "
+					Console.println("Set value of float " + name + " to "
 							+ Float.parseFloat(value));
 					break;
 				case BOOLEAN:
 					((SettingsObject<Boolean>) getObject(name)).setValue(
 							Boolean.parseBoolean(value), apply);
-					Game.console.out("Set value of boolean " + name + " to "
+					Console.println("Set value of boolean " + name + " to "
 							+ Boolean.parseBoolean(value));
 					break;
 				case STRING:
 					((SettingsObject<String>) getObject(name)).setValue(value,
 							apply);
-					Game.console.out("Set value of string " + name + " to "
+					Console.println("Set value of string " + name + " to "
 							+ value);
 					break;
 				default:
 					break;
 				}
 			} catch (NumberFormatException e) {
-				Game.console.out("Incorrect value!");
+				Console.println("Incorrect value!");
 				e.printStackTrace();
 			}
 		}
@@ -210,7 +227,7 @@ public class Settings {
 
 	public void setValue(String name, Object value) {
 		((SettingsObject<Object>) getObject(name)).setValue(value);
-		Game.console.out("Set value of boolean " + name + " to "
+		Console.println("Set value of boolean " + name + " to "
 				+ value.toString());
 	}
 

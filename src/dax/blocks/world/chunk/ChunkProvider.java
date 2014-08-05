@@ -16,6 +16,7 @@ import dax.blocks.Game;
 import dax.blocks.GameMath;
 import dax.blocks.block.Block;
 import dax.blocks.block.BlockPlant;
+import dax.blocks.settings.Settings;
 import dax.blocks.world.ChunkDistanceComparator;
 import dax.blocks.world.CoordDistanceComparator;
 import dax.blocks.world.World;
@@ -71,7 +72,7 @@ public class ChunkProvider {
 		Collections.sort(sortedCoords, new CoordDistanceComparator(x, y));
 
 		for (Coord2D c : sortedCoords) {
-			if (loaded >= Game.settings.loads_pt.getValue()) {
+			if (loaded >= Settings.getInstance().loadsPerTick.getValue()) {
 				loading = true;
 				break;
 			} 
@@ -117,7 +118,7 @@ public class ChunkProvider {
 		
 		for (Chunk c : unpopulated) {
 			
-			if (populated >= Game.settings.decorations_pt.getValue()) {
+			if (populated >= Settings.getInstance().decorationsPerTick.getValue()) {
 				break;
 			}
 			
@@ -145,7 +146,7 @@ public class ChunkProvider {
 						int block = world.getBlock(tx, h, tz);
 						if (block == Block.grass.getId()) {
 							
-							if(Game.settings.tree_generation.getValue())
+							if(Settings.getInstance().treeGeneration.getValue())
 								this.treeGen.generateTree(tx, h+1, tz);
 							
 						} else if (block != 0 && !(Block.getBlock((byte) block) instanceof BlockPlant)) {
@@ -197,12 +198,12 @@ public class ChunkProvider {
 
 			@Override
 			protected boolean removeEldestEntry(Map.Entry<Coord2D, Chunk> eldest) {
-				if (size() > Game.settings.chunk_cache_size.getValue()) {
+				if (size() > Settings.getInstance().chunkCacheSize.getValue()) {
 					eldest.getValue().deleteAllRenderChunks();
 					loader.saveChunk(eldest.getValue());
 				}
 				
-				return size() > Game.settings.chunk_cache_size.getValue();
+				return size() > Settings.getInstance().chunkCacheSize.getValue();
 			}
 		};
 		this.seed = seed;

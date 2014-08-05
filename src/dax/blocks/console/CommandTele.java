@@ -26,7 +26,7 @@ public class CommandTele extends Command {
 				Game game = Game.getInstance();
 				
 				if (game.world == null) {
-					Game.console.out("You must be ingame to use command " + getName());
+					Console.println("You must be ingame to use command " + getName());
 					return false;
 				}
 				
@@ -34,13 +34,13 @@ public class CommandTele extends Command {
 				
 				return true;
 			} catch (NumberFormatException e) {
-				Game.console.out("Invalid values!");
+				Console.println("Invalid values!");
 				e.printStackTrace();
 				return false;
 			}
 		} else {
-			Game.console.out("Not enough arguments, correct usage: ");
-			Game.console.out(getUsage());
+			Console.println("Not enough arguments, correct usage: ");
+			Console.println(getUsage());
 		}
 		
 		return false;

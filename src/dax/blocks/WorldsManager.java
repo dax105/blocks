@@ -10,10 +10,20 @@ import dax.blocks.world.WorldInfo;
 
 public class WorldsManager {
 
+	private static WorldsManager instance;
+
+	public static WorldsManager getInstance() {
+		if(WorldsManager.instance == null) {
+			WorldsManager.instance = new WorldsManager();
+		}
+		
+		return WorldsManager.instance;
+	}
+	
 	public static final String SAVES_DIR = "saves";
 	private File savesDir;
 
-	public WorldsManager() {
+	private WorldsManager() {
 		this.savesDir = new File(WorldsManager.SAVES_DIR);
 		if(!this.savesDir.exists())
 			this.savesDir.mkdir();
