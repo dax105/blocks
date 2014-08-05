@@ -1,4 +1,4 @@
-package dax.blocks;
+package dax.blocks.util;
 
 import java.nio.FloatBuffer;
 
@@ -12,6 +12,7 @@ import org.lwjgl.opengl.PixelFormat;
 import org.lwjgl.util.glu.GLU;
 import org.newdawn.slick.opengl.Texture;
 
+import dax.blocks.TextureManager;
 import dax.blocks.console.Console;
 import dax.blocks.settings.Settings;
 

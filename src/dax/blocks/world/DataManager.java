@@ -12,7 +12,7 @@ import java.util.Map.Entry;
 
 import javax.activation.UnsupportedDataTypeException;
 
-import dax.blocks.Coord3D;
+import dax.blocks.util.Coord3D;
 
 public class DataManager {
 	File data;

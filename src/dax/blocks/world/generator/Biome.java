@@ -2,7 +2,7 @@ package dax.blocks.world.generator;
 
 import java.util.Arrays;
 
-import dax.blocks.GameMath;
+import dax.blocks.util.GameMath;
 
 public abstract class Biome {
 

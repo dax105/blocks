@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
+
 import org.lwjgl.BufferUtils;
 import org.lwjgl.opengl.ARBFragmentShader;
 import org.lwjgl.opengl.ARBShaderObjects;
@@ -15,7 +16,7 @@ import org.lwjgl.opengl.ARBVertexShader;
 import org.lwjgl.opengl.Display;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL20;
-import dax.blocks.Coord2D;
+
 import dax.blocks.Particle;
 import dax.blocks.TextureManager;
 import dax.blocks.block.Block;
@@ -24,6 +25,7 @@ import dax.blocks.console.Console;
 import dax.blocks.model.ModelManager;
 import dax.blocks.movable.entity.PlayerEntity;
 import dax.blocks.settings.Settings;
+import dax.blocks.util.Coord2D;
 import dax.blocks.world.ChunkDistanceComparator;
 import dax.blocks.world.World;
 import dax.blocks.world.chunk.Chunk;

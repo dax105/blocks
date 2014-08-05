@@ -1,7 +1,6 @@
 package dax.blocks.world;
 
 import java.util.Random;
-import dax.blocks.block.Block;
 import dax.blocks.settings.Settings;
 import dax.blocks.sound.SoundManager;
 
@@ -23,7 +22,7 @@ public class Explosion {
 
 					blockid = world.getBlock(x, y, z);
 
-					if (blockid > 0 && blockid != Block.bedrock.getId()) {
+					if (blockid > 0 && blockid != IDRegister.bedrock.getID()) {
 						float distX = Math.abs(ex - x);
 						float distY = Math.abs(ey - y);
 						float distZ = Math.abs(ez - z);

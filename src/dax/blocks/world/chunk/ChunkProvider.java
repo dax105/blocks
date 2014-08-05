@@ -10,15 +10,13 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Random;
-
-import dax.blocks.Coord2D;
-import dax.blocks.Game;
-import dax.blocks.GameMath;
-import dax.blocks.block.Block;
 import dax.blocks.block.BlockPlant;
 import dax.blocks.settings.Settings;
+import dax.blocks.util.Coord2D;
+import dax.blocks.util.GameMath;
 import dax.blocks.world.ChunkDistanceComparator;
 import dax.blocks.world.CoordDistanceComparator;
+import dax.blocks.world.IDRegister;
 import dax.blocks.world.World;
 import dax.blocks.world.generator.Biome;
 import dax.blocks.world.generator.SimplexNoise;
@@ -144,12 +142,12 @@ public class ChunkProvider {
 
 					for (int h = 127; h >= 0; h--) {
 						int block = world.getBlock(tx, h, tz);
-						if (block == Block.grass.getId()) {
+						if (block == IDRegister.grass.getID()) {
 							
 							if(Settings.getInstance().treeGeneration.getValue())
 								this.treeGen.generateTree(tx, h+1, tz);
 							
-						} else if (block != 0 && !(Block.getBlock((byte) block) instanceof BlockPlant)) {
+						} else if (block != 0 && !(world.getBlockObject(block) instanceof BlockPlant)) {
 							break;
 						}
 					}
@@ -353,24 +351,24 @@ public class ChunkProvider {
 					if (!cave && density > 0) {
 						if (depth == 0) {
 							if (y < 52) {
-								chunk.setBlock(x, y, z, Block.sand.getId(), false);
+								chunk.setBlock(x, y, z, IDRegister.sand.getID(), false);
 							} else {
-								chunk.setBlock(x, y, z, Block.grass.getId(), false);
+								chunk.setBlock(x, y, z, IDRegister.grass.getID(), false);
 								
 								int r = cRand.nextInt(100);
 								
 								if (r <= 20) {
-									chunk.setBlock(x, y+1, z, Block.tallgrass.getId(), false);
+									chunk.setBlock(x, y+1, z, IDRegister.tallGrass.getID(), false);
 								} else {
 									switch(r) {
 									case 30:
-										chunk.setBlock(x, y+1, z, Block.flower_1.getId(), false);
+										chunk.setBlock(x, y+1, z, IDRegister.flower1.getID(), false);
 										break;
 									case 40:
-										chunk.setBlock(x, y+1, z, Block.flower_2.getId(), false);
+										chunk.setBlock(x, y+1, z, IDRegister.flower2.getID(), false);
 										break;
 									case 50:
-										chunk.setBlock(x, y+1, z, Block.flower_3.getId(), false);
+										chunk.setBlock(x, y+1, z, IDRegister.flower3.getID(), false);
 										break;
 									default:	
 									}
@@ -378,18 +376,18 @@ public class ChunkProvider {
 							}
 						} else if (depth < 4) {
 							if (y < 52) {
-								chunk.setBlock(x, y, z, Block.sand.getId(), false);
+								chunk.setBlock(x, y, z, IDRegister.sand.getID(), false);
 							} else {
-								chunk.setBlock(x, y, z, Block.dirt.getId(), false);
+								chunk.setBlock(x, y, z, IDRegister.dirt.getID(), false);
 							}
 						} else {
-							chunk.setBlock(x, y, z, Block.stone.getId(), false);
+							chunk.setBlock(x, y, z, IDRegister.stone.getID(), false);
 						}
 
 						depth++;
 					} else {
 						if ((!cave || depth == 0) && y < 50) {
-							chunk.setBlock(x, y, z, Block.water.getId(), false);
+							chunk.setBlock(x, y, z, IDRegister.water.getID(), false);
 						}
 						
 						if (!cave) {
@@ -398,7 +396,7 @@ public class ChunkProvider {
 					}
 					
 					if (y == 0) {
-						chunk.setBlock(x, y, z, Block.bedrock.getId(), false);
+						chunk.setBlock(x, y, z, IDRegister.bedrock.getID(), false);
 					} 
 				}
 			}

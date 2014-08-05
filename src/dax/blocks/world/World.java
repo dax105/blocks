@@ -10,18 +10,15 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
 import java.util.logging.Logger;
 import java.util.Random;
-
-import dax.blocks.Coord2D;
-import dax.blocks.Coord3D;
 import dax.blocks.Game;
 import dax.blocks.Particle;
 import dax.blocks.block.Block;
 import dax.blocks.movable.entity.PlayerEntity;
 import dax.blocks.render.IRenderable;
 import dax.blocks.settings.Settings;
+import dax.blocks.util.Coord2D;
 import dax.blocks.world.chunk.Chunk;
 import dax.blocks.world.chunk.ChunkProvider;
 
@@ -40,6 +37,7 @@ public class World implements IRenderable {
 	private PlayerEntity player;
 	private ChunkProvider chunkProvider;
 	private DataManager blockDataManager;
+	private IDRegister blockRegister;
 	
 	public int size;
 	public int sizeBlocks;
@@ -63,12 +61,15 @@ public class World implements IRenderable {
 	public World(boolean trees, Game game, boolean load, String worldName) {
 		this.name = worldName;
 		
-		player = new PlayerEntity(this, 0, 128, 0);
+		this.blockRegister = new IDRegister(this);
+		this.blockRegister.registerDefaultBlocks();
+
+		this.player = new PlayerEntity(this, 0, 128, 0);
 
 		this.renderables = new ArrayList<IRenderable>();
 		this.renderables.add(this.player);
 
-		chunkProvider = new ChunkProvider(this, load);
+		this.chunkProvider = new ChunkProvider(this, load);
 
 		this.c2d = new Coord2D(-1, -1);
 
@@ -81,6 +82,18 @@ public class World implements IRenderable {
 				(int) player.getPosZ(), Settings.getInstance().drawDistance.getValue());
 	}
 
+	public IDRegister getRegister() {
+		return this.blockRegister;
+	}
+	
+	public Block getBlockObject(int x, int y, int z) {
+		return this.blockRegister.getBlock(this.getBlock(x, y, z));
+	}
+	
+	public Block getBlockObject(int id) {
+		return this.blockRegister.getBlock(id);
+	}
+	
 	public Coord2D getCoord2D(int x, int y) {
 		this.c2d.set(x, y);
 		return this.c2d;
@@ -157,7 +170,7 @@ public class World implements IRenderable {
 
 	public boolean isOccluder(int x, int y, int z) {
 		int id = getBlock(x, y, z);
-		return id > 0 ? Block.getBlock((byte) id).isOccluder() : false;
+		return id > 0 ? this.getBlockObject(id).isOccluder() : false;
 	}
 
 	public void updateNeighbours(int x, int y, int z) {
@@ -172,7 +185,7 @@ public class World implements IRenderable {
 	public void updateBlock(int x, int y, int z) {
 		int id = getBlock(x, y, z);
 		if (id > 0) {
-			Block.getBlock(id).onTick(x, y, z, this);
+			this.getBlockObject(id).onTick(x, y, z, this);
 		}
 
 	}
@@ -222,7 +235,7 @@ public class World implements IRenderable {
 			Chunk c = chunkProvider.getChunk(coord);
 			
 			if (notify) {
-			Block before = Block.getBlock(getBlock(x, y, z));
+			Block before = this.getBlockObject(x, y, z);
 			
 			if (before != null) { 
 				before.onRemoved(x, y, z, this);
@@ -238,7 +251,9 @@ public class World implements IRenderable {
 		}
 		
 		if (notify) {
-			if(id != 0) Block.getBlock(id).onPlaced(x, y, z, this);
+			if(id != 0) {
+				this.getBlockObject(id).onPlaced(x, y, z, this);
+			}
 		}
 	}
 
@@ -301,7 +316,7 @@ public class World implements IRenderable {
 				for (int z = z0; z < z1; ++z) {
 					int blockId = getBlock(x, y, z);
 					if (blockId > 0) {
-						Block block = Block.getBlock(blockId);
+						Block block = this.getBlockObject(blockId);
 						if (block.isCollidable()) {
 							AABB blockBB = block.getOffsetAABB(x, y, z);
 							xm = blockBB.clipXCollide(bb, xm);
@@ -317,7 +332,7 @@ public class World implements IRenderable {
 				for (int z = z0; z < z1; ++z) {
 					int blockId = getBlock(x, y, z);
 					if (blockId > 0) {
-						Block block = Block.getBlock(blockId);
+						Block block = this.getBlockObject(blockId);
 						if (block.isCollidable()) {
 							AABB blockBB = block.getOffsetAABB(x, y, z);
 							ym = blockBB.clipYCollide(bb, ym);
@@ -333,7 +348,7 @@ public class World implements IRenderable {
 				for (int z = z0; z < z1; ++z) {
 					int blockId = getBlock(x, y, z);
 					if (blockId > 0) {
-						Block block = Block.getBlock(blockId);
+						Block block = this.getBlockObject(blockId);
 						if (block.isCollidable()) {
 							AABB blockBB = block.getOffsetAABB(x, y, z);
 							zm = blockBB.clipZCollide(bb, zm);
@@ -361,6 +376,12 @@ public class World implements IRenderable {
 
 	public void saveAllChunks() {
 		chunkProvider.loader.saveAll();
+		
+		try {
+			this.blockRegister.saveIDs(IDRegister.dataFile);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 
 	public List<IRenderable> getRenderables() {
@@ -409,6 +430,9 @@ public class World implements IRenderable {
 	}
 
 	public boolean containsData(int x, int y, int z, int key) {
+		if(blockDataManager == null)
+			return false;
+		
 		if(!blockDataManager.containsData(x, y, z))
 			return false;
 		
@@ -439,10 +463,11 @@ public class World implements IRenderable {
 			it.remove();
 		}
 		
+		/*
 		for(Entry<Coord3D, Block> b : Block.tickingBlocks.entrySet()) {
 			if(b.getValue().isRequiringTick())
 				b.getValue().onTick(b.getKey().x, b.getKey().y, b.getKey().z, this);
-		}
+		}*/
 
 		
 		for (Iterator<ScheduledUpdate> it = newlyScheduledUpdates.iterator(); it
@@ -477,10 +502,11 @@ public class World implements IRenderable {
 			r.onRenderTick(partialTickTime);
 		}
 		
+		/*
 		for(Entry<Coord3D, Block> b : Block.tickingBlocks.entrySet()) {
 			if(b.getValue().isRequiringRenderTick())
 				b.getValue().onRenderTick(partialTickTime, b.getKey().x, b.getKey().y, b.getKey().z, this);	
-		}
+		}*/
 		
 		GuiManager.getInstance().onRenderTick(partialTickTime);
 	}

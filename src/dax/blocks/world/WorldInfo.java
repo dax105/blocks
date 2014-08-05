@@ -5,8 +5,6 @@ import java.io.FileNotFoundException;
 import java.io.PrintWriter;
 import java.util.Scanner;
 
-import dax.blocks.WorldsManager;
-
 public class WorldInfo {
 	private String worldName;
 	private String worldDirectory;

@@ -1,6 +1,7 @@
 package dax.blocks.block;
 
 import dax.blocks.gui.ingame.GuiManager;
+import dax.blocks.world.IDRegister;
 import dax.blocks.world.World;
 
 public class BlockBasic extends Block {
@@ -9,8 +10,8 @@ public class BlockBasic extends Block {
 	protected float lightColorG = 1;
 	protected float lightColorB = 1;
 	
-	public BlockBasic(int id) {
-		super(id);
+	public BlockBasic(String name, IDRegister r) {
+		super(name, r);
 		GuiManager.getInstance().registerNewScreen(new dax.blocks.gui.ingame.GuiScreen(450, 450, GuiManager.getInstance()) {
 
 			@Override
@@ -36,7 +37,7 @@ public class BlockBasic extends Block {
 	}
 
 	@Override
-	public void onClicked(int button, int x, int y, int z, World world) {
+	public void onClick(int button, int x, int y, int z, World world) {
 		GuiManager.getInstance().setCurrentScreen(0);
 		
 		if(GuiManager.getInstance().isOpened())
@@ -44,5 +45,6 @@ public class BlockBasic extends Block {
 		else
 			GuiManager.getInstance().openScreen();
 	}
+
 
 }
