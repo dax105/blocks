@@ -59,77 +59,77 @@ public class TextureManager {
 	}
 
 	public static void load() {
-		logo = loadTex("dax/blocks/res/textures/logo.png");
-		menuBg = loadTex("dax/blocks/res/textures/menubg.png");
-		clouds = loadTex("dax/blocks/res/textures/clouds.png");
+		TextureManager.logo = TextureManager.loadTex("dax/blocks/res/textures/logo.png");
+		TextureManager.menuBg = TextureManager.loadTex("dax/blocks/res/textures/menubg.png");
+		TextureManager.clouds = TextureManager.loadTex("dax/blocks/res/textures/clouds.png");
 		
-		skybox_back = loadTex("dax/blocks/res/textures/skybox_back.png");
-		skybox_bottom = loadTex("dax/blocks/res/textures/skybox_bottom.png");
-		skybox_front = loadTex("dax/blocks/res/textures/skybox_front.png");
-		skybox_left = loadTex("dax/blocks/res/textures/skybox_left.png");
-		skybox_right = loadTex("dax/blocks/res/textures/skybox_right.png");
-		skybox_top = loadTex("dax/blocks/res/textures/skybox_top.png");
-		skybox_side = loadTex("dax/blocks/res/textures/skybox_side.png");
+		TextureManager.skybox_back = TextureManager.loadTex("dax/blocks/res/textures/skybox_back.png");
+		TextureManager.skybox_bottom = TextureManager.loadTex("dax/blocks/res/textures/skybox_bottom.png");
+		TextureManager.skybox_front = TextureManager.loadTex("dax/blocks/res/textures/skybox_front.png");
+		TextureManager.skybox_left = TextureManager.loadTex("dax/blocks/res/textures/skybox_left.png");
+		TextureManager.skybox_right = TextureManager.loadTex("dax/blocks/res/textures/skybox_right.png");
+		TextureManager.skybox_top = TextureManager.loadTex("dax/blocks/res/textures/skybox_top.png");
+		TextureManager.skybox_side = TextureManager.loadTex("dax/blocks/res/textures/skybox_side.png");
 		
-		life_full = loadTex("dax/blocks/res/textures/life_full.png");
-		life_zero = loadTex("dax/blocks/res/textures/life_null.png");
+		TextureManager.life_full = TextureManager.loadTex("dax/blocks/res/textures/life_full.png");
+		TextureManager.life_zero = TextureManager.loadTex("dax/blocks/res/textures/life_null.png");
 		
-		skybox_back.bind();
+		TextureManager.skybox_back.bind();
 		GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_WRAP_S, GL12.GL_CLAMP_TO_EDGE);
 		GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_WRAP_T, GL12.GL_CLAMP_TO_EDGE);
-		skybox_bottom.bind();
+		TextureManager.skybox_bottom.bind();
 		GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_WRAP_S, GL12.GL_CLAMP_TO_EDGE);
 		GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_WRAP_T, GL12.GL_CLAMP_TO_EDGE);
-		skybox_front.bind();
+		TextureManager.skybox_front.bind();
 		GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_WRAP_S, GL12.GL_CLAMP_TO_EDGE);
 		GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_WRAP_T, GL12.GL_CLAMP_TO_EDGE);
-		skybox_left.bind();
+		TextureManager.skybox_left.bind();
 		GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_WRAP_S, GL12.GL_CLAMP_TO_EDGE);
 		GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_WRAP_T, GL12.GL_CLAMP_TO_EDGE);
-		skybox_right.bind();
+		TextureManager.skybox_right.bind();
 		GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_WRAP_S, GL12.GL_CLAMP_TO_EDGE);
 		GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_WRAP_T, GL12.GL_CLAMP_TO_EDGE);
-		skybox_top.bind();
+		TextureManager.skybox_top.bind();
 		GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_WRAP_S, GL12.GL_CLAMP_TO_EDGE);
 		GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_WRAP_T, GL12.GL_CLAMP_TO_EDGE);
-		skybox_side.bind();
+		TextureManager.skybox_side.bind();
 		GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_WRAP_S, GL12.GL_CLAMP_TO_EDGE);
 		GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_WRAP_T, GL12.GL_CLAMP_TO_EDGE);
 		
-		clouds.bind();
+		TextureManager.clouds.bind();
 		GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MIN_FILTER, GL11.GL_NEAREST);
 		GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MAG_FILTER, GL11.GL_NEAREST);
 		
 		AtlasBuilder ab = new AtlasBuilder();
-		ab.addTexture(loadImage("dax/blocks/res/textures/blocks/stone.png"));
-		ab.addTexture(loadImage("dax/blocks/res/textures/blocks/cobblestone_mossy.png"));
-		ab.addTexture(loadImage("dax/blocks/res/textures/blocks/planks_oak.png"));
-		ab.addTexture(loadImage("dax/blocks/res/textures/blocks/dirt.png"));
-		ab.addTexture(loadImage("dax/blocks/res/textures/blocks/grass_top.png"));
-		ab.addTexture(loadImage("dax/blocks/res/textures/blocks/grass_side.png"));
-		ab.addTexture(loadImage("dax/blocks/res/textures/blocks/sand.png"));
-		ab.addTexture(loadImage("dax/blocks/res/textures/blocks/log_oak.png"));
-		ab.addTexture(loadImage("dax/blocks/res/textures/blocks/brick.png"));
-		ab.addTexture(loadImage("dax/blocks/res/textures/blocks/glass.png"));
-		ab.addTexture(loadImage("dax/blocks/res/textures/blocks/leaves.png"));
-		ab.addTexture(loadImage("dax/blocks/res/textures/blocks/log_oak_top.png"));
-		ab.addTexture(loadImage("dax/blocks/res/textures/blocks/bedrock.png"));
-		ab.addTexture(loadImage("dax/blocks/res/textures/blocks/water.png"));
-		ab.addTexture(loadImage("dax/blocks/res/textures/blocks/ice.png"));
-		ab.addTexture(loadImage("dax/blocks/res/textures/blocks/tallgrass.png"));
-		ab.addTexture(loadImage("dax/blocks/res/textures/blocks/flower_y.png"));
-		ab.addTexture(loadImage("dax/blocks/res/textures/blocks/flower_r.png"));
-		ab.addTexture(loadImage("dax/blocks/res/textures/blocks/flower_w.png"));
-		ab.addTexture(loadImage("dax/blocks/res/textures/blocks/leaves_opaque.png"));
+		ab.addTexture(TextureManager.loadImage("dax/blocks/res/textures/blocks/stone.png"));
+		ab.addTexture(TextureManager.loadImage("dax/blocks/res/textures/blocks/cobblestone_mossy.png"));
+		ab.addTexture(TextureManager.loadImage("dax/blocks/res/textures/blocks/planks_oak.png"));
+		ab.addTexture(TextureManager.loadImage("dax/blocks/res/textures/blocks/dirt.png"));
+		ab.addTexture(TextureManager.loadImage("dax/blocks/res/textures/blocks/grass_top.png"));
+		ab.addTexture(TextureManager.loadImage("dax/blocks/res/textures/blocks/grass_side.png"));
+		ab.addTexture(TextureManager.loadImage("dax/blocks/res/textures/blocks/sand.png"));
+		ab.addTexture(TextureManager.loadImage("dax/blocks/res/textures/blocks/log_oak.png"));
+		ab.addTexture(TextureManager.loadImage("dax/blocks/res/textures/blocks/brick.png"));
+		ab.addTexture(TextureManager.loadImage("dax/blocks/res/textures/blocks/glass.png"));
+		ab.addTexture(TextureManager.loadImage("dax/blocks/res/textures/blocks/leaves.png"));
+		ab.addTexture(TextureManager.loadImage("dax/blocks/res/textures/blocks/log_oak_top.png"));
+		ab.addTexture(TextureManager.loadImage("dax/blocks/res/textures/blocks/bedrock.png"));
+		ab.addTexture(TextureManager.loadImage("dax/blocks/res/textures/blocks/water.png"));
+		ab.addTexture(TextureManager.loadImage("dax/blocks/res/textures/blocks/ice.png"));
+		ab.addTexture(TextureManager.loadImage("dax/blocks/res/textures/blocks/tallgrass.png"));
+		ab.addTexture(TextureManager.loadImage("dax/blocks/res/textures/blocks/flower_y.png"));
+		ab.addTexture(TextureManager.loadImage("dax/blocks/res/textures/blocks/flower_r.png"));
+		ab.addTexture(TextureManager.loadImage("dax/blocks/res/textures/blocks/flower_w.png"));
+		ab.addTexture(TextureManager.loadImage("dax/blocks/res/textures/blocks/leaves_opaque.png"));
 		
-		atlas = ab.buildAtlas(true);
+		TextureManager.atlas = ab.buildAtlas(true);
 		
-		atlas.bind();
+		TextureManager.atlas.bind();
 		
-		textureSizeCoord = atlas.getWidth() / ATLAS_SIZE / (AtlasBuilder.EXPAND_RATIO*2+1);
-		texSize = atlas.getWidth();
+		TextureManager.textureSizeCoord = TextureManager.atlas.getWidth() / TextureManager.ATLAS_SIZE / (AtlasBuilder.EXPAND_RATIO*2+1);
+		TextureManager.texSize = TextureManager.atlas.getWidth();
 		
-		if (Game.settings.mipmaps.getValue()) {
+		if(Game.settings.mipmaps.getValue()) {
 			GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MIN_FILTER, GL11.GL_LINEAR_MIPMAP_LINEAR);
 			GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MAG_FILTER, GL11.GL_NEAREST);
 		}
@@ -140,7 +140,7 @@ public class TextureManager {
 		
 		try {
 			EXTFramebufferObject.glGenerateMipmapEXT(GL11.GL_TEXTURE_2D);
-		} catch (Exception e) {
+		} catch(Exception e) {
 			
 			JOptionPane.showMessageDialog(null, "An error occured while generating mipmaps! \n" + e + e.getStackTrace());
 			
@@ -155,21 +155,26 @@ public class TextureManager {
 	}
 	
 	public static float getX1(int texid) {
-		return (texid % ATLAS_SIZE) * (texSize / ATLAS_SIZE) + textureSizeCoord/(1/AtlasBuilder.EXPAND_RATIO);
+		return (texid % TextureManager.ATLAS_SIZE) * 
+			(TextureManager.texSize / TextureManager.ATLAS_SIZE) + 
+			TextureManager.textureSizeCoord / (1 / AtlasBuilder.EXPAND_RATIO);
 	}
 
 	public static float getX2(int texid) {
-		return (texid % ATLAS_SIZE) * (texSize / ATLAS_SIZE) + textureSizeCoord + textureSizeCoord/(1/AtlasBuilder.EXPAND_RATIO);
+		return (texid % TextureManager.ATLAS_SIZE) * 
+			(TextureManager.texSize / TextureManager.ATLAS_SIZE) + 
+			TextureManager.textureSizeCoord + TextureManager.textureSizeCoord / (1 / AtlasBuilder.EXPAND_RATIO);
 	}
 
 	public static float getY1(int texid) {
-		return (texid / ATLAS_SIZE) * (texSize / ATLAS_SIZE) + textureSizeCoord/(1/AtlasBuilder.EXPAND_RATIO);
+		return (texid / TextureManager.ATLAS_SIZE) * 
+			(TextureManager.texSize / TextureManager.ATLAS_SIZE) + 
+			TextureManager.textureSizeCoord / (1 / AtlasBuilder.EXPAND_RATIO);
 	}
 
 	public static float getY2(int texid) {
-		return (texid / ATLAS_SIZE) * (texSize / ATLAS_SIZE) + textureSizeCoord + textureSizeCoord/(1/AtlasBuilder.EXPAND_RATIO);
+		return (texid / TextureManager.ATLAS_SIZE) * 
+			(TextureManager.texSize / TextureManager.ATLAS_SIZE) + 
+			TextureManager.textureSizeCoord + TextureManager.textureSizeCoord / (1 / AtlasBuilder.EXPAND_RATIO);
 	}
-
-
-
 }
