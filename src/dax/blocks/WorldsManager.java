@@ -14,18 +14,18 @@ public class WorldsManager {
 	private File savesDir;
 
 	public WorldsManager() {
-		savesDir = new File(SAVES_DIR);
-		if(!savesDir.exists())
-			savesDir.mkdir();
+		this.savesDir = new File(WorldsManager.SAVES_DIR);
+		if(!this.savesDir.exists())
+			this.savesDir.mkdir();
 	}
 
 	public List<File> getWorldsDirs() {
 		ArrayList<File> worlds = new ArrayList<File>();
 
-		String[] names = savesDir.list();
-			for (String name : names) {
-				File d = new File(SAVES_DIR, name);
-				if (d.isDirectory()) {
+		String[] names = this.savesDir.list();
+			for(String name : names) {
+				File d = new File(WorldsManager.SAVES_DIR, name);
+				if(d.isDirectory()) {
 					worlds.add(d);
 				}
 			}
@@ -37,8 +37,8 @@ public class WorldsManager {
 	public List<WorldInfo> getWorldsInfo() {
 		ArrayList<WorldInfo> worlds = new ArrayList<WorldInfo>();
 
-		List<File> dirs = getWorldsDirs();
-		for (File d : dirs) {
+		List<File> dirs = this.getWorldsDirs();
+		for(File d : dirs) {
 			try {
 				worlds.add(WorldInfo
 						.constructFromFile(new File(d, "world.txt")));
@@ -51,9 +51,9 @@ public class WorldsManager {
 	}
 
 	public WorldInfo getWorld(String name) {
-		List<WorldInfo> worlds = getWorldsInfo();
-		for (WorldInfo i : worlds) {
-			if (i.getWorldName().equalsIgnoreCase(name)) {
+		List<WorldInfo> worlds = this.getWorldsInfo();
+		for(WorldInfo i : worlds) {
+			if(i.getWorldName().equalsIgnoreCase(name)) {
 				return i;
 			}
 		}
