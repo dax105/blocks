@@ -28,8 +28,8 @@ public class FontManager {
 	}
 	
 	
-	public static void load() {
-		FontManager.getInstance().text = FontManager.getInstance().loadFont(ResourceLoader.getResourceAsStream("dax/blocks/res/fonts/roboto.ttf"), Font.PLAIN, 12, true);
+	public void load() {
+		this.text = this.loadFont(ResourceLoader.getResourceAsStream("dax/blocks/res/fonts/roboto.ttf"), Font.PLAIN, 12, true);
 	}
 	
 	public TrueTypeFont loadFont(InputStream in, int style, int size, boolean antiAlias) {
@@ -40,12 +40,12 @@ public class FontManager {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		return FontManager.getInstance().loadFont(font, antiAlias);
+		return this.loadFont(font, antiAlias);
 	}
 	
 	public TrueTypeFont loadFont(String name, int style, int size, boolean antiAlias) {
 		Font font = new Font(name, style, size);
-		return FontManager.getInstance().loadFont(font, antiAlias);
+		return this.loadFont(font, antiAlias);
 	}
 	
 	public TrueTypeFont loadFont(Font font, boolean antiAlias) {
