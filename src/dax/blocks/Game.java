@@ -17,7 +17,6 @@ import org.newdawn.slick.Color;
 import org.newdawn.slick.TrueTypeFont;
 
 import dax.blocks.auth.AuthManager;
-import dax.blocks.block.Block;
 import dax.blocks.console.Console;
 import dax.blocks.gui.GuiObjectBlank;
 import dax.blocks.gui.GuiScreen;
@@ -73,15 +72,19 @@ public class Game implements Runnable {
 	
 	private Profiler profiler = new Profiler();
 	
-	private static Game instance;
-
-	public Game() {
-		instance = this;
-	}
-
+	private static Game _instance;
 	public static Game getInstance() {
-		return instance;
+		if(_instance == null) {
+			_instance = new Game();
+		}
+		
+		return _instance;
 	}
+	
+	private Game() {
+	}
+
+	
 	
 	public Profiler getProfiler() {
 		return this.profiler;
@@ -466,8 +469,6 @@ public class Game implements Runnable {
 			String buildText = "avg build" + String.format(Locale.ENGLISH, "%.2f", avgBuild) + "ms";
 			FontManager.getFont().drawString(offset-FontManager.getFont().getWidth(buildText)-2, (int)(Display.getHeight()-avgBuild*10-FontManager.getFont().getLineHeight()*0.75f), buildText);
 		}
-		
-		Block b = world.getBlockObject(world.getPlayer().getSelectedBlockID());
 
 		Runtime runtime = Runtime.getRuntime();
 
