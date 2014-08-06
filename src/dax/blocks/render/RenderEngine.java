@@ -31,12 +31,19 @@ import dax.blocks.world.chunk.ChunkProvider;
 
 public class RenderEngine {
 
-	Frustum frustum;
-	ChunkDistanceComparator chunkDistComp;
-	float ptt;
+	public static final String FLAG_LIGHTING = "lighting";
+	public static final String FLAG_TEXTURE = "texture";
+	public static final String FLAG_FOG = "fog";
 
-	float[] rightModelviewVec;
-	float[] upModelviewVec;
+	public static final String UNIFORM_TIME = "time";
+	public static final String UNIFORM_FOG_DISTANCE = "fogDist";
+
+	private Frustum frustum;
+	private ChunkDistanceComparator chunkDistComp;
+	private float ptt;
+
+	private float[] rightModelviewVec;
+	private float[] upModelviewVec;
 
 	public int chunksDrawn = 0;
 	public int chunksLoaded = 0;
@@ -67,9 +74,9 @@ public class RenderEngine {
 		int vertShader = 0, fragShader = 0;
 
 		try {
-			vertShader = createShader("dax/blocks/shaders/screenN.vsh",
+			vertShader = this.createShader("dax/blocks/shaders/screenN.vsh",
 					ARBVertexShader.GL_VERTEX_SHADER_ARB);
-			fragShader = createShader("dax/blocks/shaders/screenN.fsh",
+			fragShader = this.createShader("dax/blocks/shaders/screenN.fsh",
 					ARBFragmentShader.GL_FRAGMENT_SHADER_ARB);
 		} catch (Exception exc) {
 			System.err.println("============================================\n"
@@ -85,46 +92,46 @@ public class RenderEngine {
 
 			// System.exit(1);
 		} finally {
-			if (vertShader == 0 || fragShader == 0)
+			if(vertShader == 0 || fragShader == 0)
 				return;
 		}
 
-		program = ARBShaderObjects.glCreateProgramObjectARB();
+		this.program = ARBShaderObjects.glCreateProgramObjectARB();
 
-		if (program == 0)
+		if(this.program == 0)
 			return;
 
-		if (enableShaders) {
+		if(enableShaders) {
 
 			/*
 			 * if the vertex and fragment shaders setup sucessfully, attach them
 			 * to the shader program, link the sahder program (into the GL
 			 * context I suppose), and validate
 			 */
-			ARBShaderObjects.glAttachObjectARB(program, vertShader);
-			ARBShaderObjects.glAttachObjectARB(program, fragShader);
+			ARBShaderObjects.glAttachObjectARB(this.program, vertShader);
+			ARBShaderObjects.glAttachObjectARB(this.program, fragShader);
 
-			ARBShaderObjects.glLinkProgramARB(program);
-			if (ARBShaderObjects.glGetObjectParameteriARB(program,
+			ARBShaderObjects.glLinkProgramARB(this.program);
+			if(ARBShaderObjects.glGetObjectParameteriARB(this.program,
 					ARBShaderObjects.GL_OBJECT_LINK_STATUS_ARB) == GL11.GL_FALSE) {
 				System.err
 						.println("============================================\n"
 								+ "=AN ERROR OCCURED WHILE LOADING THE SHADER!=\n"
 								+ "============================================");
-				System.err.println(getLogInfo(program));
+				System.err.println(this.getLogInfo(this.program));
 			}
 
-			ARBShaderObjects.glValidateProgramARB(program);
-			if (ARBShaderObjects.glGetObjectParameteriARB(program,
+			ARBShaderObjects.glValidateProgramARB(this.program);
+			if(ARBShaderObjects.glGetObjectParameteriARB(this.program,
 					ARBShaderObjects.GL_OBJECT_VALIDATE_STATUS_ARB) == GL11.GL_FALSE) {
 				System.err
 						.println("============================================\n"
 								+ "=AN ERROR OCCURED WHILE LOADING THE SHADER!=\n"
 								+ "============================================");
-				System.err.println(getLogInfo(program));
+				System.err.println(this.getLogInfo(this.program));
 			}
 
-			blockAttributeID = GL20.glGetAttribLocation(program, "blockid");
+			this.blockAttributeID = GL20.glGetAttribLocation(this.program, "blockid");
 			Console.println("Shader seems to be loaded!");
 		}
 	}
@@ -140,17 +147,17 @@ public class RenderEngine {
 		try {
 			shader = ARBShaderObjects.glCreateShaderObjectARB(shaderType);
 
-			if (shader == 0)
+			if(shader == 0)
 				return 0;
 
 			ARBShaderObjects.glShaderSourceARB(shader,
 					readFileAsString(filename));
 			ARBShaderObjects.glCompileShaderARB(shader);
 
-			if (ARBShaderObjects.glGetObjectParameteriARB(shader,
+			if(ARBShaderObjects.glGetObjectParameteriARB(shader,
 					ARBShaderObjects.GL_OBJECT_COMPILE_STATUS_ARB) == GL11.GL_FALSE)
 				throw new RuntimeException("Error creating shader: "
-						+ getLogInfo(shader));
+						+ this.getLogInfo(shader));
 
 			return shader;
 		} catch (Exception exc) {
@@ -180,54 +187,57 @@ public class RenderEngine {
 			Exception innerExc = null;
 			try {
 				String line;
-				while ((line = reader.readLine()) != null)
+				while((line = reader.readLine()) != null) {
 					source.append(line).append('\n');
+				}
 			} catch (Exception exc) {
 				exception = exc;
 			} finally {
 				try {
 					reader.close();
 				} catch (Exception exc) {
-					if (innerExc == null)
+					if(innerExc == null) {
 						innerExc = exc;
-					else
+					} else {
 						exc.printStackTrace();
+					}
 				}
 			}
 
-			if (innerExc != null)
-				throw innerExc;
+			if(innerExc != null) throw innerExc;
 		} catch (Exception exc) {
 			exception = exc;
 		} finally {
 			try {
 				in.close();
 			} catch (Exception exc) {
-				if (exception == null)
+				if(exception == null) {
 					exception = exc;
-				else
+				} else {
 					exc.printStackTrace();
+				}
 			}
 
-			if (exception != null)
-				throw exception;
+			if(exception != null) throw exception;
 		}
 
 		return source.toString();
 	}
 
 	public void updateBeforeRendering(float ptt) {
-		if (!CommandCullLock.locked)
+		if(!CommandCullLock.locked) {
 			this.frustum.calculateFrustum();
+		}
 
 		FloatBuffer modelviewMatrix = BufferUtils.createFloatBuffer(16);
 		GL11.glGetFloat(GL11.GL_MODELVIEW_MATRIX, modelviewMatrix);
-		rightModelviewVec[0] = modelviewMatrix.get(0);
-		upModelviewVec[0] = modelviewMatrix.get(1);
-		rightModelviewVec[1] = modelviewMatrix.get(4);
-		upModelviewVec[1] = modelviewMatrix.get(5);
-		rightModelviewVec[2] = modelviewMatrix.get(8);
-		upModelviewVec[2] = modelviewMatrix.get(9);
+
+		this.rightModelviewVec[0] = modelviewMatrix.get(0);
+		this.upModelviewVec[0] = modelviewMatrix.get(1);
+		this.rightModelviewVec[1] = modelviewMatrix.get(4);
+		this.upModelviewVec[1] = modelviewMatrix.get(5);
+		this.rightModelviewVec[2] = modelviewMatrix.get(8);
+		this.upModelviewVec[2] = modelviewMatrix.get(9);
 	}
 
 	public void pushPlayerMatrix(PlayerEntity player) {
@@ -238,44 +248,38 @@ public class RenderEngine {
 				- PlayerEntity.EYES_HEIGHT, -player.getPosZPartial());
 	}
 
-	public static final String FLAG_LIGHTING = "lighting";
-	public static final String FLAG_TEXTURE = "texture";
-	public static final String FLAG_FOG = "fog";
-
-	public static final String UNIFORM_TIME = "time";
-	public static final String UNIFORM_FOG_DISTANCE = "fogDist";
-
 	public void sDisable(String flag) {
-		int loc = GL20.glGetUniformLocation(program, flag);
+		int loc = GL20.glGetUniformLocation(this.program, flag);
 		GL20.glUniform1f(loc, 0.0f);
 	}
 
 	public void sEnable(String flag) {
-		int loc = GL20.glGetUniformLocation(program, flag);
+		int loc = GL20.glGetUniformLocation(this.program, flag);
 		GL20.glUniform1f(loc, 1.0f);
 	}
 
 	public void sSetFloat(String flag, float value) {
-		int loc = GL20.glGetUniformLocation(program, flag);
+		int loc = GL20.glGetUniformLocation(this.program, flag);
 		GL20.glUniform1f(loc, value);
 	}
 
 	public void renderWorld(World world, float ptt) {
-		chunksLoaded = 0;
-		chunksDrawn = 0;
+		this.chunksLoaded = 0;
+		this.chunksDrawn = 0;
 
 		GL11.glColor3f(1, 1, 1);
 
-		if (enableShaders)
-			ARBShaderObjects.glUseProgramObjectARB(program);
+		if(this.enableShaders) {
+			ARBShaderObjects.glUseProgramObjectARB(this.program);
+		}
 
-		sSetFloat(UNIFORM_TIME, System.nanoTime() / 1000000000f);
-		sSetFloat(UNIFORM_FOG_DISTANCE,
+		this.sSetFloat(RenderEngine.UNIFORM_TIME, System.nanoTime() / 1000000000f);
+		this.sSetFloat(RenderEngine.UNIFORM_FOG_DISTANCE,
 				Settings.getInstance().drawDistance.getValue() * 16 - 8);
 
 		this.ptt = ptt;
-		pushPlayerMatrix(world.getPlayer());
-		updateBeforeRendering(ptt);
+		this.pushPlayerMatrix(world.getPlayer());
+		this.updateBeforeRendering(this.ptt);
 
 		FloatBuffer lp = BufferUtils.createFloatBuffer(4);
 		lp.put(-1000).put(1000).put(-1000).put(0).flip();
@@ -285,17 +289,19 @@ public class RenderEngine {
 		GL11.glDisable(GL11.GL_TEXTURE_2D);
 		GL11.glDisable(GL11.GL_LIGHTING);
 
-		sDisable(FLAG_LIGHTING);
-		sEnable(FLAG_TEXTURE);
-		sEnable(FLAG_FOG);
+		this.sDisable(RenderEngine.FLAG_LIGHTING);
+		this.sEnable(RenderEngine.FLAG_TEXTURE);
+		this.sEnable(RenderEngine.FLAG_FOG);
 
-		renderSkybox(world.getPlayer().getPosXPartial(), world.getPlayer()
-				.getPosYPartial() + PlayerEntity.EYES_HEIGHT, world.getPlayer()
-				.getPosZPartial());
+		this.renderSkybox(
+				world.getPlayer().getPosXPartial(), 
+				world.getPlayer().getPosYPartial() + PlayerEntity.EYES_HEIGHT, 
+				world.getPlayer().getPosZPartial()
+		);
 
 		TextureManager.atlas.bind();
 
-		sDisable(FLAG_TEXTURE);
+		this.sDisable(RenderEngine.FLAG_TEXTURE);
 
 		GL11.glDisable(GL11.GL_TEXTURE_2D);
 
@@ -306,14 +312,14 @@ public class RenderEngine {
 		 * renderParticle((Particle)r, ptt); } GL11.glEnd();
 		 */
 
-		for (IRenderable r : world.getRenderables()) {
+		for(IRenderable r : world.getRenderables()) {
 			r.renderWorld(ptt);
 		}
 
-		sEnable(FLAG_LIGHTING);
+		this.sEnable(RenderEngine.FLAG_LIGHTING);
 		GL11.glEnable(GL11.GL_LIGHTING);
 
-		for (int i = 0; i < 1; i++) {
+		for(int i = 0; i < 1; i++) {
 			GL11.glPushMatrix();
 			GL11.glTranslatef(i - 0.0625f, 49, 10);
 			GL11.glScalef(0.5f, 0.5f, 0.5f);
@@ -321,8 +327,8 @@ public class RenderEngine {
 			GL11.glPopMatrix();
 		}
 
-		sEnable(FLAG_LIGHTING);
-		sEnable(FLAG_TEXTURE);
+		this.sEnable(RenderEngine.FLAG_LIGHTING);
+		this.sEnable(RenderEngine.FLAG_TEXTURE);
 
 		// Render chunks
 		GL11.glEnable(GL11.GL_CULL_FACE);
@@ -335,33 +341,33 @@ public class RenderEngine {
 		List<Chunk> visibleChunks = world.getChunkProvider().getChunksInRadius(
 				pcx, pcz, Settings.getInstance().drawDistance.getValue());
 
-		for (Iterator<Chunk> iter = visibleChunks.iterator(); iter.hasNext();) {
+		for(Iterator<Chunk> iter = visibleChunks.iterator(); iter.hasNext();) {
 			Chunk c = iter.next();
-			if (c == null) {
+			if(c == null) {
 				iter.remove();
 			}
 		}
 
-		chunkDistComp.setFrontToBack();
-		Collections.sort(visibleChunks, chunkDistComp);
+		this.chunkDistComp.setFrontToBack();
+		Collections.sort(visibleChunks, this.chunkDistComp);
 
 		int generatedMeshes = 0;
 
-		for (Chunk c : visibleChunks) {
-			if (c != null) {
-				for (int y = 0; y < 8; y++) {
+		for(Chunk c : visibleChunks) {
+			if(c != null) {
+				for(int y = 0; y < 8; y++) {
 
-					if (generatedMeshes >= Settings.getInstance().rebuildsPerFrame.getValue()) {
-						building = true;
+					if(generatedMeshes >= Settings.getInstance().rebuildsPerFrame.getValue()) {
+						this.building = true;
 						break;
 					} else {
-						building = false;
+						this.building = false;
 					}
 
-					if (!c.renderChunks[y].isBuilt()
+					if(!c.renderChunks[y].isBuilt()
 							|| c.renderChunks[y].isDirty()) {
 						ChunkProvider cp = world.getChunkProvider();
-						if (cp.isChunkLoaded(new Coord2D(c.x + 1, c.z))
+						if(cp.isChunkLoaded(new Coord2D(c.x + 1, c.z))
 								&& cp.isChunkLoaded(new Coord2D(c.x - 1, c.z))
 								&& cp.isChunkLoaded(new Coord2D(c.x, c.z + 1))
 								&& cp.isChunkLoaded(new Coord2D(c.x, c.z - 1))) {
@@ -372,22 +378,22 @@ public class RenderEngine {
 				}
 			}
 
-			if (generatedMeshes >= Settings.getInstance().rebuildsPerFrame.getValue()) {
-				building = true;
+			if(generatedMeshes >= Settings.getInstance().rebuildsPerFrame.getValue()) {
+				this.building = true;
 				break;
 			} else {
-				building = false;
+				this.building = false;
 			}
 
 		}
 
 		List<RenderChunk> builtRenderChunks = new ArrayList<RenderChunk>();
 
-		for (Chunk c : visibleChunks) {
+		for(Chunk c : visibleChunks) {
 			RenderChunk[] crcs = c.renderChunks;
 
-			for (int y = 0; y < 8; y++) {
-				if (crcs[y].isBuilt()) {
+			for(int y = 0; y < 8; y++) {
+				if(crcs[y].isBuilt()) {
 					builtRenderChunks.add(crcs[y]);
 				}
 			}
@@ -397,56 +403,58 @@ public class RenderEngine {
 		List<RenderChunk> culledRenderChunks = ChunkCull.cull(
 				builtRenderChunks, this.frustum, Settings.getInstance().frustumCulling.getValue(), Settings.getInstance().advancedCulling.getValue());
 		
-		for (RenderChunk r : culledRenderChunks) {
-			if (r.getCm().isPresent(RenderPass.OPAQUE)) {
+		for(RenderChunk r : culledRenderChunks) {
+			if(r.getCm().isPresent(RenderPass.OPAQUE)) {
 				r.getCm().render(RenderPass.OPAQUE);
-				chunksDrawn++;
+				this.chunksDrawn++;
 			}
 		}
 
 		GL11.glEnable(GL11.GL_ALPHA_TEST);
-		for (RenderChunk r : culledRenderChunks) {
-			if (r.getCm().isPresent(RenderPass.TRANSPARENT)) {
+		for(RenderChunk r : culledRenderChunks) {
+			if(r.getCm().isPresent(RenderPass.TRANSPARENT)) {
 				r.getCm().render(RenderPass.TRANSPARENT);
-				chunksDrawn++;
+				this.chunksDrawn++;
 			}
 		}
 		GL11.glDisable(GL11.GL_ALPHA_TEST);
 
-		if (Settings.getInstance().twoPassTranslucent.getValue()) {
+		if(Settings.getInstance().twoPassTranslucent.getValue()) {
 			GL11.glColorMask(false, false, false, false);
-			for (RenderChunk r : culledRenderChunks) {
-				if (r.getCm().isPresent(RenderPass.TRANSLUCENT)) {
+			for(RenderChunk r : culledRenderChunks) {
+				if(r.getCm().isPresent(RenderPass.TRANSLUCENT)) {
 					r.getCm().render(RenderPass.TRANSLUCENT);
-					chunksDrawn++;
+					this.chunksDrawn++;
 				}
 			}
 			GL11.glColorMask(true, true, true, true);
 		}
 
-		for (RenderChunk r : culledRenderChunks) {
-			if (r.getCm().isPresent(RenderPass.TRANSLUCENT)) {
+		for(RenderChunk r : culledRenderChunks) {
+			if(r.getCm().isPresent(RenderPass.TRANSLUCENT)) {
 				r.getCm().render(RenderPass.TRANSLUCENT);
-				chunksDrawn++;
+				this.chunksDrawn++;
 			}
 		}
 
 		GL11.glDisable(GL11.GL_LIGHTING);
-		sDisable(FLAG_LIGHTING);
-		sDisable(FLAG_FOG);
+		this.sDisable(RenderEngine.FLAG_LIGHTING);
+		this.sDisable(RenderEngine.FLAG_FOG);
 
-		if (Settings.getInstance().clouds.getValue()) {
-			renderClouds(world.getPlayer().getPosXPartial(), world.getPlayer()
-					.getPosZPartial());
+		if(Settings.getInstance().clouds.getValue()) {
+			this.renderClouds(
+					world.getPlayer().getPosXPartial(), 
+					world.getPlayer().getPosZPartial()
+			);
 		}
 
 		// Render selection box
-		if (world.getPlayer().hasSelectedBlock()) {
+		if(world.getPlayer().hasSelectedBlock()) {
 			GL11.glDisable(GL11.GL_DEPTH_TEST);
 			GL11.glDepthMask(false);
 			GL11.glLineWidth(2);
 			GL11.glColor4f(0.0F, 0.0F, 0.0F, 0.25F);
-			renderLinedBox(world.getPlayer().getLookingAtX() - 0.002f, world
+			this.renderLinedBox(world.getPlayer().getLookingAtX() - 0.002f, world
 					.getPlayer().getLookingAtY() - 0.002f, world.getPlayer()
 					.getLookingAtZ() - 0.002f, world.getPlayer()
 					.getLookingAtX() + 1 + 0.002f, world.getPlayer()
@@ -455,7 +463,7 @@ public class RenderEngine {
 			GL11.glEnable(GL11.GL_DEPTH_TEST);
 			GL11.glLineWidth(4);
 			GL11.glColor4f(0.0F, 0.0F, 0.0F, 0.5F);
-			renderLinedBox(world.getPlayer().getLookingAtX() - 0.002f, world
+			this.renderLinedBox(world.getPlayer().getLookingAtX() - 0.002f, world
 					.getPlayer().getLookingAtY() - 0.002f, world.getPlayer()
 					.getLookingAtZ() - 0.002f, world.getPlayer()
 					.getLookingAtX() + 1 + 0.002f, world.getPlayer()
@@ -484,8 +492,8 @@ public class RenderEngine {
 		GL11.glDisable(GL11.GL_CULL_FACE);
 		GL11.glColor4f(1, 1, 1, 0.7f);
 
-		for (int x = -1 + xOffset; x <= 1 + xOffset; x++) {
-			for (int y = -1 + yOffset; y <= 1 + yOffset; y++) {
+		for(int x = -1 + xOffset; x <= 1 + xOffset; x++) {
+			for(int y = -1 + yOffset; y <= 1 + yOffset; y++) {
 
 				GL11.glPushMatrix();
 				GL11.glTranslatef(x * size * 2, 0, y * size * 2);
@@ -637,17 +645,17 @@ public class RenderEngine {
 		float h = Particle.PARTICLE_SIZE / 2;
 		float sizemutipler = (h / 1);
 
-		float rightup0p = (rightModelviewVec[0] + upModelviewVec[0])
+		float rightup0p = (this.rightModelviewVec[0] + this.upModelviewVec[0])
 				* sizemutipler;
-		float rightup1p = (rightModelviewVec[1] + upModelviewVec[1])
+		float rightup1p = (this.rightModelviewVec[1] + this.upModelviewVec[1])
 				* sizemutipler;
-		float rightup2p = (rightModelviewVec[2] + upModelviewVec[2])
+		float rightup2p = (this.rightModelviewVec[2] + this.upModelviewVec[2])
 				* sizemutipler;
-		float rightup0n = (rightModelviewVec[0] - upModelviewVec[0])
+		float rightup0n = (this.rightModelviewVec[0] - this.upModelviewVec[0])
 				* sizemutipler;
-		float rightup1n = (rightModelviewVec[1] - upModelviewVec[1])
+		float rightup1n = (this.rightModelviewVec[1] - this.upModelviewVec[1])
 				* sizemutipler;
-		float rightup2n = (rightModelviewVec[2] - upModelviewVec[2])
+		float rightup2n = (this.rightModelviewVec[2] - this.upModelviewVec[2])
 				* sizemutipler;
 
 		float px = p.getPartialX(ptt);
@@ -713,5 +721,4 @@ public class RenderEngine {
 
 		GL11.glEnd();
 	}
-
 }
