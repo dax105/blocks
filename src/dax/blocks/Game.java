@@ -18,12 +18,13 @@ import org.newdawn.slick.TrueTypeFont;
 
 import dax.blocks.auth.AuthManager;
 import dax.blocks.console.Console;
+import dax.blocks.gui.GuiManager;
 import dax.blocks.gui.GuiObjectBlank;
 import dax.blocks.gui.GuiScreen;
 import dax.blocks.gui.GuiScreenLoading;
 import dax.blocks.gui.GuiScreenMainMenu;
 import dax.blocks.gui.GuiScreenMenu;
-import dax.blocks.gui.ingame.GuiManager;
+import dax.blocks.gui.ingame.IngameGuiManager;
 import dax.blocks.model.ModelManager;
 import dax.blocks.profiler.Profiler;
 import dax.blocks.profiler.Section;
@@ -54,12 +55,13 @@ public class Game implements Runnable {
 	public IChunkRenderer chunkRenderer = new ChunkRendererDisplayList();
 	public AuthManager authManager;
 	
-	
 	public static final int TPS = 20;
 	public static final double TICK_TIME = 1.0D / TPS;
 	public int ticks = 0;
 	String ticksString = "N/A";
 
+	private GuiManager guiManager = new GuiManager();
+	
 	float animationProgress = 0;
 	float lastProgress = 0;
 	long lastFrame;
@@ -253,8 +255,8 @@ public class Game implements Runnable {
 
 				if (Keyboard.getEventKey() == Keyconfig.exit) {
 					if (!consoleOpen) {
-						if (GuiManager.getInstance().isOpened()) {
-							GuiManager.getInstance().closeScreen();
+						if (IngameGuiManager.getInstance().isOpened()) {
+							IngameGuiManager.getInstance().closeScreen();
 						} else {
 							if (this.guiScreen != null) {
 								closeGuiScreen();
@@ -601,6 +603,10 @@ public class Game implements Runnable {
 		this.authManager = new AuthManager();
 		this.authManager.setDummyName("Player");
 		this.loginString = "User is not logged in, using name Player";
+	}
+
+	public GuiManager getGuiManager() {
+		return guiManager;
 	}
 
 }

@@ -9,7 +9,7 @@ import dax.blocks.Game;
 import dax.blocks.TextureManager;
 import dax.blocks.block.Block;
 import dax.blocks.collisions.AABB;
-import dax.blocks.gui.ingame.GuiManager;
+import dax.blocks.gui.ingame.IngameGuiManager;
 import dax.blocks.item.stack.BasicBlockStack;
 import dax.blocks.item.stack.BasicItemStack;
 import dax.blocks.item.stack.IObjectStack;
@@ -125,8 +125,8 @@ public class PlayerEntity extends Entity {
 				updateBlock();
 			} else {
 				if(Mouse.getEventButtonState() && Mouse.getEventButton() == 0) {
-					if(GuiManager.getInstance().isOpened())
-						GuiManager.getInstance().checkMouseClosing();
+					if(IngameGuiManager.getInstance().isOpened())
+						IngameGuiManager.getInstance().checkMouseClosing();
 				}
 			}
 		}

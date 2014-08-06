@@ -6,21 +6,21 @@ import org.lwjgl.input.Mouse;
 import dax.blocks.render.IRenderable;
 import dax.blocks.settings.Settings;
 
-public class GuiManager implements IRenderable {
+public class IngameGuiManager implements IRenderable {
 	GuiScreen currentGuiScreen;
 	List<GuiScreen> screenList;
 	boolean isScreenOpened = false;
 	
-	private static GuiManager _instance;
-	public static GuiManager getInstance() {
+	private static IngameGuiManager _instance;
+	public static IngameGuiManager getInstance() {
 		if(_instance == null) {
-			_instance = new GuiManager();
+			_instance = new IngameGuiManager();
 		}
 		
 		return _instance;
 	}
 	
-	private GuiManager() {
+	private IngameGuiManager() {
 		this.screenList = new ArrayList<>();
 	}
 	

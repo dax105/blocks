@@ -9,26 +9,26 @@ public abstract class GuiScreen implements IRenderable {
 
 	private int x, y, width, height;
 	private float backColorR, backColorG, backColorB, backColorA;
-	private GuiManager guiManager;
+	private IngameGuiManager guiManager;
 	private boolean isInCenter = false;
 
-	public GuiScreen(int x, int y, int width, int height, GuiManager guiManager) {
+	public GuiScreen(int x, int y, int width, int height, IngameGuiManager guiManager) {
 		this(x, y, width, height, 1, 1, 1, 0.5f, guiManager);
 	}
 
-	public GuiScreen(int width, int height, GuiManager guiManager) {
+	public GuiScreen(int width, int height, IngameGuiManager guiManager) {
 		this(width, height, 1, 1, 1, 0.5f, guiManager);
 	}
 
 	public GuiScreen(int width, int height, float r, float g, float b, float a,
-			GuiManager guiManager) {
+			IngameGuiManager guiManager) {
 		this(0, 0, width, height, r, g, b, a, guiManager);
 		this.isInCenter = true;
 		this.updateCenteredPosition(guiManager.getScreenWidth(), guiManager.getScreenHeight());
 	}
 
 	public GuiScreen(int x, int y, int width, int height, float r, float g,
-			float b, float a, GuiManager guiManager) {
+			float b, float a, IngameGuiManager guiManager) {
 		this.x = x;
 		this.y = y;
 		this.width = width;

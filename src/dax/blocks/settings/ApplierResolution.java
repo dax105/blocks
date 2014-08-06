@@ -1,7 +1,7 @@
 package dax.blocks.settings;
 
 import dax.blocks.Game;
-import dax.blocks.gui.ingame.GuiManager;
+import dax.blocks.gui.ingame.IngameGuiManager;
 import dax.blocks.util.GLHelper;
 
 public class ApplierResolution extends Applier {
@@ -30,8 +30,8 @@ public class ApplierResolution extends Applier {
 		
 		Settings.getInstance().resolution.setValue(width + "x" + height, false);
 
-		if(GuiManager.getInstance().getCurrentScreen() != null)
-			GuiManager.getInstance().getCurrentScreen().updateCenteredPosition(width, height);
+		if(IngameGuiManager.getInstance().getCurrentScreen() != null)
+			IngameGuiManager.getInstance().getCurrentScreen().updateCenteredPosition(width, height);
 		
 		return true;
 

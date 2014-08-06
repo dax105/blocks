@@ -5,7 +5,7 @@ import dax.blocks.data.DataManager;
 import dax.blocks.data.DataValue;
 import dax.blocks.data.IBlockDataManager;
 import dax.blocks.data.IItemDataManager;
-import dax.blocks.gui.ingame.GuiManager;
+import dax.blocks.gui.ingame.IngameGuiManager;
 
 import java.io.File;
 import java.io.IOException;
@@ -527,7 +527,7 @@ public class World implements IRenderable {
 	
 	@Override
 	public void onTick() {	
-		GuiManager.getInstance().onTick();
+		IngameGuiManager.getInstance().onTick();
 		
 		for(IRenderable r : this.renderables) {
 			r.onTick();
@@ -590,7 +590,7 @@ public class World implements IRenderable {
 				b.getValue().onRenderTick(partialTickTime, b.getKey().x, b.getKey().y, b.getKey().z, this);	
 		}
 		
-		GuiManager.getInstance().onRenderTick(partialTickTime);
+		IngameGuiManager.getInstance().onRenderTick(partialTickTime);
 	}
 
 	@Override
@@ -599,7 +599,7 @@ public class World implements IRenderable {
 			r.renderWorld(partialTickTime);
 		}
 		
-		GuiManager.getInstance().renderWorld(partialTickTime);
+		IngameGuiManager.getInstance().renderWorld(partialTickTime);
 	}
 
 	@Override
@@ -608,7 +608,7 @@ public class World implements IRenderable {
 			r.renderGui(partialTickTime);
 		}
 		
-		GuiManager.getInstance().renderGui(partialTickTime);
+		IngameGuiManager.getInstance().renderGui(partialTickTime);
 	}
 
 }
