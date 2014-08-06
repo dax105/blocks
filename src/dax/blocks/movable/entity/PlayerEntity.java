@@ -391,6 +391,12 @@ public class PlayerEntity extends Entity {
 
 		if (wh > 0) {
 			int newSelectedBlock = this.inHand.getItemID() + 1;
+			
+			if(newSelectedBlock == 18) {
+				this.inHand = new BasicItemStack(IDRegister.itemImaginaryChocolate, 1);
+				return;
+			}
+			
 			if (newSelectedBlock > (world.getRegister().getBlockCount())) {
 				newSelectedBlock = 1;
 			}
