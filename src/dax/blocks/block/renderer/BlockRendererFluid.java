@@ -35,7 +35,7 @@ public class BlockRendererFluid implements IBlockRenderer {
 
 		//TODO GL20.glVertexAttrib1f(attrib, blockID);
 		
-		if (blockIdAbove == 0 || !sameAbove) {
+		if(blockIdAbove == 0 || !sameAbove) {
 			boolean xnzn = world.isOccluder(x - 1, y + 1, z - 1);
 			boolean zn = world.isOccluder(x, y + 1, z - 1);
 			boolean xpzn = world.isOccluder(x + 1, y + 1, z - 1);
@@ -46,17 +46,30 @@ public class BlockRendererFluid implements IBlockRenderer {
 			boolean xpzp = world.isOccluder(x + 1, y + 1, z + 1);
 			
 			renderer.normal(0, 1, 0);
-			renderer.texCoord(TextureManager.getX2(block.topTexture), TextureManager.getY1(block.topTexture));
-			renderer.vertexWithAO(x+1, y+height, z, xp, zn, xpzn);
-			renderer.texCoord(TextureManager.getX2(block.topTexture), TextureManager.getY2(block.topTexture));
-			renderer.vertexWithAO(x, y+height, z, xn, zn, xnzn);
-			renderer.texCoord(TextureManager.getX1(block.topTexture), TextureManager.getY2(block.topTexture));
-			renderer.vertexWithAO(x, y+height, z+1, xn, zp, xnzp);
-			renderer.texCoord(TextureManager.getX1(block.topTexture), TextureManager.getY1(block.topTexture));
-			renderer.vertexWithAO(x+1, y+height, z+1, xp, zp, xpzp);
+			renderer.texCoord(
+					TextureManager.getX2(block.topTexture), 
+					TextureManager.getY1(block.topTexture)
+			);
+			renderer.vertexWithAO(x + 1, y + height, z, xp, zn, xpzn);
+			renderer.texCoord(
+					TextureManager.getX2(block.topTexture), 
+					TextureManager.getY2(block.topTexture)
+			);
+			renderer.vertexWithAO(x, y + height, z, xn, zn, xnzn);
+			renderer.texCoord(
+					TextureManager.getX1(block.topTexture), 
+					TextureManager.getY2(block.topTexture)
+			);
+			renderer.vertexWithAO(x, y + height, z + 1, xn, zp, xnzp);
+			renderer.texCoord(
+					TextureManager.getX1(block.topTexture), 
+					TextureManager.getY1(block.topTexture)
+			);
+			renderer.vertexWithAO(x + 1, y + height, z + 1, xp, zp, xpzp);
 		}
 
-		if (blockIdBelow == 0 || !blockBelow.isOpaque() && !(blockID == blockIdBelow && blockBelow.shouldCullSame())) {
+		if(blockIdBelow == 0 || !blockBelow.isOpaque() && 
+				!(blockID == blockIdBelow && blockBelow.shouldCullSame())) {
 			boolean xnzn = world.isOccluder(x - 1, y - 1, z - 1);
 			boolean zn = world.isOccluder(x, y - 1, z - 1);
 			boolean xpzn = world.isOccluder(x + 1, y - 1, z - 1);
@@ -67,17 +80,30 @@ public class BlockRendererFluid implements IBlockRenderer {
 			boolean xpzp = world.isOccluder(x + 1, y - 1, z + 1);
 			
 			renderer.normal(0, -1, 0);
-			renderer.texCoord(TextureManager.getX1(block.bottomTexture), TextureManager.getY2(block.bottomTexture));
-			renderer.vertexWithAO(x+1, y, z+1, xp, zp, xpzp);
-			renderer.texCoord(TextureManager.getX1(block.bottomTexture), TextureManager.getY1(block.bottomTexture));
-			renderer.vertexWithAO(x, y, z+1, xn, zp, xnzp);
-			renderer.texCoord(TextureManager.getX2(block.bottomTexture), TextureManager.getY1(block.bottomTexture));
+			renderer.texCoord(
+					TextureManager.getX1(block.bottomTexture), 
+					TextureManager.getY2(block.bottomTexture)
+			);
+			renderer.vertexWithAO(x + 1, y, z + 1, xp, zp, xpzp);
+			renderer.texCoord(
+					TextureManager.getX1(block.bottomTexture), 
+					TextureManager.getY1(block.bottomTexture)
+			);
+			renderer.vertexWithAO(x, y, z + 1, xn, zp, xnzp);
+			renderer.texCoord(
+					TextureManager.getX2(block.bottomTexture), 
+					TextureManager.getY1(block.bottomTexture)
+			);
 			renderer.vertexWithAO(x, y, z, xn, zn, xnzn);
-			renderer.texCoord(TextureManager.getX2(block.bottomTexture), TextureManager.getY2(block.bottomTexture));
-			renderer.vertexWithAO(x+1, y, z, xp, zn, xpzn);
+			renderer.texCoord(
+					TextureManager.getX2(block.bottomTexture), 
+					TextureManager.getY2(block.bottomTexture)
+			);
+			renderer.vertexWithAO(x + 1, y, z, xp, zn, xpzn);
 		}
 
-		if (blockIdInFront == 0 || !blockInFront.isOpaque() && !(blockID == blockIdInFront && blockInFront.shouldCullSame())) {
+		if(blockIdInFront == 0 || !blockInFront.isOpaque() && 
+				!(blockID == blockIdInFront && blockInFront.shouldCullSame())) {
 			boolean xnzn = world.isOccluder(x - 1, y - 1, z + 1);
 			boolean zn = world.isOccluder(x, y - 1, z + 1);
 			boolean xpzn = world.isOccluder(x + 1, y - 1, z + 1);
@@ -87,40 +113,78 @@ public class BlockRendererFluid implements IBlockRenderer {
 			boolean zp = world.isOccluder(x, y + 1, z + 1);
 			boolean xpzp = world.isOccluder(x + 1, y + 1, z + 1);
 			
-			if (sameAbove) {
+			if(sameAbove) {
 				renderer.normal(0, 0, 1);
-				renderer.texCoord(TextureManager.getX2(block.sideTexture), TextureManager.getY1(block.sideTexture));
-				renderer.vertexWithAO(x+1, y+1, z+1, xp, zp, xpzp);
-				renderer.texCoord(TextureManager.getX1(block.sideTexture), TextureManager.getY1(block.sideTexture));
-				renderer.vertexWithAO(x, y+1, z+1, xn, zp, xnzp);
-				renderer.texCoord(TextureManager.getX1(block.sideTexture), TextureManager.getY2(block.sideTexture));
-				renderer.vertexWithAO(x, y, z+1, xn, zn, xnzn);
-				renderer.texCoord(TextureManager.getX2(block.sideTexture), TextureManager.getY2(block.sideTexture));
-				renderer.vertexWithAO(x+1, y, z+1, xp, zn, xpzn);
+				renderer.texCoord(
+						TextureManager.getX2(block.sideTexture), 
+						TextureManager.getY1(block.sideTexture)
+				);
+				renderer.vertexWithAO(x + 1, y + 1, z + 1, xp, zp, xpzp);
+				renderer.texCoord(
+						TextureManager.getX1(block.sideTexture), 
+						TextureManager.getY1(block.sideTexture)
+				);
+				renderer.vertexWithAO(x, y + 1, z + 1, xn, zp, xnzp);
+				renderer.texCoord(
+						TextureManager.getX1(block.sideTexture), 
+						TextureManager.getY2(block.sideTexture)
+				);
+				renderer.vertexWithAO(x, y, z + 1, xn, zn, xnzn);
+				renderer.texCoord(
+						TextureManager.getX2(block.sideTexture), 
+						TextureManager.getY2(block.sideTexture)
+				);
+				renderer.vertexWithAO(x + 1, y, z + 1, xp, zn, xpzn);
 			} else {
 				renderer.normal(0, 0, 1);
-				renderer.texCoord(TextureManager.getX2(block.sideTexture), TextureManager.getY1(block.sideTexture));
-				renderer.vertexWithAO(x+1, y+height, z+1, xp, zp, xpzp);
-				renderer.texCoord(TextureManager.getX1(block.sideTexture), TextureManager.getY1(block.sideTexture));
-				renderer.vertexWithAO(x, y+height, z+1, xn, zp, xnzp);
-				renderer.texCoord(TextureManager.getX1(block.sideTexture), TextureManager.getY2(block.sideTexture));
-				renderer.vertexWithAO(x, y, z+1, xn, zn, xnzn);
-				renderer.texCoord(TextureManager.getX2(block.sideTexture), TextureManager.getY2(block.sideTexture));
-				renderer.vertexWithAO(x+1, y, z+1, xp, zn, xpzn);
+				renderer.texCoord(
+						TextureManager.getX2(block.sideTexture), 
+						TextureManager.getY1(block.sideTexture)
+				);
+				renderer.vertexWithAO(x + 1, y + height, z + 1, xp, zp, xpzp);
+				renderer.texCoord(
+						TextureManager.getX1(block.sideTexture), 
+						TextureManager.getY1(block.sideTexture)
+				);
+				renderer.vertexWithAO(x, y + height, z + 1, xn, zp, xnzp);
+				renderer.texCoord(
+						TextureManager.getX1(block.sideTexture), 
+						TextureManager.getY2(block.sideTexture)
+				);
+				renderer.vertexWithAO(x, y, z + 1, xn, zn, xnzn);
+				renderer.texCoord(
+						TextureManager.getX2(block.sideTexture), 
+						TextureManager.getY2(block.sideTexture)
+				);
+				renderer.vertexWithAO(x + 1, y, z + 1, xp, zn, xpzn);
 			}
-		} else if (blockID == blockIdInFront && sameAbove && world.getBlock(x, y + 1, z + 1) != blockID) {
+		} else if(blockID == blockIdInFront && sameAbove && 
+				world.getBlock(x, y + 1, z + 1) != blockID) {
 			renderer.normal(0, 0, 1);
-			renderer.texCoord(TextureManager.getX2(block.sideTexture), TextureManager.getY1(block.sideTexture));
-			renderer.vertex(x+1, y+1, z+1);
-			renderer.texCoord(TextureManager.getX1(block.sideTexture), TextureManager.getY1(block.sideTexture));
-			renderer.vertex(x, y+1, z+1);
-			renderer.texCoord(TextureManager.getX1(block.sideTexture), TextureManager.getY2(block.sideTexture));
-			renderer.vertex(x, y+height, z+1);
-			renderer.texCoord(TextureManager.getX2(block.sideTexture), TextureManager.getY2(block.sideTexture));
-			renderer.vertex(x+1, y+height, z+1);
+			renderer.texCoord(
+					TextureManager.getX2(block.sideTexture), 
+					TextureManager.getY1(block.sideTexture)
+			);
+			renderer.vertex(x + 1, y + 1, z + 1);
+			renderer.texCoord(
+					TextureManager.getX1(block.sideTexture), 
+					TextureManager.getY1(block.sideTexture)
+			);
+			renderer.vertex(x, y + 1, z + 1);
+			renderer.texCoord(
+					TextureManager.getX1(block.sideTexture), 
+					TextureManager.getY2(block.sideTexture)
+			);
+			renderer.vertex(x, y + height, z + 1);
+			renderer.texCoord(
+					TextureManager.getX2(block.sideTexture), 
+					TextureManager.getY2(block.sideTexture)
+			);
+			renderer.vertex(x + 1, y + height, z + 1);
 		}
 
-		if (blockIdBehind == 0 || !blockBehind.isOpaque() && !(blockID == blockIdBehind && blockBehind.shouldCullSame())) {
+		if(blockIdBehind == 0 || !blockBehind.isOpaque() && 
+				!(blockID == blockIdBehind && blockBehind.shouldCullSame())) {
 			boolean xnzn = world.isOccluder(x - 1, y - 1, z - 1);
 			boolean zn = world.isOccluder(x, y - 1, z - 1);
 			boolean xpzn = world.isOccluder(x + 1, y - 1, z - 1);
@@ -130,40 +194,78 @@ public class BlockRendererFluid implements IBlockRenderer {
 			boolean zp = world.isOccluder(x, y + 1, z - 1);
 			boolean xpzp = world.isOccluder(x + 1, y + 1, z - 1);
 			
-			if (sameAbove) {
-			renderer.normal(0, 0, -1);
-			renderer.texCoord(TextureManager.getX1(block.sideTexture), TextureManager.getY2(block.sideTexture));
-			renderer.vertexWithAO(x+1, y, z, xp, zn, xpzn);
-			renderer.texCoord(TextureManager.getX2(block.sideTexture), TextureManager.getY2(block.sideTexture));
-			renderer.vertexWithAO(x, y, z, xn, zn, xnzn);
-			renderer.texCoord(TextureManager.getX2(block.sideTexture), TextureManager.getY1(block.sideTexture));
-			renderer.vertexWithAO(x, y+1, z, xn, zp, xnzp);
-			renderer.texCoord(TextureManager.getX1(block.sideTexture), TextureManager.getY1(block.sideTexture));
-			renderer.vertexWithAO(x+1, y+1, z, xp, zp, xpzp);
+			if(sameAbove) {
+				renderer.normal(0, 0, -1);
+				renderer.texCoord(
+						TextureManager.getX1(block.sideTexture), 
+						TextureManager.getY2(block.sideTexture)
+				);
+				renderer.vertexWithAO(x + 1, y, z, xp, zn, xpzn);
+				renderer.texCoord(
+						TextureManager.getX2(block.sideTexture), 
+						TextureManager.getY2(block.sideTexture)
+				);
+				renderer.vertexWithAO(x, y, z, xn, zn, xnzn);
+				renderer.texCoord(
+						TextureManager.getX2(block.sideTexture), 
+						TextureManager.getY1(block.sideTexture)
+				);
+				renderer.vertexWithAO(x, y + 1, z, xn, zp, xnzp);
+				renderer.texCoord(
+						TextureManager.getX1(block.sideTexture), 
+						TextureManager.getY1(block.sideTexture)
+				);
+				renderer.vertexWithAO(x + 1, y + 1, z, xp, zp, xpzp);
 			} else {
 				renderer.normal(0, 0, -1);
-				renderer.texCoord(TextureManager.getX1(block.sideTexture), TextureManager.getY2(block.sideTexture));
-				renderer.vertexWithAO(x+1, y, z, xp, zn, xpzn);
-				renderer.texCoord(TextureManager.getX2(block.sideTexture), TextureManager.getY2(block.sideTexture));
+				renderer.texCoord(
+						TextureManager.getX1(block.sideTexture), 
+						TextureManager.getY2(block.sideTexture)
+				);
+				renderer.vertexWithAO(x + 1, y, z, xp, zn, xpzn);
+				renderer.texCoord(
+						TextureManager.getX2(block.sideTexture), 
+						TextureManager.getY2(block.sideTexture)
+				);
 				renderer.vertexWithAO(x, y, z, xn, zn, xnzn);
-				renderer.texCoord(TextureManager.getX2(block.sideTexture), TextureManager.getY1(block.sideTexture));
-				renderer.vertexWithAO(x, y+height, z, xn, zp, xnzp);
-				renderer.texCoord(TextureManager.getX1(block.sideTexture), TextureManager.getY1(block.sideTexture));
-				renderer.vertexWithAO(x+1, y+height, z, xp, zp, xpzp);
+				renderer.texCoord(
+						TextureManager.getX2(block.sideTexture), 
+						TextureManager.getY1(block.sideTexture)
+				);
+				renderer.vertexWithAO(x, y + height, z, xn, zp, xnzp);
+				renderer.texCoord(
+						TextureManager.getX1(block.sideTexture), 
+						TextureManager.getY1(block.sideTexture)
+				);
+				renderer.vertexWithAO(x + 1, y + height, z, xp, zp, xpzp);
 			}
-		} else if (blockID == blockIdBehind && sameAbove && world.getBlock(x, y + 1, z - 1) != blockID) {
+		} else if(blockID == blockIdBehind && sameAbove && 
+				world.getBlock(x, y + 1, z - 1) != blockID) {
 			renderer.normal(0, 0, -1);
-			renderer.texCoord(TextureManager.getX1(block.sideTexture), TextureManager.getY2(block.sideTexture));
-			renderer.vertex(x+1, y + height, z);
-			renderer.texCoord(TextureManager.getX2(block.sideTexture), TextureManager.getY2(block.sideTexture));
+			renderer.texCoord(
+					TextureManager.getX1(block.sideTexture), 
+					TextureManager.getY2(block.sideTexture)
+			);
+			renderer.vertex(x + 1, y + height, z);
+			renderer.texCoord(
+					TextureManager.getX2(block.sideTexture), 
+					TextureManager.getY2(block.sideTexture)
+			);
 			renderer.vertex(x, y + height, z);
-			renderer.texCoord(TextureManager.getX2(block.sideTexture), TextureManager.getY1(block.sideTexture));
-			renderer.vertex(x, y+1, z);
-			renderer.texCoord(TextureManager.getX1(block.sideTexture), TextureManager.getY1(block.sideTexture));
-			renderer.vertex(x+1, y+1, z);
+			renderer.texCoord(
+					TextureManager.getX2(block.sideTexture), 
+					TextureManager.getY1(block.sideTexture)
+			);
+			renderer.vertex(x, y + 1, z);
+			renderer.texCoord(
+					TextureManager.getX1(block.sideTexture), 
+					TextureManager.getY1(block.sideTexture)
+			);
+			renderer.vertex(x + 1, y + 1, z);
 		}
 
-		if (blockIdOnRight == 0 || !blockOnRight.isOpaque() && !(blockID == blockIdOnRight && blockOnRight.shouldCullSame())) {
+		if (blockIdOnRight == 0 || !blockOnRight.isOpaque() && 
+				!(blockID == blockIdOnRight && blockOnRight.shouldCullSame())) {
 			boolean xnzn = world.isOccluder(x + 1, y + 1, z - 1);
 			boolean zn = world.isOccluder(x + 1, y + 1, z);
 			boolean xpzn = world.isOccluder(x + 1, y + 1, z + 1);
@@ -173,40 +275,78 @@ public class BlockRendererFluid implements IBlockRenderer {
 			boolean zp = world.isOccluder(x + 1, y - 1, z);
 			boolean xpzp = world.isOccluder(x + 1, y - 1, z + 1);
 			
-			if (sameAbove) {
-			renderer.normal(1, 0, 0);
-			renderer.texCoord(TextureManager.getX2(block.sideTexture), TextureManager.getY1(block.sideTexture));
-			renderer.vertexWithAO(x+1, y+1, z, xn, zn, xnzn);
-			renderer.texCoord(TextureManager.getX1(block.sideTexture), TextureManager.getY1(block.sideTexture));
-			renderer.vertexWithAO(x+1, y+1, z+1, xp, zn, xpzn);
-			renderer.texCoord(TextureManager.getX1(block.sideTexture), TextureManager.getY2(block.sideTexture));
-			renderer.vertexWithAO(x+1, y, z+1, xp, zp, xpzp);
-			renderer.texCoord(TextureManager.getX2(block.sideTexture), TextureManager.getY2(block.sideTexture));
-			renderer.vertexWithAO(x+1, y, z, xn, zp, xnzp);
+			if(sameAbove) {
+				renderer.normal(1, 0, 0);
+				renderer.texCoord(
+						TextureManager.getX2(block.sideTexture), 
+						TextureManager.getY1(block.sideTexture)
+				);
+				renderer.vertexWithAO(x + 1, y + 1, z, xn, zn, xnzn);
+				renderer.texCoord(
+						TextureManager.getX1(block.sideTexture), 
+						TextureManager.getY1(block.sideTexture)
+				);
+				renderer.vertexWithAO(x + 1, y + 1, z + 1, xp, zn, xpzn);
+				renderer.texCoord(
+						TextureManager.getX1(block.sideTexture), 
+						TextureManager.getY2(block.sideTexture)
+				);
+				renderer.vertexWithAO(x + 1, y, z + 1, xp, zp, xpzp);
+				renderer.texCoord(
+						TextureManager.getX2(block.sideTexture), 
+						TextureManager.getY2(block.sideTexture)
+				);
+				renderer.vertexWithAO(x + 1, y, z, xn, zp, xnzp);
 			} else {
 				renderer.normal(1, 0, 0);
-				renderer.texCoord(TextureManager.getX2(block.sideTexture), TextureManager.getY1(block.sideTexture));
-				renderer.vertexWithAO(x+1, y+height, z, xn, zn, xnzn);
-				renderer.texCoord(TextureManager.getX1(block.sideTexture), TextureManager.getY1(block.sideTexture));
-				renderer.vertexWithAO(x+1, y+height, z+1, xp, zn, xpzn);
-				renderer.texCoord(TextureManager.getX1(block.sideTexture), TextureManager.getY2(block.sideTexture));
-				renderer.vertexWithAO(x+1, y, z+1, xp, zp, xpzp);
-				renderer.texCoord(TextureManager.getX2(block.sideTexture), TextureManager.getY2(block.sideTexture));
-				renderer.vertexWithAO(x+1, y, z, xn, zp, xnzp);
+				renderer.texCoord(
+						TextureManager.getX2(block.sideTexture), 
+						TextureManager.getY1(block.sideTexture)
+				);
+				renderer.vertexWithAO(x + 1, y + height, z, xn, zn, xnzn);
+				renderer.texCoord(
+						TextureManager.getX1(block.sideTexture), 
+						TextureManager.getY1(block.sideTexture)
+				);
+				renderer.vertexWithAO(x + 1, y + height, z + 1, xp, zn, xpzn);
+				renderer.texCoord(
+						TextureManager.getX1(block.sideTexture), 
+						TextureManager.getY2(block.sideTexture)
+				);
+				renderer.vertexWithAO(x + 1, y, z + 1, xp, zp, xpzp);
+				renderer.texCoord(
+						TextureManager.getX2(block.sideTexture), 
+						TextureManager.getY2(block.sideTexture)
+				);
+				renderer.vertexWithAO(x + 1, y, z, xn, zp, xnzp);
 			}
-		} else if (blockID == blockIdOnRight && sameAbove && world.getBlock(x + 1, y + 1, z) != blockID) {
+		} else if(blockID == blockIdOnRight && sameAbove && 
+				world.getBlock(x + 1, y + 1, z) != blockID) {
 			renderer.normal(1, 0, 0);
-			renderer.texCoord(TextureManager.getX2(block.sideTexture), TextureManager.getY1(block.sideTexture));
-			renderer.vertex(x+1, y+1, z);
-			renderer.texCoord(TextureManager.getX1(block.sideTexture), TextureManager.getY1(block.sideTexture));
-			renderer.vertex(x+1, y+1, z+1);
-			renderer.texCoord(TextureManager.getX1(block.sideTexture), TextureManager.getY2(block.sideTexture));
-			renderer.vertex(x+1, y+height, z+1);
-			renderer.texCoord(TextureManager.getX2(block.sideTexture), TextureManager.getY2(block.sideTexture));
-			renderer.vertex(x+1, y+height, z);
+			renderer.texCoord(
+					TextureManager.getX2(block.sideTexture), 
+					TextureManager.getY1(block.sideTexture)
+			);
+			renderer.vertex(x + 1, y + 1, z);
+			renderer.texCoord(
+					TextureManager.getX1(block.sideTexture), 
+					TextureManager.getY1(block.sideTexture)
+			);
+			renderer.vertex(x + 1, y + 1, z + 1);
+			renderer.texCoord(
+					TextureManager.getX1(block.sideTexture), 
+					TextureManager.getY2(block.sideTexture)
+			);
+			renderer.vertex(x + 1, y + height, z + 1);
+			renderer.texCoord(
+					TextureManager.getX2(block.sideTexture), 
+					TextureManager.getY2(block.sideTexture)
+			);
+			renderer.vertex(x + 1, y + height, z);
 		}
 
-		if (blockIdOnLeft == 0 || !blockOnLeft.isOpaque() && !(blockID == blockIdOnLeft && blockOnLeft.shouldCullSame())) {
+		if(blockIdOnLeft == 0 || !blockOnLeft.isOpaque() && 
+				!(blockID == blockIdOnLeft && blockOnLeft.shouldCullSame())) {
 			boolean xnzn = world.isOccluder(x - 1, y + 1, z - 1);
 			boolean zn = world.isOccluder(x - 1, y + 1, z);
 			boolean xpzn = world.isOccluder(x - 1, y + 1, z + 1);
@@ -216,37 +356,74 @@ public class BlockRendererFluid implements IBlockRenderer {
 			boolean zp = world.isOccluder(x - 1, y - 1, z);
 			boolean xpzp = world.isOccluder(x - 1, y - 1, z + 1);
 
-			if (sameAbove) {
-			renderer.normal(-1, 0, 0);
-			renderer.texCoord(TextureManager.getX2(block.sideTexture), TextureManager.getY1(block.sideTexture));
-			renderer.vertexWithAO(x, y+1, z+1, xp, zn, xpzn);
-			renderer.texCoord(TextureManager.getX1(block.sideTexture), TextureManager.getY1(block.sideTexture));
-			renderer.vertexWithAO(x, y+1, z, xn, zn, xnzn);
-			renderer.texCoord(TextureManager.getX1(block.sideTexture), TextureManager.getY2(block.sideTexture));
-			renderer.vertexWithAO(x, y, z, xn, zp, xnzp);
-			renderer.texCoord(TextureManager.getX2(block.sideTexture), TextureManager.getY2(block.sideTexture));
-			renderer.vertexWithAO(x, y, z+1, xp, zp, xpzp);
+			if(sameAbove) {
+				renderer.normal(-1, 0, 0);
+				renderer.texCoord(
+						TextureManager.getX2(block.sideTexture), 
+						TextureManager.getY1(block.sideTexture)
+				);
+				renderer.vertexWithAO(x, y + 1, z + 1, xp, zn, xpzn);
+				renderer.texCoord(
+						TextureManager.getX1(block.sideTexture), 
+						TextureManager.getY1(block.sideTexture)
+				);
+				renderer.vertexWithAO(x, y + 1, z, xn, zn, xnzn);
+				renderer.texCoord(
+						TextureManager.getX1(block.sideTexture), 
+						TextureManager.getY2(block.sideTexture)
+				);
+				renderer.vertexWithAO(x, y, z, xn, zp, xnzp);
+				renderer.texCoord(
+						TextureManager.getX2(block.sideTexture), 
+						TextureManager.getY2(block.sideTexture)
+				);
+				renderer.vertexWithAO(x, y, z + 1, xp, zp, xpzp);
 			} else {
 				renderer.normal(-1, 0, 0);
-				renderer.texCoord(TextureManager.getX2(block.sideTexture), TextureManager.getY1(block.sideTexture));
-				renderer.vertexWithAO(x, y+height, z+1, xp, zn, xpzn);
-				renderer.texCoord(TextureManager.getX1(block.sideTexture), TextureManager.getY1(block.sideTexture));
-				renderer.vertexWithAO(x, y+height, z, xn, zn, xnzn);
-				renderer.texCoord(TextureManager.getX1(block.sideTexture), TextureManager.getY2(block.sideTexture));
+				renderer.texCoord(
+						TextureManager.getX2(block.sideTexture), 
+						TextureManager.getY1(block.sideTexture)
+				);
+				renderer.vertexWithAO(x, y + height, z + 1, xp, zn, xpzn);
+				renderer.texCoord(
+						TextureManager.getX1(block.sideTexture), 
+						TextureManager.getY1(block.sideTexture)
+				);
+				renderer.vertexWithAO(x, y + height, z, xn, zn, xnzn);
+				renderer.texCoord(
+						TextureManager.getX1(block.sideTexture), 
+						TextureManager.getY2(block.sideTexture)
+				);
 				renderer.vertexWithAO(x, y, z, xn, zp, xnzp);
-				renderer.texCoord(TextureManager.getX2(block.sideTexture), TextureManager.getY2(block.sideTexture));
-				renderer.vertexWithAO(x, y, z+1, xp, zp, xpzp);
+				renderer.texCoord(
+						TextureManager.getX2(block.sideTexture), 
+						TextureManager.getY2(block.sideTexture)
+				);
+				renderer.vertexWithAO(x, y, z + 1, xp, zp, xpzp);
 			} 
-		} else if (blockID == blockIdOnLeft && sameAbove && world.getBlock(x - 1, y + 1, z) != blockID) {
+		} else if(blockID == blockIdOnLeft && sameAbove && 
+				world.getBlock(x - 1, y + 1, z) != blockID) {
 			renderer.normal(-1, 0, 0);
-			renderer.texCoord(TextureManager.getX2(block.sideTexture), TextureManager.getY1(block.sideTexture));
-			renderer.vertex(x, y+1, z+1);
-			renderer.texCoord(TextureManager.getX1(block.sideTexture), TextureManager.getY1(block.sideTexture));
-			renderer.vertex(x, y+1, z);
-			renderer.texCoord(TextureManager.getX1(block.sideTexture), TextureManager.getY2(block.sideTexture));
+			renderer.texCoord(
+					TextureManager.getX2(block.sideTexture), 
+					TextureManager.getY1(block.sideTexture)
+			);
+			renderer.vertex(x, y + 1, z + 1);
+			renderer.texCoord(
+					TextureManager.getX1(block.sideTexture), 
+					TextureManager.getY1(block.sideTexture)
+			);
+			renderer.vertex(x, y + 1, z);
+			renderer.texCoord(
+					TextureManager.getX1(block.sideTexture), 
+					TextureManager.getY2(block.sideTexture)
+			);
 			renderer.vertex(x, y + height, z);
-			renderer.texCoord(TextureManager.getX2(block.sideTexture), TextureManager.getY2(block.sideTexture));
-			renderer.vertex(x, y + height, z+1);
+			renderer.texCoord(
+					TextureManager.getX2(block.sideTexture), 
+					TextureManager.getY2(block.sideTexture)
+			);
+			renderer.vertex(x, y + height, z + 1);
 		}
 		
 	}
