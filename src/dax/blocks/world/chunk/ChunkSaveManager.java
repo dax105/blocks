@@ -20,24 +20,25 @@ import dax.blocks.world.WorldInfo;
 import dax.blocks.world.WorldsManager;
 
 public class ChunkSaveManager {
-	World world;
-	ChunkProvider provider;
-	String name;
+
+	private World world;
+	private ChunkProvider provider;
+	private String name;
 	
 	public static final int WORLD_VERSION = 1;
 	
 	public void tryToLoadWorld() {
-			File dir = new File(WorldsManager.SAVES_DIR, name);
+			File dir = new File(WorldsManager.SAVES_DIR, this.name);
 			
-			if (!dir.exists()) {
+			if(!dir.exists()) {
 				dir.mkdir();
 			}	
 
-			world.createDataManagers(new File(dir, "bdf"), new File(dir, "idf"));
+			this.world.createDataManagers(new File(dir, "bdf"), new File(dir, "idf"));
 			
 			/*File file = new File(dir, "world" + ".txt");
 
-			if (!file.exists()) {
+			if(!file.exists()) {
 				Console.println("World save not found!");
 				return;
 			}*/
@@ -58,9 +59,9 @@ public class ChunkSaveManager {
 	}
 	
 	public boolean isChunkSaved(int cx, int cz) {
-		File dir = new File(WorldsManager.SAVES_DIR, name);
+		File dir = new File(WorldsManager.SAVES_DIR, this.name);
 
-		if (!dir.exists()) {
+		if(!dir.exists()) {
 			dir.mkdir();
 		}
 
@@ -72,18 +73,17 @@ public class ChunkSaveManager {
 	public void saveAll() {
 		Game.getInstance().displayLoadingScreen("Saving...");
 		Iterator<Entry<Coord2D, Chunk>> it = provider.loadedChunks.entrySet().iterator();
-		while (it.hasNext()) {
+		while(it.hasNext()) {
 			Entry<Coord2D, Chunk> pairs = it.next();
 			Chunk c = (Chunk) pairs.getValue();
 
 			c.deleteAllRenderChunks();
 
-			saveChunk(c);
+			this.saveChunk(c);
 		}
 
-		WorldInfo i = WorldsManager.getInstance().getWorld(name);
-		if (i == null)
-			i = new WorldInfo(name);
+		WorldInfo i = WorldsManager.getInstance().getWorld(this.name);
+		if(i == null) i = new WorldInfo(this.name);
 		
 		i.setPlayerX(this.world.getPlayer().getPosX());
 		i.setPlayerY(this.world.getPlayer().getPosY());
@@ -91,12 +91,12 @@ public class ChunkSaveManager {
 		i.setPlayerTilt(this.world.getPlayer().getTilt());
 		i.setPlayerHeading(this.world.getPlayer().getHeading());
 		i.setWorldSeed(this.provider.seed);
-		i.setWorldVersion("" + WORLD_VERSION);
+		i.setWorldVersion("" + ChunkSaveManager.WORLD_VERSION);
 		
 		i.saveWorldInfo();
 		
 		try {
-			world.getBlockDataManager().save();
+			this.world.getBlockDataManager().save();
 		} catch (IOException e) {
 			Logger.getGlobal().warning("Can't save data file!");
 		}
@@ -106,7 +106,7 @@ public class ChunkSaveManager {
 	
 
 	public Chunk loadChunk(int cx, int cz) {
-		File dir = new File(WorldsManager.SAVES_DIR, name);
+		File dir = new File(WorldsManager.SAVES_DIR, this.name);
 		File file = new File(dir, "x" + cx + "z" + cz + ".ccf");
 		byte[] fileData = new byte[(int) file.length()];
 		try {
@@ -119,7 +119,7 @@ public class ChunkSaveManager {
 			e.printStackTrace();
 		}
 
-		Chunk c = new Chunk(cx, cz, world);
+		Chunk c = new Chunk(cx, cz, this.world);
 		try {
 			c.blocksBuffer.put(Snappy.uncompressShortArray(fileData));
 		} catch (IOException e) {
@@ -132,14 +132,14 @@ public class ChunkSaveManager {
 	}
 
 	public void saveChunk(Chunk c) {
-		if (!c.changed) {
+		if(!c.changed) {
 			return;
 		}
 
 		try {
-			File dir = new File(WorldsManager.SAVES_DIR, name);
+			File dir = new File(WorldsManager.SAVES_DIR, this.name);
 
-			if (!dir.exists()) {
+			if(!dir.exists()) {
 				dir.mkdir();
 			}
 

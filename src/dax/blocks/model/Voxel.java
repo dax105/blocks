@@ -11,14 +11,14 @@ public class Voxel {
 	}
 	
 	public float getR() {
-		return r;
+		return this.r;
 	}
 	
 	public float getG() {
-		return g;
+		return this.g;
 	}
 	
 	public float getB() {
-		return b;
+		return this.b;
 	}
 }

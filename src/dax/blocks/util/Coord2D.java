@@ -18,17 +18,17 @@ public class Coord2D {
 	@Override
 	public boolean equals(Object o) {
 		Coord2D toCompare = (Coord2D) o;
-		return toCompare.x == x && toCompare.y == y;
+		return toCompare.x == this.x && toCompare.y == this.y;
 	}
 	
 	@Override
 	public int hashCode() {
-		return x * 31 + y;
+		return this.x * 31 + this.y;
 	}
 	
 	@Override
 	public String toString() {
-		return "X: " + x + " Y: " + y;
+		return "X: " + this.x + " Y: " + this.y;
 	}
 	
 }

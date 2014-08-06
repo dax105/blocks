@@ -6,6 +6,7 @@ import java.io.PrintWriter;
 import java.util.Scanner;
 
 public class WorldInfo {
+
 	private String worldName;
 	private String worldDirectory;
 	private String worldVersion;
@@ -21,22 +22,22 @@ public class WorldInfo {
 		w.setWorldDirectory(f.getParent());
 		
 		Scanner s = new Scanner(f);
-		while (s.hasNextLine()) {
+		while(s.hasNextLine()) {
 			String l = s.nextLine();
 			String[] words = l.split(" ");
 
-			if (words.length >= 2) {
-				if (words[0].equals("seed")) {
+			if(words.length >= 2) {
+				if(words[0].equals("seed")) {
 					w.worldSeed = Integer.parseInt(words[1]);
-				} else if (words[0].equals("playerx")) {
+				} else if(words[0].equals("playerx")) {
 					w.playerX = Float.parseFloat(words[1]);
-				} else if (words[0].equals("playery")) {
+				} else if(words[0].equals("playery")) {
 					w.playerY = Float.parseFloat(words[1]) + 1f;
-				} else if (words[0].equals("playerz")) {
+				} else if(words[0].equals("playerz")) {
 					w.playerZ = Float.parseFloat(words[1]);
-				} else if (words[0].equals("playertilt")) {
+				} else if(words[0].equals("playertilt")) {
 					w.playerTilt = Float.parseFloat(words[1]);
-				} else if (words[0].equals("playerheading")) {
+				} else if(words[0].equals("playerheading")) {
 					w.playerHeading = Float.parseFloat(words[1]);
 				}
 			}
@@ -52,7 +53,7 @@ public class WorldInfo {
 		try {
 			File dir = new File(WorldsManager.SAVES_DIR, this.worldName);
 
-			if (!dir.exists()) {
+			if(!dir.exists()) {
 				dir.mkdir();
 			}
 
@@ -79,7 +80,7 @@ public class WorldInfo {
 	}
 	
 	public String getWorldName() {
-		return worldName;
+		return this.worldName;
 	}
 
 	public void setWorldName(String worldName) {
@@ -87,7 +88,7 @@ public class WorldInfo {
 	}
 
 	public String getWorldDirectory() {
-		return worldDirectory;
+		return this.worldDirectory;
 	}
 
 	public void setWorldDirectory(String worldDirectory) {
@@ -95,7 +96,7 @@ public class WorldInfo {
 	}
 
 	public String getWorldVersion() {
-		return worldVersion;
+		return this.worldVersion;
 	}
 
 	public void setWorldVersion(String worldVersion) {
@@ -103,7 +104,7 @@ public class WorldInfo {
 	}
 
 	public int getWorldSeed() {
-		return worldSeed;
+		return this.worldSeed;
 	}
 
 	public void setWorldSeed(int worldSeed) {
@@ -111,7 +112,7 @@ public class WorldInfo {
 	}
 
 	public float getPlayerX() {
-		return playerX;
+		return this.playerX;
 	}
 
 	public void setPlayerX(float playerX) {
@@ -119,7 +120,7 @@ public class WorldInfo {
 	}
 
 	public float getPlayerY() {
-		return playerY;
+		return this.playerY;
 	}
 
 	public void setPlayerY(float playerY) {
@@ -127,7 +128,7 @@ public class WorldInfo {
 	}
 
 	public float getPlayerZ() {
-		return playerZ;
+		return this.playerZ;
 	}
 
 	public void setPlayerZ(float playerZ) {
@@ -135,7 +136,7 @@ public class WorldInfo {
 	}
 
 	public float getPlayerTilt() {
-		return playerTilt;
+		return this.playerTilt;
 	}
 
 	public void setPlayerTilt(float playerTilt) {
@@ -143,7 +144,7 @@ public class WorldInfo {
 	}
 
 	public float getPlayerHeading() {
-		return playerHeading;
+		return this.playerHeading;
 	}
 
 	public void setPlayerHeading(float playerHeading) {

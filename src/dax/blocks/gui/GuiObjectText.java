@@ -30,7 +30,11 @@ public class GuiObjectText extends GuiObject {
 	@Override
 	public void render() {
 		GL11.glEnable(GL11.GL_TEXTURE_2D);
-		font.drawString(x1 + (x2 - x1) / 2 - font.getWidth(text) / 2, y1 + (y2 - y1) / 2 - font.getHeight(text) / 2, text);
+		this.font.drawString(
+				this.x1 + (this.x2 - this.x1) / 2 - this.font.getWidth(this.text) / 2, 
+				this.y1 + (this.y2 - this.y1) / 2 - this.font.getHeight(this.text) / 2, 
+				this.text
+		);
 		GL11.glDisable(GL11.GL_TEXTURE_2D);
 	}
 

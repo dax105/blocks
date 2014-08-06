@@ -12,6 +12,7 @@ build.gradle
 build/
 libs/
 .vim.custom
+*.swp
 
 # Package Files #
 *.jar

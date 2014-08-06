@@ -140,21 +140,21 @@ public abstract class Block {
 		return this.opaque;
 	}
 	public int getSideTexture() {
-		return sideTexture;
+		return this.sideTexture;
 	}
 	public Block setSideTexture(int sideTexture) {
 		this.sideTexture = sideTexture;
 		return this;
 	}
 	public int getTopTexture() {
-		return topTexture;
+		return this.topTexture;
 	}
 	public Block setTopTexture(int topTexture) {
 		this.topTexture = topTexture;
 		return this;
 	}
 	public int getBottomTexture() {
-		return bottomTexture;
+		return this.bottomTexture;
 	}
 	public Block setBottomTexture(int bottomTexture) {
 		this.bottomTexture = bottomTexture;
@@ -177,7 +177,7 @@ public abstract class Block {
 	}
 
 	public int getFallHurt() {
-		return fallHurt;
+		return this.fallHurt;
 	}
 
 	public Block setFallHurt(int fallHurt) {
@@ -185,17 +185,9 @@ public abstract class Block {
 		return this;
 	}
 
-	public int getRenderPass() {
-		return renderPass;
-	}
-
 	public Block setRenderPass(int renderPass) {
 		this.renderPass = renderPass;
 		return this;
-	}
-
-	public float getDensity() {
-		return density;
 	}
 
 	public Block setDensity(float density) {
@@ -204,7 +196,7 @@ public abstract class Block {
 	}
 
 	public boolean isOccluder() {
-		return occluder;
+		return this.occluder;
 	}
 
 	public Block setOccluder(boolean occluder) {
@@ -213,7 +205,7 @@ public abstract class Block {
 	}
 
 	public boolean isCollidable() {
-		return collidable;
+		return this.collidable;
 	}
 
 	public Block setCollidable(boolean collidable) {
@@ -222,7 +214,7 @@ public abstract class Block {
 	}
 
 	public String[] getFootStepSound() {
-		return footStepSound;
+		return this.footStepSound;
 	}
 
 	public Block setFootStepSound(String[] footStepSound) {
@@ -234,13 +226,21 @@ public abstract class Block {
 		return fallSound;
 	}
 
+	public float getDensity() {
+		return this.density;
+	}
+
+	public int getRenderPass() {
+		return this.renderPass;
+	}
+	
 	public Block setFallSound(String fallSound) {
 		this.fallSound = fallSound;
 		return this;
 	}
 
 	public IBlockRenderer getRenderer() {
-		return renderer;
+		return this.renderer;
 	}
 
 	public Block setRenderer(IBlockRenderer renderer) {
@@ -249,6 +249,6 @@ public abstract class Block {
 	}
 
 	public String getName() {
-		return name;
+		return this.name;
 	}
 }

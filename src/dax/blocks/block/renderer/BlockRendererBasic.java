@@ -31,7 +31,8 @@ public class BlockRendererBasic implements IBlockRenderer {
 
 		//TODO GL20.glVertexAttrib1f(attrib, blockID);
 		
-		if (blockIdAbove == 0 || !blockAbove.isOpaque() && !(blockID == blockIdAbove && blockAbove.shouldCullSame())) {
+		if(blockIdAbove == 0 || !blockAbove.isOpaque() && 
+				!(blockID == blockIdAbove && blockAbove.shouldCullSame())) {
 			boolean xnzn = world.isOccluder(x - 1, y + 1, z - 1);
 			boolean zn = world.isOccluder(x, y + 1, z - 1);
 			boolean xpzn = world.isOccluder(x + 1, y + 1, z - 1);
@@ -42,17 +43,42 @@ public class BlockRendererBasic implements IBlockRenderer {
 			boolean xpzp = world.isOccluder(x + 1, y + 1, z + 1);
 			
 			renderer.normal(0, 1, 0);
-			renderer.texCoord(TextureManager.getX2(block.getTopTexture()), TextureManager.getY1(block.getTopTexture()));
-			renderer.vertexWithColoredAO(x+1, y+1, z, block.getColorR(), block.getColorG(), block.getColorB(), xp, zn, xpzn);
-			renderer.texCoord(TextureManager.getX2(block.getTopTexture()), TextureManager.getY2(block.getTopTexture()));
-			renderer.vertexWithColoredAO(x, y+1, z, block.getColorR(), block.getColorG(), block.getColorB(), xn, zn, xnzn);
-			renderer.texCoord(TextureManager.getX1(block.getTopTexture()), TextureManager.getY2(block.getTopTexture()));
-			renderer.vertexWithColoredAO(x, y+1, z+1, block.getColorR(), block.getColorG(), block.getColorB(), xn, zp, xnzp);
-			renderer.texCoord(TextureManager.getX1(block.getTopTexture()), TextureManager.getY1(block.getTopTexture()));
-			renderer.vertexWithColoredAO(x+1, y+1, z+1, block.getColorR(), block.getColorG(), block.getColorB(), xp, zp, xpzp);
+			renderer.texCoord(
+					TextureManager.getX2(block.getTopTexture()), 
+					TextureManager.getY1(block.getTopTexture())
+			);
+			renderer.vertexWithColoredAO(
+					x + 1, y + 1, z, block.getColorR(), 
+					block.getColorG(), block.getColorB(), xp, zn, xpzn
+			);
+			renderer.texCoord(
+					TextureManager.getX2(block.getTopTexture()), 
+					TextureManager.getY2(block.getTopTexture())
+			);
+			renderer.vertexWithColoredAO(
+					x, y + 1, z, block.getColorR(), 
+					block.getColorG(), block.getColorB(), xn, zn, xnzn
+			);
+			renderer.texCoord(
+					TextureManager.getX1(block.getTopTexture()), 
+					TextureManager.getY2(block.getTopTexture())
+			);
+			renderer.vertexWithColoredAO(
+					x, y + 1, z + 1, block.getColorR(), 
+					block.getColorG(), block.getColorB(), xn, zp, xnzp
+			);
+			renderer.texCoord(
+					TextureManager.getX1(block.getTopTexture()), 
+					TextureManager.getY1(block.getTopTexture())
+			);
+			renderer.vertexWithColoredAO(
+					x + 1, y + 1, z + 1, block.getColorR(), 
+					block.getColorG(), block.getColorB(), xp, zp, xpzp
+			);
 		}
 
-		if (blockIdBelow == 0 || !blockBelow.isOpaque() && !(blockID == blockIdBelow && blockBelow.shouldCullSame())) {
+		if(blockIdBelow == 0 || !blockBelow.isOpaque() && 
+				!(blockID == blockIdBelow && blockBelow.shouldCullSame())) {
 			boolean xnzn = world.isOccluder(x - 1, y - 1, z - 1);
 			boolean zn = world.isOccluder(x, y - 1, z - 1);
 			boolean xpzn = world.isOccluder(x + 1, y - 1, z - 1);
@@ -63,17 +89,42 @@ public class BlockRendererBasic implements IBlockRenderer {
 			boolean xpzp = world.isOccluder(x + 1, y - 1, z + 1);
 			
 			renderer.normal(0, -1, 0);
-			renderer.texCoord(TextureManager.getX1(block.getBottomTexture()), TextureManager.getY2(block.getBottomTexture()));
-			renderer.vertexWithColoredAO(x+1, y, z+1, block.getColorR(), block.getColorG(), block.getColorB(), xp, zp, xpzp);
-			renderer.texCoord(TextureManager.getX1(block.getBottomTexture()), TextureManager.getY1(block.getBottomTexture()));
-			renderer.vertexWithColoredAO(x, y, z+1, block.getColorR(), block.getColorG(), block.getColorB(), xn, zp, xnzp);
-			renderer.texCoord(TextureManager.getX2(block.getBottomTexture()), TextureManager.getY1(block.getBottomTexture()));
-			renderer.vertexWithColoredAO(x, y, z, block.getColorR(), block.getColorG(), block.getColorB(), xn, zn, xnzn);
-			renderer.texCoord(TextureManager.getX2(block.getBottomTexture()), TextureManager.getY2(block.getBottomTexture()));
-			renderer.vertexWithColoredAO(x+1, y, z, block.getColorR(), block.getColorG(), block.getColorB(), xp, zn, xpzn);
+			renderer.texCoord(
+					TextureManager.getX1(block.getBottomTexture()), 
+					TextureManager.getY2(block.getBottomTexture())
+			);
+			renderer.vertexWithColoredAO(
+					x + 1, y, z + 1, block.getColorR(), 
+					block.getColorG(), block.getColorB(), xp, zp, xpzp
+			);
+			renderer.texCoord(
+					TextureManager.getX1(block.getBottomTexture()), 
+					TextureManager.getY1(block.getBottomTexture())
+			);
+			renderer.vertexWithColoredAO(
+					x, y, z + 1, block.getColorR(), 
+					block.getColorG(), block.getColorB(), xn, zp, xnzp
+			);
+			renderer.texCoord(
+					TextureManager.getX2(block.getBottomTexture()), 
+					TextureManager.getY1(block.getBottomTexture())
+			);
+			renderer.vertexWithColoredAO(
+					x, y, z, block.getColorR(), 
+					block.getColorG(), block.getColorB(), xn, zn, xnzn
+			);
+			renderer.texCoord(
+					TextureManager.getX2(block.getBottomTexture()), 
+					TextureManager.getY2(block.getBottomTexture())
+			);
+			renderer.vertexWithColoredAO(
+					x + 1, y, z, block.getColorR(), 
+					block.getColorG(), block.getColorB(), xp, zn, xpzn
+			);
 		}
 
-		if (blockIdInFront == 0 || !blockInFront.isOpaque() && !(blockID == blockIdInFront && blockInFront.shouldCullSame())) {
+		if(blockIdInFront == 0 || !blockInFront.isOpaque() && 
+				!(blockID == blockIdInFront && blockInFront.shouldCullSame())) {
 			boolean xnzn = world.isOccluder(x - 1, y - 1, z + 1);
 			boolean zn = world.isOccluder(x, y - 1, z + 1);
 			boolean xpzn = world.isOccluder(x + 1, y - 1, z + 1);
@@ -84,17 +135,42 @@ public class BlockRendererBasic implements IBlockRenderer {
 			boolean xpzp = world.isOccluder(x + 1, y + 1, z + 1);
 			
 			renderer.normal(0, 0, 1);
-			renderer.texCoord(TextureManager.getX2(block.getSideTexture()), TextureManager.getY1(block.getSideTexture()));
-			renderer.vertexWithColoredAO(x+1, y+1, z+1, block.getColorR(), block.getColorG(), block.getColorB(), xp, zp, xpzp);
-			renderer.texCoord(TextureManager.getX1(block.getSideTexture()), TextureManager.getY1(block.getSideTexture()));
-			renderer.vertexWithColoredAO(x, y+1, z+1, block.getColorR(), block.getColorG(), block.getColorB(), xn, zp, xnzp);
-			renderer.texCoord(TextureManager.getX1(block.getSideTexture()), TextureManager.getY2(block.getSideTexture()));
-			renderer.vertexWithColoredAO(x, y, z+1, block.getColorR(), block.getColorG(), block.getColorB(), xn, zn, xnzn);
-			renderer.texCoord(TextureManager.getX2(block.getSideTexture()), TextureManager.getY2(block.getSideTexture()));
-			renderer.vertexWithColoredAO(x+1, y, z+1, block.getColorR(), block.getColorG(), block.getColorB(), xp, zn, xpzn);
+			renderer.texCoord(
+					TextureManager.getX2(block.getSideTexture()), 
+					TextureManager.getY1(block.getSideTexture())
+			);
+			renderer.vertexWithColoredAO(
+					x + 1, y + 1, z + 1, block.getColorR(), 
+					block.getColorG(), block.getColorB(), xp, zp, xpzp
+			);
+			renderer.texCoord(
+					TextureManager.getX1(block.getSideTexture()), 
+					TextureManager.getY1(block.getSideTexture())
+			);
+			renderer.vertexWithColoredAO(
+					x, y + 1, z + 1, block.getColorR(), 
+					block.getColorG(), block.getColorB(), xn, zp, xnzp
+			);
+			renderer.texCoord(
+					TextureManager.getX1(block.getSideTexture()), 
+					TextureManager.getY2(block.getSideTexture())
+			);
+			renderer.vertexWithColoredAO(
+					x, y, z + 1, block.getColorR(), 
+					block.getColorG(), block.getColorB(), xn, zn, xnzn
+			);
+			renderer.texCoord(
+					TextureManager.getX2(block.getSideTexture()), 
+					TextureManager.getY2(block.getSideTexture())
+			);
+			renderer.vertexWithColoredAO(
+					x + 1, y, z + 1, block.getColorR(), 
+					block.getColorG(), block.getColorB(), xp, zn, xpzn
+			);
 		}
 
-		if (blockIdBehind == 0 || !blockBehind.isOpaque() && !(blockID == blockIdBehind && blockBehind.shouldCullSame())) {
+		if(blockIdBehind == 0 || !blockBehind.isOpaque() && 
+				!(blockID == blockIdBehind && blockBehind.shouldCullSame())) {
 			boolean xnzn = world.isOccluder(x - 1, y - 1, z - 1);
 			boolean zn = world.isOccluder(x, y - 1, z - 1);
 			boolean xpzn = world.isOccluder(x + 1, y - 1, z - 1);
@@ -105,17 +181,42 @@ public class BlockRendererBasic implements IBlockRenderer {
 			boolean xpzp = world.isOccluder(x + 1, y + 1, z - 1);
 			
 			renderer.normal(0, 0, -1);
-			renderer.texCoord(TextureManager.getX1(block.getSideTexture()), TextureManager.getY2(block.getSideTexture()));
-			renderer.vertexWithColoredAO(x+1, y, z, block.getColorR(), block.getColorG(), block.getColorB(), xp, zn, xpzn);
-			renderer.texCoord(TextureManager.getX2(block.getSideTexture()), TextureManager.getY2(block.getSideTexture()));
-			renderer.vertexWithColoredAO(x, y, z, block.getColorR(), block.getColorG(), block.getColorB(), xn, zn, xnzn);
-			renderer.texCoord(TextureManager.getX2(block.getSideTexture()), TextureManager.getY1(block.getSideTexture()));
-			renderer.vertexWithColoredAO(x, y+1, z, block.getColorR(), block.getColorG(), block.getColorB(), xn, zp, xnzp);
-			renderer.texCoord(TextureManager.getX1(block.getSideTexture()), TextureManager.getY1(block.getSideTexture()));
-			renderer.vertexWithColoredAO(x+1, y+1, z, block.getColorR(), block.getColorG(), block.getColorB(), xp, zp, xpzp);
+			renderer.texCoord(
+					TextureManager.getX1(block.getSideTexture()), 
+					TextureManager.getY2(block.getSideTexture())
+			);
+			renderer.vertexWithColoredAO(
+					x + 1, y, z, block.getColorR(), 
+					block.getColorG(), block.getColorB(), xp, zn, xpzn
+			);
+			renderer.texCoord(
+					TextureManager.getX2(block.getSideTexture()), 
+					TextureManager.getY2(block.getSideTexture())
+			);
+			renderer.vertexWithColoredAO(
+					x, y, z, block.getColorR(), 
+					block.getColorG(), block.getColorB(), xn, zn, xnzn
+			);
+			renderer.texCoord(
+					TextureManager.getX2(block.getSideTexture()), 
+					TextureManager.getY1(block.getSideTexture())
+			);
+			renderer.vertexWithColoredAO(
+					x, y + 1, z, block.getColorR(), 
+					block.getColorG(), block.getColorB(), xn, zp, xnzp
+			);
+			renderer.texCoord(
+					TextureManager.getX1(block.getSideTexture()), 
+					TextureManager.getY1(block.getSideTexture())
+			);
+			renderer.vertexWithColoredAO(
+					x + 1, y + 1, z, block.getColorR(), 
+					block.getColorG(), block.getColorB(), xp, zp, xpzp
+			);
 		}
 
-		if (blockIdOnRight == 0 || !blockOnRight.isOpaque() && !(blockID == blockIdOnRight && blockOnRight.shouldCullSame())) {
+		if(blockIdOnRight == 0 || !blockOnRight.isOpaque() && 
+				!(blockID == blockIdOnRight && blockOnRight.shouldCullSame())) {
 			boolean xnzn = world.isOccluder(x + 1, y + 1, z - 1);
 			boolean zn = world.isOccluder(x + 1, y + 1, z);
 			boolean xpzn = world.isOccluder(x + 1, y + 1, z + 1);
@@ -126,17 +227,42 @@ public class BlockRendererBasic implements IBlockRenderer {
 			boolean xpzp = world.isOccluder(x + 1, y - 1, z + 1);
 			
 			renderer.normal(1, 0, 0);
-			renderer.texCoord(TextureManager.getX2(block.getSideTexture()), TextureManager.getY1(block.getSideTexture()));
-			renderer.vertexWithColoredAO(x+1, y+1, z, block.getColorR(), block.getColorG(), block.getColorB(), xn, zn, xnzn);
-			renderer.texCoord(TextureManager.getX1(block.getSideTexture()), TextureManager.getY1(block.getSideTexture()));
-			renderer.vertexWithColoredAO(x+1, y+1, z+1, block.getColorR(), block.getColorG(), block.getColorB(), xp, zn, xpzn);
-			renderer.texCoord(TextureManager.getX1(block.getSideTexture()), TextureManager.getY2(block.getSideTexture()));
-			renderer.vertexWithColoredAO(x+1, y, z+1, block.getColorR(), block.getColorG(), block.getColorB(), xp, zp, xpzp);
-			renderer.texCoord(TextureManager.getX2(block.getSideTexture()), TextureManager.getY2(block.getSideTexture()));
-			renderer.vertexWithColoredAO(x+1, y, z, block.getColorR(), block.getColorG(), block.getColorB(), xn, zp, xnzp);
+			renderer.texCoord(
+					TextureManager.getX2(block.getSideTexture()), 
+					TextureManager.getY1(block.getSideTexture())
+			);
+			renderer.vertexWithColoredAO(
+					x + 1, y + 1, z, block.getColorR(), 
+					block.getColorG(), block.getColorB(), xn, zn, xnzn
+			);
+			renderer.texCoord(
+					TextureManager.getX1(block.getSideTexture()), 
+					TextureManager.getY1(block.getSideTexture())
+			);
+			renderer.vertexWithColoredAO(
+					x + 1, y + 1, z + 1, block.getColorR(), 
+					block.getColorG(), block.getColorB(), xp, zn, xpzn
+			);
+			renderer.texCoord(
+					TextureManager.getX1(block.getSideTexture()), 
+					TextureManager.getY2(block.getSideTexture())
+			);
+			renderer.vertexWithColoredAO(
+					x + 1, y, z + 1, block.getColorR(), 
+					block.getColorG(), block.getColorB(), xp, zp, xpzp
+			);
+			renderer.texCoord(
+					TextureManager.getX2(block.getSideTexture()), 
+					TextureManager.getY2(block.getSideTexture())
+			);
+			renderer.vertexWithColoredAO(
+					x + 1, y, z, block.getColorR(), 
+					block.getColorG(), block.getColorB(), xn, zp, xnzp
+			);
 		}
 
-		if (blockIdOnLeft == 0 || !blockOnLeft.isOpaque() && !(blockID == blockIdOnLeft && blockOnLeft.shouldCullSame())) {
+		if(blockIdOnLeft == 0 || !blockOnLeft.isOpaque() && 
+				!(blockID == blockIdOnLeft && blockOnLeft.shouldCullSame())) {
 			boolean xnzn = world.isOccluder(x - 1, y + 1, z - 1);
 			boolean zn = world.isOccluder(x - 1, y + 1, z);
 			boolean xpzn = world.isOccluder(x - 1, y + 1, z + 1);
@@ -147,14 +273,38 @@ public class BlockRendererBasic implements IBlockRenderer {
 			boolean xpzp = world.isOccluder(x - 1, y - 1, z + 1);
 
 			renderer.normal(-1, 0, 0);
-			renderer.texCoord(TextureManager.getX2(block.getSideTexture()), TextureManager.getY1(block.getSideTexture()));
-			renderer.vertexWithColoredAO(x, y+1, z+1, block.getColorR(), block.getColorG(), block.getColorB(), xp, zn, xpzn);
-			renderer.texCoord(TextureManager.getX1(block.getSideTexture()), TextureManager.getY1(block.getSideTexture()));
-			renderer.vertexWithColoredAO(x, y+1, z, block.getColorR(), block.getColorG(), block.getColorB(), xn, zn, xnzn);
-			renderer.texCoord(TextureManager.getX1(block.getSideTexture()), TextureManager.getY2(block.getSideTexture()));
-			renderer.vertexWithColoredAO(x, y, z, block.getColorR(), block.getColorG(), block.getColorB(), xn, zp, xnzp);
-			renderer.texCoord(TextureManager.getX2(block.getSideTexture()), TextureManager.getY2(block.getSideTexture()));
-			renderer.vertexWithColoredAO(x, y, z+1, block.getColorR(), block.getColorG(), block.getColorB(), xp, zp, xpzp);
+			renderer.texCoord(
+					TextureManager.getX2(block.getSideTexture()), 
+					TextureManager.getY1(block.getSideTexture())
+			);
+			renderer.vertexWithColoredAO(
+					x, y + 1, z + 1, block.getColorR(), 
+					block.getColorG(), block.getColorB(), xp, zn, xpzn
+			);
+			renderer.texCoord(
+					TextureManager.getX1(block.getSideTexture()), 
+					TextureManager.getY1(block.getSideTexture())
+			);
+			renderer.vertexWithColoredAO(
+					x, y + 1, z, block.getColorR(), 
+					block.getColorG(), block.getColorB(), xn, zn, xnzn
+			);
+			renderer.texCoord(
+					TextureManager.getX1(block.getSideTexture()), 
+					TextureManager.getY2(block.getSideTexture())
+			);
+			renderer.vertexWithColoredAO(
+					x, y, z, block.getColorR(), 
+					block.getColorG(), block.getColorB(), xn, zp, xnzp
+			);
+			renderer.texCoord(
+					TextureManager.getX2(block.getSideTexture()), 
+					TextureManager.getY2(block.getSideTexture())
+			);
+			renderer.vertexWithColoredAO(
+					x, y, z + 1, block.getColorR(), 
+					block.getColorG(), block.getColorB(), xp, zp, xpzp
+			);
 		}
 		
 	}

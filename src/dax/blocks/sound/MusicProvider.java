@@ -18,7 +18,9 @@ public class MusicProvider {
 
 	private SoundManager sound;
 
-	Random rand = new Random();
+	private Random rand = new Random();
+	private boolean isGame = false;
+	private boolean wasInGame = false;
 
 	public MusicProvider(SoundManager soundManager) {
 		this.sound = soundManager;
@@ -36,73 +38,66 @@ public class MusicProvider {
 	}
 
 	private void sortMusic() {
-		gameMusic = new String[] { "music1", "music2", "music3" };
-		gameQueue = new String[gameMusic.length];
-		for (String music : gameMusic) {
-			addMusicToField(gameQueue, music);
+		this.gameMusic = new String[] { "music1", "music2", "music3" };
+		this.gameQueue = new String[this.gameMusic.length];
+		for (String music : this.gameMusic) {
+			this.addMusicToField(this.gameQueue, music);
 		}
 
-		menuMusic = new String[] { "menu1", "menu2" };
-		menuQueue = new String[menuMusic.length];
-		for (String music : menuMusic) {
-			addMusicToField(menuQueue, music);
+		this.menuMusic = new String[] { "menu1", "menu2" };
+		this.menuQueue = new String[this.menuMusic.length];
+		for (String music : this.menuMusic) {
+			this.addMusicToField(this.menuQueue, music);
 		}
 	}
 
 	private void addMusicToField(String[] queue, String name) {
-		int i = rand.nextInt(queue.length);
+		int i = this.rand.nextInt(queue.length);
 		if (queue[i] != null) {
-			addMusicToField(queue, name);
+			this.addMusicToField(queue, name);
 		} else {
 			queue[i] = name;
 		}
 	}
 
-	boolean isGame = false;
-	boolean wasInGame = false;
-
 	public void updateMusic() {
-		wasInGame = isGame;
-		isGame = Game.getInstance().ingame;
+		this.wasInGame = this.isGame;
+		this.isGame = Game.getInstance().ingame;
 
-		if (isGame ^ wasInGame) {
-			stopMusic();
-			sound.updatePlaying();
+		if(this.isGame ^ this.wasInGame) {
+			this.stopMusic();
+			this.sound.updatePlaying();
 			return;
 		}
 
-		if (!sound.isMusicPlaying()) {
-			if(rand.nextInt(500) == 69) {
-				sound.playMusic("69", false);
+		if(!this.sound.isMusicPlaying()) {
+			if(this.rand.nextInt(500) == 69) {
+				this.sound.playMusic("69", false);
 			} else {
-			
-			if (isGame) {
-				if (rand.nextInt(this.startGameMusicProbability) == 1) {
-					sound.playMusic(gameQueue[gameIndex], false);
+				if(this.isGame) {
+					if(this.rand.nextInt(this.startGameMusicProbability) == 1) {
+						this.sound.playMusic(gameQueue[gameIndex], false);
 
-					gameIndex++;
+						this.gameIndex++;
 
-					if (gameIndex > (gameQueue.length - 1)) {
-						gameIndex = 0;
+						if(this.gameIndex > (this.gameQueue.length - 1)) {
+							this.gameIndex = 0;
+						}
+					}
+				} else {
+					this.sound.playMusic(this.menuQueue[this.menuIndex], false);
+
+					this.menuIndex++;
+
+					if(this.menuIndex > (this.menuQueue.length - 1)) {
+						this.menuIndex = 0;
 					}
 				}
-			} else {
-				sound.playMusic(menuQueue[menuIndex], false);
-
-				menuIndex++;
-
-				if (menuIndex > (menuQueue.length - 1)) {
-					menuIndex = 0;
-				}
 			}
-			}
-
 		}
-
 	}
 
 	public void stopMusic() {
-		sound.stopMusic();
+		this.sound.stopMusic();
 	}
-
 }

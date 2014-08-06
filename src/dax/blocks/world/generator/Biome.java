@@ -17,9 +17,9 @@ public abstract class Biome {
 	public Biome(String name) {
 		this.name = name;
 		Arrays.fill(tempOffsets, -9999);
-		setOffsets();
-		applyOffsets();
-		registerBiome(this);
+		this.setOffsets();
+		this.applyOffsets();
+		this.registerBiome(this);
 	}
 	
 	public double[] getOffsets() {
@@ -35,39 +35,38 @@ public abstract class Biome {
 	}
 	
 	public void setOffset(int h, double val) {
-		tempOffsets[h] = val;
+		this.tempOffsets[h] = val;
 	}
 	
 	public void applyOffsets() {
-		for (int i = 0; i < 129; i++) {
-			if (tempOffsets[i] != -9999) {
-				densityOffsets[i] = tempOffsets[i];
+		for(int i = 0; i < 129; i++) {
+			if(this.tempOffsets[i] != -9999) {
+				this.densityOffsets[i] = this.tempOffsets[i];
 			} else {
 				int lp = 0;
 				int hp = 0;
 				
-				for (int x = i; x >= 0; x--) {
-					if (tempOffsets[x] != -9999) {
+				for(int x = i; x >= 0; x--) {
+					if(this.tempOffsets[x] != -9999) {
 						lp = x;
 						break;
 					}
 				}
 				
-				for (int x = i; x < 129; x++) {
-					if (tempOffsets[x] != -9999) {
+				for(int x = i; x < 129; x++) {
+					if(this.tempOffsets[x] != -9999) {
 						hp = x;
 						break;
 					}
 				}
 				
-				densityOffsets[i] = GameMath.lerp(i, lp, hp, tempOffsets[lp], tempOffsets[hp]);
+				this.densityOffsets[i] = GameMath.lerp(i, lp, hp, this.tempOffsets[lp], this.tempOffsets[hp]);
 			}
 		}
 		
-		tempOffsets = null;
+		this.tempOffsets = null;
 		
 	}
 
 	public abstract void setOffsets();
-	
 }

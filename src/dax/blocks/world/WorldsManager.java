@@ -7,18 +7,20 @@ import java.util.List;
 import java.util.logging.Logger;
 
 public class WorldsManager {
-	private static WorldsManager _instance;
+
+	private static WorldsManager instance;
+
 	public static WorldsManager getInstance() {
-		if(_instance == null) {
-			_instance = new WorldsManager();
+		if(WorldsManager.instance == null) {
+			WorldsManager.instance = new WorldsManager();
 		}
 		
-		return _instance;
+		return WorldsManager.instance;
 	}
 	
 	public static final String SAVES_DIR = "saves";
-
 	private File savesDir;
+
 	private WorldsManager() {
 	}
 	
@@ -32,10 +34,10 @@ public class WorldsManager {
 	public List<File> getWorldsDirs() {
 		ArrayList<File> worlds = new ArrayList<File>();
 
-		String[] names = savesDir.list();
-			for (String name : names) {
-				File d = new File(SAVES_DIR, name);
-				if (d.isDirectory()) {
+		String[] names = this.savesDir.list();
+			for(String name : names) {
+				File d = new File(WorldsManager.SAVES_DIR, name);
+				if(d.isDirectory()) {
 					worlds.add(d);
 				}
 			}
@@ -47,8 +49,8 @@ public class WorldsManager {
 	public List<WorldInfo> getWorldsInfo() {
 		ArrayList<WorldInfo> worlds = new ArrayList<WorldInfo>();
 
-		List<File> dirs = getWorldsDirs();
-		for (File d : dirs) {
+		List<File> dirs = this.getWorldsDirs();
+		for(File d : dirs) {
 			try {
 				worlds.add(WorldInfo
 						.constructFromFile(new File(d, "world.txt")));
@@ -61,9 +63,9 @@ public class WorldsManager {
 	}
 
 	public WorldInfo getWorld(String name) {
-		List<WorldInfo> worlds = getWorldsInfo();
-		for (WorldInfo i : worlds) {
-			if (i.getWorldName().equalsIgnoreCase(name)) {
+		List<WorldInfo> worlds = this.getWorldsInfo();
+		for(WorldInfo i : worlds) {
+			if(i.getWorldName().equalsIgnoreCase(name)) {
 				return i;
 			}
 		}

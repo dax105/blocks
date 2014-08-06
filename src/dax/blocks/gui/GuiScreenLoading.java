@@ -7,30 +7,37 @@ import dax.blocks.settings.Settings;
 
 public class GuiScreenLoading extends GuiScreen {
 
-	int width = 400;
-	int height = 30;
-
-	int overflow = 8;
-	
-	GuiObjectTitleBar titleBar;
+	private int width = 400;
+	private int height = 30;
+	private int overflow = 8;
+	private GuiObjectTitleBar titleBar;
 
 	public GuiScreenLoading(Game game, String text) {
 		super(game);
-		objects.add(new GuiObjectRectangle((Settings.getInstance().windowWidth.getValue() - width - overflow) / 2, (Settings.getInstance().windowHeight.getValue() - height - overflow) / 2, (Settings.getInstance().windowWidth.getValue() + width + overflow) / 2, (Settings.getInstance().windowHeight.getValue() + height + overflow) / 2, 0xA0000000));
+		this.objects.add(new GuiObjectRectangle(
+					(Settings.getInstance().windowWidth.getValue() - width - overflow) / 2, 
+					(Settings.getInstance().windowHeight.getValue() - height - overflow) / 2, 
+					(Settings.getInstance().windowWidth.getValue() + width + overflow) / 2, 
+					(Settings.getInstance().windowHeight.getValue() + height + overflow) / 2, 
+					0xA0000000)
+		);
 
-		titleBar = new GuiObjectTitleBar((Settings.getInstance().windowWidth.getValue() - width) / 2, (Settings.getInstance().windowHeight.getValue() - height) / 2, (Settings.getInstance().windowWidth.getValue() + width) / 2, ((Settings.getInstance().windowHeight.getValue() - height) / 2) + 30, this.f, text);
+		this.titleBar = new GuiObjectTitleBar(
+				(Settings.getInstance().windowWidth.getValue() - width) / 2, 
+				(Settings.getInstance().windowHeight.getValue() - height) / 2, 
+				(Settings.getInstance().windowWidth.getValue() + width) / 2, 
+				((Settings.getInstance().windowHeight.getValue() - height) / 2) + 30, 
+				this.f, text
+		);
 	}
 	
 	public GuiScreenLoading(Game game) {
-		super(game);
-		objects.add(new GuiObjectRectangle((Settings.getInstance().windowWidth.getValue() - width - overflow) / 2, (Settings.getInstance().windowHeight.getValue() - height - overflow) / 2, (Settings.getInstance().windowWidth.getValue() + width + overflow) / 2, (Settings.getInstance().windowHeight.getValue() + height + overflow) / 2, 0xA0000000));
-
-		titleBar = new GuiObjectTitleBar((Settings.getInstance().windowWidth.getValue() - width) / 2, (Settings.getInstance().windowHeight.getValue() - height) / 2, (Settings.getInstance().windowWidth.getValue() + width) / 2, ((Settings.getInstance().windowHeight.getValue() - height) / 2) + 30, this.f, "Loading...");
+		this(game, "Loading...");
 	}
 
 	public void update(String text) {
-		titleBar.setText(text);
-		game.render(0);
+		this.titleBar.setText(text);
+		this.game.render(0);
 		Display.update();
 	}
 	
@@ -47,7 +54,7 @@ public class GuiScreenLoading extends GuiScreen {
 	@Override
 	public void render() {
 		super.render();
-		titleBar.render();
+		this.titleBar.render();
 	}
 
 	@Override
@@ -63,6 +70,4 @@ public class GuiScreenLoading extends GuiScreen {
 	@Override
 	public void onOpening() {
 	}
-
-
 }

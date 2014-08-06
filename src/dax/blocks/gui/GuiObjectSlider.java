@@ -47,74 +47,93 @@ public class GuiObjectSlider extends GuiObject {
 
 	@Override
 	public void render() {
-		drawRect(x1, y1, x2, y2, 0xFF8C8C8C);
-		drawRect(x1 + 2, y1 + 2, x2 - 2, y2 - 2, 0xFF404040);
+		this.drawRect(this.x1, this.y1, this.x2, this.y2, 0xFF8C8C8C);
+		this.drawRect(this.x1 + 2, this.y1 + 2, this.x2 - 2, this.y2 - 2, 0xFF404040);
 		
-		int x = x1 + SLIDER_WIDTH/2 +2 + (int)Math.round(((float)(val-minVal) / (maxVal-minVal))*((x2-x1)-SLIDER_WIDTH-4));
+		int x = this.x1 + GuiObjectSlider.SLIDER_WIDTH / 2 + 2 + 
+			(int)Math.round(
+				((float)(this.val - this.minVal) / (this.maxVal - this.minVal)) * 
+				((this.x2 - this.x1) - GuiObjectSlider.SLIDER_WIDTH - 4)
+			);
 		
-		drawRect(x - SLIDER_WIDTH / 2 , y1 + 2, x + SLIDER_WIDTH / 2 , y2 - 2, 0xFF6E6E6E);
+		this.drawRect(
+				x - GuiObjectSlider.SLIDER_WIDTH / 2 , 
+				this.y1 + 2, 
+				x + GuiObjectSlider.SLIDER_WIDTH / 2 , 
+				this.y2 - 2, 
+				0xFF6E6E6E
+		);
 		
 		GL11.glEnable(GL11.GL_TEXTURE_2D);
 		
-		String toDraw = formatString.replace("%v", val + "");
-		font.drawString(x1 + (x2 - x1) / 2 - font.getWidth(toDraw) / 2, y1 + (y2 - y1) / 2 - font.getHeight(toDraw) / 2, toDraw);
+		String toDraw = formatString.replace("%v", this.val + "");
+		this.font.drawString(
+				this.x1 + (this.x2 - this.x1) / 2 - this.font.getWidth(toDraw) / 2, 
+				this.y1 + (this.y2 - this.y1) / 2 - this.font.getHeight(toDraw) / 2, 
+				toDraw
+		);
 		
 		GL11.glDisable(GL11.GL_TEXTURE_2D);
-		if (hover) {
-			drawRect(x - SLIDER_WIDTH / 2, y1 + 2, x + SLIDER_WIDTH / 2, y2 - 2, 0xA0FFFFFF);
+		if(this.hover) {
+			this.drawRect(
+					x - GuiObjectSlider.SLIDER_WIDTH / 2, 
+					this.y1 + 2, 
+					x + GuiObjectSlider.SLIDER_WIDTH / 2, 
+					this.y2 - 2, 
+					0xA0FFFFFF
+			);
 		}
 	}
 
 	@Override
 	public void update() {
-		wasPressed = pressed;
-		wasHovered = hover;
+		this.wasPressed = this.pressed;
+		this.wasHovered = this.hover;
 		
-		if (Mouse.getX() >= x1 && Mouse.getX() <= x2 && Display.getHeight() - Mouse.getY() >= y1 && Display.getHeight() - Mouse.getY() <= y2) {
+		if(Mouse.getX() >= x1 && Mouse.getX() <= x2 && Display.getHeight() - Mouse.getY() >= y1 && Display.getHeight() - Mouse.getY() <= y2) {
 			
-			hover = true;
+			this.hover = true;
 			
-			if (wasHovered && !wasPressed && !lock) {
-				pressed = Mouse.isButtonDown(0);
+			if(this.wasHovered && !this.wasPressed && !this.lock) {
+				this.pressed = Mouse.isButtonDown(0);
 			} else {
-				lock = true;
+				this.lock = true;
 			}
 
 			
 
 		} else {
-			hover = false;
+			this.hover = false;
 		}
 
 		
-		if (!Mouse.isButtonDown(0)) {
-			pressed = false;
-			lock = false;
+		if(!Mouse.isButtonDown(0)) {
+			this.pressed = false;
+			this.lock = false;
 		}
 		
-		if (lock) {
-			hover = false;
+		if(this.lock) {
+			this.hover = false;
 		}
 		
-		if (pressed) {
-			hover = true;
-			int width = x2 - x1 - SLIDER_WIDTH+2;
-			int clickedX = Mouse.getX() - this.x1 - SLIDER_WIDTH/2+1;
-			val = ((float)(clickedX) / (float)width)*(maxVal-minVal)+minVal;
-			val = (float) (0.01 * Math.floor(val * 100.0));
-			parent.sliderUpdate(this);
+		if(this.pressed) {
+			this.hover = true;
+			int width = this.x2 - this.x1 - GuiObjectSlider.SLIDER_WIDTH + 2;
+			int clickedX = Mouse.getX() - this.x1 - GuiObjectSlider.SLIDER_WIDTH / 2 + 1;
+			this.val = ((float)(clickedX) / (float)width) * (this.maxVal - this.minVal) + this.minVal;
+			this.val = (float) (0.01 * Math.floor(this.val * 100.0));
+			this.parent.sliderUpdate(this);
 		}
 		
-		if (val < minVal) {
-			val = minVal;
+		if(this.val < this.minVal) {
+			this.val = this.minVal;
 		}
 		
-		if (val > maxVal) {
-			val = maxVal;
+		if (this.val > this.maxVal) {
+			this.val = this.maxVal;
 		}
 		
-		parent.sliderUpdate(this);
+		this.parent.sliderUpdate(this);
 		
 	}	
-
 }
