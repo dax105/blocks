@@ -19,7 +19,7 @@ public class CommandDeleteWorld extends Command {
 
 	@Override
 	public boolean execute(String[] args) {
-		if (Game.getInstance().world != null) {
+		if(Game.getInstance().world != null) {
 			Game.getInstance().world.saveAllChunks();
 		}	
 		Game.getInstance().displayLoadingScreen("Deleting world save...");
