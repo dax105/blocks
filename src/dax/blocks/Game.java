@@ -59,8 +59,6 @@ public class Game implements Runnable {
 	public static final double TICK_TIME = 1.0D / TPS;
 	public int ticks = 0;
 	String ticksString = "N/A";
-
-	private GuiManager guiManager = new GuiManager();
 	
 	float animationProgress = 0;
 	float lastProgress = 0;
@@ -603,10 +601,6 @@ public class Game implements Runnable {
 		this.authManager = new AuthManager();
 		this.authManager.setDummyName("Player");
 		this.loginString = "User is not logged in, using name Player";
-	}
-
-	public GuiManager getGuiManager() {
-		return guiManager;
 	}
 
 }
