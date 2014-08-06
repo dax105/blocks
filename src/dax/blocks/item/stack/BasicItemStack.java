@@ -9,9 +9,10 @@ import dax.blocks.world.World;
 public class BasicItemStack implements IObjectStack {
 
 	int items = 1;
-	Item surroudingItem;
+	Item innerItem;
 	int[] itemInstanceIdentificators;
 	Random rand = new Random();
+	boolean shouldRecycle;
 	
 	public BasicItemStack(Item itemFor, int count) {
 		if(count > this.getMaximumItemsPerStack() || count < 1) {
@@ -19,7 +20,7 @@ public class BasicItemStack implements IObjectStack {
 		}
 		
 		this.itemInstanceIdentificators = new int[this.getMaximumItemsPerStack()];
-		this.surroudingItem = itemFor;
+		this.innerItem = itemFor;
 		
 		this.setCurrentItemsCount(count);
 	}
@@ -31,12 +32,12 @@ public class BasicItemStack implements IObjectStack {
 
 	@Override
 	public int getItemID() {
-		return surroudingItem.getID();
+		return innerItem.getID();
 	}
 
 	@Override
 	public String getShowedName() {
-		return surroudingItem.getShowedName();
+		return innerItem.getShowedName();
 	}
 
 	@Override
@@ -52,33 +53,38 @@ public class BasicItemStack implements IObjectStack {
 	@Override
 	public void tickItems(World w) {
 		for(int i = 0; i < this.getCurrentItemsCount(); i++) {
-			surroudingItem.onTick(this.itemInstanceIdentificators[i], w);
+			innerItem.onTick(this.itemInstanceIdentificators[i], w);
 		}
 	}
 
 	@Override
 	public void renderTickItems(float partialTickTime, World w) {
 		for(int i = 0; i < this.getCurrentItemsCount(); i++) {
-			surroudingItem.onRenderTick(partialTickTime, this.itemInstanceIdentificators[i], w);
+			innerItem.onRenderTick(partialTickTime, this.itemInstanceIdentificators[i], w);
 		}
 	}
 
 	@Override
-	public void renderTexture(int x, int y, int width, int height) {
-		GLHelper.drawTexture(surroudingItem.getTexture(), x, x + width, y, y + height);
+	public void renderGUITexture(int x, int y, int width, int height) {
+		GLHelper.drawTexture(innerItem.getTexture(), x, x + width, y, y + height);
 	}
 
 	@Override
 	public void setCurrentItemsCount(int count) throws IllegalArgumentException {
-		if(count > this.getMaximumItemsPerStack() || count < 1) {
+		if(count > this.getMaximumItemsPerStack()) {
 			throw new IllegalArgumentException("Count must be greater than 0 and smaller the maximum items per stack");
+		}
+		
+		if(count < 1) {
+			this.shouldRecycle = true;
+			return;
 		}
 		
 		this.items = count;
 		
 		for(int i = 0; i < this.getCurrentItemsCount(); i++) {
 			if(this.itemInstanceIdentificators[i] == 0) {
-				this.itemInstanceIdentificators[i] = surroudingItem.getName().hashCode() + rand.nextInt(7) * rand.nextInt(13);
+				this.itemInstanceIdentificators[i] = innerItem.getName().hashCode() + rand.nextInt(7) * rand.nextInt(13);
 			}
 		}
 		
@@ -96,7 +102,33 @@ public class BasicItemStack implements IObjectStack {
 			throw new IllegalArgumentException("This ItemStack holds only " + this.getCurrentItemsCount() + " items!");
 		}
 		
-		this.surroudingItem.onUse(mouseButton, x, y, z, this.itemInstanceIdentificators[item], world);
+		this.innerItem.onUse(mouseButton, x, y, z, this.itemInstanceIdentificators[item], world);
+	}
+
+	@Override
+	public boolean addItem() {
+		if(this.items != this.getMaximumItemsPerStack()) {
+			this.setCurrentItemsCount(items + 1);
+			return true;
+		}
+		
+		return false;
+	}
+
+	@Override
+	public boolean removeItem() {
+		if(this.items != 1) {
+			this.setCurrentItemsCount(items - 1);
+			return true;
+		} else {
+			this.shouldRecycle = true;
+			return true;
+		}
+	}
+
+	@Override
+	public boolean shouldRecycle() {
+		return this.shouldRecycle;
 	}
 
 }

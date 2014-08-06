@@ -31,6 +31,7 @@ public abstract class Block {
 	private String[] footStepSound;
 	private String fallSound;
 	private String name;
+	private String showedName;
 	
 	private AABB aabb = new AABB(0, 0, 0, 1, 1, 1);
 	private IBlockRenderer renderer;
@@ -42,6 +43,7 @@ public abstract class Block {
 	public Block(String blockName, IDRegister register) {
 		this.id = register.getIDForName(blockName);
 		this.name = blockName;
+		this.showedName = new String(this.name);
 		
 		this.renderer = new BlockRendererBasic();
 		this.fallHurt = 5;
@@ -76,6 +78,15 @@ public abstract class Block {
 		this.colorR = 1;
 		this.colorG = 1;
 		this.colorB = 1;
+	}
+	
+	public Block setShowedName(String name) {
+		this.showedName = name;
+		return this;
+	}
+	
+	public String getShowedName() {
+		return this.showedName;
 	}
 	
 	public boolean isRequiringTick() {

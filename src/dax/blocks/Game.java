@@ -468,9 +468,6 @@ public class Game implements Runnable {
 		}
 		
 		Block b = world.getBlockObject(world.getPlayer().getSelectedBlockID());
-		int textureid = b.getSideTexture();
-
-		GLHelper.drawFromAtlas(textureid, 25, 75, Settings.getInstance().windowHeight.getValue() - 75, Settings.getInstance().windowHeight.getValue() - 25);
 
 		Runtime runtime = Runtime.getRuntime();
 

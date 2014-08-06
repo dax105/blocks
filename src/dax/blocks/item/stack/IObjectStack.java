@@ -9,9 +9,12 @@ public interface IObjectStack {
 	public String getShowedDescription();
 	public int getCurrentItemsCount();
 	public void setCurrentItemsCount(int count) throws IllegalArgumentException;
+	public boolean addItem();
+	public boolean removeItem();
+	public boolean shouldRecycle();
 	
 	public void useItem(int mouseButton, int x, int y, int z, int item, World world) throws IllegalArgumentException;
 	public void tickItems(World world);
 	public void renderTickItems(float partialTickTime, World world);
-	public void renderTexture(int x, int y, int width, int height);
+	public void renderGUITexture(int x, int y, int width, int height);
 }

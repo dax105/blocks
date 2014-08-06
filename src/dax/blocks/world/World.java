@@ -6,8 +6,6 @@ import dax.blocks.data.DataValue;
 import dax.blocks.data.IBlockDataManager;
 import dax.blocks.data.IItemDataManager;
 import dax.blocks.gui.ingame.GuiManager;
-import dax.blocks.item.stack.BasicItemStack;
-import dax.blocks.item.stack.IObjectStack;
 
 import java.io.File;
 import java.io.IOException;
@@ -84,8 +82,6 @@ public class World implements IRenderable {
 
 		this.c2d = new Coord2D(-1, -1);
 		
-		this.testItems();
-
 		this.scheduledUpdates = new LinkedList<ScheduledUpdate>();
 		this.newlyScheduledUpdates = new LinkedList<ScheduledUpdate>();
 		this.scheduledRenderablesAdding = new LinkedList<IRenderable>();
@@ -93,14 +89,6 @@ public class World implements IRenderable {
 
 		chunkProvider.updateLoadedChunksInRadius((int) player.getPosX(),
 				(int) player.getPosZ(), Settings.getInstance().drawDistance.getValue());
-	}
-	
-	private void testItems() {
-		IObjectStack stack;
-		stack = new BasicItemStack(IDRegister.itemImaginaryChocolate, 5);
-		System.out.println(stack.getItemID());
-	
-		stack.useItem(0, this.player.getLookingAtX(), this.player.getLookingAtY(), this.player.getLookingAtZ(), 4, this);
 	}
 
 	public IDRegister getRegister() {

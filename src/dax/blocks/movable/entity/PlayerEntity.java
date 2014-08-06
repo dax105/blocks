@@ -10,6 +10,9 @@ import dax.blocks.TextureManager;
 import dax.blocks.block.Block;
 import dax.blocks.collisions.AABB;
 import dax.blocks.gui.ingame.GuiManager;
+import dax.blocks.item.stack.BasicBlockStack;
+import dax.blocks.item.stack.BasicItemStack;
+import dax.blocks.item.stack.IObjectStack;
 import dax.blocks.settings.Keyconfig;
 import dax.blocks.settings.Settings;
 import dax.blocks.sound.SoundManager;
@@ -28,7 +31,7 @@ public class PlayerEntity extends Entity {
 	public static final float MAX_WALK_SPEED = 0.25f;
 	public static final int REGENERATION_TICKS = 20;
 
-	private int selectedBlockID = 1;
+	private IObjectStack inHand;
 
 	private int lookingAtX;
 	private int lookingAtY;
@@ -61,6 +64,7 @@ public class PlayerEntity extends Entity {
 
 	public PlayerEntity(World world, float x, float y, float z) {
 		super(world, x, y, z);
+		this.setSelectedBlockID(1);
 		this.bb = new AABB(posX - PLAYER_SIZE / 2, posY,
 				posZ - PLAYER_SIZE / 2, posX + PLAYER_SIZE / 2, posY
 						+ PLAYER_HEIGHT, posZ + PLAYER_SIZE / 2);
@@ -101,10 +105,7 @@ public class PlayerEntity extends Entity {
 					if (Mouse.getEventButton() == 0
 							&& Keyconfig.isDown(Keyconfig.crouch)) {
 						if (hasSelected) {
-							world.getBlockObject(
-									world.getBlock(lookingAtX, lookingAtY,
-											lookingAtZ)).onClick(0,
-									lookingAtX, lookingAtY, lookingAtZ, world);
+							this.inHand.useItem(0, lookingAtX, lookingAtY, lookingAtZ, 0, world);
 						}
 					} else if (Mouse.getEventButton() == 0) {
 						if (hasSelected) {
@@ -116,8 +117,7 @@ public class PlayerEntity extends Entity {
 						if (hasSelected
 								&& (lookingAtX != placesAtX
 										|| lookingAtY != placesAtY || lookingAtZ != placesAtZ)) {
-							world.setBlock(placesAtX, placesAtY, placesAtZ,
-									selectedBlockID, true, true);
+							this.inHand.useItem(1, placesAtX, placesAtY, placesAtZ, 0, world);
 						}
 					}
 				}
@@ -131,6 +131,9 @@ public class PlayerEntity extends Entity {
 			}
 		}
 		
+		if(this.inHand.shouldRecycle()) {
+			this.inHand = new BasicBlockStack(world.getBlockObject(this.inHand.getItemID()), 32);
+		}
 		
 
 		if (!wasOnGround && onGround) {
@@ -253,6 +256,8 @@ public class PlayerEntity extends Entity {
 
 	@Override
 	public void renderGui(float ptt) {
+		this.inHand.renderGUITexture(25, Settings.getInstance().windowHeight.getValue() - 75, 50, 50);
+		
 		int heartsX = 80;
 		int heartsY = Settings.getInstance().windowHeight.getValue() - 43;
 
@@ -385,7 +390,7 @@ public class PlayerEntity extends Entity {
 		int wh = Mouse.getEventDWheel();
 
 		if (wh > 0) {
-			int newSelectedBlock = this.selectedBlockID + 1;
+			int newSelectedBlock = this.inHand.getItemID() + 1;
 			if (newSelectedBlock > (world.getRegister().getBlockCount())) {
 				newSelectedBlock = 1;
 			}
@@ -394,7 +399,7 @@ public class PlayerEntity extends Entity {
 		}
 
 		if (wh < 0) {
-			int newSelectedBlock = this.selectedBlockID - 1;
+			int newSelectedBlock = this.inHand.getItemID() - 1;
 			if (newSelectedBlock < 1) {
 				newSelectedBlock = world.getRegister().getBlockCount();
 			}
@@ -456,11 +461,11 @@ public class PlayerEntity extends Entity {
 	}
 
 	public int getSelectedBlockID() {
-		return selectedBlockID;
+		return this.inHand.getItemID();
 	}
 
 	public void setSelectedBlockID(int selectedBlockID) {
-		this.selectedBlockID = selectedBlockID;
+		this.inHand = new BasicBlockStack(world.getBlockObject(selectedBlockID), 32);
 	}
 
 	public float getHeading() {
