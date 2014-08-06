@@ -21,22 +21,22 @@ public class ChunkRendererDisplayList implements IChunkRenderer {
 	private float lastT = -5;
 	
 	private void reset() {
-		lastR = -5;
-		lastG = -5;
-		lastB = -5;
-		lastA = -5;
+		this.lastR = -5;
+		this.lastG = -5;
+		this.lastB = -5;
+		this.lastA = -5;
 		
-		lastNX = -5;
-		lastNY = -5;
-		lastNZ = -5;
+		this.lastNX = -5;
+		this.lastNY = -5;
+		this.lastNZ = -5;
 		
-		lastS = -5;
-		lastT = -5;
+		this.lastS = -5;
+		this.lastT = -5;
 	}
 	
 	@Override
 	public void begin() {
-		reset();
+		this.reset();
 		this.drawing = true;
 		this.handle = GL11.glGenLists(1);
 		GL11.glNewList(this.handle, GL11.GL_COMPILE);
@@ -57,14 +57,14 @@ public class ChunkRendererDisplayList implements IChunkRenderer {
 
 	@Override
 	public void delete(int handle) {
-		if (!this.drawing) {
+		if(!this.drawing) {
 			GL11.glDeleteLists(handle, 1);
 		}
 	}
 
 	@Override
 	public void render(int handle) {
-		if (!this.drawing) {
+		if(!this.drawing) {
 			GL11.glCallList(handle);
 		}
 	}
@@ -76,42 +76,42 @@ public class ChunkRendererDisplayList implements IChunkRenderer {
 
 	@Override
 	public void color(float r, float b, float g) {
-		color(r, g, b, 1);
+		this.color(r, g, b, 1);
 	}
 
 	@Override
 	public void color(float r, float b, float g, float a) {
-		if (r != lastR || b != lastB || g != lastG || a != lastA) {
-			lastR = r;
-			lastG = g;
-			lastB = b;
-			lastA = a;
+		if(r != this.lastR || b != this.lastB || g != this.lastG || a != this.lastA) {
+			this.lastR = r;
+			this.lastG = g;
+			this.lastB = b;
+			this.lastA = a;
 			GL11.glColor4f(r, g, b, a);
 		}	
 	}
 
 	@Override
 	public void normal(float nx, float ny, float nz) {
-		if (nx != lastNX || ny != lastNY || nz != lastNZ) {
-			lastNX = nx;
-			lastNY = ny;
-			lastNZ = nz;
+		if (nx != this.lastNX || ny != this.lastNY || nz != this.lastNZ) {
+			this.lastNX = nx;
+			this.lastNY = ny;
+			this.lastNZ = nz;
 			GL11.glNormal3f(nx, ny, nz);
 		}	
 	}
 
 	@Override
 	public void texCoord(float s, float t) {
-		if (s != lastS || t != lastT) {
-			lastS = s;
-			lastT = t;
+		if (s != this.lastS || t != this.lastT) {
+			this.lastS = s;
+			this.lastT = t;
 			GL11.glTexCoord2f(s, t);
 		}
 	}
 
 	@Override
 	public void vertexWithAO(float x, float y, float z, boolean s1, boolean s2, boolean c) {
-		vertexWithColoredAO(x, y, z, 1, 1, 1, s1, s2, c);
+		this.vertexWithColoredAO(x, y, z, 1, 1, 1, s1, s2, c);
 	}
 	
 	@Override
@@ -134,8 +134,7 @@ public class ChunkRendererDisplayList implements IChunkRenderer {
 		
 		float aom = ao * Settings.getInstance().aoIntensity.getValue();
 	
-		color(r - aom, g - aom, b - aom);
-		vertex(x, y, z);
+		this.color(r - aom, g - aom, b - aom);
+		this.vertex(x, y, z);
 	}
-
 }
