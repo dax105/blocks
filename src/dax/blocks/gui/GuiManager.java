@@ -5,7 +5,7 @@ public class GuiManager {
 	private static GuiManager _instance;
 	
 	public static GuiManager getInstance() {
-		if (_instance != null) {
+		if (_instance == null) {
 			_instance = new GuiManager();
 		}
 		return _instance;
