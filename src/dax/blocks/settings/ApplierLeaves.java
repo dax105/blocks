@@ -14,7 +14,7 @@ public class ApplierLeaves extends Applier {
 		Block.leaves.setRenderPass(transp ? RenderPass.TRANSPARENT : RenderPass.OPAQUE);
 		Block.leaves.setAllTextures(transp ? 10 : 19);
 		
-		if (Game.getInstance().ingame) {
+		if(Game.getInstance().ingame) {
 			Game.getInstance().world.setAllChunksDirty();
 		}
 		
