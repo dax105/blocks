@@ -19,14 +19,14 @@ public class ModelManager {
 
 	private final int BUFFER = 1024;
 	private Map<String, Model> models;
+	private static ModelManager instance;
 
-	private static ModelManager _instance;
 	public static ModelManager getInstance() {
-		if(_instance == null) {
-			_instance = new ModelManager();
+		if(ModelManager.instance == null) {
+			ModelManager.instance = new ModelManager();
 		}
 		
-		return _instance;
+		return ModelManager.instance;
 	}
 	
 	private ModelManager() {
@@ -34,9 +34,9 @@ public class ModelManager {
 	}
 	
 	public void load() {
-		models.put("char", loadModel("dax/blocks/res/models/char.zip"));
+		this.models.put("char", this.loadModel("dax/blocks/res/models/char.zip"));
 		
-		for(Model m : models.values())
+		for(Model m : this.models.values())
 			m.generateDisplayList();
 	}
 	
@@ -52,13 +52,13 @@ public class ModelManager {
 			ZipInputStream zin = new ZipInputStream(in);
 			ZipEntry e;	
 			
-			while ((e = zin.getNextEntry()) != null) {
+			while((e = zin.getNextEntry()) != null) {
 				ByteArrayOutputStream bout = new ByteArrayOutputStream();
 
-				byte[] data = new byte[BUFFER];
+				byte[] data = new byte[this.BUFFER];
 				
 				int count;
-				while ((count = zin.read(data, 0, BUFFER)) != -1) {
+				while((count = zin.read(data, 0, this.BUFFER)) != -1) {
 				    bout.write(data, 0, count);
 				}
 				
@@ -66,54 +66,50 @@ public class ModelManager {
 				zin.closeEntry();
 			}
 
-
 			zin.close();
-
-
 
 			int maxl = 0;
 
-			for (Entry<String, byte[]> en : streams.entrySet()) {
+			for(Entry<String, byte[]> en : streams.entrySet()) {
 				String key = en.getKey();
 				key = key.replace("layer", "");
 				key = key.replace(".png", "");
 				int l = Integer.parseInt(key);
 
-				if (l > maxl) {
+				if(l > maxl) {
 					maxl = l;
 				}
 
 			}
 
-			for (int i = 0; i <= maxl; i++) {
+			for(int i = 0; i <= maxl; i++) {
 				BufferedImage img;
 				
 				InputStream bain = new ByteArrayInputStream(streams.get("layer" + i + ".png")); 
 				
 				img = ImageIO.read(bain);
 				
-				if (i == 0) {
+				if(i == 0) {
 					m.setWidth(img.getWidth() + 1);
 					m.setHeight(img.getHeight() + 1);
 					m.setDepth(maxl + 1);
 					m.createArray();
 				}
 
-				for (int x = 0; x < m.getWidth() - 1; x++) {
-					for (int y = 0; y < m.getHeight() - 1; y++) {
+				for(int x = 0; x < m.getWidth() - 1; x++) {
+					for(int y = 0; y < m.getHeight() - 1; y++) {
 
 						int col = img.getRGB(x, y);
 
 						Color color = new Color(col, true);
 
-						if (color.getAlpha() > 0) {
+						if(color.getAlpha() > 0) {
 							m.voxels[img.getWidth() - x][img.getHeight() - y][i] = new Voxel(color.getRed() / 255f, color.getGreen() / 255f, color.getBlue() / 255f);
 						}
 					}
 				}
 
 			}
-
 
 			return m;
 		} catch (Exception e) {
