@@ -13,7 +13,7 @@ public class ChunkMeshBuilder {
 		
 		profiler.build.start();
 		
-		if (c != null) {
+		if(c != null) {
 
 			IChunkRenderer renderer = Game.getInstance().chunkRenderer;
 			ChunkMesh cm = new ChunkMesh(renderer);
@@ -34,12 +34,12 @@ public class ChunkMeshBuilder {
 			int maxY = -100;
 			int maxZ = -100;
 			
-			for (int x = 0; x < 16; x++) {
-				for (int z = 0; z < 16; z++) {
-					for (int y = startY; y < endY; y++) {
+			for(int x = 0; x < 16; x++) {
+				for(int z = 0; z < 16; z++) {
+					for(int y = startY; y < endY; y++) {
 						int blockID = c.getBlock(x, y, z);
 
-						if (blockID > 0) {
+						if(blockID > 0) {
 							Block block = Block.getBlock(blockID);
 
 							if(x < minX) minX = x;
@@ -50,16 +50,16 @@ public class ChunkMeshBuilder {
 							if(y-startY > maxY) maxY = y-startY;
 							if(z > maxZ) maxZ = z;
 							
-							switch (block.getRenderPass()) {
-							case RenderPass.OPAQUE:
-								opaqueCount++;
-								break;
-							case RenderPass.TRANSPARENT:
-								transparentCount++;
-								break;
-							case RenderPass.TRANSLUCENT:
-								translucentCount++;
-								break;	
+							switch(block.getRenderPass()) {
+								case RenderPass.OPAQUE:
+									opaqueCount++;
+									break;
+								case RenderPass.TRANSPARENT:
+									transparentCount++;
+									break;
+								case RenderPass.TRANSLUCENT:
+									translucentCount++;
+									break;	
 							}
 
 						}
@@ -69,7 +69,7 @@ public class ChunkMeshBuilder {
 
 			cm.setBounds(minX, minY, minZ, maxX, maxY, maxZ);
 			
-			if (opaqueCount == 0 && transparentCount == 0 && translucentCount == 0) {
+			if(opaqueCount == 0 && transparentCount == 0 && translucentCount == 0) {
 				profiler.build.end();
 				return cm;
 			}
@@ -79,7 +79,7 @@ public class ChunkMeshBuilder {
 
 			//int attrib = Game.getInstance().renderEngine.blockAttributeID;
 			
-			if (opaqueCount > 0) {
+			if(opaqueCount > 0) {
 				//GL11.glNewList(listIDs + currentOffset, GL11.GL_COMPILE);
 				renderer.begin();
 				cm.setHandle(RenderPass.OPAQUE, renderer.getHandle());
@@ -87,14 +87,14 @@ public class ChunkMeshBuilder {
 
 				// All gl calls to draw the chunk (OPAQUE PASS) should be here
 
-				for (int x = 0; x < 16; x++) {
-					for (int z = 0; z < 16; z++) {
-						for (int y = startY; y < endY; y++) {
+				for(int x = 0; x < 16; x++) {
+					for(int z = 0; z < 16; z++) {
+						for(int y = startY; y < endY; y++) {
 							int blockID = c.getBlock(x, y, z);
-							if (blockID > 0) {
+							if(blockID > 0) {
 								Block block = Block.getBlock(blockID);
 
-								if (block.getRenderPass() == RenderPass.OPAQUE) {
+								if(block.getRenderPass() == RenderPass.OPAQUE) {
 									
 									int calcX = x + blockOffsetX;
 									int calcY = y;
@@ -116,21 +116,21 @@ public class ChunkMeshBuilder {
 				
 			}
 
-			if (transparentCount > 0) {
+			if(transparentCount > 0) {
 				renderer.begin();
 				cm.setHandle(RenderPass.TRANSPARENT, renderer.getHandle());
 
 
 				// All gl calls to draw the chunk (TRANSPARENT PASS) should be here
 
-				for (int x = 0; x < 16; x++) {
-					for (int z = 0; z < 16; z++) {
-						for (int y = startY; y < endY; y++) {
+				for(int x = 0; x < 16; x++) {
+					for(int z = 0; z < 16; z++) {
+						for(int y = startY; y < endY; y++) {
 							int blockID = c.getBlock(x, y, z);
-							if (blockID > 0) {
+							if(blockID > 0) {
 								Block block = Block.getBlock(blockID);
 
-								if (block.getRenderPass() == RenderPass.TRANSPARENT) {
+								if(block.getRenderPass() == RenderPass.TRANSPARENT) {
 
 									int calcX = x + blockOffsetX;
 									int calcY = y;
@@ -150,19 +150,19 @@ public class ChunkMeshBuilder {
 				renderer.end();
 			}
 			
-			if (translucentCount > 0) {
+			if(translucentCount > 0) {
 				renderer.begin();
 				cm.setHandle(RenderPass.TRANSLUCENT, renderer.getHandle());
 
 				// All gl calls to draw the chunk (TRANSLUCENT PASS) should be here
-				for (int x = 0; x < 16; x++) {
-					for (int z = 0; z < 16; z++) {
-						for (int y = startY; y < endY; y++) {
+				for(int x = 0; x < 16; x++) {
+					for(int z = 0; z < 16; z++) {
+						for(int y = startY; y < endY; y++) {
 							int blockID = c.getBlock(x, y, z);
-							if (blockID > 0) {
+							if(blockID > 0) {
 								Block block = Block.getBlock(blockID);
 
-								if (block.getRenderPass() == RenderPass.TRANSLUCENT) {
+								if(block.getRenderPass() == RenderPass.TRANSLUCENT) {
 
 									int calcX = x + blockOffsetX;
 									int calcY = y;
@@ -189,5 +189,4 @@ public class ChunkMeshBuilder {
 		profiler.build.end();
 		return null;
 	}
-
 }
