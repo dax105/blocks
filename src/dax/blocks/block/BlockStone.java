@@ -2,8 +2,8 @@ package dax.blocks.block;
 
 import java.util.Random;
 
+import dax.blocks.data.DataFlags;
 import dax.blocks.sound.SoundManager;
-import dax.blocks.world.DataFlags;
 import dax.blocks.world.IDRegister;
 import dax.blocks.world.World;
 

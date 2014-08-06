@@ -18,6 +18,7 @@ import dax.blocks.block.BlockFluid;
 import dax.blocks.block.BlockPlant;
 import dax.blocks.block.BlockSand;
 import dax.blocks.block.BlockStone;
+import dax.blocks.item.Item;
 import dax.blocks.render.RenderPass;
 import dax.blocks.settings.Settings;
 import dax.blocks.sound.SoundManager;
@@ -27,6 +28,10 @@ public class IDRegister {
 
 	private Block[] blocks;
 	private int blockCount;
+	
+	private Item[] items;
+	private int itemCount;
+	
 	private Map<String, Integer> ids;
 	
 	public static File dataFile;
@@ -50,8 +55,8 @@ public class IDRegister {
 	public static Block flower3;
 
 	public IDRegister(World world) {
-		ids = new HashMap<>();
-		blocks = new Block[512];
+		this.ids = new HashMap<>();
+		this.blocks = new Block[512];
 		this.blockCount = 0;
 		
 		IDRegister.dataFile = new File(new File(WorldsManager.SAVES_DIR, world.name), "ids");
@@ -160,7 +165,7 @@ public class IDRegister {
 		}
 		
 		BufferedWriter bw = new BufferedWriter(new FileWriter(file));
-		for(Entry<String, Integer> id : ids.entrySet()) {
+		for(Entry<String, Integer> id : this.ids.entrySet()) {
 			bw.write(id.getKey() + ";" + id.getValue().toString());
 			bw.newLine();
 		}
@@ -169,16 +174,16 @@ public class IDRegister {
 	}
 	
 	public int getIDForName(String name) {
-		if (ids.get(name) == null) {
+		if (this.ids.get(name) == null) {
 
 			try {
-				return registerName(name);
+				return this.registerName(name);
 			} catch (RegisterException e) {
 				e.printStackTrace();
 			}
 
 		} else {
-			return ids.get(name);
+			return this.ids.get(name);
 		}
 
 		return 0;
@@ -189,27 +194,40 @@ public class IDRegister {
 	}
 
 	public int registerName(String name) throws RegisterException {
-		if (ids.get(name) == null) {
-			ids.put(name, getBlockCount() + 1);
-			return getBlockCount() + 1;
+		if(this.ids.get(name) == null) {
+			this.ids.put(name, this.getBlockCount() + 1);
+			return this.getBlockCount() + 1;
 		} else {
 			throw new RegisterException(name);
 		}
 	}
 
 	public Block registerBlock(Block block) throws RegisterException {
-		if (blocks[block.getID()] == null) {
-			blocks[block.getID()] = block;
-			this.blockCount = (getBlockCount() + 1);
+		if(this.blocks[block.getID()] == null) {
+			this.blocks[block.getID()] = block;
+			this.blockCount++;
 			return block;
 		} else {
 			throw new RegisterException(block.getID());
 		}
 	}
-
-	public int getBlockCount() {
-		return blockCount;
+	
+	public Item registerItem(Item item) throws RegisterException {
+		if(this.items[item.getID()] == null && this.blocks[item.getID()] == null) {
+			this.items[item.getID()] = item;
+			this.itemCount++;
+			return item;
+		} else {
+			throw new RegisterException(item.getID());
+		}
 	}
 
+	public int getBlockCount() {
+		return this.blockCount;
+	}
+
+	public int getItemCount() {
+		return this.itemCount;
+	}
 
 }

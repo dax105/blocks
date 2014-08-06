@@ -2,8 +2,8 @@ package dax.blocks.block.renderer;
 
 import dax.blocks.TextureManager;
 import dax.blocks.block.Block;
+import dax.blocks.data.DataFlags;
 import dax.blocks.render.IChunkRenderer;
-import dax.blocks.world.DataFlags;
 import dax.blocks.world.World;
 
 public class BlockRendererPlant implements IBlockRenderer {

@@ -50,7 +50,7 @@ public abstract class Block {
 	}
 	
 	public abstract void onTick(int x, int y, int z, World world);
-	public abstract void onRenderTick(float ptt, int x, int y, int z, World world);
+	public abstract void onRenderTick(float partialTickTime, int x, int y, int z, World world);
 	public abstract void onClick(int mouseButton, int x, int y, int z, World world);
 	
 	public void onPlaced(int x, int y, int z, World world) {

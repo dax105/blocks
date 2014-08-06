@@ -1,8 +1,8 @@
 package dax.blocks.block;
 
 import dax.blocks.block.renderer.BlockRendererPlant;
+import dax.blocks.data.DataFlags;
 import dax.blocks.render.RenderPass;
-import dax.blocks.world.DataFlags;
 import dax.blocks.world.IDRegister;
 import dax.blocks.world.World;
 
