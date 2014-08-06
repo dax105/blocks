@@ -34,35 +34,38 @@ public class GuiObjectButton extends GuiObject {
 
 	@Override
 	public void render() {
-		drawRect(x1, y1, x2, y2, 0xFF8C8C8C);
-		drawRect(x1 + 2, y1 + 2, x2 - 2, y2 - 2, 0xFF6E6E6E);
+		this.drawRect(x1, y1, x2, y2, 0xFF8C8C8C);
+		this.drawRect(x1 + 2, y1 + 2, x2 - 2, y2 - 2, 0xFF6E6E6E);
 		GL11.glEnable(GL11.GL_TEXTURE_2D);
-		font.drawString(x1 + (x2 - x1) / 2 - font.getWidth(text) / 2, y1 + (y2 - y1) / 2 - font.getHeight(text) / 2, text);
+		this.font.drawString(
+				x1 + (x2 - x1) / 2 - this.font.getWidth(text) / 2, 
+				y1 + (y2 - y1) / 2 - this.font.getHeight(text) / 2, 
+				this.text
+		);
 		GL11.glDisable(GL11.GL_TEXTURE_2D);
-		if (hover) {
-			drawRect(x1, y1, x2, y2, 0xA0FFFFFF);
+		if(this.hover) {
+			this.drawRect(x1, y1, x2, y2, 0xA0FFFFFF);
 		}
 	}
 
 	@Override
 	public void update() {
-		if (Mouse.getX() >= x1 && Mouse.getX() <= x2 && Display.getHeight() - Mouse.getY() >= y1 && Display.getHeight() - Mouse.getY() <= y2) {
-			hover = !Mouse.isButtonDown(0);
-			while (Mouse.next()) {
-				if (Mouse.getEventButtonState()) {
-					if (Mouse.getEventButton() == 0) {
+		if(Mouse.getX() >= x1 && Mouse.getX() <= x2 && Display.getHeight() - Mouse.getY() >= y1 && 
+				Display.getHeight() - Mouse.getY() <= y2) {
+			this.hover = !Mouse.isButtonDown(0);
+			while(Mouse.next()) {
+				if(Mouse.getEventButtonState()) {
+					if(Mouse.getEventButton() == 0) {
 						this.onClick();
 					}
 				}
 			}
 		} else {
-			hover = false;
+			this.hover = false;
 		}
-
 	}
 	
 	protected void onClick() {
-		parent.buttonPress(this);
+		this.parent.buttonPress(this);
 	}
-
 }
