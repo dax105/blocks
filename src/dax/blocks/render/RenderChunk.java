@@ -16,16 +16,16 @@ public class RenderChunk {
 	}
 	
 	public ChunkMesh getCm() {
-		return cm;
+		return this.cm;
 	}
 	
 	public void setCm(ChunkMesh cm) {
-		setGenerated();
+		this.setGenerated();
 		this.cm = cm;
 	}
 	
 	public boolean isDirty() {
-		return dirty;
+		return this.dirty;
 	}
 	
 	public void setDirty(boolean dirty) {
@@ -37,11 +37,11 @@ public class RenderChunk {
 	}
 	
 	public boolean isBuilt() {
-		return built;
+		return this.built;
 	}
 	
 	public void clear() {
-		cm.delete();
+		this.cm.delete();
 		this.built = false;
 		this.dirty = true;
 	}
@@ -52,15 +52,14 @@ public class RenderChunk {
 	}
 
 	public int getX() {
-		return x;
+		return this.x;
 	}
 
 	public int getY() {
-		return y;
+		return this.y;
 	}
 
 	public int getZ() {
-		return z;
+		return this.z;
 	}	
-		
 }
