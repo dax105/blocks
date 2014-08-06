@@ -2,8 +2,8 @@ package dax.blocks.block.renderer;
 
 import dax.blocks.TextureManager;
 import dax.blocks.block.Block;
+import dax.blocks.data.DataFlags;
 import dax.blocks.render.IChunkRenderer;
-import dax.blocks.world.DataFlags;
 import dax.blocks.world.World;
 
 public class BlockRendererPlant implements IBlockRenderer {
@@ -13,92 +13,92 @@ public class BlockRendererPlant implements IBlockRenderer {
 		renderer.normal(0, 0, 0);
 		renderer.color(1, 1, 1);
 		
-		int lastTexture = block.sideTexture;
+		int lastTexture = block.getSideTexture();
 		if(world.getDataBoolean(x, y, z, DataFlags.SPECIAL_TEXTURE)) {
 			block.setSideTexture(2);
 		}	
 		
 		renderer.texCoord(
-				TextureManager.getX1(block.sideTexture), 
-				TextureManager.getY1(block.sideTexture)
+				TextureManager.getX1(block.getSideTexture()), 
+				TextureManager.getY1(block.getSideTexture())
 		);
 		renderer.vertex(x + 0, y + 1, z + 0);
 		renderer.texCoord(
-				TextureManager.getX2(block.sideTexture), 
-				TextureManager.getY1(block.sideTexture)
+				TextureManager.getX2(block.getSideTexture()), 
+				TextureManager.getY1(block.getSideTexture())
 		);
 		renderer.vertex(x + 1, y + 1, z + 1);
 		renderer.texCoord(
-				TextureManager.getX2(block.sideTexture), 
-				TextureManager.getY2(block.sideTexture)
+				TextureManager.getX2(block.getSideTexture()), 
+				TextureManager.getY2(block.getSideTexture())
 		);
 		renderer.vertex(x + 1, y + 0, z + 1);
 		renderer.texCoord(
-				TextureManager.getX1(block.sideTexture), 
-				TextureManager.getY2(block.sideTexture)
+				TextureManager.getX1(block.getSideTexture()), 
+				TextureManager.getY2(block.getSideTexture())
 		);
 		renderer.vertex(x + 0, y + 0, z + 0);
 		
 		renderer.texCoord(
-				TextureManager.getX2(block.sideTexture), 
-				TextureManager.getY1(block.sideTexture)
+				TextureManager.getX2(block.getSideTexture()), 
+				TextureManager.getY1(block.getSideTexture())
 		);
 		renderer.vertex(x + 0, y + 1, z + 0);
 		renderer.texCoord(
-				TextureManager.getX2(block.sideTexture), 
-				TextureManager.getY2(block.sideTexture)
+				TextureManager.getX2(block.getSideTexture()), 
+				TextureManager.getY2(block.getSideTexture())
 		);
 		renderer.vertex(x + 0, y + 0, z + 0);
 		renderer.texCoord(
-				TextureManager.getX1(block.sideTexture), 
-				TextureManager.getY2(block.sideTexture)
+				TextureManager.getX1(block.getSideTexture()), 
+				TextureManager.getY2(block.getSideTexture())
 		);
 		renderer.vertex(x + 1, y + 0, z + 1);
 		renderer.texCoord(
-				TextureManager.getX1(block.sideTexture), 
-				TextureManager.getY1(block.sideTexture)
+				TextureManager.getX1(block.getSideTexture()), 
+				TextureManager.getY1(block.getSideTexture())
 		);
 		renderer.vertex(x + 1, y + 1, z + 1);
 		
 		renderer.texCoord(
-				TextureManager.getX1(block.sideTexture), 
-				TextureManager.getY1(block.sideTexture)
+				TextureManager.getX1(block.getSideTexture()), 
+				TextureManager.getY1(block.getSideTexture())
 		);
 		renderer.vertex(x + 0, y + 1, z + 1);
 		renderer.texCoord(
-				TextureManager.getX2(block.sideTexture), 
-				TextureManager.getY1(block.sideTexture)
+				TextureManager.getX2(block.getSideTexture()), 
+				TextureManager.getY1(block.getSideTexture())
 		);
 		renderer.vertex(x + 1, y + 1, z + 0);
 		renderer.texCoord(
-				TextureManager.getX2(block.sideTexture), 
-				TextureManager.getY2(block.sideTexture)
+				TextureManager.getX2(block.getSideTexture()), 
+				TextureManager.getY2(block.getSideTexture())
 		);
 		renderer.vertex(x + 1, y + 0, z + 0);
 		renderer.texCoord(
-				TextureManager.getX1(block.sideTexture), 
-				TextureManager.getY2(block.sideTexture)
+				TextureManager.getX1(block.getSideTexture()), 
+				TextureManager.getY2(block.getSideTexture())
 		);
 		renderer.vertex(x + 0, y + 0, z + 1);
 		
 		renderer.texCoord(
-				TextureManager.getX2(block.sideTexture), 
-				TextureManager.getY1(block.sideTexture)
+				TextureManager.getX2(block.getSideTexture()), 
+				TextureManager.getY1(block.getSideTexture())
 		);
 		renderer.vertex(x + 0, y + 1, z + 1);
 		renderer.texCoord(
-				TextureManager.getX2(block.sideTexture), 
-				TextureManager.getY2(block.sideTexture)
+				TextureManager.getX2(block.getSideTexture()), 
+				TextureManager.getY2(block.getSideTexture())
 		);
 		renderer.vertex(x + 0, y + 0, z + 1);
 		renderer.texCoord(
-				TextureManager.getX1(block.sideTexture), 
-				TextureManager.getY2(block.sideTexture)
+				TextureManager.getX1(block.getSideTexture()), 
+				TextureManager.getY2(block.getSideTexture())
 		);
 		renderer.vertex(x + 1, y + 0, z + 0);
 		renderer.texCoord(
-				TextureManager.getX1(block.sideTexture), 
-				TextureManager.getY1(block.sideTexture)
+				TextureManager.getX1(block.getSideTexture()), 
+				TextureManager.getY1(block.getSideTexture())
 		);
 		renderer.vertex(x + 1, y + 1, z + 0);
 		

@@ -1,7 +1,7 @@
 package dax.blocks.gui;
 
 import dax.blocks.settings.Settings;
-import dax.blocks.GLHelper;
+import dax.blocks.util.GLHelper;
 
 public class GuiScreenSettings extends GuiScreen {
 

@@ -1,8 +1,7 @@
 package dax.blocks.world.generator;
 
 import java.util.Random;
-
-import dax.blocks.block.Block;
+import dax.blocks.world.IDRegister;
 import dax.blocks.world.World;
 
 public class TreeGenerator {
@@ -20,16 +19,17 @@ public class TreeGenerator {
 		int leavesStart = trunkHeight - 1 - rand.nextInt(2);
 		int leavesEnd = trunkHeight + 2 + rand.nextInt(1);
 		
-		this.fill(x-2, y+leavesStart, z-2, x+2, y+leavesEnd-2, z+2, Block.leaves.getId());
-		this.fill(x-2, y+leavesStart+2, z-1, x+2, y+leavesEnd-1, z+1, Block.leaves.getId());
-		this.fill(x-1, y+leavesStart+2, z-2, x+1, y+leavesEnd-1, z+2, Block.leaves.getId());
-		this.world.setBlock(x-1, y+leavesEnd, z, Block.leaves.getId(), false, true);
-		this.world.setBlock(x+1, y+leavesEnd, z, Block.leaves.getId(), false, true);
-		this.world.setBlock(x, y+leavesEnd, z-1, Block.leaves.getId(), false, true);
-		this.world.setBlock(x, y+leavesEnd, z+1, Block.leaves.getId(), false, true);
-		this.world.setBlock(x, y+leavesEnd, z, Block.leaves.getId(), false, true);
+		int leaves = IDRegister.leaves.getID();
+		this.fill(x-2, y+leavesStart, z-2, x+2, y+leavesEnd-2, z+2, leaves);
+		this.fill(x-2, y+leavesStart+2, z-1, x+2, y+leavesEnd-1, z+1, leaves);
+		this.fill(x-1, y+leavesStart+2, z-2, x+1, y+leavesEnd-1, z+2, leaves);
+		this.world.setBlock(x-1, y+leavesEnd, z, leaves, false, true);
+		this.world.setBlock(x+1, y+leavesEnd, z, leaves, false, true);
+		this.world.setBlock(x, y+leavesEnd, z-1, leaves, false, true);
+		this.world.setBlock(x, y+leavesEnd, z+1, leaves, false, true);
+		this.world.setBlock(x, y+leavesEnd, z, leaves, false, true);
 		
-		this.fill(x, y, z, x, y+trunkHeight, z, Block.log.getId());
+		this.fill(x, y, z, x, y+trunkHeight, z, IDRegister.log.getID());
 	}
 	
 	public void fill(int x0, int y0, int z0, int x1, int y1, int z1, int id) {

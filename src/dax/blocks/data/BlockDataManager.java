@@ -1,4 +1,4 @@
-package dax.blocks.world;
+package dax.blocks.data;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -12,14 +12,14 @@ import java.util.Map.Entry;
 
 import javax.activation.UnsupportedDataTypeException;
 
-import dax.blocks.Coord3D;
+import dax.blocks.util.Coord3D;
 
-public class DataManager {
+public class BlockDataManager implements IBlockDataManager {
 
 	private File data;
 	private Map<Coord3D, Map<Integer, DataValue>> values;
 
-	public DataManager(File dataFile) throws IOException {
+	public BlockDataManager(File dataFile) throws IOException {
 		this.data = dataFile;
 		this.values = new HashMap<>();
 
@@ -39,7 +39,7 @@ public class DataManager {
 	}
 	
 	public Map<Integer, DataValue> getValuesForCoord(Coord3D position) {
-		if(this.values.get(position) != null) {
+		if(this.containsData(position)) {
 			return this.values.get(position);
 		} else {
 			Map<Integer, DataValue> dataMap = new HashMap<Integer, DataValue>();

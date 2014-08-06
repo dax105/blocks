@@ -1,12 +1,10 @@
-package dax.blocks;
+package dax.blocks.world;
 
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Logger;
-
-import dax.blocks.world.WorldInfo;
 
 public class WorldsManager {
 
@@ -24,9 +22,13 @@ public class WorldsManager {
 	private File savesDir;
 
 	private WorldsManager() {
-		this.savesDir = new File(WorldsManager.SAVES_DIR);
-		if(!this.savesDir.exists())
-			this.savesDir.mkdir();
+	}
+	
+	public void load() {
+		savesDir = new File(SAVES_DIR);
+		if(!savesDir.exists()) {
+			savesDir.mkdir();
+		}
 	}
 
 	public List<File> getWorldsDirs() {
@@ -70,4 +72,6 @@ public class WorldsManager {
 
 		return null;
 	}
+
+
 }

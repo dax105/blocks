@@ -1,50 +1,50 @@
 package dax.blocks.item;
 
+import org.newdawn.slick.opengl.Texture;
+
+import dax.blocks.world.IDRegister;
+import dax.blocks.world.World;
+
 public abstract class Item {
-	
-	//Special positions: 0 - null item; 1 - null block; 2 - air
-	private static Item[] allItems = new Item[512];
-	private static int itemsCount;
-	public static Item nullItem = new ItemEmpty();
-	
+
 	private int id;
+	private String name;
+	private Texture texture;
+	private String showedName;
 	
-	public static void registerItem(Item i, int id) throws RegisterException {
-		if(id < Item.allItems.length) {
-			if(Item.allItems[id] == null) {
-				Item.allItems[id] = i;
-				Item.itemsCount++;
-				return;
-			}
-		}
-		
-		throw new RegisterException(i, id);
+	public abstract void onTick(int uniqueIdentifier, World world);
+	public abstract void onRenderTick(float partialTickTime, int uniqueIdentifier, World world);
+	public abstract void onUse(int mouseButton, int targetX, int targetY, int targetZ, int uniqueIdentifier, World world);
+	
+	public Item(String name, IDRegister register) {
+		this.id = register.getIDForName(name);
+		this.name = name;
+		this.showedName = new String(name);
 	}
 	
-	public static int getItemsCount() {
-		return Item.itemsCount;
-	}
-	
-	public static Item getItem(int id) {
-		if(id < Item.allItems.length)
-			return Item.allItems[id];
-		else
-			return null;
-	}
-	
-	public Item(int itemID) {
-		this.id = itemID;
-		
-		try {
-			Item.registerItem(this, this.id);
-		} catch (RegisterException e) {
-			e.printStackTrace();
-		}
-	}
-	
-	public int getId() {
+	public int getID() {
 		return this.id;
 	}
 	
-	public abstract void onTick(int itemIdentifier);
+	public String getName() {
+		return this.name;
+	}
+	
+	public Item setTexture(Texture texture) {
+		this.texture = texture;
+		return this;
+	}
+	
+	public Texture getTexture() {
+		return this.texture;
+	}
+	
+	public Item setShowedName(String showedName) {
+		this.showedName = showedName;
+		return this;
+	}
+	
+	public String getShowedName() {
+		return this.showedName;
+	}
 }

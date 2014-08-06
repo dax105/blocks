@@ -1,6 +1,10 @@
 package dax.blocks.world;
 
 import dax.blocks.collisions.AABB;
+import dax.blocks.data.DataManager;
+import dax.blocks.data.DataValue;
+import dax.blocks.data.IBlockDataManager;
+import dax.blocks.data.IItemDataManager;
 import dax.blocks.gui.ingame.GuiManager;
 
 import java.io.File;
@@ -14,14 +18,14 @@ import java.util.Map.Entry;
 import java.util.logging.Logger;
 import java.util.Random;
 
-import dax.blocks.Coord2D;
-import dax.blocks.Coord3D;
 import dax.blocks.Game;
 import dax.blocks.Particle;
 import dax.blocks.block.Block;
 import dax.blocks.movable.entity.PlayerEntity;
 import dax.blocks.render.IRenderable;
 import dax.blocks.settings.Settings;
+import dax.blocks.util.Coord2D;
+import dax.blocks.util.Coord3D;
 import dax.blocks.world.chunk.Chunk;
 import dax.blocks.world.chunk.ChunkProvider;
 
@@ -39,7 +43,9 @@ public class World implements IRenderable {
 	private Coord2D c2d;
 	private PlayerEntity player;
 	private ChunkProvider chunkProvider;
-	private DataManager blockDataManager;
+	private IBlockDataManager blockDataManager;
+	private IItemDataManager itemDataManager;
+	private IDRegister idRegister;
 	
 	public int size;
 	public int sizeBlocks;
@@ -63,15 +69,18 @@ public class World implements IRenderable {
 	public World(boolean trees, Game game, boolean load, String worldName) {
 		this.name = worldName;
 		
-		this.player = new PlayerEntity(this, 0, 128, 0);
+		this.idRegister = new IDRegister(this);
+		this.idRegister.registerDefaultBlocks();
+		this.idRegister.registerDefaultItems();
 
+		this.player = new PlayerEntity(this, 0, 128, 0);
 		this.renderables = new ArrayList<IRenderable>();
 		this.renderables.add(this.player);
 
 		this.chunkProvider = new ChunkProvider(this, load);
 
 		this.c2d = new Coord2D(-1, -1);
-
+		
 		this.scheduledUpdates = new LinkedList<ScheduledUpdate>();
 		this.newlyScheduledUpdates = new LinkedList<ScheduledUpdate>();
 		this.scheduledRenderablesAdding = new LinkedList<IRenderable>();
@@ -81,6 +90,18 @@ public class World implements IRenderable {
 				(int) this.player.getPosZ(), Settings.getInstance().drawDistance.getValue());
 	}
 
+	public IDRegister getRegister() {
+		return this.idRegister;
+	}
+	
+	public Block getBlockObject(int x, int y, int z) {
+		return this.idRegister.getBlock(this.getBlock(x, y, z));
+	}
+	
+	public Block getBlockObject(int id) {
+		return this.idRegister.getBlock(id);
+	}
+	
 	public Coord2D getCoord2D(int x, int y) {
 		this.c2d.set(x, y);
 		return this.c2d;
@@ -95,13 +116,19 @@ public class World implements IRenderable {
 		return this.chunkProvider;
 	}
 	
-	public DataManager getDataManager() {
+	public IBlockDataManager getBlockDataManager() {
 		return this.blockDataManager;
 	}
 	
-	public void createDataManager(File file) {
+	public IItemDataManager getItemDataManager() {
+		return this.itemDataManager;
+	}
+	
+	public void createDataManagers(File blockDataFile, File itemDataFile) {
 		try {
-			this.blockDataManager = new DataManager(file);
+			DataManager n = new DataManager(blockDataFile, itemDataFile);
+			this.itemDataManager = n;
+			this.blockDataManager = n;
 		} catch (IOException e) {
 			Logger.getGlobal().warning("Can't create data file!");
 		}
@@ -158,7 +185,7 @@ public class World implements IRenderable {
 
 	public boolean isOccluder(int x, int y, int z) {
 		int id = this.getBlock(x, y, z);
-		return id > 0 ? Block.getBlock((byte) id).isOccluder() : false;
+		return id > 0 ? this.getBlockObject(id).isOccluder() : false;
 	}
 
 	public void updateNeighbours(int x, int y, int z) {
@@ -173,7 +200,7 @@ public class World implements IRenderable {
 	public void updateBlock(int x, int y, int z) {
 		int id = this.getBlock(x, y, z);
 		if(id > 0) {
-			Block.getBlock(id).onTick(x, y, z, this);
+			this.getBlockObject(id).onTick(x, y, z, this);
 		}
 
 	}
@@ -223,11 +250,11 @@ public class World implements IRenderable {
 			Chunk c = this.chunkProvider.getChunk(coord);
 			
 			if(notify) {
-				Block before = Block.getBlock(getBlock(x, y, z));
-				
-				if(before != null) { 
-					before.onRemoved(x, y, z, this);
-				}
+			Block before = this.getBlockObject(x, y, z);
+			
+			if(before != null) { 
+				before.onRemoved(x, y, z, this);
+			}
 			}
 			
 			c.setBlock(icx, y, icz, id, true);
@@ -239,7 +266,9 @@ public class World implements IRenderable {
 		}
 		
 		if(notify) {
-			if(id != 0) Block.getBlock(id).onPlaced(x, y, z, this);
+			if(id != 0) {
+				this.getBlockObject(id).onPlaced(x, y, z, this);
+			}
 		}
 	}
 
@@ -302,7 +331,7 @@ public class World implements IRenderable {
 				for(int z = z0; z < z1; ++z) {
 					int blockId = getBlock(x, y, z);
 					if(blockId > 0) {
-						Block block = Block.getBlock(blockId);
+						Block block = this.getBlockObject(blockId);
 						if(block.isCollidable()) {
 							AABB blockBB = block.getOffsetAABB(x, y, z);
 							xm = blockBB.clipXCollide(bb, xm);
@@ -318,7 +347,7 @@ public class World implements IRenderable {
 				for(int z = z0; z < z1; ++z) {
 					int blockId = getBlock(x, y, z);
 					if(blockId > 0) {
-						Block block = Block.getBlock(blockId);
+						Block block = this.getBlockObject(blockId);
 						if(block.isCollidable()) {
 							AABB blockBB = block.getOffsetAABB(x, y, z);
 							ym = blockBB.clipYCollide(bb, ym);
@@ -334,7 +363,7 @@ public class World implements IRenderable {
 				for(int z = z0; z < z1; ++z) {
 					int blockId = getBlock(x, y, z);
 					if(blockId > 0) {
-						Block block = Block.getBlock(blockId);
+						Block block = this.getBlockObject(blockId);
 						if(block.isCollidable()) {
 							AABB blockBB = block.getOffsetAABB(x, y, z);
 							zm = blockBB.clipZCollide(bb, zm);
@@ -362,6 +391,12 @@ public class World implements IRenderable {
 
 	public void saveAllChunks() {
 		this.chunkProvider.loader.saveAll();
+		
+		try {
+			this.idRegister.saveIDs(IDRegister.dataFile);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 
 	public List<IRenderable> getRenderables() {
@@ -411,6 +446,9 @@ public class World implements IRenderable {
 	}
 
 	public boolean containsData(int x, int y, int z, int key) {
+		if(blockDataManager == null)
+			return false;
+		
 		if(!this.blockDataManager.containsData(x, y, z))
 			return false;
 		
@@ -419,6 +457,74 @@ public class World implements IRenderable {
 	
 	public void removeData(int x, int y, int z) {
 		this.blockDataManager.getValuesForCoord(x, y, z).clear();
+	}
+	
+	
+
+	
+	public void setData(int identificator, int key, String value) {
+		Map<Integer, DataValue> coordData = itemDataManager.getValuesForIdentificator(identificator);
+		if (coordData.get(key) != null)
+			coordData.get(key).setData(value);
+		else
+			coordData.put(key, new DataValue(value));
+	}
+
+	public String getDataString(int identificator, int key) {
+		if (containsData(identificator, key)) {
+			return this.itemDataManager
+					.getValuesForIdentificator(identificator).get(key)
+					.getDataString();
+		}
+		
+		return null;
+	}
+	
+	public float getDataFloat(int identificator, int key) {
+		if (containsData(identificator, key)) {
+			return this.itemDataManager
+					.getValuesForIdentificator(identificator).get(key)
+					.getDataFloat();
+		}
+
+		return 0;
+	}
+
+	public boolean getDataBoolean(int identificator, int key) {
+		if (containsData(identificator, key)) {
+			return this.itemDataManager
+					.getValuesForIdentificator(identificator).get(key)
+					.getDataBoolean();
+		}
+
+		return false;
+	}
+
+	public int getDataInt(int identificator, int key) {
+		if (containsData(identificator, key)) {
+			return this.itemDataManager
+					.getValuesForIdentificator(identificator).get(key)
+					.getDataInt();
+		}
+
+		return 0;
+	}
+	
+	public boolean containsData(int identificator, int key) {
+		if(this.itemDataManager == null) {
+			return false;
+		}
+		
+		if(!this.itemDataManager.containsData(identificator)) {
+			return false;
+		}
+		
+		return (this.itemDataManager.getValuesForIdentificator(identificator).get(key) != null);
+	}
+	
+	public void removeData(int identificator) {
+		if(this.itemDataManager.containsData(identificator))
+			this.itemDataManager.getValuesForIdentificator(identificator).clear();
 	}
 	
 	@Override
@@ -440,6 +546,7 @@ public class World implements IRenderable {
 			this.renderables.remove(it.next());
 			it.remove();
 		}
+		
 		
 		for(Entry<Coord3D, Block> b : Block.tickingBlocks.entrySet()) {
 			if(b.getValue().isRequiringTick())
@@ -476,6 +583,7 @@ public class World implements IRenderable {
 		for(IRenderable r : this.renderables) {
 			r.onRenderTick(partialTickTime);
 		}
+		
 		
 		for(Entry<Coord3D, Block> b : Block.tickingBlocks.entrySet()) {
 			if(b.getValue().isRequiringRenderTick())

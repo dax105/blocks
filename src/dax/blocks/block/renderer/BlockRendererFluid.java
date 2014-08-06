@@ -9,27 +9,27 @@ public class BlockRendererFluid implements IBlockRenderer {
 
 	@Override
 	public void render(IChunkRenderer renderer, World world, Block block, int x, int y, int z) {
-		int blockID = block.getId();
+		int blockID = block.getID();
 		
 		float height = 0.85f;
 		
 		int blockIdAbove = world.getBlock(x, y + 1, z);
-		//Block blockAbove = Block.getBlock(blockIdAbove);
+		//Block blockAbove = world.getBlockObject(blockIdAbove);
 
 		int blockIdBelow = world.getBlock(x, y - 1, z);
-		Block blockBelow = Block.getBlock(blockIdBelow);
+		Block blockBelow = world.getBlockObject(blockIdBelow);
 
 		int blockIdInFront = world.getBlock(x, y, z + 1);
-		Block blockInFront = Block.getBlock(blockIdInFront);
+		Block blockInFront = world.getBlockObject(blockIdInFront);
 
 		int blockIdBehind = world.getBlock(x, y, z - 1);
-		Block blockBehind = Block.getBlock(blockIdBehind);
+		Block blockBehind = world.getBlockObject(blockIdBehind);
 
 		int blockIdOnRight = world.getBlock(x + 1, y, z);
-		Block blockOnRight = Block.getBlock(blockIdOnRight);
+		Block blockOnRight = world.getBlockObject(blockIdOnRight);
 
 		int blockIdOnLeft = world.getBlock(x - 1, y, z);
-		Block blockOnLeft = Block.getBlock(blockIdOnLeft);
+		Block blockOnLeft = world.getBlockObject(blockIdOnLeft);
 		
 		boolean sameAbove = blockID == blockIdAbove;
 
@@ -47,23 +47,23 @@ public class BlockRendererFluid implements IBlockRenderer {
 			
 			renderer.normal(0, 1, 0);
 			renderer.texCoord(
-					TextureManager.getX2(block.topTexture), 
-					TextureManager.getY1(block.topTexture)
+					TextureManager.getX2(block.getTopTexture()), 
+					TextureManager.getY1(block.getTopTexture())
 			);
 			renderer.vertexWithAO(x + 1, y + height, z, xp, zn, xpzn);
 			renderer.texCoord(
-					TextureManager.getX2(block.topTexture), 
-					TextureManager.getY2(block.topTexture)
+					TextureManager.getX2(block.getTopTexture()), 
+					TextureManager.getY2(block.getTopTexture())
 			);
 			renderer.vertexWithAO(x, y + height, z, xn, zn, xnzn);
 			renderer.texCoord(
-					TextureManager.getX1(block.topTexture), 
-					TextureManager.getY2(block.topTexture)
+					TextureManager.getX1(block.getTopTexture()), 
+					TextureManager.getY2(block.getTopTexture())
 			);
 			renderer.vertexWithAO(x, y + height, z + 1, xn, zp, xnzp);
 			renderer.texCoord(
-					TextureManager.getX1(block.topTexture), 
-					TextureManager.getY1(block.topTexture)
+					TextureManager.getX1(block.getTopTexture()), 
+					TextureManager.getY1(block.getTopTexture())
 			);
 			renderer.vertexWithAO(x + 1, y + height, z + 1, xp, zp, xpzp);
 		}
@@ -81,23 +81,23 @@ public class BlockRendererFluid implements IBlockRenderer {
 			
 			renderer.normal(0, -1, 0);
 			renderer.texCoord(
-					TextureManager.getX1(block.bottomTexture), 
-					TextureManager.getY2(block.bottomTexture)
+					TextureManager.getX1(block.getBottomTexture()), 
+					TextureManager.getY2(block.getBottomTexture())
 			);
 			renderer.vertexWithAO(x + 1, y, z + 1, xp, zp, xpzp);
 			renderer.texCoord(
-					TextureManager.getX1(block.bottomTexture), 
-					TextureManager.getY1(block.bottomTexture)
+					TextureManager.getX1(block.getBottomTexture()), 
+					TextureManager.getY1(block.getBottomTexture())
 			);
 			renderer.vertexWithAO(x, y, z + 1, xn, zp, xnzp);
 			renderer.texCoord(
-					TextureManager.getX2(block.bottomTexture), 
-					TextureManager.getY1(block.bottomTexture)
+					TextureManager.getX2(block.getBottomTexture()), 
+					TextureManager.getY1(block.getBottomTexture())
 			);
 			renderer.vertexWithAO(x, y, z, xn, zn, xnzn);
 			renderer.texCoord(
-					TextureManager.getX2(block.bottomTexture), 
-					TextureManager.getY2(block.bottomTexture)
+					TextureManager.getX2(block.getBottomTexture()), 
+					TextureManager.getY2(block.getBottomTexture())
 			);
 			renderer.vertexWithAO(x + 1, y, z, xp, zn, xpzn);
 		}
@@ -116,45 +116,45 @@ public class BlockRendererFluid implements IBlockRenderer {
 			if(sameAbove) {
 				renderer.normal(0, 0, 1);
 				renderer.texCoord(
-						TextureManager.getX2(block.sideTexture), 
-						TextureManager.getY1(block.sideTexture)
+						TextureManager.getX2(block.getSideTexture()), 
+						TextureManager.getY1(block.getSideTexture())
 				);
 				renderer.vertexWithAO(x + 1, y + 1, z + 1, xp, zp, xpzp);
 				renderer.texCoord(
-						TextureManager.getX1(block.sideTexture), 
-						TextureManager.getY1(block.sideTexture)
+						TextureManager.getX1(block.getSideTexture()), 
+						TextureManager.getY1(block.getSideTexture())
 				);
 				renderer.vertexWithAO(x, y + 1, z + 1, xn, zp, xnzp);
 				renderer.texCoord(
-						TextureManager.getX1(block.sideTexture), 
-						TextureManager.getY2(block.sideTexture)
+						TextureManager.getX1(block.getSideTexture()), 
+						TextureManager.getY2(block.getSideTexture())
 				);
 				renderer.vertexWithAO(x, y, z + 1, xn, zn, xnzn);
 				renderer.texCoord(
-						TextureManager.getX2(block.sideTexture), 
-						TextureManager.getY2(block.sideTexture)
+						TextureManager.getX2(block.getSideTexture()), 
+						TextureManager.getY2(block.getSideTexture())
 				);
 				renderer.vertexWithAO(x + 1, y, z + 1, xp, zn, xpzn);
 			} else {
 				renderer.normal(0, 0, 1);
 				renderer.texCoord(
-						TextureManager.getX2(block.sideTexture), 
-						TextureManager.getY1(block.sideTexture)
+						TextureManager.getX2(block.getSideTexture()), 
+						TextureManager.getY1(block.getSideTexture())
 				);
 				renderer.vertexWithAO(x + 1, y + height, z + 1, xp, zp, xpzp);
 				renderer.texCoord(
-						TextureManager.getX1(block.sideTexture), 
-						TextureManager.getY1(block.sideTexture)
+						TextureManager.getX1(block.getSideTexture()), 
+						TextureManager.getY1(block.getSideTexture())
 				);
 				renderer.vertexWithAO(x, y + height, z + 1, xn, zp, xnzp);
 				renderer.texCoord(
-						TextureManager.getX1(block.sideTexture), 
-						TextureManager.getY2(block.sideTexture)
+						TextureManager.getX1(block.getSideTexture()), 
+						TextureManager.getY2(block.getSideTexture())
 				);
 				renderer.vertexWithAO(x, y, z + 1, xn, zn, xnzn);
 				renderer.texCoord(
-						TextureManager.getX2(block.sideTexture), 
-						TextureManager.getY2(block.sideTexture)
+						TextureManager.getX2(block.getSideTexture()), 
+						TextureManager.getY2(block.getSideTexture())
 				);
 				renderer.vertexWithAO(x + 1, y, z + 1, xp, zn, xpzn);
 			}
@@ -162,23 +162,23 @@ public class BlockRendererFluid implements IBlockRenderer {
 				world.getBlock(x, y + 1, z + 1) != blockID) {
 			renderer.normal(0, 0, 1);
 			renderer.texCoord(
-					TextureManager.getX2(block.sideTexture), 
-					TextureManager.getY1(block.sideTexture)
+					TextureManager.getX2(block.getSideTexture()), 
+					TextureManager.getY1(block.getSideTexture())
 			);
 			renderer.vertex(x + 1, y + 1, z + 1);
 			renderer.texCoord(
-					TextureManager.getX1(block.sideTexture), 
-					TextureManager.getY1(block.sideTexture)
+					TextureManager.getX1(block.getSideTexture()), 
+					TextureManager.getY1(block.getSideTexture())
 			);
 			renderer.vertex(x, y + 1, z + 1);
 			renderer.texCoord(
-					TextureManager.getX1(block.sideTexture), 
-					TextureManager.getY2(block.sideTexture)
+					TextureManager.getX1(block.getSideTexture()), 
+					TextureManager.getY2(block.getSideTexture())
 			);
 			renderer.vertex(x, y + height, z + 1);
 			renderer.texCoord(
-					TextureManager.getX2(block.sideTexture), 
-					TextureManager.getY2(block.sideTexture)
+					TextureManager.getX2(block.getSideTexture()), 
+					TextureManager.getY2(block.getSideTexture())
 			);
 			renderer.vertex(x + 1, y + height, z + 1);
 		}
@@ -197,45 +197,45 @@ public class BlockRendererFluid implements IBlockRenderer {
 			if(sameAbove) {
 				renderer.normal(0, 0, -1);
 				renderer.texCoord(
-						TextureManager.getX1(block.sideTexture), 
-						TextureManager.getY2(block.sideTexture)
+						TextureManager.getX1(block.getSideTexture()), 
+						TextureManager.getY2(block.getSideTexture())
 				);
 				renderer.vertexWithAO(x + 1, y, z, xp, zn, xpzn);
 				renderer.texCoord(
-						TextureManager.getX2(block.sideTexture), 
-						TextureManager.getY2(block.sideTexture)
+						TextureManager.getX2(block.getSideTexture()), 
+						TextureManager.getY2(block.getSideTexture())
 				);
 				renderer.vertexWithAO(x, y, z, xn, zn, xnzn);
 				renderer.texCoord(
-						TextureManager.getX2(block.sideTexture), 
-						TextureManager.getY1(block.sideTexture)
+						TextureManager.getX2(block.getSideTexture()), 
+						TextureManager.getY1(block.getSideTexture())
 				);
 				renderer.vertexWithAO(x, y + 1, z, xn, zp, xnzp);
 				renderer.texCoord(
-						TextureManager.getX1(block.sideTexture), 
-						TextureManager.getY1(block.sideTexture)
+						TextureManager.getX1(block.getSideTexture()), 
+						TextureManager.getY1(block.getSideTexture())
 				);
 				renderer.vertexWithAO(x + 1, y + 1, z, xp, zp, xpzp);
 			} else {
 				renderer.normal(0, 0, -1);
 				renderer.texCoord(
-						TextureManager.getX1(block.sideTexture), 
-						TextureManager.getY2(block.sideTexture)
+						TextureManager.getX1(block.getSideTexture()), 
+						TextureManager.getY2(block.getSideTexture())
 				);
 				renderer.vertexWithAO(x + 1, y, z, xp, zn, xpzn);
 				renderer.texCoord(
-						TextureManager.getX2(block.sideTexture), 
-						TextureManager.getY2(block.sideTexture)
+						TextureManager.getX2(block.getSideTexture()), 
+						TextureManager.getY2(block.getSideTexture())
 				);
 				renderer.vertexWithAO(x, y, z, xn, zn, xnzn);
 				renderer.texCoord(
-						TextureManager.getX2(block.sideTexture), 
-						TextureManager.getY1(block.sideTexture)
+						TextureManager.getX2(block.getSideTexture()), 
+						TextureManager.getY1(block.getSideTexture())
 				);
 				renderer.vertexWithAO(x, y + height, z, xn, zp, xnzp);
 				renderer.texCoord(
-						TextureManager.getX1(block.sideTexture), 
-						TextureManager.getY1(block.sideTexture)
+						TextureManager.getX1(block.getSideTexture()), 
+						TextureManager.getY1(block.getSideTexture())
 				);
 				renderer.vertexWithAO(x + 1, y + height, z, xp, zp, xpzp);
 			}
@@ -243,23 +243,23 @@ public class BlockRendererFluid implements IBlockRenderer {
 				world.getBlock(x, y + 1, z - 1) != blockID) {
 			renderer.normal(0, 0, -1);
 			renderer.texCoord(
-					TextureManager.getX1(block.sideTexture), 
-					TextureManager.getY2(block.sideTexture)
+					TextureManager.getX1(block.getSideTexture()), 
+					TextureManager.getY2(block.getSideTexture())
 			);
 			renderer.vertex(x + 1, y + height, z);
 			renderer.texCoord(
-					TextureManager.getX2(block.sideTexture), 
-					TextureManager.getY2(block.sideTexture)
+					TextureManager.getX2(block.getSideTexture()), 
+					TextureManager.getY2(block.getSideTexture())
 			);
 			renderer.vertex(x, y + height, z);
 			renderer.texCoord(
-					TextureManager.getX2(block.sideTexture), 
-					TextureManager.getY1(block.sideTexture)
+					TextureManager.getX2(block.getSideTexture()), 
+					TextureManager.getY1(block.getSideTexture())
 			);
 			renderer.vertex(x, y + 1, z);
 			renderer.texCoord(
-					TextureManager.getX1(block.sideTexture), 
-					TextureManager.getY1(block.sideTexture)
+					TextureManager.getX1(block.getSideTexture()), 
+					TextureManager.getY1(block.getSideTexture())
 			);
 			renderer.vertex(x + 1, y + 1, z);
 		}
@@ -278,45 +278,45 @@ public class BlockRendererFluid implements IBlockRenderer {
 			if(sameAbove) {
 				renderer.normal(1, 0, 0);
 				renderer.texCoord(
-						TextureManager.getX2(block.sideTexture), 
-						TextureManager.getY1(block.sideTexture)
+						TextureManager.getX2(block.getSideTexture()), 
+						TextureManager.getY1(block.getSideTexture())
 				);
 				renderer.vertexWithAO(x + 1, y + 1, z, xn, zn, xnzn);
 				renderer.texCoord(
-						TextureManager.getX1(block.sideTexture), 
-						TextureManager.getY1(block.sideTexture)
+						TextureManager.getX1(block.getSideTexture()), 
+						TextureManager.getY1(block.getSideTexture())
 				);
 				renderer.vertexWithAO(x + 1, y + 1, z + 1, xp, zn, xpzn);
 				renderer.texCoord(
-						TextureManager.getX1(block.sideTexture), 
-						TextureManager.getY2(block.sideTexture)
+						TextureManager.getX1(block.getSideTexture()), 
+						TextureManager.getY2(block.getSideTexture())
 				);
 				renderer.vertexWithAO(x + 1, y, z + 1, xp, zp, xpzp);
 				renderer.texCoord(
-						TextureManager.getX2(block.sideTexture), 
-						TextureManager.getY2(block.sideTexture)
+						TextureManager.getX2(block.getSideTexture()), 
+						TextureManager.getY2(block.getSideTexture())
 				);
 				renderer.vertexWithAO(x + 1, y, z, xn, zp, xnzp);
 			} else {
 				renderer.normal(1, 0, 0);
 				renderer.texCoord(
-						TextureManager.getX2(block.sideTexture), 
-						TextureManager.getY1(block.sideTexture)
+						TextureManager.getX2(block.getSideTexture()), 
+						TextureManager.getY1(block.getSideTexture())
 				);
 				renderer.vertexWithAO(x + 1, y + height, z, xn, zn, xnzn);
 				renderer.texCoord(
-						TextureManager.getX1(block.sideTexture), 
-						TextureManager.getY1(block.sideTexture)
+						TextureManager.getX1(block.getSideTexture()), 
+						TextureManager.getY1(block.getSideTexture())
 				);
 				renderer.vertexWithAO(x + 1, y + height, z + 1, xp, zn, xpzn);
 				renderer.texCoord(
-						TextureManager.getX1(block.sideTexture), 
-						TextureManager.getY2(block.sideTexture)
+						TextureManager.getX1(block.getSideTexture()), 
+						TextureManager.getY2(block.getSideTexture())
 				);
 				renderer.vertexWithAO(x + 1, y, z + 1, xp, zp, xpzp);
 				renderer.texCoord(
-						TextureManager.getX2(block.sideTexture), 
-						TextureManager.getY2(block.sideTexture)
+						TextureManager.getX2(block.getSideTexture()), 
+						TextureManager.getY2(block.getSideTexture())
 				);
 				renderer.vertexWithAO(x + 1, y, z, xn, zp, xnzp);
 			}
@@ -324,23 +324,23 @@ public class BlockRendererFluid implements IBlockRenderer {
 				world.getBlock(x + 1, y + 1, z) != blockID) {
 			renderer.normal(1, 0, 0);
 			renderer.texCoord(
-					TextureManager.getX2(block.sideTexture), 
-					TextureManager.getY1(block.sideTexture)
+					TextureManager.getX2(block.getSideTexture()), 
+					TextureManager.getY1(block.getSideTexture())
 			);
 			renderer.vertex(x + 1, y + 1, z);
 			renderer.texCoord(
-					TextureManager.getX1(block.sideTexture), 
-					TextureManager.getY1(block.sideTexture)
+					TextureManager.getX1(block.getSideTexture()), 
+					TextureManager.getY1(block.getSideTexture())
 			);
 			renderer.vertex(x + 1, y + 1, z + 1);
 			renderer.texCoord(
-					TextureManager.getX1(block.sideTexture), 
-					TextureManager.getY2(block.sideTexture)
+					TextureManager.getX1(block.getSideTexture()), 
+					TextureManager.getY2(block.getSideTexture())
 			);
 			renderer.vertex(x + 1, y + height, z + 1);
 			renderer.texCoord(
-					TextureManager.getX2(block.sideTexture), 
-					TextureManager.getY2(block.sideTexture)
+					TextureManager.getX2(block.getSideTexture()), 
+					TextureManager.getY2(block.getSideTexture())
 			);
 			renderer.vertex(x + 1, y + height, z);
 		}
@@ -359,45 +359,45 @@ public class BlockRendererFluid implements IBlockRenderer {
 			if(sameAbove) {
 				renderer.normal(-1, 0, 0);
 				renderer.texCoord(
-						TextureManager.getX2(block.sideTexture), 
-						TextureManager.getY1(block.sideTexture)
+						TextureManager.getX2(block.getSideTexture()), 
+						TextureManager.getY1(block.getSideTexture())
 				);
 				renderer.vertexWithAO(x, y + 1, z + 1, xp, zn, xpzn);
 				renderer.texCoord(
-						TextureManager.getX1(block.sideTexture), 
-						TextureManager.getY1(block.sideTexture)
+						TextureManager.getX1(block.getSideTexture()), 
+						TextureManager.getY1(block.getSideTexture())
 				);
 				renderer.vertexWithAO(x, y + 1, z, xn, zn, xnzn);
 				renderer.texCoord(
-						TextureManager.getX1(block.sideTexture), 
-						TextureManager.getY2(block.sideTexture)
+						TextureManager.getX1(block.getSideTexture()), 
+						TextureManager.getY2(block.getSideTexture())
 				);
 				renderer.vertexWithAO(x, y, z, xn, zp, xnzp);
 				renderer.texCoord(
-						TextureManager.getX2(block.sideTexture), 
-						TextureManager.getY2(block.sideTexture)
+						TextureManager.getX2(block.getSideTexture()), 
+						TextureManager.getY2(block.getSideTexture())
 				);
 				renderer.vertexWithAO(x, y, z + 1, xp, zp, xpzp);
 			} else {
 				renderer.normal(-1, 0, 0);
 				renderer.texCoord(
-						TextureManager.getX2(block.sideTexture), 
-						TextureManager.getY1(block.sideTexture)
+						TextureManager.getX2(block.getSideTexture()), 
+						TextureManager.getY1(block.getSideTexture())
 				);
 				renderer.vertexWithAO(x, y + height, z + 1, xp, zn, xpzn);
 				renderer.texCoord(
-						TextureManager.getX1(block.sideTexture), 
-						TextureManager.getY1(block.sideTexture)
+						TextureManager.getX1(block.getSideTexture()), 
+						TextureManager.getY1(block.getSideTexture())
 				);
 				renderer.vertexWithAO(x, y + height, z, xn, zn, xnzn);
 				renderer.texCoord(
-						TextureManager.getX1(block.sideTexture), 
-						TextureManager.getY2(block.sideTexture)
+						TextureManager.getX1(block.getSideTexture()), 
+						TextureManager.getY2(block.getSideTexture())
 				);
 				renderer.vertexWithAO(x, y, z, xn, zp, xnzp);
 				renderer.texCoord(
-						TextureManager.getX2(block.sideTexture), 
-						TextureManager.getY2(block.sideTexture)
+						TextureManager.getX2(block.getSideTexture()), 
+						TextureManager.getY2(block.getSideTexture())
 				);
 				renderer.vertexWithAO(x, y, z + 1, xp, zp, xpzp);
 			} 
@@ -405,23 +405,23 @@ public class BlockRendererFluid implements IBlockRenderer {
 				world.getBlock(x - 1, y + 1, z) != blockID) {
 			renderer.normal(-1, 0, 0);
 			renderer.texCoord(
-					TextureManager.getX2(block.sideTexture), 
-					TextureManager.getY1(block.sideTexture)
+					TextureManager.getX2(block.getSideTexture()), 
+					TextureManager.getY1(block.getSideTexture())
 			);
 			renderer.vertex(x, y + 1, z + 1);
 			renderer.texCoord(
-					TextureManager.getX1(block.sideTexture), 
-					TextureManager.getY1(block.sideTexture)
+					TextureManager.getX1(block.getSideTexture()), 
+					TextureManager.getY1(block.getSideTexture())
 			);
 			renderer.vertex(x, y + 1, z);
 			renderer.texCoord(
-					TextureManager.getX1(block.sideTexture), 
-					TextureManager.getY2(block.sideTexture)
+					TextureManager.getX1(block.getSideTexture()), 
+					TextureManager.getY2(block.getSideTexture())
 			);
 			renderer.vertex(x, y + height, z);
 			renderer.texCoord(
-					TextureManager.getX2(block.sideTexture), 
-					TextureManager.getY2(block.sideTexture)
+					TextureManager.getX2(block.getSideTexture()), 
+					TextureManager.getY2(block.getSideTexture())
 			);
 			renderer.vertex(x, y + height, z + 1);
 		}
@@ -439,5 +439,4 @@ public class BlockRendererFluid implements IBlockRenderer {
 		// TODO Auto-generated method stub
 		
 	}
-	
 }

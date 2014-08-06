@@ -64,6 +64,8 @@ public class SoundManager {
 		SoundManager.sounds.put("fall_hard", "fall_hard.wav");
 		SoundManager.sounds.put("fall_soft", "fall_soft.wav");
 		SoundManager.sounds.put("explosion", "explosion.wav");
+		
+		SoundManager.sounds.put("holy_chorus", "hch.wav");
 
 
 		ListenerData d = system.getListenerData();

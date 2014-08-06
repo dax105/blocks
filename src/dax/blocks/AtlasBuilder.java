@@ -13,6 +13,7 @@ import org.newdawn.slick.opengl.Texture;
 import org.newdawn.slick.util.BufferedImageUtil;
 
 import dax.blocks.console.Console;
+import dax.blocks.util.GameMath;
 
 public class AtlasBuilder {
 

@@ -12,12 +12,12 @@ import java.util.logging.Logger;
 
 import org.xerial.snappy.Snappy;
 
-import dax.blocks.Coord2D;
 import dax.blocks.Game;
-import dax.blocks.WorldsManager;
 import dax.blocks.console.Console;
+import dax.blocks.util.Coord2D;
 import dax.blocks.world.World;
 import dax.blocks.world.WorldInfo;
+import dax.blocks.world.WorldsManager;
 
 public class ChunkSaveManager {
 
@@ -34,14 +34,14 @@ public class ChunkSaveManager {
 				dir.mkdir();
 			}	
 
-			this.world.createDataManager(new File(dir, "bdf"));
+			this.world.createDataManagers(new File(dir, "bdf"), new File(dir, "idf"));
 			
-			File file = new File(dir, "world" + ".txt");
+			/*File file = new File(dir, "world" + ".txt");
 
 			if(!file.exists()) {
 				Console.println("World save not found!");
 				return;
-			}
+			}*/
 
 			WorldInfo i = WorldsManager.getInstance().getWorld(name);
 			this.world.getPlayer().setPosition(i.getPlayerX(), i.getPlayerY(), i.getPlayerZ());
@@ -91,12 +91,12 @@ public class ChunkSaveManager {
 		i.setPlayerTilt(this.world.getPlayer().getTilt());
 		i.setPlayerHeading(this.world.getPlayer().getHeading());
 		i.setWorldSeed(this.provider.seed);
-		i.setWorldVersion("" + WORLD_VERSION);
+		i.setWorldVersion("" + ChunkSaveManager.WORLD_VERSION);
 		
 		i.saveWorldInfo();
 		
 		try {
-			this.world.getDataManager().save();
+			this.world.getBlockDataManager().save();
 		} catch (IOException e) {
 			Logger.getGlobal().warning("Can't save data file!");
 		}

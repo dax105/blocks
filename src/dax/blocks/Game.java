@@ -6,6 +6,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ListIterator;
 import java.util.Locale;
+
 import org.lwjgl.Sys;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
@@ -14,8 +15,8 @@ import org.lwjgl.opengl.Display;
 import org.lwjgl.opengl.GL11;
 import org.newdawn.slick.Color;
 import org.newdawn.slick.TrueTypeFont;
+
 import dax.blocks.auth.AuthManager;
-import dax.blocks.block.Block;
 import dax.blocks.console.Console;
 import dax.blocks.gui.GuiObjectBlank;
 import dax.blocks.gui.GuiScreen;
@@ -32,7 +33,10 @@ import dax.blocks.render.RenderEngine;
 import dax.blocks.settings.Keyconfig;
 import dax.blocks.settings.Settings;
 import dax.blocks.sound.SoundManager;
+import dax.blocks.util.GLHelper;
+import dax.blocks.util.GameUtil;
 import dax.blocks.world.World;
+import dax.blocks.world.WorldsManager;
 
 public class Game implements Runnable {
 	public static final String TITLE = Start.GAME_NAME + " v" + Start.GAME_VERSION;
@@ -179,6 +183,8 @@ public class Game implements Runnable {
 		ModelManager.getInstance().load();
 		this.displayLoadingScreen("Loading keyconfig...");
 		Keyconfig.load();
+		this.displayLoadingScreen("Creating world config");
+		WorldsManager.getInstance().load();
 		this.displayLoadingScreen("Loading sounds...");
 
 		this.lastFPS = getTime();
@@ -493,11 +499,6 @@ public class Game implements Runnable {
 					buildText
 			);
 		}
-		
-		Block b = Block.getBlock(world.getPlayer().getSelectedBlockID());
-		int textureid = b.sideTexture;
-
-		GLHelper.drawFromAtlas(textureid, 25, 75, Settings.getInstance().windowHeight.getValue() - 75, Settings.getInstance().windowHeight.getValue() - 25);
 
 		Runtime runtime = Runtime.getRuntime();
 

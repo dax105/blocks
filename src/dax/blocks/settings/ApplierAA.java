@@ -2,8 +2,8 @@ package dax.blocks.settings;
 
 import org.lwjgl.opengl.Display;
 
-import dax.blocks.GLHelper;
 import dax.blocks.Game;
+import dax.blocks.util.GLHelper;
 
 public class ApplierAA extends Applier {
 

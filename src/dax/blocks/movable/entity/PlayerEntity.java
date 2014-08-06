@@ -5,16 +5,20 @@ import java.util.Random;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
 
-import dax.blocks.GLHelper;
 import dax.blocks.Game;
 import dax.blocks.TextureManager;
 import dax.blocks.block.Block;
 import dax.blocks.collisions.AABB;
 import dax.blocks.gui.ingame.GuiManager;
+import dax.blocks.item.stack.BasicBlockStack;
+import dax.blocks.item.stack.BasicItemStack;
+import dax.blocks.item.stack.IObjectStack;
 import dax.blocks.settings.Keyconfig;
 import dax.blocks.settings.Settings;
 import dax.blocks.sound.SoundManager;
+import dax.blocks.util.GLHelper;
 import dax.blocks.world.Explosion;
+import dax.blocks.world.IDRegister;
 import dax.blocks.world.World;
 
 public class PlayerEntity extends Entity {
@@ -27,7 +31,7 @@ public class PlayerEntity extends Entity {
 	public static final float MAX_WALK_SPEED = 0.25f;
 	public static final int REGENERATION_TICKS = 20;
 
-	private int selectedBlockID = 1;
+	private IObjectStack inHand;
 
 	private int lookingAtX;
 	private int lookingAtY;
@@ -60,6 +64,7 @@ public class PlayerEntity extends Entity {
 
 	public PlayerEntity(World world, float x, float y, float z) {
 		super(world, x, y, z);
+		this.setSelectedBlockID(1);
 		this.bb = new AABB(this.posX - PlayerEntity.PLAYER_SIZE / 2, this.posY,
 				this.posZ - PlayerEntity.PLAYER_SIZE / 2, this.posX + PlayerEntity.PLAYER_SIZE / 2, this.posY
 						+ PlayerEntity.PLAYER_HEIGHT, this.posZ + PlayerEntity.PLAYER_SIZE / 2);
@@ -102,11 +107,8 @@ public class PlayerEntity extends Entity {
 				if(Mouse.getEventButtonState()) {
 					if(Mouse.getEventButton() == 0
 							&& Keyconfig.isDown(Keyconfig.crouch)) {
-						if(this.hasSelected) {
-							Block.getBlock(
-									this.world.getBlock(this.lookingAtX, this.lookingAtY,
-											this.lookingAtZ)).onClicked(0,
-									this.lookingAtX, this.lookingAtY, this.lookingAtZ, this.world);
+						if(hasSelected) {
+							this.inHand.useItem(0, this.lookingAtX, this.lookingAtY, this.lookingAtZ, 0, this.world);
 						}
 					} else if(Mouse.getEventButton() == 0) {
 						if(this.hasSelected) {
@@ -117,8 +119,7 @@ public class PlayerEntity extends Entity {
 					if(Mouse.getEventButton() == 1) {
 						if(this.hasSelected	&& (this.lookingAtX != this.placesAtX || 
 									this.lookingAtY != this.placesAtY || this.lookingAtZ != this.placesAtZ)) {
-							this.world.setBlock(this.placesAtX, this.placesAtY, this.placesAtZ,
-									this.selectedBlockID, true, true);
+							this.inHand.useItem(1, this.placesAtX, this.placesAtY, this.placesAtZ, 0, this.world);
 						}
 					}
 				}
@@ -132,7 +133,12 @@ public class PlayerEntity extends Entity {
 			}
 		}
 		
-		if(!this.wasOnGround && this.onGround) {
+		if(this.inHand.shouldRecycle()) {
+			this.inHand = new BasicBlockStack(world.getBlockObject(this.inHand.getItemID()), 32);
+		}
+		
+
+		if (!this.wasOnGround && this.onGround) {
 
 			Block block = this.standingOn;
 
@@ -156,7 +162,7 @@ public class PlayerEntity extends Entity {
 		if(this.stepTimer <= 0 && this.onGround) {
 			Block block = this.standingOn;
 			if(block != null) {
-				SoundManager.getInstance().playSound(block.getStepSound(),
+				SoundManager.getInstance().playSound(block.getFootStepSound(),
 						1.0f - (this.rand.nextFloat() * 0.2f));
 			}
 
@@ -217,7 +223,7 @@ public class PlayerEntity extends Entity {
 
 		}
 
-		this.standingOn = Block.getBlock(b);
+		this.standingOn = world.getBlockObject(b);
 
 	}
 
@@ -251,6 +257,8 @@ public class PlayerEntity extends Entity {
 
 	@Override
 	public void renderGui(float ptt) {
+		this.inHand.renderGUITexture(25, Settings.getInstance().windowHeight.getValue() - 75, 50, 50);
+		
 		int heartsX = 80;
 		int heartsY = Settings.getInstance().windowHeight.getValue() - 43;
 
@@ -271,17 +279,15 @@ public class PlayerEntity extends Entity {
 		int blockPosY = (int) Math.floor(this.posY);
 		int blockPosZ = (int) Math.floor(this.posZ);
 
-		boolean inWater = ((this.world.getBlock(blockPosX, blockPosY, blockPosZ) == Block.water
-				.getId()) || (this.world.getBlock(blockPosX, blockPosY + 1,
-				blockPosZ) == Block.water.getId()));
-		float d0 = Block.getBlock(this.world.getBlock(blockPosX, blockPosY,
-				blockPosZ)) != null ? Block.getBlock(
-				this.world.getBlock(blockPosX, blockPosY, blockPosZ)).getDensity()
-				: 1;
-		float d1 = Block.getBlock(this.world.getBlock(blockPosX, blockPosY + 1,
-				blockPosZ)) != null ? Block.getBlock(
-				this.world.getBlock(blockPosX, blockPosY + 1, blockPosZ))
-				.getDensity() : 1;
+		boolean inWater = ((this.world.getBlockObject(blockPosX, blockPosY, blockPosZ) == IDRegister.water) || 
+				(this.world.getBlockObject(blockPosX, blockPosY + 1, 	blockPosZ) == IDRegister.water));
+
+		float d0 = this.world.getBlockObject(blockPosX, blockPosY, blockPosZ) != null ? 
+				this.world.getBlockObject(blockPosX, blockPosY, blockPosZ).getDensity() : 1;
+				
+		float d1 = this.world.getBlockObject(blockPosX, blockPosY + 1, blockPosZ) != null ? 
+				this.world.getBlockObject(blockPosX, blockPosY + 1, blockPosZ).getDensity() : 1;
+				
 		float density = (d0 + d1) / 2f;
 		float frictionMultipler = 1f / density;
 
@@ -385,8 +391,14 @@ public class PlayerEntity extends Entity {
 		int wh = Mouse.getEventDWheel();
 
 		if(wh > 0) {
-			int newSelectedBlock = this.selectedBlockID + 1;
-			if (newSelectedBlock > (Block.blocksCount)) {
+			int newSelectedBlock = this.inHand.getItemID() + 1;
+			
+			if(newSelectedBlock == 18) {
+				this.inHand = new BasicItemStack(IDRegister.itemImaginaryChocolate, 1);
+				return;
+			}
+			
+			if(newSelectedBlock > (world.getRegister().getBlockCount())) {
 				newSelectedBlock = 1;
 			}
 
@@ -394,9 +406,9 @@ public class PlayerEntity extends Entity {
 		}
 
 		if(wh < 0) {
-			int newSelectedBlock = this.selectedBlockID - 1;
-			if (newSelectedBlock < 1) {
-				newSelectedBlock = Block.blocksCount;
+			int newSelectedBlock = this.inHand.getItemID() - 1;
+			if(newSelectedBlock < 1) {
+				newSelectedBlock = world.getRegister().getBlockCount();
 			}
 
 			this.setSelectedBlockID(newSelectedBlock);
@@ -456,11 +468,11 @@ public class PlayerEntity extends Entity {
 	}
 
 	public int getSelectedBlockID() {
-		return this.selectedBlockID;
+		return this.inHand.getItemID();
 	}
 
 	public void setSelectedBlockID(int selectedBlockID) {
-		this.selectedBlockID = selectedBlockID;
+		this.inHand = new BasicBlockStack(world.getBlockObject(selectedBlockID), 32);
 	}
 
 	public float getHeading() {

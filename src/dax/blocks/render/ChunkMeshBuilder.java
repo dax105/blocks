@@ -40,7 +40,7 @@ public class ChunkMeshBuilder {
 						int blockID = c.getBlock(x, y, z);
 
 						if(blockID > 0) {
-							Block block = Block.getBlock(blockID);
+							Block block = c.world.getBlockObject(blockID);
 
 							if(x < minX) minX = x;
 							if(y-startY < minY) minY = y-startY;
@@ -82,7 +82,6 @@ public class ChunkMeshBuilder {
 			if(opaqueCount > 0) {
 				//GL11.glNewList(listIDs + currentOffset, GL11.GL_COMPILE);
 				renderer.begin();
-				cm.setHandle(RenderPass.OPAQUE, renderer.getHandle());
 				//currentOffset++;
 
 				// All gl calls to draw the chunk (OPAQUE PASS) should be here
@@ -92,7 +91,7 @@ public class ChunkMeshBuilder {
 						for(int y = startY; y < endY; y++) {
 							int blockID = c.getBlock(x, y, z);
 							if(blockID > 0) {
-								Block block = Block.getBlock(blockID);
+								Block block = c.world.getBlockObject(blockID);
 
 								if(block.getRenderPass() == RenderPass.OPAQUE) {
 									
@@ -114,12 +113,16 @@ public class ChunkMeshBuilder {
 
 				renderer.end();
 				
+				if (renderer.getVertexCount() == 0) {
+					renderer.delete(renderer.getHandle());
+				} else {
+					cm.setHandle(RenderPass.OPAQUE, renderer.getHandle());
+				}
+				
 			}
 
 			if(transparentCount > 0) {
 				renderer.begin();
-				cm.setHandle(RenderPass.TRANSPARENT, renderer.getHandle());
-
 
 				// All gl calls to draw the chunk (TRANSPARENT PASS) should be here
 
@@ -128,7 +131,7 @@ public class ChunkMeshBuilder {
 						for(int y = startY; y < endY; y++) {
 							int blockID = c.getBlock(x, y, z);
 							if(blockID > 0) {
-								Block block = Block.getBlock(blockID);
+								Block block = c.world.getBlockObject(blockID);
 
 								if(block.getRenderPass() == RenderPass.TRANSPARENT) {
 
@@ -148,11 +151,17 @@ public class ChunkMeshBuilder {
 					}
 				}
 				renderer.end();
+				
+				if (renderer.getVertexCount() == 0) {
+					renderer.delete(renderer.getHandle());
+				} else {
+					cm.setHandle(RenderPass.TRANSPARENT, renderer.getHandle());
+				}
+				
 			}
 			
 			if(translucentCount > 0) {
 				renderer.begin();
-				cm.setHandle(RenderPass.TRANSLUCENT, renderer.getHandle());
 
 				// All gl calls to draw the chunk (TRANSLUCENT PASS) should be here
 				for(int x = 0; x < 16; x++) {
@@ -160,7 +169,7 @@ public class ChunkMeshBuilder {
 						for(int y = startY; y < endY; y++) {
 							int blockID = c.getBlock(x, y, z);
 							if(blockID > 0) {
-								Block block = Block.getBlock(blockID);
+								Block block = c.world.getBlockObject(blockID);
 
 								if(block.getRenderPass() == RenderPass.TRANSLUCENT) {
 
@@ -180,6 +189,13 @@ public class ChunkMeshBuilder {
 					}
 				}
 				renderer.end();
+				
+				if (renderer.getVertexCount() == 0) {
+					renderer.delete(renderer.getHandle());
+				} else {
+					cm.setHandle(RenderPass.TRANSLUCENT, renderer.getHandle());
+				}
+				
 			}
 
 			profiler.build.end();

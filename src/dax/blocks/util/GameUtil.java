@@ -1,4 +1,4 @@
-package dax.blocks;
+package dax.blocks.util;
 
 import java.awt.image.BufferedImage;
 import java.io.File;

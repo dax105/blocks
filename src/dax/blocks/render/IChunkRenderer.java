@@ -5,9 +5,10 @@ public interface IChunkRenderer {
 	public void begin();
 	public void end();
 	
-	public int getHandle();
-	public void delete(int handle);
+	public int getVertexCount();
 	
+	public int getHandle();
+	public void delete(int handle);	
 	public void render(int handle);
 	
 	public void vertex(float x, float y, float z);

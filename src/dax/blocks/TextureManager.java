@@ -38,6 +38,8 @@ public class TextureManager {
 	
 	public static Texture life_full;
 	public static Texture life_zero;
+	
+	public static Texture imaginary_chocolate;
 
 	private static Texture loadTex(String path) {
 		try {
@@ -78,6 +80,7 @@ public class TextureManager {
 		
 		TextureManager.life_full = TextureManager.loadTex("dax/blocks/res/textures/life_full.png");
 		TextureManager.life_zero = TextureManager.loadTex("dax/blocks/res/textures/life_null.png");
+		TextureManager.imaginary_chocolate = TextureManager.loadTex("dax/blocks/res/textures/items/im_choc.png");
 		
 		TextureManager.skybox_back.bind();
 		GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_WRAP_S, GL12.GL_CLAMP_TO_EDGE);

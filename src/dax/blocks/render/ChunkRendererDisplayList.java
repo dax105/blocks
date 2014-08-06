@@ -6,6 +6,8 @@ import dax.blocks.settings.Settings;
 public class ChunkRendererDisplayList implements IChunkRenderer {
 
 	private int handle = 0;
+	
+	private int vertices = 0;
 	private boolean drawing = false;
 	
 	private float lastR = -5;
@@ -32,6 +34,8 @@ public class ChunkRendererDisplayList implements IChunkRenderer {
 		
 		this.lastS = -5;
 		this.lastT = -5;
+		
+		this.vertices = 0;
 	}
 	
 	@Override
@@ -72,6 +76,7 @@ public class ChunkRendererDisplayList implements IChunkRenderer {
 	@Override
 	public void vertex(float x, float y, float z) {
 		GL11.glVertex3f(x, y, z);
+		vertices++;
 	}
 
 	@Override
@@ -137,4 +142,10 @@ public class ChunkRendererDisplayList implements IChunkRenderer {
 		this.color(r - aom, g - aom, b - aom);
 		this.vertex(x, y, z);
 	}
+
+	@Override
+	public int getVertexCount() {
+		return this.vertices;
+	}
+
 }

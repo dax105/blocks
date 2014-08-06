@@ -1,9 +1,9 @@
 package dax.blocks.gui.ingame;
 
-import dax.blocks.Coord2D;
-import dax.blocks.CoordUtil;
-import dax.blocks.GLHelper;
 import dax.blocks.render.IRenderable;
+import dax.blocks.util.Coord2D;
+import dax.blocks.util.CoordUtil;
+import dax.blocks.util.GLHelper;
 
 public abstract class GuiScreen implements IRenderable {
 

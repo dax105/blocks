@@ -3,8 +3,8 @@ package dax.blocks.settings;
 import java.awt.Dimension;
 import java.awt.Toolkit;
 
-import dax.blocks.GLHelper;
 import dax.blocks.Game;
+import dax.blocks.util.GLHelper;
 
 public class ApplierFullscreen extends Applier {
 	int lastWidth;
