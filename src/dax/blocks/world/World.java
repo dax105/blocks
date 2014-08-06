@@ -46,15 +46,15 @@ public class World implements IRenderable {
 
 	public String name;
 
-	float[] rightMod = new float[3];
-	float[] upMod = new float[3];
+	private float[] rightMod = new float[3];
+	private float[] upMod = new float[3];
 
-	Random rand = new Random();
+	private Random rand = new Random();
 	private int vertices;
 
 	public int chunksDrawn;
 
-	boolean trees;
+	private boolean trees;
 
 	public int getVertices() {
 		return this.vertices;
@@ -63,12 +63,12 @@ public class World implements IRenderable {
 	public World(boolean trees, Game game, boolean load, String worldName) {
 		this.name = worldName;
 		
-		player = new PlayerEntity(this, 0, 128, 0);
+		this.player = new PlayerEntity(this, 0, 128, 0);
 
 		this.renderables = new ArrayList<IRenderable>();
 		this.renderables.add(this.player);
 
-		chunkProvider = new ChunkProvider(this, load);
+		this.chunkProvider = new ChunkProvider(this, load);
 
 		this.c2d = new Coord2D(-1, -1);
 
@@ -77,8 +77,8 @@ public class World implements IRenderable {
 		this.scheduledRenderablesAdding = new LinkedList<IRenderable>();
 		this.scheduledRenderablesRemoval = new LinkedList<IRenderable>();
 
-		chunkProvider.updateLoadedChunksInRadius((int) player.getPosX(),
-				(int) player.getPosZ(), Settings.getInstance().drawDistance.getValue());
+		this.chunkProvider.updateLoadedChunksInRadius((int) this.player.getPosX(),
+				(int) this.player.getPosZ(), Settings.getInstance().drawDistance.getValue());
 	}
 
 	public Coord2D getCoord2D(int x, int y) {
@@ -123,22 +123,23 @@ public class World implements IRenderable {
 
 		float velhalf = vel * 0.5f;
 
-		float velX = velhalf - rand.nextFloat() * vel - rand.nextFloat()
+		float velX = velhalf - this.rand.nextFloat() * vel - this.rand.nextFloat()
 				* velFuzziness;
-		float velY = velhalf - rand.nextFloat() * vel - rand.nextFloat()
+		float velY = velhalf - this.rand.nextFloat() * vel - this.rand.nextFloat()
 				* velFuzziness;
-		float velZ = velhalf - rand.nextFloat() * vel - rand.nextFloat()
+		float velZ = velhalf - this.rand.nextFloat() * vel - this.rand.nextFloat()
 				* velFuzziness;
 
-		Particle p = new Particle(this, x, y, z, velX, velY, velZ, 100, rand.nextFloat(), rand.nextFloat(), rand.nextFloat());
+		Particle p = new Particle(this, x, y, z, velX, velY, velZ, 100, this.rand.nextFloat(), 
+				this.rand.nextFloat(), this.rand.nextFloat());
 		this.registerNewRenderable(p);
 
 	}
 
 	public void spawnParticle(float x, float y, float z) {
-		float velocity = 2.0f + rand.nextFloat() * 0.15f;
-		float heading = 180 - rand.nextFloat() * 360f;
-		float tilt = 180 - rand.nextFloat() * 360f;
+		float velocity = 2.0f + this.rand.nextFloat() * 0.15f;
+		float heading = 180 - this.rand.nextFloat() * 360f;
+		float tilt = 180 - this.rand.nextFloat() * 360f;
 
 		float velY = (float) (Math.cos(tilt) * velocity);
 		float mult = (float) (Math.sin(tilt));
@@ -147,8 +148,8 @@ public class World implements IRenderable {
 		float velZ = (float) (Math.sin(heading) * velocity * mult);
 
 		Particle p = new Particle(this, x, y, z, velX, velY, velZ,
-				50 + rand.nextInt(20), rand.nextFloat(), rand.nextFloat(),
-				rand.nextFloat());
+				50 + this.rand.nextInt(20), this.rand.nextFloat(), this.rand.nextFloat(),
+				this.rand.nextFloat());
 		this.registerNewRenderable(p);
 
 	}
@@ -156,43 +157,43 @@ public class World implements IRenderable {
 	int removedParticles = 0;
 
 	public boolean isOccluder(int x, int y, int z) {
-		int id = getBlock(x, y, z);
+		int id = this.getBlock(x, y, z);
 		return id > 0 ? Block.getBlock((byte) id).isOccluder() : false;
 	}
 
 	public void updateNeighbours(int x, int y, int z) {
-		scheduleUpdate(x + 1, y, z, 1);
-		scheduleUpdate(x - 1, y, z, 1);
-		scheduleUpdate(x, y + 1, z, 1);
-		scheduleUpdate(x, y - 1, z, 1);
-		scheduleUpdate(x, y, z + 1, 1);
-		scheduleUpdate(x, y, z - 1, 1);
+		this.scheduleUpdate(x + 1, y, z, 1);
+		this.scheduleUpdate(x - 1, y, z, 1);
+		this.scheduleUpdate(x, y + 1, z, 1);
+		this.scheduleUpdate(x, y - 1, z, 1);
+		this.scheduleUpdate(x, y, z + 1, 1);
+		this.scheduleUpdate(x, y, z - 1, 1);
 	}
 
 	public void updateBlock(int x, int y, int z) {
-		int id = getBlock(x, y, z);
-		if (id > 0) {
+		int id = this.getBlock(x, y, z);
+		if(id > 0) {
 			Block.getBlock(id).onTick(x, y, z, this);
 		}
 
 	}
 
 	public void scheduleUpdate(int x, int y, int z, int ticks) {
-		newlyScheduledUpdates.add(new ScheduledUpdate(x, y, z, ticks));
+		this.newlyScheduledUpdates.add(new ScheduledUpdate(x, y, z, ticks));
 	}
 
 	public void menuUpdate() {
-		chunkProvider.updateLoadedChunksInRadius(
-				((int) Math.floor(player.getPosX())) >> 4,
-				((int) Math.floor(player.getPosZ())) >> 4,
+		this.chunkProvider.updateLoadedChunksInRadius(
+				((int) Math.floor(this.player.getPosX())) >> 4,
+				((int) Math.floor(this.player.getPosZ())) >> 4,
 				Settings.getInstance().drawDistance.getValue() + 1);
 	}
 
 	public void setChunkDirty(int x, int y, int z) {
-		Coord2D coord = getCoord2D(x, z);
+		Coord2D coord = this.getCoord2D(x, z);
 
-		if (chunkProvider.isChunkLoaded(coord)) {
-			chunkProvider.getChunk(coord).setDirty(y);
+		if(this.chunkProvider.isChunkLoaded(coord)) {
+			this.chunkProvider.getChunk(coord).setDirty(y);
 		}
 	}
 
@@ -203,9 +204,9 @@ public class World implements IRenderable {
 		int cx = x >> 4;
 		int cz = z >> 4;
 
-		Coord2D coord = getCoord2D(cx, cz);
+		Coord2D coord = this.getCoord2D(cx, cz);
 
-		Chunk c = chunkProvider.getChunk(coord);
+		Chunk c = this.chunkProvider.getChunk(coord);
 		return c != null ? c.getBlock(icx, y, icz) : 0;
 	}
 
@@ -216,28 +217,28 @@ public class World implements IRenderable {
 		int cx = x >> 4;
 		int cz = z >> 4;
 
-		Coord2D coord = getCoord2D(cx, cz);
+		Coord2D coord = this.getCoord2D(cx, cz);
 
-		if (chunkProvider.isChunkLoaded(coord)) {
-			Chunk c = chunkProvider.getChunk(coord);
+		if(this.chunkProvider.isChunkLoaded(coord)) {
+			Chunk c = this.chunkProvider.getChunk(coord);
 			
-			if (notify) {
-			Block before = Block.getBlock(getBlock(x, y, z));
-			
-			if (before != null) { 
-				before.onRemoved(x, y, z, this);
-			}
+			if(notify) {
+				Block before = Block.getBlock(getBlock(x, y, z));
+				
+				if(before != null) { 
+					before.onRemoved(x, y, z, this);
+				}
 			}
 			
 			c.setBlock(icx, y, icz, id, true);
 			c.changed = artificial;
-			if (artificial) {
-				scheduleUpdate(x, y, z, 1);
-				updateNeighbours(x, y, z);
+			if(artificial) {
+				this.scheduleUpdate(x, y, z, 1);
+				this.updateNeighbours(x, y, z);
 			}
 		}
 		
-		if (notify) {
+		if(notify) {
 			if(id != 0) Block.getBlock(id).onPlaced(x, y, z, this);
 		}
 	}
@@ -249,10 +250,10 @@ public class World implements IRenderable {
 		int cx = x >> 4;
 		int cz = z >> 4;
 
-		Coord2D coord = getCoord2D(cx, cz);
+		Coord2D coord = this.getCoord2D(cx, cz);
 
-		if (chunkProvider.isChunkLoaded(coord)) {
-			chunkProvider.getChunk(coord).setBlock(icx, y, icz, id, false);
+		if(this.chunkProvider.isChunkLoaded(coord)) {
+			this.chunkProvider.getChunk(coord).setBlock(icx, y, icz, id, false);
 		}
 	}
 
@@ -265,27 +266,27 @@ public class World implements IRenderable {
 		float _y1 = bb.y1;
 		float _z1 = bb.z1;
 
-		if (xm < 0.0F) {
+		if(xm < 0.0F) {
 			_x0 += xm;
 		}
 
-		if (xm > 0.0F) {
+		if(xm > 0.0F) {
 			_x1 += xm;
 		}
 
-		if (ym < 0.0F) {
+		if(ym < 0.0F) {
 			_y0 += ym;
 		}
 
-		if (ym > 0.0F) {
+		if(ym > 0.0F) {
 			_y1 += ym;
 		}
 
-		if (zm < 0.0F) {
+		if(zm < 0.0F) {
 			_z0 += zm;
 		}
 
-		if (zm > 0.0F) {
+		if(zm > 0.0F) {
 			_z1 += zm;
 		}
 
@@ -296,13 +297,13 @@ public class World implements IRenderable {
 		int z0 = (int) (_z0 - 1.0F);
 		int z1 = (int) (_z1 + 1.0F);
 
-		for (int x = x0; x < x1; ++x) {
-			for (int y = y0; y < y1; ++y) {
-				for (int z = z0; z < z1; ++z) {
+		for(int x = x0; x < x1; ++x) {
+			for(int y = y0; y < y1; ++y) {
+				for(int z = z0; z < z1; ++z) {
 					int blockId = getBlock(x, y, z);
-					if (blockId > 0) {
+					if(blockId > 0) {
 						Block block = Block.getBlock(blockId);
-						if (block.isCollidable()) {
+						if(block.isCollidable()) {
 							AABB blockBB = block.getOffsetAABB(x, y, z);
 							xm = blockBB.clipXCollide(bb, xm);
 						}
@@ -312,13 +313,13 @@ public class World implements IRenderable {
 		}
 		bb.move(xm, 0.0F, 0.0F);
 
-		for (int x = x0; x < x1; ++x) {
-			for (int y = y0; y < y1; ++y) {
-				for (int z = z0; z < z1; ++z) {
+		for(int x = x0; x < x1; ++x) {
+			for(int y = y0; y < y1; ++y) {
+				for(int z = z0; z < z1; ++z) {
 					int blockId = getBlock(x, y, z);
-					if (blockId > 0) {
+					if(blockId > 0) {
 						Block block = Block.getBlock(blockId);
-						if (block.isCollidable()) {
+						if(block.isCollidable()) {
 							AABB blockBB = block.getOffsetAABB(x, y, z);
 							ym = blockBB.clipYCollide(bb, ym);
 						}
@@ -328,13 +329,13 @@ public class World implements IRenderable {
 		}
 		bb.move(0.0F, ym, 0.0F);
 
-		for (int x = x0; x < x1; ++x) {
-			for (int y = y0; y < y1; ++y) {
-				for (int z = z0; z < z1; ++z) {
+		for(int x = x0; x < x1; ++x) {
+			for(int y = y0; y < y1; ++y) {
+				for(int z = z0; z < z1; ++z) {
 					int blockId = getBlock(x, y, z);
-					if (blockId > 0) {
+					if(blockId > 0) {
 						Block block = Block.getBlock(blockId);
-						if (block.isCollidable()) {
+						if(block.isCollidable()) {
 							AABB blockBB = block.getOffsetAABB(x, y, z);
 							zm = blockBB.clipZCollide(bb, zm);
 						}
@@ -348,19 +349,19 @@ public class World implements IRenderable {
 	}
 
 	public void setAllChunksDirty() {
-		for (Chunk c : chunkProvider.getAllLoadedChunks()) {
+		for(Chunk c : this.chunkProvider.getAllLoadedChunks()) {
 			c.setAllDirty();
 		}
 	}
 
 	public void deleteAllDisplayLists() {
-		for (Chunk c : chunkProvider.getAllLoadedChunks()) {
+		for(Chunk c : this.chunkProvider.getAllLoadedChunks()) {
 			c.deleteAllRenderChunks();
 		}
 	}
 
 	public void saveAllChunks() {
-		chunkProvider.loader.saveAll();
+		this.chunkProvider.loader.saveAll();
 	}
 
 	public List<IRenderable> getRenderables() {
@@ -368,55 +369,56 @@ public class World implements IRenderable {
 	}
 
 	public void setData(int x, int y, int z, int key, String value) {
-		Map<Integer, DataValue> coordData = blockDataManager.getValuesForCoord(
+		Map<Integer, DataValue> coordData = this.blockDataManager.getValuesForCoord(
 				x, y, z);
-		if (coordData.get(key) != null)
+		if(coordData.get(key) != null) {
 			coordData.get(key).setData(value);
-		else
+		} else {
 			coordData.put(key, new DataValue(value));
+		}
 	}
 
 	public String getDataString(int x, int y, int z, int key) {
-		if (containsData(x, y, z, key))
-			return blockDataManager.getValuesForCoord(x, y, z).get(key)
+		if(this.containsData(x, y, z, key))
+			return this.blockDataManager.getValuesForCoord(x, y, z).get(key)
 					.getDataString();
 
 		return null;
 	}
 
 	public int getDataInt(int x, int y, int z, int key) {
-		if (containsData(x, y, z, key))
-			return blockDataManager.getValuesForCoord(x, y, z).get(key)
+		if(this.containsData(x, y, z, key))
+			return this.blockDataManager.getValuesForCoord(x, y, z).get(key)
 					.getDataInt();
 
 		return 0;
 	}
 
 	public float getDataFloat(int x, int y, int z, int key) {
-		if (containsData(x, y, z, key))
-			return blockDataManager.getValuesForCoord(x, y, z).get(key)
+		if(this.containsData(x, y, z, key))
+			return this.blockDataManager.getValuesForCoord(x, y, z).get(key)
 					.getDataFloat();
 
 		return 0;
 	}
 
 	public boolean getDataBoolean(int x, int y, int z, int key) {
-		if (containsData(x, y, z, key))
-			return blockDataManager.getValuesForCoord(x, y, z).get(key)
+		if(this.containsData(x, y, z, key))
+			return this.blockDataManager.getValuesForCoord(x, y, z).get(key)
 					.getDataBoolean();
 
 		return false;
 	}
 
 	public boolean containsData(int x, int y, int z, int key) {
-		if(!blockDataManager.containsData(x, y, z))
+		if(!this.blockDataManager.containsData(x, y, z))
 			return false;
 		
-		return (blockDataManager.getValuesForCoord(x, y, z).get(key) != null);
+		return (this.blockDataManager.getValuesForCoord(x, y, z).get(key) != null);
 	}
 	
 	public void removeData(int x, int y, int z) {
-		blockDataManager.getValuesForCoord(x, y, z).clear();
+		this.blockDataManager.getValuesForCoord(x, y, z).clear();
 	}
 	
 	@Override
@@ -427,13 +429,13 @@ public class World implements IRenderable {
 			r.onTick();
 		}
 		
-		for (Iterator<IRenderable> it = this.scheduledRenderablesAdding.iterator(); it
+		for(Iterator<IRenderable> it = this.scheduledRenderablesAdding.iterator(); it
 				.hasNext();) {
 			this.renderables.add(it.next());
 			it.remove();
 		}
 		
-		for (Iterator<IRenderable> it = this.scheduledRenderablesRemoval.iterator(); it
+		for(Iterator<IRenderable> it = this.scheduledRenderablesRemoval.iterator(); it
 				.hasNext();) {
 			this.renderables.remove(it.next());
 			it.remove();
@@ -445,28 +447,26 @@ public class World implements IRenderable {
 		}
 
 		
-		for (Iterator<ScheduledUpdate> it = newlyScheduledUpdates.iterator(); it
+		for(Iterator<ScheduledUpdate> it = newlyScheduledUpdates.iterator(); it
 				.hasNext();) {
 			scheduledUpdates.add(it.next());
 			it.remove();
 		}
 
 		Iterator<ScheduledUpdate> updateIterator = scheduledUpdates.iterator();
-		while (updateIterator.hasNext()) {
+		while(updateIterator.hasNext()) {
 			ScheduledUpdate s = updateIterator.next();
-			if (s.ticks > 0) {
+			if(s.ticks > 0) {
 				s.ticks--;
 			} else {
-				updateBlock(s.x, s.y, s.z);
+				this.updateBlock(s.x, s.y, s.z);
 				updateIterator.remove();
 			}
 		}
-		
-		
 
-		chunkProvider.updateLoadedChunksInRadius(
-				((int) Math.floor(player.getPosX())) >> 4,
-				((int) Math.floor(player.getPosZ())) >> 4,
+		this.chunkProvider.updateLoadedChunksInRadius(
+				((int) Math.floor(this.player.getPosX())) >> 4,
+				((int) Math.floor(this.player.getPosZ())) >> 4,
 				Settings.getInstance().drawDistance.getValue() + 1);
 
 	}
@@ -502,5 +502,4 @@ public class World implements IRenderable {
 		
 		GuiManager.getInstance().renderGui(partialTickTime);
 	}
-
 }
