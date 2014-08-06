@@ -275,4 +275,51 @@ public class GLHelper {
 	public static void drawLine(float x1, float x2, float y1, float y2, int thickness) {
 		drawLine(x1, x2, y1, y2, thickness, 1, 1, 1, 1);
 	}
+
+	public static void renderLinedBox(float x0, float y0, float z0, float x1,
+			float y1, float z1) {
+		GL11.glBegin(GL11.GL_LINES);
+
+		// front
+		GL11.glVertex3f(x0, y1, z1);
+		GL11.glVertex3f(x1, y1, z1);
+
+		GL11.glVertex3f(x1, y1, z1);
+		GL11.glVertex3f(x1, y0, z1);
+
+		GL11.glVertex3f(x1, y0, z1);
+		GL11.glVertex3f(x0, y0, z1);
+
+		GL11.glVertex3f(x0, y0, z1);
+		GL11.glVertex3f(x0, y1, z1);
+
+		// right
+		GL11.glVertex3f(x1, y1, z1);
+		GL11.glVertex3f(x1, y1, z0);
+
+		GL11.glVertex3f(x1, y1, z0);
+		GL11.glVertex3f(x1, y0, z0);
+
+		GL11.glVertex3f(x1, y0, z0);
+		GL11.glVertex3f(x1, y0, z1);
+
+		// back
+		GL11.glVertex3f(x1, y1, z0);
+		GL11.glVertex3f(x0, y1, z0);
+
+		GL11.glVertex3f(x0, y0, z0);
+		GL11.glVertex3f(x1, y0, z0);
+
+		GL11.glVertex3f(x0, y0, z0);
+		GL11.glVertex3f(x0, y1, z0);
+
+		// left
+		GL11.glVertex3f(x0, y1, z0);
+		GL11.glVertex3f(x0, y1, z1);
+
+		GL11.glVertex3f(x0, y0, z1);
+		GL11.glVertex3f(x0, y0, z0);
+
+		GL11.glEnd();
+	}
 }

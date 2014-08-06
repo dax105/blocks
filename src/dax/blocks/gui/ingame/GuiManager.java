@@ -2,11 +2,14 @@ package dax.blocks.gui.ingame;
 
 import java.util.ArrayList;
 import java.util.List;
+
 import org.lwjgl.input.Mouse;
-import dax.blocks.render.IRenderable;
+
+import dax.blocks.render.IOverlayRenderer;
+import dax.blocks.render.ITickListener;
 import dax.blocks.settings.Settings;
 
-public class GuiManager implements IRenderable {
+public class GuiManager implements ITickListener, IOverlayRenderer {
 	GuiScreen currentGuiScreen;
 	List<GuiScreen> screenList;
 	boolean isScreenOpened = false;
@@ -97,17 +100,11 @@ public class GuiManager implements IRenderable {
 		if(this.isOpened())
 			this.currentGuiScreen.onRenderTick(partialTickTime);
 	}
-
+	
 	@Override
-	public void renderWorld(float partialTickTime) {
+	public void renderOverlay(float partialTickTime) {
 		if(this.isOpened())
-			this.currentGuiScreen.renderWorld(partialTickTime);
-	}
-
-	@Override
-	public void renderGui(float partialTickTime) {
-		if(this.isOpened())
-			this.currentGuiScreen.renderGui(partialTickTime);
+			this.currentGuiScreen.renderOverlay(partialTickTime);
 	}
 
 }

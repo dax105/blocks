@@ -13,6 +13,7 @@ import dax.blocks.gui.ingame.GuiManager;
 import dax.blocks.item.stack.BasicBlockStack;
 import dax.blocks.item.stack.BasicItemStack;
 import dax.blocks.item.stack.IObjectStack;
+import dax.blocks.render.IOverlayRenderer;
 import dax.blocks.settings.Keyconfig;
 import dax.blocks.settings.Settings;
 import dax.blocks.sound.SoundManager;
@@ -21,7 +22,7 @@ import dax.blocks.world.Explosion;
 import dax.blocks.world.IDRegister;
 import dax.blocks.world.World;
 
-public class PlayerEntity extends Entity {
+public class PlayerEntity extends Entity implements IOverlayRenderer {
 
 	public static final float PLAYER_HEIGHT = 1.7f;
 	public static final float EYES_HEIGHT = 1.6f;
@@ -255,7 +256,7 @@ public class PlayerEntity extends Entity {
 	}
 
 	@Override
-	public void renderGui(float ptt) {
+	public void renderOverlay(float ptt) {
 		this.inHand.renderGUITexture(25, Settings.getInstance().windowHeight.getValue() - 75, 50, 50);
 		
 		int heartsX = 80;
@@ -264,10 +265,6 @@ public class PlayerEntity extends Entity {
 		GLHelper.drawTexture(TextureManager.life_zero, heartsX, heartsY);
 		GLHelper.drawTextureCropped(TextureManager.life_full, heartsX, heartsY,
 				lifes, 1);
-	}
-
-	@Override
-	public void renderWorld(float partialTickTime) {
 	}
 
 	@Override

@@ -1,8 +1,5 @@
 package dax.blocks.render;
 
-import java.io.BufferedReader;
-import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.nio.FloatBuffer;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -26,6 +23,8 @@ import dax.blocks.model.ModelManager;
 import dax.blocks.movable.entity.PlayerEntity;
 import dax.blocks.settings.Settings;
 import dax.blocks.util.Coord2D;
+import dax.blocks.util.GLHelper;
+import dax.blocks.util.GameUtil;
 import dax.blocks.world.ChunkDistanceComparator;
 import dax.blocks.world.World;
 import dax.blocks.world.chunk.Chunk;
@@ -33,6 +32,13 @@ import dax.blocks.world.chunk.ChunkProvider;
 
 public class RenderEngine {
 
+	public static final String FLAG_LIGHTING = "lighting";
+	public static final String FLAG_TEXTURE = "texture";
+	public static final String FLAG_FOG = "fog";
+
+	public static final String UNIFORM_TIME = "time";
+	public static final String UNIFORM_FOG_DISTANCE = "fogDist";
+	
 	Frustum frustum;
 	ChunkDistanceComparator chunkDistComp;
 	float ptt;
@@ -42,14 +48,15 @@ public class RenderEngine {
 
 	public int chunksDrawn = 0;
 	public int chunksLoaded = 0;
-
+	int vertShader = 0, fragShader = 0;
+	
 	public boolean building = false;
-
+	private boolean enableShaders;
+	
 	public int program = 0;
-
 	public int blockAttributeID;
 
-	private boolean enableShaders;
+	
 
 	public RenderEngine() {
 		this(false);
@@ -61,17 +68,23 @@ public class RenderEngine {
 		this.rightModelviewVec = new float[3];
 		this.upModelviewVec = new float[3];
 		this.chunkDistComp = new ChunkDistanceComparator();
+		
+		this.loadShaders();
 
-		// Load a shader that I'll never use
-		// ===================
-		// INIT WORLD SHADER
-		// ===================
-		int vertShader = 0, fragShader = 0;
+		if (program == 0)
+			return;
 
+		if (enableShaders) {
+			this.attachShaders();
+		}
+	}
+
+	
+	private void loadShaders() {
 		try {
-			vertShader = createShader("dax/blocks/shaders/screenN.vsh",
+			this.vertShader = createShader("dax/blocks/shaders/screenN.vsh",
 					ARBVertexShader.GL_VERTEX_SHADER_ARB);
-			fragShader = createShader("dax/blocks/shaders/screenN.fsh",
+			this.fragShader = createShader("dax/blocks/shaders/screenN.fsh",
 					ARBFragmentShader.GL_FRAGMENT_SHADER_ARB);
 		} catch (Exception exc) {
 			System.err.println("============================================\n"
@@ -80,63 +93,48 @@ public class RenderEngine {
 
 			exc.printStackTrace();
 
-			System.err.println(getLogInfo(program));
-
-			// JOptionPane.showMessageDialog(null,
-			// "AN ERROR OCCURED WHILE LOADING THE SHADER!");
-
-			// System.exit(1);
+			System.err.println(getLogInfo(this.program));
 		} finally {
 			if (vertShader == 0 || fragShader == 0)
 				return;
 		}
 
 		program = ARBShaderObjects.glCreateProgramObjectARB();
-
-		if (program == 0)
-			return;
-
-		if (enableShaders) {
-
-			/*
-			 * if the vertex and fragment shaders setup sucessfully, attach them
-			 * to the shader program, link the sahder program (into the GL
-			 * context I suppose), and validate
-			 */
-			ARBShaderObjects.glAttachObjectARB(program, vertShader);
-			ARBShaderObjects.glAttachObjectARB(program, fragShader);
-
-			ARBShaderObjects.glLinkProgramARB(program);
-			if (ARBShaderObjects.glGetObjectParameteriARB(program,
-					ARBShaderObjects.GL_OBJECT_LINK_STATUS_ARB) == GL11.GL_FALSE) {
-				System.err
-						.println("============================================\n"
-								+ "=AN ERROR OCCURED WHILE LOADING THE SHADER!=\n"
-								+ "============================================");
-				System.err.println(getLogInfo(program));
-			}
-
-			ARBShaderObjects.glValidateProgramARB(program);
-			if (ARBShaderObjects.glGetObjectParameteriARB(program,
-					ARBShaderObjects.GL_OBJECT_VALIDATE_STATUS_ARB) == GL11.GL_FALSE) {
-				System.err
-						.println("============================================\n"
-								+ "=AN ERROR OCCURED WHILE LOADING THE SHADER!=\n"
-								+ "============================================");
-				System.err.println(getLogInfo(program));
-			}
-
-			blockAttributeID = GL20.glGetAttribLocation(program, "blockid");
-			Console.println("Shader seems to be loaded!");
-		}
 	}
+	
+	private void attachShaders() {
+		/*
+		 * if the vertex and fragment shaders setup sucessfully, attach them
+		 * to the shader program, link the shader program (into the GL
+		 * context I suppose), and validate
+		 */
+		ARBShaderObjects.glAttachObjectARB(this.program, this.vertShader);
+		ARBShaderObjects.glAttachObjectARB(this.program, this.fragShader);
 
-	/*
-	 * With the exception of syntax, setting up vertex and fragment shaders is
-	 * the same.
-	 * 
-	 * @param the name and path to the vertex shader
-	 */
+		ARBShaderObjects.glLinkProgramARB(this.program);
+		if (ARBShaderObjects.glGetObjectParameteriARB(this.program,
+				ARBShaderObjects.GL_OBJECT_LINK_STATUS_ARB) == GL11.GL_FALSE) {
+			System.err
+					.println("============================================\n"
+							+ "=AN ERROR OCCURED WHILE LOADING THE SHADER!=\n"
+							+ "============================================");
+			System.err.println(getLogInfo(this.program));
+		}
+
+		ARBShaderObjects.glValidateProgramARB(this.program);
+		if (ARBShaderObjects.glGetObjectParameteriARB(this.program,
+				ARBShaderObjects.GL_OBJECT_VALIDATE_STATUS_ARB) == GL11.GL_FALSE) {
+			System.err
+					.println("============================================\n"
+							+ "=AN ERROR OCCURED WHILE LOADING THE SHADER!=\n"
+							+ "============================================");
+			System.err.println(getLogInfo(this.program));
+		}
+
+		blockAttributeID = GL20.glGetAttribLocation(this.program, "blockid");
+		Console.println("Shader seems to be loaded!");
+	}
+	
 	private int createShader(String filename, int shaderType) throws Exception {
 		int shader = 0;
 		try {
@@ -146,7 +144,7 @@ public class RenderEngine {
 				return 0;
 
 			ARBShaderObjects.glShaderSourceARB(shader,
-					readFileAsString(filename));
+					GameUtil.readFileAsString(getClass().getClassLoader().getResourceAsStream(filename)));
 			ARBShaderObjects.glCompileShaderARB(shader);
 
 			if (ARBShaderObjects.glGetObjectParameteriARB(shader,
@@ -161,63 +159,13 @@ public class RenderEngine {
 		}
 	}
 
-	private static String getLogInfo(int obj) {
+	private String getLogInfo(int obj) {
 		return ARBShaderObjects.glGetInfoLogARB(obj, ARBShaderObjects
 				.glGetObjectParameteriARB(obj,
 						ARBShaderObjects.GL_OBJECT_INFO_LOG_LENGTH_ARB));
 	}
-
-	private String readFileAsString(String filename) throws Exception {
-		StringBuilder source = new StringBuilder();
-
-		InputStream in = getClass().getClassLoader().getResourceAsStream(
-				filename);
-
-		Exception exception = null;
-
-		BufferedReader reader;
-		try {
-			reader = new BufferedReader(new InputStreamReader(in, "UTF-8"));
-
-			Exception innerExc = null;
-			try {
-				String line;
-				while ((line = reader.readLine()) != null)
-					source.append(line).append('\n');
-			} catch (Exception exc) {
-				exception = exc;
-			} finally {
-				try {
-					reader.close();
-				} catch (Exception exc) {
-					if (innerExc == null)
-						innerExc = exc;
-					else
-						exc.printStackTrace();
-				}
-			}
-
-			if (innerExc != null)
-				throw innerExc;
-		} catch (Exception exc) {
-			exception = exc;
-		} finally {
-			try {
-				in.close();
-			} catch (Exception exc) {
-				if (exception == null)
-					exception = exc;
-				else
-					exc.printStackTrace();
-			}
-
-			if (exception != null)
-				throw exception;
-		}
-
-		return source.toString();
-	}
-
+	
+	
 	public void updateBeforeRendering(float ptt) {
 		if (!CommandCullLock.locked)
 			this.frustum.calculateFrustum();
@@ -240,12 +188,6 @@ public class RenderEngine {
 				- PlayerEntity.EYES_HEIGHT, -player.getPosZPartial());
 	}
 
-	public static final String FLAG_LIGHTING = "lighting";
-	public static final String FLAG_TEXTURE = "texture";
-	public static final String FLAG_FOG = "fog";
-
-	public static final String UNIFORM_TIME = "time";
-	public static final String UNIFORM_FOG_DISTANCE = "fogDist";
 
 	public void sDisable(String flag) {
 		int loc = GL20.glGetUniformLocation(program, flag);
@@ -262,6 +204,7 @@ public class RenderEngine {
 		GL20.glUniform1f(loc, value);
 	}
 
+	
 	public void renderWorld(World world, float ptt) {
 		chunksLoaded = 0;
 		chunksDrawn = 0;
@@ -308,9 +251,6 @@ public class RenderEngine {
 		 * renderParticle((Particle)r, ptt); } GL11.glEnd();
 		 */
 
-		for (IRenderable r : world.getRenderables()) {
-			r.renderWorld(ptt);
-		}
 
 		sEnable(FLAG_LIGHTING);
 		GL11.glEnable(GL11.GL_LIGHTING);
@@ -448,7 +388,7 @@ public class RenderEngine {
 			GL11.glDepthMask(false);
 			GL11.glLineWidth(2);
 			GL11.glColor4f(0.0F, 0.0F, 0.0F, 0.25F);
-			renderLinedBox(world.getPlayer().getLookingAtX() - 0.002f, world
+			GLHelper.renderLinedBox(world.getPlayer().getLookingAtX() - 0.002f, world
 					.getPlayer().getLookingAtY() - 0.002f, world.getPlayer()
 					.getLookingAtZ() - 0.002f, world.getPlayer()
 					.getLookingAtX() + 1 + 0.002f, world.getPlayer()
@@ -457,7 +397,7 @@ public class RenderEngine {
 			GL11.glEnable(GL11.GL_DEPTH_TEST);
 			GL11.glLineWidth(4);
 			GL11.glColor4f(0.0F, 0.0F, 0.0F, 0.5F);
-			renderLinedBox(world.getPlayer().getLookingAtX() - 0.002f, world
+			GLHelper.renderLinedBox(world.getPlayer().getLookingAtX() - 0.002f, world
 					.getPlayer().getLookingAtY() - 0.002f, world.getPlayer()
 					.getLookingAtZ() - 0.002f, world.getPlayer()
 					.getLookingAtX() + 1 + 0.002f, world.getPlayer()
@@ -467,8 +407,6 @@ public class RenderEngine {
 			GL11.glDepthMask(true);
 		}
 
-		// this.vertices = vertices;
-		// this.chunksDrawn = cd;
 
 		GL11.glPopMatrix();
 
@@ -669,51 +607,6 @@ public class RenderEngine {
 		// py+Particle.PARTICLE_SIZE/2, pz+Particle.PARTICLE_SIZE/2);
 	}
 
-	public void renderLinedBox(float x0, float y0, float z0, float x1,
-			float y1, float z1) {
-		GL11.glBegin(GL11.GL_LINES);
 
-		// front
-		GL11.glVertex3f(x0, y1, z1);
-		GL11.glVertex3f(x1, y1, z1);
-
-		GL11.glVertex3f(x1, y1, z1);
-		GL11.glVertex3f(x1, y0, z1);
-
-		GL11.glVertex3f(x1, y0, z1);
-		GL11.glVertex3f(x0, y0, z1);
-
-		GL11.glVertex3f(x0, y0, z1);
-		GL11.glVertex3f(x0, y1, z1);
-
-		// right
-		GL11.glVertex3f(x1, y1, z1);
-		GL11.glVertex3f(x1, y1, z0);
-
-		GL11.glVertex3f(x1, y1, z0);
-		GL11.glVertex3f(x1, y0, z0);
-
-		GL11.glVertex3f(x1, y0, z0);
-		GL11.glVertex3f(x1, y0, z1);
-
-		// back
-		GL11.glVertex3f(x1, y1, z0);
-		GL11.glVertex3f(x0, y1, z0);
-
-		GL11.glVertex3f(x0, y0, z0);
-		GL11.glVertex3f(x1, y0, z0);
-
-		GL11.glVertex3f(x0, y0, z0);
-		GL11.glVertex3f(x0, y1, z0);
-
-		// left
-		GL11.glVertex3f(x0, y1, z0);
-		GL11.glVertex3f(x0, y1, z1);
-
-		GL11.glVertex3f(x0, y0, z1);
-		GL11.glVertex3f(x0, y0, z0);
-
-		GL11.glEnd();
-	}
 
 }

@@ -1,8 +1,9 @@
 package dax.blocks.movable;
 
-import dax.blocks.render.IRenderable;
+import dax.blocks.render.ITickListener;
 
-public abstract class Movable implements IRenderable {
+
+public abstract class Movable implements ITickListener {
 
 	protected float posX;
 	protected float posY;
@@ -33,9 +34,6 @@ public abstract class Movable implements IRenderable {
 		updateRenderPosition(partialTickTime);
 	}
 
-	public void renderGui(float ptt) {		
-			
-	}
 
 	public Movable(float x, float y, float z) {
 		this(x, y, z, 0, 0, 0);

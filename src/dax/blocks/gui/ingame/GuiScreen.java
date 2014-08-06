@@ -1,11 +1,12 @@
 package dax.blocks.gui.ingame;
 
-import dax.blocks.render.IRenderable;
+import dax.blocks.render.IOverlayRenderer;
+import dax.blocks.render.ITickListener;
 import dax.blocks.util.Coord2D;
 import dax.blocks.util.CoordUtil;
 import dax.blocks.util.GLHelper;
 
-public abstract class GuiScreen implements IRenderable {
+public abstract class GuiScreen implements ITickListener, IOverlayRenderer {
 
 	private int x, y, width, height;
 	private float backColorR, backColorG, backColorB, backColorA;
@@ -51,18 +52,11 @@ public abstract class GuiScreen implements IRenderable {
 
 	@Override
 	public void onRenderTick(float partialTickTime) {
-		// TODO Auto-generated method stub
 
 	}
 
 	@Override
-	public void renderWorld(float partialTickTime) {
-		// TODO Auto-generated method stub
-
-	}
-
-	@Override
-	public void renderGui(float partialTickTime) {
+	public void renderOverlay(float partialTickTime) {
 		GLHelper.drawRectangle(this.backColorR, this.backColorG,
 				this.backColorB, this.backColorA, this.x, this.x + this.width,
 				this.y, this.y + this.height);

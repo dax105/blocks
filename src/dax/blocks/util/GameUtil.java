@@ -1,8 +1,11 @@
 package dax.blocks.util;
 
 import java.awt.image.BufferedImage;
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.nio.ByteBuffer;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -84,4 +87,51 @@ public class GameUtil {
 
 	}
 	
+	public static String readFileAsString(InputStream in) throws Exception {
+		StringBuilder source = new StringBuilder();
+
+		Exception exception = null;
+
+		BufferedReader reader;
+		try {
+			reader = new BufferedReader(new InputStreamReader(in, "UTF-8"));
+
+			Exception innerExc = null;
+			try {
+				String line;
+				while ((line = reader.readLine()) != null)
+					source.append(line).append('\n');
+			} catch (Exception exc) {
+				exception = exc;
+			} finally {
+				try {
+					reader.close();
+				} catch (Exception exc) {
+					if (innerExc == null)
+						innerExc = exc;
+					else
+						exc.printStackTrace();
+				}
+			}
+
+			if (innerExc != null)
+				throw innerExc;
+		} catch (Exception exc) {
+			exception = exc;
+		} finally {
+			try {
+				in.close();
+			} catch (Exception exc) {
+				if (exception == null)
+					exception = exc;
+				else
+					exc.printStackTrace();
+			}
+
+			if (exception != null)
+				throw exception;
+		}
+
+		return source.toString();
+	}
 }

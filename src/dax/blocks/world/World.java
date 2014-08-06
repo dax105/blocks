@@ -22,24 +22,26 @@ import dax.blocks.Game;
 import dax.blocks.Particle;
 import dax.blocks.block.Block;
 import dax.blocks.movable.entity.PlayerEntity;
-import dax.blocks.render.IRenderable;
+import dax.blocks.render.ITickListener;
+import dax.blocks.render.IWorldRenderer;
 import dax.blocks.settings.Settings;
 import dax.blocks.util.Coord2D;
 import dax.blocks.util.Coord3D;
 import dax.blocks.world.chunk.Chunk;
 import dax.blocks.world.chunk.ChunkProvider;
 
-public class World implements IRenderable {
+public class World implements ITickListener {
 
 	public static final float GRAVITY = 0.06f;
 	public static final int MAX_PARTICLES = 10000;
 
 	private List<ScheduledUpdate> scheduledUpdates;
 	private List<ScheduledUpdate> newlyScheduledUpdates;
-	private List<IRenderable> renderables;
-	private List<IRenderable> scheduledRenderablesRemoval;
-	private List<IRenderable> scheduledRenderablesAdding;
-
+	
+	private List<ITickListener> tickListeners;
+	private List<ITickListener> scheduledTickListenersRemoval;
+	private List<ITickListener> scheduledTickListenersAdding;
+	
 	private Coord2D c2d;
 	private PlayerEntity player;
 	private ChunkProvider chunkProvider;
@@ -74,8 +76,6 @@ public class World implements IRenderable {
 		this.idRegister.registerDefaultItems();
 
 		this.player = new PlayerEntity(this, 0, 128, 0);
-		this.renderables = new ArrayList<IRenderable>();
-		this.renderables.add(this.player);
 
 		this.chunkProvider = new ChunkProvider(this, load);
 
@@ -83,8 +83,6 @@ public class World implements IRenderable {
 		
 		this.scheduledUpdates = new LinkedList<ScheduledUpdate>();
 		this.newlyScheduledUpdates = new LinkedList<ScheduledUpdate>();
-		this.scheduledRenderablesAdding = new LinkedList<IRenderable>();
-		this.scheduledRenderablesRemoval = new LinkedList<IRenderable>();
 
 		chunkProvider.updateLoadedChunksInRadius((int) player.getPosX(),
 				(int) player.getPosZ(), Settings.getInstance().drawDistance.getValue());
@@ -133,16 +131,6 @@ public class World implements IRenderable {
 			Logger.getGlobal().warning("Can't create data file!");
 		}
 	}
-	
-	public void registerNewRenderable(IRenderable renderable) {
-		if(!this.scheduledRenderablesAdding.contains(renderable))
-			this.scheduledRenderablesAdding.add(renderable);
-	}
-	
-	public void registerNewRenderableRemoval(IRenderable renderable) {
-		if(!this.scheduledRenderablesRemoval.contains(renderable) && this.renderables.contains(renderable))
-			this.scheduledRenderablesRemoval.add(renderable);
-	}
 
 	
 	public void spawnParticleWithRandomDirectionFast(float x, float y, float z,
@@ -180,7 +168,6 @@ public class World implements IRenderable {
 
 	}
 
-	int removedParticles = 0;
 
 	public boolean isOccluder(int x, int y, int z) {
 		int id = getBlock(x, y, z);
@@ -398,10 +385,7 @@ public class World implements IRenderable {
 		}
 	}
 
-	public List<IRenderable> getRenderables() {
-		return this.renderables;
-	}
-
+	//.... DATA ....
 	public void setData(int x, int y, int z, int key, String value) {
 		Map<Integer, DataValue> coordData = blockDataManager.getValuesForCoord(
 				x, y, z);
@@ -456,10 +440,8 @@ public class World implements IRenderable {
 	public void removeData(int x, int y, int z) {
 		blockDataManager.getValuesForCoord(x, y, z).clear();
 	}
-	
-	
 
-	
+	//..Item Data..
 	public void setData(int identificator, int key, String value) {
 		Map<Integer, DataValue> coordData = itemDataManager.getValuesForIdentificator(identificator);
 		if (coordData.get(key) != null)
@@ -525,26 +507,11 @@ public class World implements IRenderable {
 			this.itemDataManager.getValuesForIdentificator(identificator).clear();
 	}
 	
+	//....  OVERRIDE METHODS ....
 	@Override
 	public void onTick() {	
 		GuiManager.getInstance().onTick();
-		
-		for(IRenderable r : this.renderables) {
-			r.onTick();
-		}
-		
-		for (Iterator<IRenderable> it = this.scheduledRenderablesAdding.iterator(); it
-				.hasNext();) {
-			this.renderables.add(it.next());
-			it.remove();
-		}
-		
-		for (Iterator<IRenderable> it = this.scheduledRenderablesRemoval.iterator(); it
-				.hasNext();) {
-			this.renderables.remove(it.next());
-			it.remove();
-		}
-		
+		this.player.onTick();
 		
 		for(Entry<Coord3D, Block> b : Block.tickingBlocks.entrySet()) {
 			if(b.getValue().isRequiringTick())
@@ -580,9 +547,7 @@ public class World implements IRenderable {
 
 	@Override
 	public void onRenderTick(float partialTickTime) {
-		for(IRenderable r : this.renderables) {
-			r.onRenderTick(partialTickTime);
-		}
+		this.player.onRenderTick(partialTickTime);
 		
 		
 		for(Entry<Coord3D, Block> b : Block.tickingBlocks.entrySet()) {
@@ -591,24 +556,6 @@ public class World implements IRenderable {
 		}
 		
 		GuiManager.getInstance().onRenderTick(partialTickTime);
-	}
-
-	@Override
-	public void renderWorld(float partialTickTime) {
-		for(IRenderable r : this.renderables) {
-			r.renderWorld(partialTickTime);
-		}
-		
-		GuiManager.getInstance().renderWorld(partialTickTime);
-	}
-
-	@Override
-	public void renderGui(float partialTickTime) {
-		for(IRenderable r : this.renderables) {
-			r.renderGui(partialTickTime);
-		}
-		
-		GuiManager.getInstance().renderGui(partialTickTime);
 	}
 
 }

@@ -6,9 +6,12 @@ import org.lwjgl.opengl.GL11;
 
 import dax.blocks.collisions.AABB;
 import dax.blocks.render.IRenderable;
+import dax.blocks.render.ITickListener;
+import dax.blocks.render.IWorldRenderer;
+import dax.blocks.render.RenderEngine;
 import dax.blocks.world.World;
 
-public class Particle implements IRenderable {
+public class Particle implements ITickListener, IWorldRenderer {
 
 	public static final float BOUNCE_MAX = 0.5f;
 	public static final float BOUNCE_MIN = 0.1f;
@@ -143,21 +146,12 @@ public class Particle implements IRenderable {
 
 	@Override
 	public void onRenderTick(float partialTickTime) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void renderWorld(float partialTickTime) {
-		GL11.glBegin(GL11.GL_QUADS);
-		Game.getInstance().renderEngine.renderParticle(this, partialTickTime);
-		GL11.glEnd();
-	}
-
-	@Override
-	public void renderGui(float partialTickTime) {
-		// TODO Auto-generated method stub
-		
 	}
 	
+	@Override
+	public void renderWorld(float partialTickTime, World world, RenderEngine e) {
+		GL11.glBegin(GL11.GL_QUADS);
+		e.renderParticle(this, partialTickTime);
+		GL11.glEnd();
+	}
 }
