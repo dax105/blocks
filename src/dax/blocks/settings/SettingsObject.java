@@ -41,7 +41,7 @@ public class SettingsObject<T> {
 	}
 	
 	public ObjectType getObjectType() {
-		Class<?> type = value.getClass();
+		Class<?> type = this.value.getClass();
 		if(type == Integer.class)
 			return ObjectType.INTEGER;
 		
@@ -58,29 +58,29 @@ public class SettingsObject<T> {
 	}
 	
 	public String getReadableValue() {
-		if(readableForm == null)
-			return value.toString();
+		if(this.readableForm == null)
+			return this.value.toString();
 		
 		if(this.getObjectType() == ObjectType.BOOLEAN) {
-			boolean b = (Boolean)value;
-			return readableForm.replace("%o", b ? "ON" : "OFF").replace("%v", value.toString());
+			boolean b = (Boolean)this.value;
+			return this.readableForm.replace("%o", b ? "ON" : "OFF").replace("%v", this.value.toString());
 		}
-		return readableForm.replace("%v", value.toString());
+		return this.readableForm.replace("%v", this.value.toString());
 	}
 	
 	public String getRepresentation() {
-		return this.getReadableName() + ": " + getReadableValue();
+		return this.getReadableName() + ": " + this.getReadableValue();
 	}
 	
 	public void setValue(T value) {
-		setValue(value, true);
+		this.setValue(value, true);
 	}
 	
 	public void setValue(T value, boolean applyApplier) {
-		if (applier != null && applyApplier) {
-			applier.setApplyingObject(this);
+		if(this.applier != null && applyApplier) {
+			this.applier.setApplyingObject(this);
 			
-			if(applier.apply(value))
+			if(this.applier.apply(value))
 				this.value = value;
 		} else {
 			this.value = value;
@@ -88,7 +88,7 @@ public class SettingsObject<T> {
 	}
 	
 	public T getValue() {
-		return value;
+		return this.value;
 	}
 	
 	public String getName() {
@@ -96,7 +96,7 @@ public class SettingsObject<T> {
 	}
 	
 	public String getReadableForm() {
-		return readableForm;
+		return this.readableForm;
 	}
 
 	public void setReadableForm(String readableForm) {
@@ -104,7 +104,7 @@ public class SettingsObject<T> {
 	}
 
 	public String getReadableName() {
-		return readableName == null ? name : readableName;
+		return this.readableName == null ? this.name : this.readableName;
 	}
 
 	public void setReadableName(String readableName) {
@@ -112,11 +112,10 @@ public class SettingsObject<T> {
 	}
 
 	public boolean isInSettings() {
-		return inSettings;
+		return this.inSettings;
 	}
 
 	public void setInSettings(boolean inSettings) {
 		this.inSettings = inSettings;
 	}
-
 }
