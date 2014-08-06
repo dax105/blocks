@@ -20,9 +20,13 @@ public class WorldsManager {
 
 	private File savesDir;
 	private WorldsManager() {
+	}
+	
+	public void load() {
 		savesDir = new File(SAVES_DIR);
-		if(!savesDir.exists())
+		if(!savesDir.exists()) {
 			savesDir.mkdir();
+		}
 	}
 
 	public List<File> getWorldsDirs() {
@@ -66,4 +70,6 @@ public class WorldsManager {
 
 		return null;
 	}
+
+
 }

@@ -74,7 +74,6 @@ public class World implements IRenderable {
 		this.idRegister.registerDefaultItems();
 
 		this.player = new PlayerEntity(this, 0, 128, 0);
-
 		this.renderables = new ArrayList<IRenderable>();
 		this.renderables.add(this.player);
 

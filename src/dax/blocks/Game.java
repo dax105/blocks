@@ -36,6 +36,7 @@ import dax.blocks.sound.SoundManager;
 import dax.blocks.util.GLHelper;
 import dax.blocks.util.GameUtil;
 import dax.blocks.world.World;
+import dax.blocks.world.WorldsManager;
 
 public class Game implements Runnable {
 	public static final String TITLE = Start.GAME_NAME + " v" + Start.GAME_VERSION;
@@ -181,6 +182,8 @@ public class Game implements Runnable {
 		ModelManager.getInstance().load();
 		displayLoadingScreen("Loading keyconfig...");
 		Keyconfig.load();
+		displayLoadingScreen("Creating world config");
+		WorldsManager.getInstance().load();
 		displayLoadingScreen("Loading sounds...");
 
 		lastFPS = getTime();

@@ -204,13 +204,13 @@ public class ChunkProvider {
 				return size() > Settings.getInstance().chunkCacheSize.getValue();
 			}
 		};
+		
 		this.seed = seed;
 		this.world = world;
 		this.loader = new ChunkSaveManager(this, world.name);
-		this.treeGen = new TreeGenerator(this.world);
-		
 		loader.tryToLoadWorld();
-
+		
+		this.treeGen = new TreeGenerator(this.world);
 		this.simplex3D_1 = new SimplexNoise(512, 0.425, this.seed);
 		this.simplex3D_2 = new SimplexNoise(512, 0.525, this.seed*2);
 		this.simplex3D_caves = new SimplexNoise(64, 0.55, this.seed*3);
