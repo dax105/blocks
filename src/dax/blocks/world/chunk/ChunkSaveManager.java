@@ -33,7 +33,7 @@ public class ChunkSaveManager {
 				dir.mkdir();
 			}	
 
-			world.createDataManager(new File(dir, "bdf"));
+			world.createDataManagers(new File(dir, "bdf"), new File(dir, "idf"));
 			
 			File file = new File(dir, "world" + ".txt");
 
@@ -96,7 +96,7 @@ public class ChunkSaveManager {
 		i.saveWorldInfo();
 		
 		try {
-			world.getDataManager().save();
+			world.getBlockDataManager().save();
 		} catch (IOException e) {
 			Logger.getGlobal().warning("Can't save data file!");
 		}

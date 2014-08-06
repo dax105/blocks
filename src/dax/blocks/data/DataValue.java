@@ -1,4 +1,4 @@
-package dax.blocks.world;
+package dax.blocks.data;
 
 import dax.blocks.settings.ObjectType;
 

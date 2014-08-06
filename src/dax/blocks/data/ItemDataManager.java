@@ -1,4 +1,4 @@
-package dax.blocks.world;
+package dax.blocks.data;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -9,46 +9,39 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
-
 import javax.activation.UnsupportedDataTypeException;
 
-import dax.blocks.util.Coord3D;
 
-public class DataManager {
+public class ItemDataManager implements IItemDataManager {
+
 	File data;
-	private Map<Coord3D, Map<Integer, DataValue>> values;
+	private Map<Integer, Map<Integer, DataValue>> values;
 
-	public DataManager(File dataFile) throws IOException {
+	public ItemDataManager(File dataFile) throws IOException {
 		this.data = dataFile;
-		values = new HashMap<>();
+		this.values = new HashMap<>();
 
 		if (dataFile.exists()) {
-			load();
+			this.load();
 		} else {
 			dataFile.createNewFile();
 		}
 	}
 	
-	public boolean containsData(Coord3D position) {
-		return (values.get(position) != null);
+	@Override
+	public boolean containsData(int identificator) {
+		return (values.get(identificator) != null);
 	}
 
-	public boolean containsData(int x, int y, int z) {
-		return (values.get(new Coord3D(x, y, z)) != null);
-	}
-	
-	public Map<Integer, DataValue> getValuesForCoord(Coord3D position) {
-		if (values.get(position) != null) {
-			return values.get(position);
+	@Override
+	public Map<Integer, DataValue> getValuesForIdentificator(int ident) {
+		if (this.containsData(ident)) {
+			return values.get(ident);
 		} else {
 			Map<Integer, DataValue> dataMap = new HashMap<Integer, DataValue>();
-			values.put(position, dataMap);
+			values.put(ident, dataMap);
 			return dataMap;
 		}
-	}
-
-	public Map<Integer, DataValue> getValuesForCoord(int x, int y, int z) {
-		return getValuesForCoord(new Coord3D(x, y, z));
 	}
 
 	public void load() throws IOException {
@@ -56,7 +49,7 @@ public class DataManager {
 
 		String line;
 		boolean started = false;
-		Coord3D currentCoords = null;
+		Integer currentKey = null;
 		Map<Integer, DataValue> currentMap = new HashMap<>();
 
 		while ((line = br.readLine()) != null) {
@@ -71,8 +64,8 @@ public class DataManager {
 			}
 
 			if (started && line.charAt(0) == 'e') {
-				if (currentCoords != null && !currentMap.isEmpty())
-					values.put(currentCoords, currentMap);
+				if (currentKey != null && !currentMap.isEmpty())
+					values.put(currentKey, currentMap);
 				break;
 			}
 
@@ -80,18 +73,17 @@ public class DataManager {
 
 			switch (parts[0]) {
 			case "c":
-				if (currentCoords == null && !currentMap.isEmpty()) {
+				if (currentKey == null && !currentMap.isEmpty()) {
 					br.close();
 					throw new UnsupportedDataTypeException(
 							"Invalid file contents");
 				}
 
 				if (!currentMap.isEmpty()) {
-					values.put(currentCoords, currentMap);
+					values.put(currentKey, currentMap);
 					currentMap = new HashMap<>();
 				}
-				currentCoords = new Coord3D(Integer.parseInt(parts[1]),
-						Integer.parseInt(parts[2]), Integer.parseInt(parts[3]));
+				currentKey = Integer.parseInt(parts[1]);
 				break;
 			case "d":
 				currentMap.put(Integer.parseInt(parts[1]), new DataValue(parts[2]));
@@ -109,12 +101,9 @@ public class DataManager {
 
 			bw.write("s");
 			bw.newLine();
-			for (Entry<Coord3D, Map<Integer, DataValue>> entry : this.values
-					.entrySet()) {
+			for (Entry<Integer, Map<Integer, DataValue>> entry : this.values.entrySet()) {
 				if (!entry.getValue().isEmpty()) {
-					bw.write(String.format("c;%1$d;%2$d;%3$d",
-							(int) entry.getKey().x, (int) entry.getKey().y,
-							(int) entry.getKey().z));
+					bw.write(String.format("i;%s", entry.getKey()));
 					bw.newLine();
 
 					for (Entry<Integer, DataValue> dataEntry : entry.getValue()
@@ -132,4 +121,5 @@ public class DataManager {
 			bw.close();
 		}
 	}
+
 }

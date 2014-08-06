@@ -1,6 +1,10 @@
 package dax.blocks.world;
 
 import dax.blocks.collisions.AABB;
+import dax.blocks.data.DataManager;
+import dax.blocks.data.DataValue;
+import dax.blocks.data.IBlockDataManager;
+import dax.blocks.data.IItemDataManager;
 import dax.blocks.gui.ingame.GuiManager;
 
 import java.io.File;
@@ -39,7 +43,8 @@ public class World implements IRenderable {
 	private Coord2D c2d;
 	private PlayerEntity player;
 	private ChunkProvider chunkProvider;
-	private DataManager blockDataManager;
+	private IBlockDataManager blockDataManager;
+	private IItemDataManager itemDataManager;
 	private IDRegister blockRegister;
 	
 	public int size;
@@ -111,13 +116,19 @@ public class World implements IRenderable {
 		return this.chunkProvider;
 	}
 	
-	public DataManager getDataManager() {
+	public IBlockDataManager getBlockDataManager() {
 		return this.blockDataManager;
 	}
 	
-	public void createDataManager(File file) {
+	public IItemDataManager getItemDataManager() {
+		return this.itemDataManager;
+	}
+	
+	public void createDataManagers(File blockDataFile, File itemDataFile) {
 		try {
-			this.blockDataManager = new DataManager(file);
+			DataManager n = new DataManager(blockDataFile, itemDataFile);
+			this.itemDataManager = n;
+			this.blockDataManager = n;
 		} catch (IOException e) {
 			Logger.getGlobal().warning("Can't create data file!");
 		}
@@ -444,6 +455,74 @@ public class World implements IRenderable {
 	
 	public void removeData(int x, int y, int z) {
 		blockDataManager.getValuesForCoord(x, y, z).clear();
+	}
+	
+	
+
+	
+	public void setData(int identificator, int key, String value) {
+		Map<Integer, DataValue> coordData = itemDataManager.getValuesForIdentificator(identificator);
+		if (coordData.get(key) != null)
+			coordData.get(key).setData(value);
+		else
+			coordData.put(key, new DataValue(value));
+	}
+
+	public String getDataString(int identificator, int key) {
+		if (containsData(identificator, key)) {
+			return this.itemDataManager
+					.getValuesForIdentificator(identificator).get(key)
+					.getDataString();
+		}
+		
+		return null;
+	}
+	
+	public float getDataFloat(int identificator, int key) {
+		if (containsData(identificator, key)) {
+			return this.itemDataManager
+					.getValuesForIdentificator(identificator).get(key)
+					.getDataFloat();
+		}
+
+		return 0;
+	}
+
+	public boolean getDataBoolean(int identificator, int key) {
+		if (containsData(identificator, key)) {
+			return this.itemDataManager
+					.getValuesForIdentificator(identificator).get(key)
+					.getDataBoolean();
+		}
+
+		return false;
+	}
+
+	public int getDataInt(int identificator, int key) {
+		if (containsData(identificator, key)) {
+			return this.itemDataManager
+					.getValuesForIdentificator(identificator).get(key)
+					.getDataInt();
+		}
+
+		return 0;
+	}
+	
+	public boolean containsData(int identificator, int key) {
+		if(this.itemDataManager == null) {
+			return false;
+		}
+		
+		if(!this.itemDataManager.containsData(identificator)) {
+			return false;
+		}
+		
+		return (this.itemDataManager.getValuesForIdentificator(identificator).get(key) != null);
+	}
+	
+	public void removeData(int identificator) {
+		if(this.itemDataManager.containsData(identificator))
+			this.itemDataManager.getValuesForIdentificator(identificator).clear();
 	}
 	
 	@Override
