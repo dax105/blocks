@@ -6,6 +6,8 @@ import dax.blocks.data.DataValue;
 import dax.blocks.data.IBlockDataManager;
 import dax.blocks.data.IItemDataManager;
 import dax.blocks.gui.ingame.GuiManager;
+import dax.blocks.item.stack.BasicItemStack;
+import dax.blocks.item.stack.IObjectStack;
 
 import java.io.File;
 import java.io.IOException;
@@ -45,7 +47,7 @@ public class World implements IRenderable {
 	private ChunkProvider chunkProvider;
 	private IBlockDataManager blockDataManager;
 	private IItemDataManager itemDataManager;
-	private IDRegister blockRegister;
+	private IDRegister idRegister;
 	
 	public int size;
 	public int sizeBlocks;
@@ -69,8 +71,9 @@ public class World implements IRenderable {
 	public World(boolean trees, Game game, boolean load, String worldName) {
 		this.name = worldName;
 		
-		this.blockRegister = new IDRegister(this);
-		this.blockRegister.registerDefaultBlocks();
+		this.idRegister = new IDRegister(this);
+		this.idRegister.registerDefaultBlocks();
+		this.idRegister.registerDefaultItems();
 
 		this.player = new PlayerEntity(this, 0, 128, 0);
 
@@ -80,6 +83,8 @@ public class World implements IRenderable {
 		this.chunkProvider = new ChunkProvider(this, load);
 
 		this.c2d = new Coord2D(-1, -1);
+		
+		this.testItems();
 
 		this.scheduledUpdates = new LinkedList<ScheduledUpdate>();
 		this.newlyScheduledUpdates = new LinkedList<ScheduledUpdate>();
@@ -89,17 +94,25 @@ public class World implements IRenderable {
 		chunkProvider.updateLoadedChunksInRadius((int) player.getPosX(),
 				(int) player.getPosZ(), Settings.getInstance().drawDistance.getValue());
 	}
+	
+	private void testItems() {
+		IObjectStack stack;
+		stack = new BasicItemStack(IDRegister.itemImaginaryChocolate, 5);
+		System.out.println(stack.getItemID());
+	
+		stack.useItem(0, this.player.getLookingAtX(), this.player.getLookingAtY(), this.player.getLookingAtZ(), 4, this);
+	}
 
 	public IDRegister getRegister() {
-		return this.blockRegister;
+		return this.idRegister;
 	}
 	
 	public Block getBlockObject(int x, int y, int z) {
-		return this.blockRegister.getBlock(this.getBlock(x, y, z));
+		return this.idRegister.getBlock(this.getBlock(x, y, z));
 	}
 	
 	public Block getBlockObject(int id) {
-		return this.blockRegister.getBlock(id);
+		return this.idRegister.getBlock(id);
 	}
 	
 	public Coord2D getCoord2D(int x, int y) {
@@ -392,7 +405,7 @@ public class World implements IRenderable {
 		chunkProvider.loader.saveAll();
 		
 		try {
-			this.blockRegister.saveIDs(IDRegister.dataFile);
+			this.idRegister.saveIDs(IDRegister.dataFile);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}

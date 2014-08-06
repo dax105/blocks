@@ -19,6 +19,7 @@ import dax.blocks.block.BlockPlant;
 import dax.blocks.block.BlockSand;
 import dax.blocks.block.BlockStone;
 import dax.blocks.item.Item;
+import dax.blocks.item.ItemImaginaryChocolate;
 import dax.blocks.render.RenderPass;
 import dax.blocks.settings.Settings;
 import dax.blocks.sound.SoundManager;
@@ -54,10 +55,14 @@ public class IDRegister {
 	public static Block flower2;
 	public static Block flower3;
 
+	public static Item itemImaginaryChocolate;
+	
 	public IDRegister(World world) {
 		this.ids = new HashMap<>();
 		this.blocks = new Block[512];
 		this.blockCount = 0;
+		this.items = new Item[1024];
+		this.itemCount = 0;
 		
 		IDRegister.dataFile = new File(new File(WorldsManager.SAVES_DIR, world.name), "ids");
 		
@@ -70,38 +75,38 @@ public class IDRegister {
 
 	public void registerDefaultBlocks() {
 		try {
-			grass = registerBlock(new BlockBasic("oots/blockGrass", this)
+			IDRegister.grass = registerBlock(new BlockBasic("oots/blockGrass", this)
 					.setTopTexture(4).setSideTexture(5).setBottomTexture(3)
 					.setFootStepSound(SoundManager.footstep_grass)
 					.setFallSound("fall_soft"));
-			dirt = registerBlock(new BlockBasic("oots/blockDirt", this)
+			IDRegister.dirt = registerBlock(new BlockBasic("oots/blockDirt", this)
 					.setAllTextures(3)
 					.setFootStepSound(SoundManager.footstep_dirt)
 					.setFallSound("fall_soft"));
-			stone = registerBlock(new BlockStone(this));
-			wood = registerBlock(new BlockBasic("oots/blockWood", this)
+			IDRegister.stone = registerBlock(new BlockStone(this));
+			IDRegister.wood = registerBlock(new BlockBasic("oots/blockWood", this)
 					.setAllTextures(2)
 					.setFootStepSound(SoundManager.footstep_wood)
 					.setFallSound("fall_hard"));
-			stoneMossy = registerBlock(new BlockBasic("oots/blockStoneMossy",
+			IDRegister.stoneMossy = registerBlock(new BlockBasic("oots/blockStoneMossy",
 					this).setAllTextures(1)
 					.setFootStepSound(SoundManager.footstep_stone)
 					.setFallSound("fall_hard"));
-			bricks = registerBlock(new BlockBasic("oots/blockBricks", this)
+			IDRegister.bricks = registerBlock(new BlockBasic("oots/blockBricks", this)
 					.setAllTextures(8)
 					.setFootStepSound(SoundManager.footstep_stone)
 					.setFallSound("fall_hard"));
-			sand = registerBlock(new BlockSand(this));
-			log = registerBlock(new BlockBasic("oots/blockLog", this)
+			IDRegister.sand = registerBlock(new BlockSand(this));
+			IDRegister.log = registerBlock(new BlockBasic("oots/blockLog", this)
 					.setAllTextures(11).setSideTexture(7)
 					.setFootStepSound(SoundManager.footstep_wood)
 					.setFallSound("fall_hard"));
-			glass = registerBlock(new BlockBasic("oots/blockGlass", this)
+			IDRegister.glass = registerBlock(new BlockBasic("oots/blockGlass", this)
 					.setAllTextures(9).setOpaque(false).setCullSame(true)
 					.setFootStepSound(SoundManager.footstep_stone)
 					.setFallSound("fall_hard")
 					.setRenderPass(RenderPass.TRANSPARENT));
-			leaves = registerBlock(new BlockBasic("oots/blockLeaves", this)
+			IDRegister.leaves = registerBlock(new BlockBasic("oots/blockLeaves", this)
 					.setAllTextures(
 							Settings.getInstance().transparentLeaves.getValue() ? 10
 									: 19)
@@ -113,29 +118,37 @@ public class IDRegister {
 					.setRenderPass(
 							Settings.getInstance().transparentLeaves.getValue() ? RenderPass.TRANSPARENT
 									: RenderPass.OPAQUE));
-			bedrock = registerBlock(new BlockBasic("oots/blockBedrock", this)
+			IDRegister.bedrock = registerBlock(new BlockBasic("oots/blockBedrock", this)
 					.setAllTextures(12)
 					.setFootStepSound(SoundManager.footstep_stone)
 					.setFallSound("fall_hard"));
-			water = registerBlock(new BlockFluid("oots/fluidWater", this)
+			IDRegister.water = registerBlock(new BlockFluid("oots/fluidWater", this)
 					.setAllTextures(13).setCullSame(true).setOccluder(false)
 					.setOpaque(false).setDensity(1.175f));
-			ice = registerBlock(new BlockBasic("oots/blockIce", this)
+			IDRegister.ice = registerBlock(new BlockBasic("oots/blockIce", this)
 					.setAllTextures(14).setOpaque(false).setCullSame(true)
 					.setRenderPass(RenderPass.TRANSLUCENT));
-			tallGrass = registerBlock(new BlockPlant("oots/plantGrass", this)
+			IDRegister.tallGrass = registerBlock(new BlockPlant("oots/plantGrass", this)
 					.setAllTextures(15));
-			flower1 = registerBlock(new BlockPlant("oots/plantFlowerRed", this)
+			IDRegister.flower1 = registerBlock(new BlockPlant("oots/plantFlowerRed", this)
 					.setAllTextures(16));
-			flower2 = registerBlock(new BlockPlant("oots/plantFlowerYellow",
+			IDRegister.flower2 = registerBlock(new BlockPlant("oots/plantFlowerYellow",
 					this).setAllTextures(17));
-			flower3 = registerBlock(new BlockPlant("oots/plantFlowerWhite",
+			IDRegister.flower3 = registerBlock(new BlockPlant("oots/plantFlowerWhite",
 					this).setAllTextures(18));
 		} catch (RegisterException e) {
 			e.printStackTrace();
 		}
 	}
 
+	public void registerDefaultItems() {
+		try {
+			IDRegister.itemImaginaryChocolate = this.registerItem(new ItemImaginaryChocolate(this));
+		} catch (RegisterException e) {
+			e.printStackTrace();
+		}
+	}
+	
 	public void loadIDs(File file) throws IOException {
 		if(!file.exists())
 			return;
@@ -191,6 +204,10 @@ public class IDRegister {
 
 	public Block getBlock(int id) {
 		return blocks[id];
+	}
+	
+	public Item getItem(int id) {
+		return items[id];
 	}
 
 	public int registerName(String name) throws RegisterException {
