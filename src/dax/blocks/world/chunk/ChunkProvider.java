@@ -32,27 +32,27 @@ public class ChunkProvider {
 	public boolean loading = false;
 
 	private TreeGenerator treeGen;
-	Map<Coord2D, Chunk> loadedChunks;
-	LinkedHashMap<Coord2D, Chunk> cachedChunks;
+	protected Map<Coord2D, Chunk> loadedChunks;
+	private LinkedHashMap<Coord2D, Chunk> cachedChunks;
 
-	SimplexNoise simplex3D_1;
-	SimplexNoise simplex3D_2;
-	SimplexNoise simplex3D_caves;
-	
-	SimplexNoise simplex2D_rainfall;
-	SimplexNoise simplex2D_temperature;
+	private SimplexNoise simplex3D_1;
+	private SimplexNoise simplex3D_2;
+	private SimplexNoise simplex3D_caves;
 
-	World world;
+	private SimplexNoise simplex2D_rainfall;
+	private SimplexNoise simplex2D_temperature;
+
+	protected World world;
 	public ChunkSaveManager loader;
 
-	int seed;
+	protected int seed;
 
 	public boolean isChunkLoaded(Coord2D coord) {
-		return loadedChunks.containsKey(coord);
+		return this.loadedChunks.containsKey(coord);
 	}
 
 	public Chunk getChunk(Coord2D coord) {
-		return loadedChunks.get(coord);
+		return this.loadedChunks.get(coord);
 	}
 
 	public void updateLoadedChunksInRadius(int x, int y, int r) {
@@ -60,10 +60,10 @@ public class ChunkProvider {
 
 		List<Coord2D> sortedCoords = new ArrayList<Coord2D>();
 
-		for (int ix = x - r; ix <= x + r; ix++) {
-			for (int iy = y - r; iy <= y + r; iy++) {
+		for(int ix = x - r; ix <= x + r; ix++) {
+			for(int iy = y - r; iy <= y + r; iy++) {
 				Coord2D coord = new Coord2D(ix, iy);
-				if (!loadedChunks.containsKey(coord)) {
+				if(!this.loadedChunks.containsKey(coord)) {
 					sortedCoords.add(coord);
 				}
 			}
@@ -71,21 +71,21 @@ public class ChunkProvider {
 
 		Collections.sort(sortedCoords, new CoordDistanceComparator(x, y));
 
-		for (Coord2D c : sortedCoords) {
-			if (loaded >= Settings.getInstance().loadsPerTick.getValue()) {
-				loading = true;
+		for(Coord2D c : sortedCoords) {
+			if(loaded >= Settings.getInstance().loadsPerTick.getValue()) {
+				this.loading = true;
 				break;
 			} 
 			
-			loadChunk(c);
+			this.loadChunk(c);
 			loaded++;
-			loading = false;
+			this.loading = false;
 		}
 
 		List<Chunk> unpopulated = new LinkedList<Chunk>();
 		
 		Iterator<Entry<Coord2D, Chunk>> it = loadedChunks.entrySet().iterator();
-		while (it.hasNext()) {
+		while(it.hasNext()) {
 			Map.Entry<Coord2D, Chunk> pairs = (Map.Entry<Coord2D, Chunk>) it.next();
 
 			Chunk c = (Chunk) pairs.getValue();
@@ -94,14 +94,14 @@ public class ChunkProvider {
 			int xdist = Math.abs(x - c.x);
 			int ydist = Math.abs(y - c.z);
 
-			if ((xdist > r || ydist > r) && loadedChunks.containsKey(coord)) {
+			if((xdist > r || ydist > r) && this.loadedChunks.containsKey(coord)) {
 				//loader.saveChunk(c);
 				//c.deleteAllRenderChunks();
-				cacheChunk(c);
+				this.cacheChunk(c);
 				it.remove();
 			} 
 			
-			if (!c.populated && loadedChunks.get(coord) != null){
+			if(!c.populated && this.loadedChunks.get(coord) != null){
 				
 				unpopulated.add(c);
 				
@@ -116,9 +116,9 @@ public class ChunkProvider {
 		
 		Collections.sort(unpopulated, cdc);
 		
-		for (Chunk c : unpopulated) {
+		for(Chunk c : unpopulated) {
 			
-			if (populated >= Settings.getInstance().decorationsPerTick.getValue()) {
+			if(populated >= Settings.getInstance().decorationsPerTick.getValue()) {
 				break;
 			}
 			
@@ -131,25 +131,28 @@ public class ChunkProvider {
 			Coord2D q12 = new Coord2D(c.x, c.z+1);
 			Coord2D q22 = new Coord2D(c.x+1, c.z+1);
 			
-			if (isChunkLoaded(q00) && isChunkLoaded(q10) && isChunkLoaded(q20) && isChunkLoaded(q01) && isChunkLoaded(q21) && isChunkLoaded(q02) && isChunkLoaded(q12) && isChunkLoaded(q22)) {
+			if(this.isChunkLoaded(q00) && isChunkLoaded(q10) && isChunkLoaded(q20) && 
+					isChunkLoaded(q01) && isChunkLoaded(q21) && isChunkLoaded(q02) && 
+					isChunkLoaded(q12) && isChunkLoaded(q22)) {
 				c.populated = true;
 				populated++;
 				Random rand = new Random((c.x*31+c.z)+seed);
 				
 				int tries = rand.nextInt(3);
 				
-				for (int i = 0; i < tries; i++) {
+				for(int i = 0; i < tries; i++) {
 					int tx = c.x*16+rand.nextInt(16);
 					int tz = c.z*16+rand.nextInt(16);
 
-					for (int h = 127; h >= 0; h--) {
-						int block = world.getBlock(tx, h, tz);
-						if (block == Block.grass.getId()) {
+					for(int h = 127; h >= 0; h--) {
+						int block = this.world.getBlock(tx, h, tz);
+						if(block == Block.grass.getId()) {
 							
-							if(Settings.getInstance().treeGeneration.getValue())
+							if(Settings.getInstance().treeGeneration.getValue()) {
 								this.treeGen.generateTree(tx, h+1, tz);
+							}
 							
-						} else if (block != 0 && !(Block.getBlock((byte) block) instanceof BlockPlant)) {
+						} else if(block != 0 && !(Block.getBlock((byte) block) instanceof BlockPlant)) {
 							break;
 						}
 					}
@@ -160,14 +163,14 @@ public class ChunkProvider {
 	}
 
 	public void cacheChunk(Chunk c) {
-		cachedChunks.put(new Coord2D(c.x, c.z), c);
+		this.cachedChunks.put(new Coord2D(c.x, c.z), c);
 	}
 	
 	public void unloadChunk(Coord2D coord) {
 		Chunk c = loadedChunks.get(coord);
 		c.deleteAllRenderChunks();
-		loader.saveChunk(c);
-		loadedChunks.remove(coord);
+		this.loader.saveChunk(c);
+		this.loadedChunks.remove(coord);
 	}
 
 	public ChunkProvider(World world, boolean shouldLoad) {
@@ -175,16 +178,16 @@ public class ChunkProvider {
 	}
 
 	public LinkedList<Chunk> getAllLoadedChunks() {
-		return new LinkedList<Chunk>(loadedChunks.values());
+		return new LinkedList<Chunk>(this.loadedChunks.values());
 	}
 
 	public List<Chunk> getChunksInRadius(int x, int y, int r) {
 		List<Chunk> chunks = new LinkedList<Chunk>();
 
-		for (int ix = x - r; ix <= x + r; ix++) {
-			for (int iy = y - r; iy <= y + r; iy++) {
-				Coord2D coord = world.getCoord2D(ix, iy);
-				chunks.add(getChunk(coord));
+		for(int ix = x - r; ix <= x + r; ix++) {
+			for(int iy = y - r; iy <= y + r; iy++) {
+				Coord2D coord = this.world.getCoord2D(ix, iy);
+				chunks.add(this.getChunk(coord));
 			}
 		}
 
@@ -198,7 +201,7 @@ public class ChunkProvider {
 
 			@Override
 			protected boolean removeEldestEntry(Map.Entry<Coord2D, Chunk> eldest) {
-				if (size() > Settings.getInstance().chunkCacheSize.getValue()) {
+				if(size() > Settings.getInstance().chunkCacheSize.getValue()) {
 					eldest.getValue().deleteAllRenderChunks();
 					loader.saveChunk(eldest.getValue());
 				}
@@ -211,7 +214,7 @@ public class ChunkProvider {
 		this.loader = new ChunkSaveManager(this, world.name);
 		this.treeGen = new TreeGenerator(this.world);
 		
-		loader.tryToLoadWorld();
+		this.loader.tryToLoadWorld();
 
 		this.simplex3D_1 = new SimplexNoise(512, 0.425, this.seed);
 		this.simplex3D_2 = new SimplexNoise(512, 0.525, this.seed*2);
@@ -222,22 +225,25 @@ public class ChunkProvider {
 	}
 
 	public void loadChunk(Coord2D coord) {
-		loadedChunks.put(coord, getChunk(coord.x, coord.y));
+		this.loadedChunks.put(coord, getChunk(coord.x, coord.y));
 	}
 
 	public double[][][] getChunkDensityMap(int cx, int cz) {
 		double[][][] densityMap = new double[16+1][128+1][16+1];
 
-		for (int x = 0; x <= 16; x += SAMPLE_RATE_HORIZONTAL) {
-			for (int z = 0; z <= 16; z += SAMPLE_RATE_HORIZONTAL) {
-				for (int y = 0; y <= 128; y += SAMPLE_RATE_VERTICAL) {
-					double[] densityOffsets = getOffsetsAtLocation(cx*16+x, cz*16+z);
-					densityMap[x][y][z] = (float) (Math.max(simplex3D_1.getNoise(cx*16+x, y, cz*16+z), simplex3D_2.getNoise(cx*16+x, y, cz*16+z)))+densityOffsets[y];				
+		for(int x = 0; x <= 16; x += ChunkProvider.SAMPLE_RATE_HORIZONTAL) {
+			for(int z = 0; z <= 16; z += ChunkProvider.SAMPLE_RATE_HORIZONTAL) {
+				for(int y = 0; y <= 128; y += ChunkProvider.SAMPLE_RATE_VERTICAL) {
+					double[] densityOffsets = this.getOffsetsAtLocation(cx * 16 + x, cz * 16 + z);
+					densityMap[x][y][z] = (float) (Math.max(
+								this.simplex3D_1.getNoise(cx * 16 + x, y, cz * 16 + z), 
+								this.simplex3D_2.getNoise(cx * 16 + x, y, cz * 16 + z))
+					) + densityOffsets[y];				
 				}
 			}
 		}
 
-		triLerpDensityMap(densityMap);
+		this.triLerpDensityMap(densityMap);
 
 		return densityMap;
 	}
@@ -245,38 +251,39 @@ public class ChunkProvider {
 	public double[][][] getChunkCaveMap(int cx, int cz) {
 		double[][][] caveMap = new double[16+1][128+1][16+1];
 
-		for (int x = 0; x <= 16; x += SAMPLE_RATE_HORIZONTAL) {
-			for (int z = 0; z <= 16; z += SAMPLE_RATE_HORIZONTAL) {
-				for (int y = 0; y <= 128; y += SAMPLE_RATE_VERTICAL) {
-					caveMap[x][y][z] = simplex3D_caves.getNoise(cx*16+x, y, cz*16+z);				
+		for(int x = 0; x <= 16; x += ChunkProvider.SAMPLE_RATE_HORIZONTAL) {
+			for(int z = 0; z <= 16; z += ChunkProvider.SAMPLE_RATE_HORIZONTAL) {
+				for(int y = 0; y <= 128; y += ChunkProvider.SAMPLE_RATE_VERTICAL) {
+					caveMap[x][y][z] = this.simplex3D_caves.getNoise(cx * 16 + x, y, cz * 16 + z);				
 				}
 			}
 		}
 
-		triLerpCaveMap(caveMap);
+		this.triLerpCaveMap(caveMap);
 
 		return caveMap;
 	}
 
 	private void triLerpDensityMap(double[][][] densityMap) {
-		for (int x = 0; x < 16; x++) {
-			for (int y = 0; y < 128; y++) {
-				for (int z = 0; z < 16; z++) {
-					if (!(x % SAMPLE_RATE_HORIZONTAL == 0 && y % SAMPLE_RATE_VERTICAL == 0 && z % SAMPLE_RATE_HORIZONTAL == 0)) {
-						int offsetX = (x / SAMPLE_RATE_HORIZONTAL) * SAMPLE_RATE_HORIZONTAL;
-						int offsetY = (y / SAMPLE_RATE_VERTICAL) * SAMPLE_RATE_VERTICAL;
-						int offsetZ = (z / SAMPLE_RATE_HORIZONTAL) * SAMPLE_RATE_HORIZONTAL;
+		for(int x = 0; x < 16; x++) {
+			for(int y = 0; y < 128; y++) {
+				for(int z = 0; z < 16; z++) {
+					if(!(x % ChunkProvider.SAMPLE_RATE_HORIZONTAL == 0 && y % ChunkProvider.SAMPLE_RATE_VERTICAL == 0 && 
+								z % ChunkProvider.SAMPLE_RATE_HORIZONTAL == 0)) {
+						int offsetX = (x / ChunkProvider.SAMPLE_RATE_HORIZONTAL) * ChunkProvider.SAMPLE_RATE_HORIZONTAL;
+						int offsetY = (y / ChunkProvider.SAMPLE_RATE_VERTICAL) * ChunkProvider.SAMPLE_RATE_VERTICAL;
+						int offsetZ = (z / ChunkProvider.SAMPLE_RATE_HORIZONTAL) * ChunkProvider.SAMPLE_RATE_HORIZONTAL;
 						densityMap[x][y][z] = GameMath.triLerp(x, y, z,
 								densityMap[offsetX][offsetY][offsetZ],
-								densityMap[offsetX][SAMPLE_RATE_VERTICAL + offsetY][offsetZ],
-								densityMap[offsetX][offsetY][offsetZ + SAMPLE_RATE_HORIZONTAL],
-								densityMap[offsetX][offsetY + SAMPLE_RATE_VERTICAL][offsetZ + SAMPLE_RATE_HORIZONTAL],
-								densityMap[SAMPLE_RATE_HORIZONTAL + offsetX][offsetY][offsetZ],
-								densityMap[SAMPLE_RATE_HORIZONTAL + offsetX][offsetY + SAMPLE_RATE_VERTICAL][offsetZ],
-								densityMap[SAMPLE_RATE_HORIZONTAL + offsetX][offsetY][offsetZ + SAMPLE_RATE_HORIZONTAL],
-								densityMap[SAMPLE_RATE_HORIZONTAL + offsetX][offsetY + SAMPLE_RATE_VERTICAL][offsetZ + SAMPLE_RATE_HORIZONTAL],
-								offsetX, SAMPLE_RATE_HORIZONTAL + offsetX, offsetY,
-								SAMPLE_RATE_VERTICAL + offsetY, offsetZ, offsetZ + SAMPLE_RATE_HORIZONTAL);
+								densityMap[offsetX][ChunkProvider.SAMPLE_RATE_VERTICAL + offsetY][offsetZ],
+								densityMap[offsetX][offsetY][offsetZ + ChunkProvider.SAMPLE_RATE_HORIZONTAL],
+								densityMap[offsetX][offsetY + ChunkProvider.SAMPLE_RATE_VERTICAL][offsetZ + ChunkProvider.SAMPLE_RATE_HORIZONTAL],
+								densityMap[ChunkProvider.SAMPLE_RATE_HORIZONTAL + offsetX][offsetY][offsetZ],
+								densityMap[ChunkProvider.SAMPLE_RATE_HORIZONTAL + offsetX][offsetY + ChunkProvider.SAMPLE_RATE_VERTICAL][offsetZ],
+								densityMap[ChunkProvider.SAMPLE_RATE_HORIZONTAL + offsetX][offsetY][offsetZ + ChunkProvider.SAMPLE_RATE_HORIZONTAL],
+								densityMap[ChunkProvider.SAMPLE_RATE_HORIZONTAL + offsetX][offsetY + ChunkProvider.SAMPLE_RATE_VERTICAL][offsetZ + ChunkProvider.SAMPLE_RATE_HORIZONTAL],
+								offsetX, ChunkProvider.SAMPLE_RATE_HORIZONTAL + offsetX, offsetY,
+								ChunkProvider.SAMPLE_RATE_VERTICAL + offsetY, offsetZ, offsetZ + ChunkProvider.SAMPLE_RATE_HORIZONTAL);
 					}
 				}
 			}
@@ -284,24 +291,25 @@ public class ChunkProvider {
 	}
 	
 	private void triLerpCaveMap(double[][][] caveMap) {
-		for (int x = 0; x < 16; x++) {
-			for (int y = 0; y < 128; y++) {
-				for (int z = 0; z < 16; z++) {
-					if (!(x % SAMPLE_RATE_HORIZONTAL == 0 && y % SAMPLE_RATE_VERTICAL == 0 && z % SAMPLE_RATE_HORIZONTAL == 0)) {
-						int offsetX = (x / SAMPLE_RATE_HORIZONTAL) * SAMPLE_RATE_HORIZONTAL;
-						int offsetY = (y / SAMPLE_RATE_VERTICAL) * SAMPLE_RATE_VERTICAL;
-						int offsetZ = (z / SAMPLE_RATE_HORIZONTAL) * SAMPLE_RATE_HORIZONTAL;
+		for(int x = 0; x < 16; x++) {
+			for(int y = 0; y < 128; y++) {
+				for(int z = 0; z < 16; z++) {
+					if(!(x % ChunkProvider.SAMPLE_RATE_HORIZONTAL == 0 && y % ChunkProvider.SAMPLE_RATE_VERTICAL == 0 && 
+								z % ChunkProvider.SAMPLE_RATE_HORIZONTAL == 0)) {
+						int offsetX = (x / ChunkProvider.SAMPLE_RATE_HORIZONTAL) * ChunkProvider.SAMPLE_RATE_HORIZONTAL;
+						int offsetY = (y / ChunkProvider.SAMPLE_RATE_VERTICAL) * ChunkProvider.SAMPLE_RATE_VERTICAL;
+						int offsetZ = (z / ChunkProvider.SAMPLE_RATE_HORIZONTAL) * ChunkProvider.SAMPLE_RATE_HORIZONTAL;
 						caveMap[x][y][z] = GameMath.triLerp(x, y, z,
 								caveMap[offsetX][offsetY][offsetZ],
-								caveMap[offsetX][SAMPLE_RATE_VERTICAL + offsetY][offsetZ],
-								caveMap[offsetX][offsetY][offsetZ + SAMPLE_RATE_HORIZONTAL],
-								caveMap[offsetX][offsetY + SAMPLE_RATE_VERTICAL][offsetZ + SAMPLE_RATE_HORIZONTAL],
-								caveMap[SAMPLE_RATE_HORIZONTAL + offsetX][offsetY][offsetZ],
-								caveMap[SAMPLE_RATE_HORIZONTAL + offsetX][offsetY + SAMPLE_RATE_VERTICAL][offsetZ],
-								caveMap[SAMPLE_RATE_HORIZONTAL + offsetX][offsetY][offsetZ + SAMPLE_RATE_HORIZONTAL],
-								caveMap[SAMPLE_RATE_HORIZONTAL + offsetX][offsetY + SAMPLE_RATE_VERTICAL][offsetZ + SAMPLE_RATE_HORIZONTAL],
-								offsetX, SAMPLE_RATE_HORIZONTAL + offsetX, offsetY,
-								SAMPLE_RATE_VERTICAL + offsetY, offsetZ, offsetZ + SAMPLE_RATE_HORIZONTAL);
+								caveMap[offsetX][ChunkProvider.SAMPLE_RATE_VERTICAL + offsetY][offsetZ],
+								caveMap[offsetX][offsetY][offsetZ + ChunkProvider.SAMPLE_RATE_HORIZONTAL],
+								caveMap[offsetX][offsetY + ChunkProvider.SAMPLE_RATE_VERTICAL][offsetZ + ChunkProvider.SAMPLE_RATE_HORIZONTAL],
+								caveMap[ChunkProvider.SAMPLE_RATE_HORIZONTAL + offsetX][offsetY][offsetZ],
+								caveMap[ChunkProvider.SAMPLE_RATE_HORIZONTAL + offsetX][offsetY + ChunkProvider.SAMPLE_RATE_VERTICAL][offsetZ],
+								caveMap[ChunkProvider.SAMPLE_RATE_HORIZONTAL + offsetX][offsetY][offsetZ + ChunkProvider.SAMPLE_RATE_HORIZONTAL],
+								caveMap[ChunkProvider.SAMPLE_RATE_HORIZONTAL + offsetX][offsetY + ChunkProvider.SAMPLE_RATE_VERTICAL][offsetZ + ChunkProvider.SAMPLE_RATE_HORIZONTAL],
+								offsetX, ChunkProvider.SAMPLE_RATE_HORIZONTAL + offsetX, offsetY,
+								ChunkProvider.SAMPLE_RATE_VERTICAL + offsetY, offsetZ, offsetZ + ChunkProvider.SAMPLE_RATE_HORIZONTAL);
 					}
 				}
 			}
@@ -309,22 +317,22 @@ public class ChunkProvider {
 	}
 	
 	public Biome getBiomeAtLocation(int x, int z) {
-		float noise = (float) simplex2D_rainfall.getNoise(x, z);
+		float noise = (float) this.simplex2D_rainfall.getNoise(x, z);
 		return noise > 0 ? Biome.mountains : Biome.plains;
 	}
 	
 	private double[] getOffsetsAtLocation(int x, int z) {
 		float smoothening = 0.025f;
-		float noise = (float) simplex2D_rainfall.getNoise(x, z);
-		float offset = 0-noise;
-		if (noise > smoothening) {
+		float noise = (float) this.simplex2D_rainfall.getNoise(x, z);
+		float offset = 0 - noise;
+		if(noise > smoothening) {
 			return Biome.mountains.getOffsets();
-		} else if (noise < -smoothening) {
+		} else if(noise < -smoothening) {
 			return Biome.plains.getOffsets();
 		} else {
 			double[] interpolated = new double[129];
 			
-			for (int i = 0; i < 129; i++) {
+			for(int i = 0; i < 129; i++) {
 				interpolated[i] = GameMath.lerp(Biome.mountains.getOffsets()[i], Biome.plains.getOffsets()[i], 1/smoothening/2*offset+0.5); //GameMath.lerp(i, Biome.mountains.getOffsets()[i], Biome.plains.getOffsets()[i], smoothening, -smoothening);
 			}
 			
@@ -335,49 +343,49 @@ public class ChunkProvider {
 	private Chunk generateChunk(int xc, int zc) {
 		Chunk chunk = new Chunk(xc, zc, world);
 
-		double[][][] densityMap = getChunkDensityMap(xc, zc);
-		double[][][] caveMap = getChunkCaveMap(xc, zc);
+		double[][][] densityMap = this.getChunkDensityMap(xc, zc);
+		double[][][] caveMap = this.getChunkCaveMap(xc, zc);
 		
 		Random cRand = new Random((xc*31+zc)+seed+1);
 		
-		for (int x = 0; x < Chunk.CHUNK_SIZE; x++) {
-			for (int z = 0; z < Chunk.CHUNK_SIZE; z++) {
+		for(int x = 0; x < Chunk.CHUNK_SIZE; x++) {
+			for(int z = 0; z < Chunk.CHUNK_SIZE; z++) {
 				int depth = 0;
 				
 				
 				
-				for (int y = 127; y >= 0; y--) {
+				for(int y = 127; y >= 0; y--) {
 					double density = densityMap[x][y][z];
 					boolean cave = caveMap[x][y][z] > (0.3 + 1/(8.0+depth/2));
 					
-					if (!cave && density > 0) {
-						if (depth == 0) {
-							if (y < 52) {
+					if(!cave && density > 0) {
+						if(depth == 0) {
+							if(y < 52) {
 								chunk.setBlock(x, y, z, Block.sand.getId(), false);
 							} else {
 								chunk.setBlock(x, y, z, Block.grass.getId(), false);
 								
 								int r = cRand.nextInt(100);
 								
-								if (r <= 20) {
+								if(r <= 20) {
 									chunk.setBlock(x, y+1, z, Block.tallgrass.getId(), false);
 								} else {
 									switch(r) {
-									case 30:
-										chunk.setBlock(x, y+1, z, Block.flower_1.getId(), false);
-										break;
-									case 40:
-										chunk.setBlock(x, y+1, z, Block.flower_2.getId(), false);
-										break;
-									case 50:
-										chunk.setBlock(x, y+1, z, Block.flower_3.getId(), false);
-										break;
-									default:	
+										case 30:
+											chunk.setBlock(x, y+1, z, Block.flower_1.getId(), false);
+											break;
+										case 40:
+											chunk.setBlock(x, y+1, z, Block.flower_2.getId(), false);
+											break;
+										case 50:
+											chunk.setBlock(x, y+1, z, Block.flower_3.getId(), false);
+											break;
+										default:	
 									}
 								}
 							}
-						} else if (depth < 4) {
-							if (y < 52) {
+						} else if(depth < 4) {
+							if(y < 52) {
 								chunk.setBlock(x, y, z, Block.sand.getId(), false);
 							} else {
 								chunk.setBlock(x, y, z, Block.dirt.getId(), false);
@@ -388,16 +396,16 @@ public class ChunkProvider {
 
 						depth++;
 					} else {
-						if ((!cave || depth == 0) && y < 50) {
+						if((!cave || depth == 0) && y < 50) {
 							chunk.setBlock(x, y, z, Block.water.getId(), false);
 						}
 						
-						if (!cave) {
+						if(!cave) {
 							depth = 0;
 						}
 					}
 					
-					if (y == 0) {
+					if(y == 0) {
 						chunk.setBlock(x, y, z, Block.bedrock.getId(), false);
 					} 
 				}
@@ -408,23 +416,21 @@ public class ChunkProvider {
 	}
 
 	public boolean isChunkCached(int x, int z) {
-		return cachedChunks.get(new Coord2D(x, z)) != null;
+		return this.cachedChunks.get(new Coord2D(x, z)) != null;
 	}
 	
 	public Chunk getChunk(int xc, int zc) {
-		if (isChunkCached(xc, zc)) {
+		if(this.isChunkCached(xc, zc)) {
 			Coord2D coord = new Coord2D(xc, zc);
-			Chunk c = cachedChunks.get(coord);
-			cachedChunks.remove(coord);
+			Chunk c = this.cachedChunks.get(coord);
+			this.cachedChunks.remove(coord);
 			return c;
-		} else if (loader.isChunkSaved(xc, zc)) {
+		} else if(this.loader.isChunkSaved(xc, zc)) {
 			System.out.println("Loading " + xc + ":" + zc);
-			return loader.loadChunk(xc, zc);
+			return this.loader.loadChunk(xc, zc);
 			
 		} else {
-			return generateChunk(xc, zc);
+			return this.generateChunk(xc, zc);
 		}
 	}
-
-	
 }
