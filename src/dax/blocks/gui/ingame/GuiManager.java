@@ -7,17 +7,18 @@ import dax.blocks.render.IRenderable;
 import dax.blocks.settings.Settings;
 
 public class GuiManager implements IRenderable {
-	GuiScreen currentGuiScreen;
-	List<GuiScreen> screenList;
-	boolean isScreenOpened = false;
+
+	private GuiScreen currentGuiScreen;
+	private List<GuiScreen> screenList;
+	private boolean isScreenOpened = false;
+	private static GuiManager instance;
 	
-	private static GuiManager _instance;
 	public static GuiManager getInstance() {
-		if(_instance == null) {
-			_instance = new GuiManager();
+		if(GuiManager.instance == null) {
+			GuiManager.instance = new GuiManager();
 		}
 		
-		return _instance;
+		return GuiManager.instance;
 	}
 	
 	private GuiManager() {
@@ -33,9 +34,9 @@ public class GuiManager implements IRenderable {
 	}
 
 	public int registerNewScreen(GuiScreen screen) {
-		if(!screenList.contains(screen)) {
-			screenList.add(screen);
-			return screenList.size() - 1;
+		if(!this.screenList.contains(screen)) {
+			this.screenList.add(screen);
+			return this.screenList.size() - 1;
 		} else {
 			return -1;
 		}
@@ -49,17 +50,17 @@ public class GuiManager implements IRenderable {
 	}
 	
 	public void openScreen() {
-		if(currentGuiScreen != null && !this.isOpened()) {
+		if(this.currentGuiScreen != null && !this.isOpened()) {
 			Mouse.setGrabbed(false);
-			currentGuiScreen.onOpening();
+			this.currentGuiScreen.onOpening();
 			this.isScreenOpened = true;
 		}
 	}
 	
 	public void closeScreen() {
-		if(currentGuiScreen != null && this.isOpened()) {
+		if(this.currentGuiScreen != null && this.isOpened()) {
 			Mouse.setGrabbed(true);
-			currentGuiScreen.onClosing();
+			this.currentGuiScreen.onClosing();
 			this.isScreenOpened = false;
 		}
 	}
