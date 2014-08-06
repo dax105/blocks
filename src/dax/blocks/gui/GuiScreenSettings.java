@@ -51,11 +51,7 @@ public class GuiScreenSettings extends GuiScreen {
 		if (button.id == 1) {	
 			dax.blocks.util.GLHelper.updateFiltering(Settings.getInstance().linearFiltering.getValue());
 			
-			if (ingame) {
-				close();
-			} else {
-				game.openGuiScreen(parent);
-			}
+			close();
 		}
 	}
 	

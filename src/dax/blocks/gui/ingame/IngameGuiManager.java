@@ -7,6 +7,16 @@ import dax.blocks.render.IRenderable;
 import dax.blocks.settings.Settings;
 
 public class IngameGuiManager implements IRenderable {
+	
+	// Nah, we need screen stacks and "always render everything", lolz :P
+	
+	// Tohle nejak mergnu s tim mym dohromady a budou screen stacky :D
+	
+	// Jakto, ze to je v ingame gui? :D
+	// Nejak poresim :D
+	
+	//Proc se grab na mys vola jen tady? :D
+	
 	GuiScreen currentGuiScreen;
 	List<GuiScreen> screenList;
 	boolean isScreenOpened = false;

@@ -1,6 +1,7 @@
 package dax.blocks.settings;
 
 import dax.blocks.Game;
+import dax.blocks.gui.GuiManager;
 import dax.blocks.gui.ingame.IngameGuiManager;
 import dax.blocks.util.GLHelper;
 
@@ -23,9 +24,7 @@ public class ApplierResolution extends Applier {
 
 			GLHelper.setDisplayMode(width, height, Settings.getInstance().fullscreen.getValue());
 
-			if (Game.getInstance().guiScreen != null) {
-				Game.getInstance().closeGuiScreen();
-			}
+			GuiManager.getInstance().closeAll();
 		}
 		
 		Settings.getInstance().resolution.setValue(width + "x" + height, false);

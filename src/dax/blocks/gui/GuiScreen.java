@@ -50,11 +50,7 @@ public abstract class GuiScreen {
 	}
 
 	public void close() {
-		if (parent != null) {
-			game.openGuiScreen(parent);
-		} else {
-			game.closeGuiScreen();
-		}
+		GuiManager.getInstance().close();
 	}
 	
 	public abstract void onOpening();

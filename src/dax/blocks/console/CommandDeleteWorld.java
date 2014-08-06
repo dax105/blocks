@@ -3,6 +3,7 @@ package dax.blocks.console;
 import java.io.File;
 
 import dax.blocks.Game;
+import dax.blocks.gui.GuiManager;
 import dax.blocks.util.GameUtil;
 
 public class CommandDeleteWorld extends Command {
@@ -26,7 +27,7 @@ public class CommandDeleteWorld extends Command {
 		Game.getInstance().ingame = false;
 		Game.getInstance().world = null;
 		GameUtil.deleteDirectory(new File("saves"));
-		Game.getInstance().closeGuiScreen();
+		GuiManager.getInstance().closeAll();
 		return true;
 	}
 

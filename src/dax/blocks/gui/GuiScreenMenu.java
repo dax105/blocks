@@ -27,18 +27,18 @@ public class GuiScreenMenu extends GuiScreen {
 	@Override
 	public void buttonPress(GuiObjectButton button) {
 		if (button.id == 0) {
-			game.closeGuiScreen();
+			GuiManager.getInstance().closeAll();
 		} else if (button.id == 1) {
 			game.displayLoadingScreen();
 			game.makeNewWorld(false, game.world.name);
 		} else if (button.id == 2) {
-			game.openGuiScreen(new GuiScreenSettings(this));
+			GuiManager.getInstance().open(new GuiScreenSettings(this));
 		} else if (button.id == 3) {
 			game.world.saveAllChunks();
 			game.world = null;
 			game.renderEngine = new RenderEngine(Settings.getInstance().shaders.getValue());
 			game.ingame = false;
-			game.openGuiScreen(new GuiScreenMainMenu(game));
+			GuiManager.getInstance().open(new GuiScreenMainMenu(game));
 		}
 
 	}

@@ -14,6 +14,7 @@ import org.xerial.snappy.Snappy;
 
 import dax.blocks.Game;
 import dax.blocks.console.Console;
+import dax.blocks.gui.GuiManager;
 import dax.blocks.util.Coord2D;
 import dax.blocks.world.World;
 import dax.blocks.world.WorldInfo;
@@ -100,7 +101,7 @@ public class ChunkSaveManager {
 		} catch (IOException e) {
 			Logger.getGlobal().warning("Can't save data file!");
 		}
-		Game.getInstance().closeGuiScreen();
+		GuiManager.getInstance().closeAll();
 	}
 
 	

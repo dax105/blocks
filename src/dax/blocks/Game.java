@@ -9,7 +9,6 @@ import java.util.Locale;
 
 import org.lwjgl.Sys;
 import org.lwjgl.input.Keyboard;
-import org.lwjgl.input.Mouse;
 import org.lwjgl.openal.AL;
 import org.lwjgl.opengl.Display;
 import org.lwjgl.opengl.GL11;
@@ -49,7 +48,6 @@ public class Game implements Runnable {
 	public boolean ingame = false;
 
 	public RenderEngine renderEngine;
-	public GuiScreen guiScreen;
 	public TrueTypeFont font;
 	public World world;
 	public IChunkRenderer chunkRenderer = new ChunkRendererDisplayList();
@@ -191,9 +189,9 @@ public class Game implements Runnable {
 		showbg = true;
 
 		if (toMenu) {
-			openGuiScreen(new GuiScreenMainMenu(this));
+			GuiManager.getInstance().open(new GuiScreenMainMenu(this));
 		} else {
-			closeGuiScreen();
+			GuiManager.getInstance().closeAll();
 			ingame = true;
 		}
 	}
@@ -210,7 +208,7 @@ public class Game implements Runnable {
 		ingame = true;
 		GLHelper.updateFiltering(Settings.getInstance().linearFiltering.getValue());
 		world = new World(Settings.getInstance().treeGeneration.getValue(), this, load, name);
-		closeGuiScreen();
+		GuiManager.getInstance().closeAll();
 		//ingame = true;
 	}
 
@@ -219,7 +217,7 @@ public class Game implements Runnable {
 		world = null;
 		renderEngine = new RenderEngine(Settings.getInstance().shaders.getValue());
 		ingame = false;
-		openGuiScreen(new GuiScreenMainMenu(this));
+		GuiManager.getInstance().open(new GuiScreenMainMenu(this));
 	}
 	
 	//.... RENDER/UPDATE METHODS ....
@@ -247,7 +245,7 @@ public class Game implements Runnable {
 				}
 				
 				if (Keyboard.getEventKey() == Keyconfig.fullscreen
-						&& this.guiScreen == null && !consoleOpen) {
+						&& GuiManager.getInstance().hasOpen() && !consoleOpen) {
 					toggleFullscreen();
 				}
 
@@ -256,10 +254,10 @@ public class Game implements Runnable {
 						if (IngameGuiManager.getInstance().isOpened()) {
 							IngameGuiManager.getInstance().closeScreen();
 						} else {
-							if (this.guiScreen != null) {
-								closeGuiScreen();
+							if (GuiManager.getInstance().hasOpen()) {
+								GuiManager.getInstance().closeAll();
 							} else {
-								openGuiScreen(new GuiScreenMenu(this));
+								GuiManager.getInstance().open(new GuiScreenMenu(this));
 							}
 						}
 					} else {
@@ -282,11 +280,11 @@ public class Game implements Runnable {
 			}
 		}
 
-		if (!ingame && this.guiScreen == null) {
-			openGuiScreen(new GuiScreenMainMenu(this));
+		if (!ingame && !GuiManager.getInstance().hasOpen()) {
+			GuiManager.getInstance().open(new GuiScreenMainMenu(this));
 		}
 
-		if (this.guiScreen == null && ingame && !consoleOpen) {
+		if (!GuiManager.getInstance().hasOpen() && ingame && !consoleOpen) {
 			world.onTick();
 		} else if (ingame) {
 			world.menuUpdate();
@@ -306,7 +304,7 @@ public class Game implements Runnable {
 	}
 
 	public void onRender(float ptt) {
-		if (this.guiScreen == null && ingame && !consoleOpen) {
+		if (!GuiManager.getInstance().hasOpen() && ingame && !consoleOpen) {
 			world.onRenderTick(ptt);
 		}
 	}
@@ -315,7 +313,7 @@ public class Game implements Runnable {
 
 		float pttbackup = ptt;
 
-		if (guiScreen != null || consoleOpen) {
+		if (GuiManager.getInstance().hasOpen() || consoleOpen) {
 			ptt = 1;
 		}
 
@@ -348,9 +346,9 @@ public class Game implements Runnable {
 	}
 	
 	public void renderGuiScreen(float ptt) {
-		if (this.guiScreen != null) {
-			guiScreen.update();
-			if (this.guiScreen != null) {
+		if (GuiManager.getInstance().hasOpen()) {
+			GuiManager.getInstance().update();
+			if (GuiManager.getInstance().hasOpen()) {
 
 				if (!ingame) {
 					if (TextureManager.menuBg != null && showbg) {
@@ -369,10 +367,9 @@ public class Game implements Runnable {
 						font.drawString(15 + font.getWidth(this.versionString), Settings.getInstance().windowHeight.getValue() - font.getHeight(), this.loginString, 
 									authManager.isAuthenticated() ? Color.white : Color.red);
 					}
-					guiScreen.render();
+					GuiManager.getInstance().render();
 				}
-
-				guiScreen.render();
+				GuiManager.getInstance().render();
 			}
 		}
 	}
@@ -532,36 +529,16 @@ public class Game implements Runnable {
 
 
 	//.... GUI METHODS ....
-
-	public void openGuiScreen(GuiScreen scr) {
-		if (this.guiScreen != null)
-			this.guiScreen.onClosing();
-		this.guiScreen = scr;
-		scr.onOpening();
-		Mouse.setGrabbed(false);
-	}
-
-	public void closeGuiScreen() {
-		this.guiScreen.onClosing();
-		this.guiScreen = null;
-
-		if (consoleOpen) {
-			consoleOpen = false;
-		}
-
-		Mouse.setGrabbed(true);
-	}
-
 	public void displayLoadingScreen(String text) {
 		// isIngame = false;
-		openGuiScreen(new GuiScreenLoading(this, text));
+		GuiManager.getInstance().open(new GuiScreenLoading(this, text));
 		render(0);
 		Display.update();
 	}
 
 	public void displayLoadingScreen() {
 		// isIngame = false;
-		openGuiScreen(new GuiScreenLoading(this));
+		GuiManager.getInstance().open(new GuiScreenLoading(this));
 		render(0);
 		Display.update();
 	}
