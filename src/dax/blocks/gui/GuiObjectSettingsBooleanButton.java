@@ -5,6 +5,7 @@ import org.newdawn.slick.Font;
 import dax.blocks.settings.SettingsObject;
 
 public class GuiObjectSettingsBooleanButton extends GuiObjectButton {
+
 	private SettingsObject<Boolean> object;
 
 	public GuiObjectSettingsBooleanButton(int x1, int y1, int x2, int y2,
