@@ -19,7 +19,7 @@ public class GuiObjectSettingsFloatSlider extends GuiObjectSlider {
 	@Override
 	public void update() {
 		super.update();
-		object.setValue(val);
+		this.object.setValue(val);
 	}
 
 }
