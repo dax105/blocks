@@ -11,15 +11,15 @@ public class ApplierResolution extends Applier {
 		int width = Settings.getInstance().windowWidth.getValue();
 		int height = Settings.getInstance().windowHeight.getValue();
 
-		if (this.applyingObject == Settings.getInstance().windowWidth) {
+		if(this.applyingObject == Settings.getInstance().windowWidth) {
 			width = (Integer) val;
 		}
 
-		if (this.applyingObject == Settings.getInstance().windowHeight) {
+		if(this.applyingObject == Settings.getInstance().windowHeight) {
 			height = (Integer) val;
 		}
 
-		if (width > 200 && height > 200) {
+		if(width > 200 && height > 200) {
 
 			GLHelper.setDisplayMode(width, height, Settings.getInstance().fullscreen.getValue());
 
