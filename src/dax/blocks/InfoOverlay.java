@@ -21,7 +21,7 @@ public class InfoOverlay implements IOverlayRenderer {
 	
 	public InfoOverlay(Game game) {
 		this.profiler = game.getProfiler();
-		this.world = game.world;
+		this.world = game.getWorldsManager().getWorld();
 		this.game = game;
 	}
 	

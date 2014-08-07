@@ -19,7 +19,8 @@ public abstract class Biome {
 		Arrays.fill(tempOffsets, -9999);
 		this.setOffsets();
 		this.applyOffsets();
-		this.registerBiome(this);
+
+		Biome.registerBiome(this);
 	}
 	
 	public double[] getOffsets() {

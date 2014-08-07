@@ -23,17 +23,17 @@ public class CommandCullLock extends Command {
 
 	@Override
 	public boolean execute(String[] args) {
-		if(!this.locked) {
-			PlayerEntity player = Game.getInstance().world.getPlayer();
-			this.lockedX = player.getPosX();
-			this.lockedY = player.getPosY();
-			this.lockedZ = player.getPosZ();
+		if(!CommandCullLock.locked) {
+			PlayerEntity player = Game.getInstance().getCurrentWorld().getPlayer();
+			CommandCullLock.lockedX = player.getPosX();
+			CommandCullLock.lockedY = player.getPosY();
+			CommandCullLock.lockedZ = player.getPosZ();
 			
 			Console.println("Culling locked!");
-			this.locked = true;
+			CommandCullLock.locked = true;
 		} else {
 			Console.println("Culling unlocked!");
-			this.locked = false;
+			CommandCullLock.locked = false;
 		}
 		
 		return true;

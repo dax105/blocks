@@ -36,14 +36,14 @@ public class ChunkSaveManager {
 
 			this.world.createDataManagers(new File(dir, "bdf"), new File(dir, "idf"));
 			
-			/*File file = new File(dir, "world" + ".txt");
+			File file = new File(dir, "world" + ".txt");
 
 			if(!file.exists()) {
 				Console.println("World save not found!");
 				return;
-			}*/
+			}
 
-			WorldInfo i = WorldsManager.getInstance().getWorld(name);
+			WorldInfo i = Game.getInstance().getWorldsManager().getWorld(name);
 			this.world.getPlayer().setPosition(i.getPlayerX(), i.getPlayerY(), i.getPlayerZ());
 			this.world.getPlayer().setTilt(i.getPlayerTilt());
 			this.world.getPlayer().setHeading(i.getPlayerHeading());
@@ -82,7 +82,7 @@ public class ChunkSaveManager {
 			this.saveChunk(c);
 		}
 
-		WorldInfo i = WorldsManager.getInstance().getWorld(this.name);
+		WorldInfo i = Game.getInstance().getWorldsManager().getWorld(this.name);
 		if(i == null) i = new WorldInfo(this.name);
 		
 		i.setPlayerX(this.world.getPlayer().getPosX());

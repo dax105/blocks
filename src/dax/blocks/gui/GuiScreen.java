@@ -1,5 +1,6 @@
 package dax.blocks.gui;
 
+import dax.blocks.FontManager;
 import dax.blocks.Game;
 import dax.blocks.settings.Settings;
 
@@ -16,7 +17,7 @@ public abstract class GuiScreen {
 	protected ArrayList<GuiObject> objects = new ArrayList<GuiObject>();
 	
 	public GuiScreen(Game game) {
-		if(game.ingame) {
+		if(game.getWorldsManager().isInGame()) {
 			this.objects.add(new GuiObjectRectangle(
 						0, 0, 
 						Settings.getInstance().windowWidth.getValue(), 
@@ -26,21 +27,11 @@ public abstract class GuiScreen {
 		}
 		this.game = game;
 		this.parent = null;
-		this.f = game.font;
+		this.f = FontManager.getFont();
 	}
 
 	public GuiScreen(GuiScreen parent) {
-		if(parent.game.ingame) {
-			this.objects.add(new GuiObjectRectangle(
-						0, 0, 
-						Settings.getInstance().windowWidth.getValue(), 
-						Settings.getInstance().windowHeight.getValue(), 
-						0xA0000000)
-			);
-		}
-		this.game = parent.game;
-		this.parent = parent;
-		this.f = game.font;
+		this(parent.game);
 	}
 
 	public void render() {

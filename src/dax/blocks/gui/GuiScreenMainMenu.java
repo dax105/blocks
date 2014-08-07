@@ -58,7 +58,7 @@ public class GuiScreenMainMenu extends GuiScreen {
 		if(button.id == 0) {
 			SoundManager.getInstance().getMusicProvider().updateMusic();
 			this.game.displayLoadingScreen();
-			this.game.makeNewWorld(true,"this_will_be_changable");
+			this.game.getWorldsManager().startWorld("this_will_be_changable");
 		} else if(button.id == 1) {
 			this.game.openGuiScreen(new GuiScreenSettings(this));
 		} else if(button.id == 2) {

@@ -6,22 +6,22 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Logger;
 
+import dax.blocks.Game;
+import dax.blocks.InfoOverlay;
+import dax.blocks.render.RenderEngine;
+import dax.blocks.settings.Settings;
+import dax.blocks.util.GLHelper;
+
 public class WorldsManager {
-
-	private static WorldsManager instance;
-
-	public static WorldsManager getInstance() {
-		if(WorldsManager.instance == null) {
-			WorldsManager.instance = new WorldsManager();
-		}
-		
-		return WorldsManager.instance;
-	}
 	
 	public static final String SAVES_DIR = "saves";
+	
 	private File savesDir;
+	private boolean ingame;
+	private World currentWorld;
+	private InfoOverlay infoOverlay;
 
-	private WorldsManager() {
+	public WorldsManager() {
 	}
 	
 	public void load() {
@@ -73,5 +73,36 @@ public class WorldsManager {
 		return null;
 	}
 
-
+	public boolean isInGame() {
+		return this.ingame;
+	}
+	
+	public World getWorld() {
+		return this.currentWorld;
+	}
+	
+	public World startWorld(String name) {
+		this.ingame = true;
+		GLHelper.updateFiltering(Settings.getInstance().linearFiltering.getValue());
+		RenderEngine e = new RenderEngine(Settings.getInstance().shaders.getValue());
+		this.currentWorld = new World(name, e);
+		
+		this.infoOverlay = new InfoOverlay(Game.getInstance());
+		Game.getInstance().getOverlayManager().addOverlay(this.infoOverlay);
+		
+		//TODO: Remove dependency on Game
+		Game.getInstance().closeGuiScreen();
+		
+		return this.currentWorld;
+	}
+	
+	public void exitWorld() {
+		if(this.ingame) {
+			this.currentWorld.saveAllChunks();
+			this.currentWorld = null;
+			this.ingame = false;
+			
+			Game.getInstance().getOverlayManager().removeOverlay(this.infoOverlay);
+		}
+	}
 }

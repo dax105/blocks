@@ -7,7 +7,7 @@ import java.util.List;
 
 import org.lwjgl.input.Keyboard;
 
-import dax.blocks.Game;
+import dax.blocks.FontManager;
 
 public class Console {
 
@@ -99,7 +99,7 @@ public class Console {
 	}
 	
 	public float getTranslation() {
-		return -Game.getInstance().font.getLineHeight() * this.displayOffset;
+		return -FontManager.getFont().getLineHeight() * this.displayOffset;
 	}
 	
 	public void charTyped(char c, int key) {

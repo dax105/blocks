@@ -62,7 +62,7 @@ public class MusicProvider {
 
 	public void updateMusic() {
 		this.wasInGame = this.isGame;
-		this.isGame = Game.getInstance().ingame;
+		this.isGame = Game.getInstance().getWorldsManager().isInGame();
 
 		if(this.isGame ^ this.wasInGame) {
 			this.stopMusic();

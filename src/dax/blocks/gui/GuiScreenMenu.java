@@ -36,13 +36,14 @@ public class GuiScreenMenu extends GuiScreen {
 					this.f, "Back to game", 0, this)
 		);
 
+		/*
 		this.objects.add(new GuiObjectButton(
 					(Settings.getInstance().windowWidth.getValue() - width) / 2, 
 					(Settings.getInstance().windowHeight.getValue() - height) / 2 + 62, 
 					(Settings.getInstance().windowWidth.getValue() + width) / 2, 
 					((Settings.getInstance().windowHeight.getValue() - height) / 2) + 86, 
 					this.f, "Regenerate world", 1, this)
-		);
+		);*/
 
 		this.objects.add(new GuiObjectButton(
 					(Settings.getInstance().windowWidth.getValue() - width) / 2, 
@@ -67,12 +68,11 @@ public class GuiScreenMenu extends GuiScreen {
 		if (button.id == 0) {
 			game.closeGuiScreen();
 		} else if (button.id == 1) {
-			game.displayLoadingScreen();
-			game.makeNewWorld(false, game.world.name);
 		} else if (button.id == 2) {
 			game.openGuiScreen(new GuiScreenSettings(this));
 		} else if (button.id == 3) {
-			Game.getInstance().exitGame();
+			Game.getInstance().getWorldsManager().exitWorld();
+			Game.getInstance().openGuiScreen(new GuiScreenMainMenu(Game.getInstance()));
 		}
 
 	}

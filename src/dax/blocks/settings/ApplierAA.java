@@ -21,9 +21,9 @@ public class ApplierAA extends Applier {
 				Settings.getInstance().windowWidth.getValue(), 
 				Settings.getInstance().windowHeight.getValue()
 		);
-		Game.getInstance().load(!Game.getInstance().ingame);
+		Game.getInstance().load(!Game.getInstance().getWorldsManager().isInGame());
 		
-		Game.getInstance().world.deleteAllDisplayLists();
+		Game.getInstance().getCurrentWorld().deleteAllDisplayLists();
 		
 		return true;
 	}

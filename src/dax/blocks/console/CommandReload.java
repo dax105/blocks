@@ -19,8 +19,8 @@ public class CommandReload extends Command {
 		
 		Game game = Game.getInstance();
 		
-		if (game.ingame) {
-			game.makeNewWorld(true, game.world.name);
+		if (game.getWorldsManager().isInGame()) {
+			game.getWorldsManager().startWorld(game.getCurrentWorld().name);
 			return true;
 		} else {
 			Console.println("You must be ingame to use command " + getName());

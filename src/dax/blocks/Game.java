@@ -1,6 +1,5 @@
 package dax.blocks;
 
-import java.awt.Font;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -27,8 +26,6 @@ import dax.blocks.model.ModelManager;
 import dax.blocks.profiler.Profiler;
 import dax.blocks.render.ChunkRendererDisplayList;
 import dax.blocks.render.IChunkRenderer;
-import dax.blocks.render.IOverlayRenderer;
-import dax.blocks.render.RenderEngine;
 import dax.blocks.settings.Keyconfig;
 import dax.blocks.settings.Settings;
 import dax.blocks.sound.SoundManager;
@@ -38,22 +35,19 @@ import dax.blocks.world.World;
 import dax.blocks.world.WorldsManager;
 
 public class Game implements Runnable {
-	public static final String TITLE = Start.GAME_NAME + " v" + Start.GAME_VERSION;
-	
+	public static final String TITLE = Start.GAME_NAME + " v"
+			+ Start.GAME_VERSION;
+
 	private File configFile = new File("settings.txt");
-	
+
 	public boolean showbg = false;
 	public boolean consoleOpen = false;
-	public boolean ingame = false;
 
 	private OverlayManager overlayManager;
 	public GuiScreen guiScreen;
-	public TrueTypeFont font;
-	public World world;
 	public IChunkRenderer chunkRenderer = new ChunkRendererDisplayList();
 	public AuthManager authManager;
-	
-	
+
 	private static final int TPS = 20;
 	private static final double TICK_TIME = 1.0D / TPS;
 	private int ticks = 0;
@@ -70,38 +64,47 @@ public class Game implements Runnable {
 
 	private String loginString = "Unlogged";
 	private String versionString = "version " + Start.GAME_VERSION;
-	
+
 	private Profiler profiler = new Profiler();
-	private IOverlayRenderer infoOverlay;
-	
+	private WorldsManager worldsManager = new WorldsManager();
+	private TrueTypeFont font;
+
 	private static Game instance = null;
 
 	public static Game getInstance() {
-		if(Game.instance == null) {
+		if (Game.instance == null) {
 			Game.instance = new Game();
 		}
 
 		return Game.instance;
 	}
-	
+
 	private Game() {
 		this.overlayManager = new OverlayManager();
 	}
-	
+
 	public OverlayManager getOverlayManager() {
 		return this.overlayManager;
 	}
-	
+
 	public Profiler getProfiler() {
 		return this.profiler;
 	}
 
-	//.... RUN METHODS ....
-	
+	public WorldsManager getWorldsManager() {
+		return this.worldsManager;
+	}
+
+	public World getCurrentWorld() {
+		return this.worldsManager.getWorld();
+	}
+
+	// .... RUN METHODS ....
+
 	@Override
 	public void run() {
 		try {
-			if(!this.configFile.exists()) {
+			if (!this.configFile.exists()) {
 				this.configFile.createNewFile();
 				Settings.getInstance().saveToFile(configFile);
 			}
@@ -111,7 +114,9 @@ public class Game implements Runnable {
 			e.printStackTrace();
 		}
 
-		GLHelper.setDisplayMode(Settings.getInstance().windowWidth.getValue(), Settings.getInstance().windowHeight.getValue(), Settings.getInstance().fullscreen.getValue());
+		GLHelper.setDisplayMode(Settings.getInstance().windowWidth.getValue(),
+				Settings.getInstance().windowHeight.getValue(),
+				Settings.getInstance().fullscreen.getValue());
 		this.init();
 		this.load(true);
 
@@ -119,9 +124,9 @@ public class Game implements Runnable {
 		long lastTime = time;
 		long lastInfo = time;
 
-		while(!Display.isCloseRequested()) {
+		while (!Display.isCloseRequested()) {
 			time = System.nanoTime();
-			while(time - lastTime >= Game.TICK_TIME * 1000000000) {
+			while (time - lastTime >= Game.TICK_TIME * 1000000000) {
 				this.ticks++;
 				this.profiler.tick.start();
 				this.onTick();
@@ -129,24 +134,25 @@ public class Game implements Runnable {
 				lastTime += Game.TICK_TIME * 1000000000;
 			}
 
-			if(time - lastInfo >= 1000000000) {
+			if (time - lastInfo >= 1000000000) {
 				lastInfo += 1000000000;
 				this.ticksString = "Ticks: " + ticks;
 				this.ticks = 0;
 				SoundManager.getInstance().updatePlaying();
 				SoundManager.getInstance().getMusicProvider().updateMusic();
 			}
-			
+
 			this.profiler.render.start();
-			float partialTickTime = (time - lastTime) / ((float) TICK_TIME * 1000000000);
+			float partialTickTime = (time - lastTime)
+					/ ((float) TICK_TIME * 1000000000);
 
 			this.onRender(partialTickTime);
 			this.render(partialTickTime);
 
 			Display.update();
 			this.profiler.render.end();
-			
-			if(Settings.getInstance().fpsLimit.getValue() > 0)
+
+			if (Settings.getInstance().fpsLimit.getValue() > 0)
 				Display.sync(Settings.getInstance().fpsLimit.getValue());
 		}
 
@@ -154,14 +160,16 @@ public class Game implements Runnable {
 	}
 
 	public void init() {
-		GLHelper.initGL(Settings.getInstance().windowWidth.getValue(), Settings.getInstance().windowHeight.getValue());
+		GLHelper.initGL(Settings.getInstance().windowWidth.getValue(),
+				Settings.getInstance().windowHeight.getValue());
 		Display.setTitle(TITLE);
 	}
 
 	public void exit() {
-		if(this.ingame) {
-			this.exitGame();
+		if (this.worldsManager.isInGame()) {
+			this.worldsManager.exitWorld();
 		}
+
 		SoundManager.getInstance().shutdown();
 
 		Display.destroy();
@@ -178,89 +186,67 @@ public class Game implements Runnable {
 
 	public void load(boolean toMenu) {
 		FontManager.getInstance().load();
-		this.font = FontManager.getInstance().text;
+		this.font = FontManager.getFont();
+
 		this.displayLoadingScreen("Loading textures...");
 		TextureManager.load();
+
 		this.displayLoadingScreen("Loading models...");
 		ModelManager.getInstance().load();
+
 		this.displayLoadingScreen("Loading keyconfig...");
 		Keyconfig.load();
+
 		this.displayLoadingScreen("Creating world config");
-		WorldsManager.getInstance().load();
+		this.worldsManager.load();
+
 		this.displayLoadingScreen("Loading sounds...");
 
 		this.lastFPS = getTime();
 
 		this.showbg = true;
 
-		if(toMenu) {
+		if (toMenu) {
 			this.openGuiScreen(new GuiScreenMainMenu(this));
 		} else {
 			this.closeGuiScreen();
-			this.ingame = true;
 		}
 	}
 
-	public void createFont() {
-		Font awtFont = new Font("Arial", Font.BOLD, 10);
-		this.font = new TrueTypeFont(awtFont, false);
-	}
-
-	
-	//.... GAME METHODS ....
-
-	public void makeNewWorld(boolean load, String name) {
-		this.ingame = true;
-		GLHelper.updateFiltering(Settings.getInstance().linearFiltering.getValue());
-		RenderEngine e = new RenderEngine(Settings.getInstance().shaders.getValue());
-		world = new World(Settings.getInstance().treeGeneration.getValue(), this, load, name, e);
-		this.infoOverlay = new InfoOverlay(this);
-		this.getOverlayManager().addOverlay(this.infoOverlay);
-		closeGuiScreen();
-	}
-
-	public void exitGame() {
-		this.world.saveAllChunks();
-		this.world = null;
-		this.ingame = false;
-		this.getOverlayManager().removeOverlay(this.infoOverlay);
-		this.openGuiScreen(new GuiScreenMainMenu(this));
-	}
-	
-	//.... RENDER/UPDATE METHODS ....
+	// .... RENDER/UPDATE METHODS ....
 
 	public void onTick() {
 
-		while(Keyboard.next()) {
-			if(Keyboard.getEventKeyState()) {
-				if(Keyboard.getEventKey() == Keyconfig.screenshot) {
+		while (Keyboard.next()) {
+			if (Keyboard.getEventKeyState()) {
+				if (Keyboard.getEventKey() == Keyconfig.screenshot) {
 					GameUtil.screenshot();
 				}
-				
-				if(this.consoleOpen) {
-					Console.getInstance().charTyped(Keyboard.getEventCharacter(),
-					Keyboard.getEventKey());
+
+				if (this.consoleOpen) {
+					Console.getInstance().charTyped(
+							Keyboard.getEventCharacter(),
+							Keyboard.getEventKey());
 				}
 
-
-				if(Keyconfig.isDownEvent(Keyconfig.console)) {
-					if(!this.consoleOpen) {
+				if (Keyconfig.isDownEvent(Keyconfig.console)) {
+					if (!this.consoleOpen) {
 						Console.getInstance().clearInput();
 						this.consoleOpen = true;
-					}		
+					}
 				}
-				
-				if(Keyboard.getEventKey() == Keyconfig.fullscreen
+
+				if (Keyboard.getEventKey() == Keyconfig.fullscreen
 						&& this.guiScreen == null && !this.consoleOpen) {
 					this.toggleFullscreen();
 				}
 
-				if(Keyboard.getEventKey() == Keyconfig.exit) {
-					if(!this.consoleOpen) {
+				if (Keyboard.getEventKey() == Keyconfig.exit) {
+					if (!this.consoleOpen) {
 						if (GuiManager.getInstance().isOpened()) {
 							GuiManager.getInstance().closeScreen();
 						} else {
-							if(this.guiScreen != null) {
+							if (this.guiScreen != null) {
 								this.closeGuiScreen();
 							} else {
 								this.openGuiScreen(new GuiScreenMenu(this));
@@ -273,111 +259,124 @@ public class Game implements Runnable {
 
 			}
 		}
-		
-		if(Keyboard.isKeyDown(Keyconfig.zoom)) {
-			if(this.lastFov == 0) {
+
+		if (Keyboard.isKeyDown(Keyconfig.zoom)) {
+			if (this.lastFov == 0) {
 				this.lastFov = Settings.getInstance().fov.getValue();
 				Settings.getInstance().fov.setValue(15f);
 			}
 		} else {
-			if(this.lastFov > 0) {
+			if (this.lastFov > 0) {
 				Settings.getInstance().fov.setValue(lastFov);
 				this.lastFov = 0;
 			}
 		}
 
-		if(!this.ingame && this.guiScreen == null) {
+		if (!this.worldsManager.isInGame() && this.guiScreen == null) {
 			this.openGuiScreen(new GuiScreenMainMenu(this));
 		}
 
-		if(this.guiScreen == null && this.ingame && !this.consoleOpen) {
-			this.world.onTick();
-		} else if(this.ingame) {
-			this.world.menuUpdate();
+		if (this.guiScreen == null && this.worldsManager.isInGame()
+				&& !this.consoleOpen) {
+			this.worldsManager.getWorld().onTick();
+		} else if (this.worldsManager.isInGame()) {
+			this.worldsManager.getWorld().menuUpdate();
 		}
 
 		this.lastProgress = this.animationProgress;
 
 		this.animationProgress += this.consoleOpen ? 0.150f : -0.150f;
 
-		if(this.animationProgress < 0) {
+		if (this.animationProgress < 0) {
 			this.animationProgress = 0;
 		}
 
-		if(this.animationProgress > 1) {
+		if (this.animationProgress > 1) {
 			this.animationProgress = 1;
 		}
 	}
 
 	public void onRender(float ptt) {
-		if(this.guiScreen == null && this.ingame && !this.consoleOpen) {
-			this.world.onRenderTick(ptt);
+		if (this.guiScreen == null && this.worldsManager.isInGame()
+				&& !this.consoleOpen) {
+			this.worldsManager.getWorld().onRenderTick(ptt);
 		}
 	}
-	
+
 	public void render(float ptt) {
 
 		float pttbackup = ptt;
 
-		if(this.guiScreen != null || this.consoleOpen) {
+		if (this.guiScreen != null || this.consoleOpen) {
 			ptt = 1;
 		}
 
 		// Clear old frame
 		GL11.glClear(GL11.GL_COLOR_BUFFER_BIT | GL11.GL_DEPTH_BUFFER_BIT);
 
-		if(this.ingame) {
+		if (this.worldsManager.isInGame()) {
 
 			TextureManager.atlas.bind();
 
-			this.world.getRenderEngine().renderWorld(world, ptt);
-			
-			GLHelper.setOrtho(Settings.getInstance().windowWidth.getValue(), Settings.getInstance().windowHeight.getValue());
-			
+			this.worldsManager.getWorld().getRenderEngine().renderWorld(ptt);
+
+			GLHelper.setOrtho(Settings.getInstance().windowWidth.getValue(),
+					Settings.getInstance().windowHeight.getValue());
+
 			this.getOverlayManager().renderOverlays(ptt);
 
 			this.updateFPS();
 		}
 
-		GLHelper.setOrtho(Settings.getInstance().windowWidth.getValue(), Settings.getInstance().windowHeight.getValue());
+		GLHelper.setOrtho(Settings.getInstance().windowWidth.getValue(),
+				Settings.getInstance().windowHeight.getValue());
 
 		this.renderGuiScreen(ptt);
 
 		this.renderConsole(pttbackup);
 
-		GLHelper.setPerspective(Settings.getInstance().windowWidth.getValue(), Settings.getInstance().windowHeight.getValue());
+		GLHelper.setPerspective(Settings.getInstance().windowWidth.getValue(),
+				Settings.getInstance().windowHeight.getValue());
 
 	}
-	
-	public void renderGuiScreen(float ptt) {
-		if(this.guiScreen != null) {
-			this.guiScreen.update();
-			if(this.guiScreen != null) {
 
-				if(!this.ingame) {
-					if(TextureManager.menuBg != null && this.showbg) {
-						GLHelper.drawTexture(TextureManager.menuBg, 0, Settings.getInstance().windowWidth.getValue(),
-								0, Settings.getInstance().windowWidth.getValue());
+	public void renderGuiScreen(float ptt) {
+		if (this.guiScreen != null) {
+			this.guiScreen.update();
+			if (this.guiScreen != null) {
+
+				if (!this.worldsManager.isInGame()) {
+					if (TextureManager.menuBg != null && this.showbg) {
+						GLHelper.drawTexture(TextureManager.menuBg, 0,
+								Settings.getInstance().windowWidth.getValue(),
+								0,
+								Settings.getInstance().windowWidth.getValue());
 					} else {
-						GLHelper.drawRectangle(0.2f, 0.2f, 0.2f, 0, Settings.getInstance().windowWidth.getValue(), 0,
+						GLHelper.drawRectangle(0.2f, 0.2f, 0.2f, 0,
+								Settings.getInstance().windowWidth.getValue(),
+								0,
 								Settings.getInstance().windowWidth.getValue());
 					}
 
-					if(TextureManager.logo != null && this.showbg) {
+					if (TextureManager.logo != null && this.showbg) {
 						GLHelper.drawTexture(
-								TextureManager.logo, 
-								(Settings.getInstance().windowWidth.getValue() / 2) - (TextureManager.logo.getImageWidth() / 2), 
-								32
-						);
+								TextureManager.logo,
+								(Settings.getInstance().windowWidth.getValue() / 2)
+										- (TextureManager.logo.getImageWidth() / 2),
+								32);
 
-						this.font.drawString(5, Settings.getInstance().windowHeight.getValue() - font.getHeight(),
-								this.versionString);
-						this.font.drawString(
-								15 + this.font.getWidth(this.versionString), 
-								Settings.getInstance().windowHeight.getValue() - font.getHeight(), 
-								this.loginString, 
-								this.authManager.isAuthenticated() ? Color.white : Color.red
-						);
+						this.font.drawString(5,
+								Settings.getInstance().windowHeight.getValue()
+										- font.getHeight(), this.versionString);
+						this.font
+								.drawString(
+										15 + this.font
+												.getWidth(this.versionString),
+										Settings.getInstance().windowHeight
+												.getValue() - font.getHeight(),
+										this.loginString,
+										this.authManager.isAuthenticated() ? Color.white
+												: Color.red);
 					}
 					this.guiScreen.render();
 				}
@@ -386,49 +385,48 @@ public class Game implements Runnable {
 			}
 		}
 	}
-	
+
 	public void renderConsole(float ptt) {
 		GL11.glPushMatrix();
 
 		int cHeight = Settings.getInstance().consoleHeight.getValue();
 
-		float lerp = this.lastProgress + (this.animationProgress - this.lastProgress) * ptt;
+		float lerp = this.lastProgress
+				+ (this.animationProgress - this.lastProgress) * ptt;
 
 		GL11.glTranslatef(0, -((1 - lerp) * cHeight), 0);
 
-		if(this.lastProgress > 0) {
+		if (this.lastProgress > 0) {
 			GuiObjectBlank gui = new GuiObjectBlank();
-			gui.drawRect(0, 0, Settings.getInstance().windowWidth.getValue(), cHeight, 0xD0000000);
-			gui.drawRect(
-					0, 
-					cHeight - this.font.getLineHeight(), 
-					Settings.getInstance().windowWidth.getValue(),
-					cHeight, 
-					0x500030A0
-			);
+			gui.drawRect(0, 0, Settings.getInstance().windowWidth.getValue(),
+					cHeight, 0xD0000000);
+			gui.drawRect(0, cHeight - this.font.getLineHeight(),
+					Settings.getInstance().windowWidth.getValue(), cHeight,
+					0x500030A0);
 			GL11.glEnable(GL11.GL_TEXTURE_2D);
 			String cursor = (this.ticks % Game.TPS >= Game.TPS / 2) ? "_" : "";
-			this.font.drawString(0, cHeight - this.font.getLineHeight(), 
-					"> " + Console.getInstance().currentCommand + cursor);
+			this.font.drawString(0, cHeight - this.font.getLineHeight(), "> "
+					+ Console.getInstance().currentCommand + cursor);
 			String info = Game.TITLE;
-			this.font.drawString(Settings.getInstance().windowWidth.getValue() - this.font.getWidth(info) - 2,
+			this.font.drawString(Settings.getInstance().windowWidth.getValue()
+					- this.font.getWidth(info) - 2,
 					cHeight - this.font.getLineHeight() * 2, info,
 					new org.newdawn.slick.Color(120, 120, 120));
 
-			ListIterator<String> li = Console.getInstance().lines.listIterator(
-					Console.getInstance().lines.size());
+			ListIterator<String> li = Console.getInstance().lines
+					.listIterator(Console.getInstance().lines.size());
 
 			int offset = 0;
 
-			while(li.hasPrevious()) {
+			while (li.hasPrevious()) {
 				offset += this.font.getLineHeight();
 
-				this.font.drawString(
-						0, 
-						cHeight - this.font.getLineHeight() - offset - Console.getInstance().getTranslation(), 
-						li.previous(),
-						new org.newdawn.slick.Color(200, 200, 200)
-				);
+				this.font
+						.drawString(0, cHeight - this.font.getLineHeight()
+								- offset
+								- Console.getInstance().getTranslation(), li
+								.previous(), new org.newdawn.slick.Color(200,
+								200, 200));
 			}
 
 		}
@@ -436,11 +434,10 @@ public class Game implements Runnable {
 		GL11.glPopMatrix();
 	}
 
-
-	//.... GUI METHODS ....
+	// .... GUI METHODS ....
 
 	public void openGuiScreen(GuiScreen scr) {
-		if(this.guiScreen != null)
+		if (this.guiScreen != null)
 			this.guiScreen.onClosing();
 		this.guiScreen = scr;
 		scr.onOpening();
@@ -448,14 +445,16 @@ public class Game implements Runnable {
 	}
 
 	public void closeGuiScreen() {
-		this.guiScreen.onClosing();
-		this.guiScreen = null;
+		if (this.guiScreen != null) {
+			this.guiScreen.onClosing();
+			this.guiScreen = null;
 
-		if(this.consoleOpen) {
-			this.consoleOpen = false;
+			if (this.consoleOpen) {
+				this.consoleOpen = false;
+			}
+
+			Mouse.setGrabbed(true);
 		}
-
-		Mouse.setGrabbed(true);
 	}
 
 	public void displayLoadingScreen(String text) {
@@ -472,15 +471,14 @@ public class Game implements Runnable {
 		Display.update();
 	}
 
-
-	//.... NEMAMZDANIKCEMU METHODS ....
+	// .... NEMAMZDANIKCEMU METHODS ....
 
 	public long getTime() {
 		return (Sys.getTime() * 1000) / Sys.getTimerResolution();
 	}
 
 	public void updateFPS() {
-		if(this.getTime() - this.lastFPS > 1000) {
+		if (this.getTime() - this.lastFPS > 1000) {
 			this.fps = fpsCounter;
 			this.fpsCounter = 0;
 			this.lastFPS += 1000;
@@ -489,21 +487,21 @@ public class Game implements Runnable {
 	}
 
 	public void toggleFullscreen() {
-		Settings.getInstance().fullscreen.setValue(!Settings.getInstance().fullscreen.getValue());
+		Settings.getInstance().fullscreen
+				.setValue(!Settings.getInstance().fullscreen.getValue());
 	}
 
-
-	//.... LOGIN METHODS ....
+	// .... LOGIN METHODS ....
 	public void doLogin(String userName, String password, String token) {
 		this.authManager = new AuthManager(userName, password, token);
-	
-		if(this.authManager.isAuthenticated()) {
+
+		if (this.authManager.isAuthenticated()) {
 			this.loginString = userName + " is logged in with token " + token;
 		} else {
 			this.loginString = "Bad login for " + userName;
 		}
 	}
-	
+
 	public void dummyLogin() {
 		this.authManager = new AuthManager();
 		this.authManager.setDummyName("Player");

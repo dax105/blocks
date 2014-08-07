@@ -111,12 +111,12 @@ public class SoundManager {
 	}
 	
 	public void playMusic(String name, boolean loop) {
-		if(this.music.get(name) != null) {
+		if(SoundManager.music.get(name) != null) {
 			this.stopMusic();
 			this.musicPlaying = name;
 			this.isMusicPlaying = true;
 			if(this.isWorking)
-				this.system.backgroundMusic(name, this.music.get(name), loop);
+				this.system.backgroundMusic(name, SoundManager.music.get(name), loop);
 		} else {
 			Console.println("Music called " + name + " does not exist");
 		}
@@ -195,7 +195,7 @@ public class SoundManager {
 
 	public void playSound(String name, float pitch, float volume, float x,
 			float y, float z, boolean loop) {
-		if(this.isWorking && this.sounds.get(name) != null) {
+		if(this.isWorking && SoundManager.sounds.get(name) != null) {
 			this.system.setVolume(name, volume);
 			this.system.setPitch(name, pitch);
 			this.system.setPosition(name, x, y, z);

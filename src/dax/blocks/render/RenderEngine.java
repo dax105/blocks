@@ -60,6 +60,8 @@ public class RenderEngine {
 	private List<IWorldRenderer> renderables;
 	private List<IWorldRenderer> renderablesToRemove;
 	private List<IWorldRenderer> renderablesToAdd;
+	
+	private World renderWorld;
 
 	public RenderEngine() {
 		this(false);
@@ -85,6 +87,9 @@ public class RenderEngine {
 		}
 	}
 
+	public void setWorld(World world) {
+		this.renderWorld = world;
+	}
 	
 	private void loadShaders() {
 		try {
@@ -211,7 +216,7 @@ public class RenderEngine {
 	}
 
 	
-	public void renderWorld(World world, float ptt) {
+	public void renderWorld(float ptt) {
 		this.chunksLoaded = 0;
 		this.chunksDrawn = 0;
 
@@ -226,7 +231,7 @@ public class RenderEngine {
 				Settings.getInstance().drawDistance.getValue() * 16 - 8);
 
 		this.ptt = ptt;
-		this.pushPlayerMatrix(world.getPlayer());
+		this.pushPlayerMatrix(this.renderWorld.getPlayer());
 		this.updateBeforeRendering(this.ptt);
 
 		FloatBuffer lp = BufferUtils.createFloatBuffer(4);
@@ -241,8 +246,8 @@ public class RenderEngine {
 		this.sEnable(RenderEngine.FLAG_TEXTURE);
 		this.sEnable(RenderEngine.FLAG_FOG);
 
-		this.renderSkybox(world.getPlayer().getPosXPartial(), world.getPlayer()
-				.getPosYPartial() + PlayerEntity.EYES_HEIGHT, world.getPlayer()
+		this.renderSkybox(this.renderWorld.getPlayer().getPosXPartial(), this.renderWorld.getPlayer()
+				.getPosYPartial() + PlayerEntity.EYES_HEIGHT, this.renderWorld.getPlayer()
 				.getPosZPartial());
 
 
@@ -252,7 +257,7 @@ public class RenderEngine {
 
 		GL11.glDisable(GL11.GL_TEXTURE_2D);
 
-		this.updateRenderables(ptt, world);
+		this.updateRenderables(ptt);
 
 		this.sEnable(RenderEngine.FLAG_LIGHTING);
 		GL11.glEnable(GL11.GL_LIGHTING);
@@ -266,14 +271,14 @@ public class RenderEngine {
 		}
 		
 		// Render chunks
-		this.renderChunks(ptt, world);
+		this.renderChunks(ptt);
 
 		if (Settings.getInstance().clouds.getValue()) {
-			renderClouds(world.getPlayer().getPosXPartial(), world.getPlayer()
+			renderClouds(this.renderWorld.getPlayer().getPosXPartial(), this.renderWorld.getPlayer()
 					.getPosZPartial());
 		}
 
-		this.renderSelectionBox(world);
+		this.renderSelectionBox();
 
 		GL11.glPopMatrix();
 
@@ -281,7 +286,7 @@ public class RenderEngine {
 
 	}
 	
-	public void renderChunks(float ptt, World world) {
+	public void renderChunks(float ptt) {
 		sEnable(FLAG_LIGHTING);
 		sEnable(FLAG_TEXTURE);
 
@@ -289,10 +294,10 @@ public class RenderEngine {
 		GL11.glEnable(GL11.GL_LIGHTING);
 		GL11.glEnable(GL11.GL_TEXTURE_2D);
 
-		int pcx = (int) Math.floor(world.getPlayer().getPosX()) >> 4;
-		int pcz = (int) Math.floor(world.getPlayer().getPosZ()) >> 4;
+		int pcx = (int) Math.floor(this.renderWorld.getPlayer().getPosX()) >> 4;
+		int pcz = (int) Math.floor(this.renderWorld.getPlayer().getPosZ()) >> 4;
 
-		List<Chunk> visibleChunks = world.getChunkProvider().getChunksInRadius(
+		List<Chunk> visibleChunks = this.renderWorld.getChunkProvider().getChunksInRadius(
 				pcx, pcz, Settings.getInstance().drawDistance.getValue());
 
 		for(Iterator<Chunk> iter = visibleChunks.iterator(); iter.hasNext();) {
@@ -320,7 +325,7 @@ public class RenderEngine {
 
 					if(!c.renderChunks[y].isBuilt()
 							|| c.renderChunks[y].isDirty()) {
-						ChunkProvider cp = world.getChunkProvider();
+						ChunkProvider cp = this.renderWorld.getChunkProvider();
 						if(cp.isChunkLoaded(new Coord2D(c.x + 1, c.z))
 								&& cp.isChunkLoaded(new Coord2D(c.x - 1, c.z))
 								&& cp.isChunkLoaded(new Coord2D(c.x, c.z + 1))
@@ -396,28 +401,28 @@ public class RenderEngine {
 		sDisable(FLAG_FOG);
 	}
 	
-	public void renderSelectionBox(World world) {
-		if (world.getPlayer().hasSelectedBlock()) {
+	public void renderSelectionBox() {
+		if (this.renderWorld.getPlayer().hasSelectedBlock()) {
 			GL11.glDisable(GL11.GL_DEPTH_TEST);
 			GL11.glDepthMask(false);
 			GL11.glLineWidth(2);
 			GL11.glColor4f(0.0F, 0.0F, 0.0F, 0.25F);
 
-			GLHelper.renderLinedBox(world.getPlayer().getLookingAtX() - 0.002f, world
-					.getPlayer().getLookingAtY() - 0.002f, world.getPlayer()
-					.getLookingAtZ() - 0.002f, world.getPlayer()
-					.getLookingAtX() + 1 + 0.002f, world.getPlayer()
-					.getLookingAtY() + 1 + 0.002f, world.getPlayer()
+			GLHelper.renderLinedBox(this.renderWorld.getPlayer().getLookingAtX() - 0.002f, this.renderWorld
+					.getPlayer().getLookingAtY() - 0.002f, this.renderWorld.getPlayer()
+					.getLookingAtZ() - 0.002f, this.renderWorld.getPlayer()
+					.getLookingAtX() + 1 + 0.002f, this.renderWorld.getPlayer()
+					.getLookingAtY() + 1 + 0.002f, this.renderWorld.getPlayer()
 					.getLookingAtZ() + 1 + 0.002f);
 			GL11.glEnable(GL11.GL_DEPTH_TEST);
 			GL11.glLineWidth(4);
 			GL11.glColor4f(0.0F, 0.0F, 0.0F, 0.5F);
 
-			GLHelper.renderLinedBox(world.getPlayer().getLookingAtX() - 0.002f, world
-					.getPlayer().getLookingAtY() - 0.002f, world.getPlayer()
-					.getLookingAtZ() - 0.002f, world.getPlayer()
-					.getLookingAtX() + 1 + 0.002f, world.getPlayer()
-					.getLookingAtY() + 1 + 0.002f, world.getPlayer()
+			GLHelper.renderLinedBox(this.renderWorld.getPlayer().getLookingAtX() - 0.002f, this.renderWorld
+					.getPlayer().getLookingAtY() - 0.002f, this.renderWorld.getPlayer()
+					.getLookingAtZ() - 0.002f, this.renderWorld.getPlayer()
+					.getLookingAtX() + 1 + 0.002f, this.renderWorld.getPlayer()
+					.getLookingAtY() + 1 + 0.002f, this.renderWorld.getPlayer()
 					.getLookingAtZ() + 1 + 0.002f);
 			GL11.glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
 			GL11.glDepthMask(true);
@@ -625,9 +630,9 @@ public class RenderEngine {
 		}
 	}
 	
-	public void updateRenderables(float ptt, World world) {
+	public void updateRenderables(float ptt) {
 		for(IWorldRenderer r : this.renderables) {
-			r.renderWorld(ptt, world, this);
+			r.renderWorld(ptt, this.renderWorld, this);
 		}
 		
 		for (Iterator<IWorldRenderer> it = this.renderablesToAdd.iterator(); it

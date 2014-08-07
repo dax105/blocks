@@ -171,7 +171,7 @@ public class PlayerEntity extends Entity implements IOverlayRenderer {
 		}
 
 		if(!this.alive && !Settings.getInstance().peacefulMode.getValue()) {
-			Game.getInstance().exitGame();
+			Game.getInstance().getWorldsManager().exitWorld();
 		}
 	}
 

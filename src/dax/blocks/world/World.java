@@ -54,32 +54,28 @@ public class World implements ITickListener {
 
 	public String name;
 
-	private float[] rightMod = new float[3];
-	private float[] upMod = new float[3];
-
 	private Random rand = new Random();
 	private int vertices;
 
 	public int chunksDrawn;
 
-	private boolean trees;
-
 	public int getVertices() {
 		return this.vertices;
 	}
 
-	public World(boolean trees, Game game, boolean load, String worldName, RenderEngine e) {
+	public World(String worldName, RenderEngine e) {
 		this.name = worldName;
 		this.renderEngine = e;
+		e.setWorld(this);
 		
 		this.idRegister = new IDRegister(this);
 		this.idRegister.registerDefaultBlocks();
 		this.idRegister.registerDefaultItems();
 
 		this.player = new PlayerEntity(this, 0, 128, 0);
-		game.getOverlayManager().addOverlay(this.player);
+		Game.getInstance().getOverlayManager().addOverlay(this.player);
 
-		this.chunkProvider = new ChunkProvider(this, load);
+		this.chunkProvider = new ChunkProvider(this, true);
 
 		this.c2d = new Coord2D(-1, -1);
 		

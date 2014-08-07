@@ -4,8 +4,7 @@ import dax.blocks.settings.Settings;
 import dax.blocks.util.GLHelper;
 
 public class GuiScreenSettings extends GuiScreen {
-
-	private boolean filter;
+;
 	private int width = 400;
 	private int height = 200;
 	private int overflow = 8;
@@ -13,7 +12,7 @@ public class GuiScreenSettings extends GuiScreen {
 
 	public GuiScreenSettings(GuiScreen parent) {
 		super(parent);
-		this.ingame = this.game.ingame;
+		this.ingame = this.game.getWorldsManager().isInGame();
 	
 		//Rectangle
 		this.objects.add(new GuiObjectRectangle(

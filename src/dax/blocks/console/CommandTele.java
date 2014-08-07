@@ -25,12 +25,12 @@ public class CommandTele extends Command {
 				
 				Game game = Game.getInstance();
 				
-				if (game.world == null) {
+				if (game.getWorldsManager().isInGame()) {
 					Console.println("You must be ingame to use command " + getName());
 					return false;
 				}
 				
-				game.world.getPlayer().setPosition(x, y, z);
+				game.getCurrentWorld().getPlayer().setPosition(x, y, z);
 				
 				return true;
 			} catch (NumberFormatException e) {
