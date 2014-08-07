@@ -104,34 +104,46 @@ public class PlayerEntity extends Entity implements IOverlayRenderer {
 		}
 
 		while(Mouse.next()) {
+			
 			if(Mouse.isGrabbed()) {
+				
 				if(Mouse.getEventButtonState()) {
+					
 					if(Mouse.getEventButton() == 0
 							&& Keyconfig.isDown(Keyconfig.crouch)) {
 						if(hasSelected) {
 							this.inHand.useItem(0, this.lookingAtX, this.lookingAtY, this.lookingAtZ, 0, this.world);
+							
+							this.world.getBlockObject(this.lookingAtX, this.lookingAtY, this.lookingAtZ)
+								.onClick(0, this.lookingAtX, this.lookingAtY, this.lookingAtZ, world);
+							
 						}
 					} else if(Mouse.getEventButton() == 0) {
 						if(this.hasSelected) {
 							this.world.setBlock(this.lookingAtX, this.lookingAtY, this.lookingAtZ,
 									0, true, true);
 						}
-					}
+					} 
+
 					if(Mouse.getEventButton() == 1) {
 						if(this.hasSelected	&& (this.lookingAtX != this.placesAtX || 
 									this.lookingAtY != this.placesAtY || this.lookingAtZ != this.placesAtZ)) {
 							this.inHand.useItem(1, this.placesAtX, this.placesAtY, this.placesAtZ, 0, this.world);
 						}
 					}
+					
 				}
 
 				this.updateBlock();
+				
 			} else {
 				if(Mouse.getEventButtonState() && Mouse.getEventButton() == 0) {
 					if(GuiManager.getInstance().isOpened())
 						GuiManager.getInstance().checkMouseClosing();
 				}
+				
 			}
+			
 		}
 		
 		if(this.inHand.shouldRecycle()) {

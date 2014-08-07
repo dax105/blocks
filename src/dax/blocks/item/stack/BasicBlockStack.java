@@ -64,9 +64,11 @@ public class BasicBlockStack implements IObjectStack {
 
 	@Override
 	public void useItem(int mouseButton, int x, int y, int z, int item,
-			World world) throws IllegalArgumentException {
-		world.setBlock(x, y, z, this.innerBlock.getID(), true, true);
-		this.removeItem();
+			World world) throws IllegalArgumentException {	
+		if(mouseButton == 1) {
+			world.setBlock(x, y, z, this.innerBlock.getID(), true, true);
+			this.removeItem();
+		}	
 	}
 
 	@Override
