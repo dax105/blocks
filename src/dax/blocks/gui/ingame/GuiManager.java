@@ -5,11 +5,12 @@ import java.util.List;
 
 import org.lwjgl.input.Mouse;
 
+import dax.blocks.Game;
 import dax.blocks.render.IOverlayRenderer;
 import dax.blocks.render.ITickListener;
 import dax.blocks.settings.Settings;
 
-public class GuiManager implements ITickListener, IOverlayRenderer {
+public class GuiManager implements ITickListener {
 	GuiScreen currentGuiScreen;
 	List<GuiScreen> screenList;
 	boolean isScreenOpened = false;
@@ -56,12 +57,14 @@ public class GuiManager implements ITickListener, IOverlayRenderer {
 			Mouse.setGrabbed(false);
 			this.currentGuiScreen.onOpening();
 			this.isScreenOpened = true;
+			Game.getInstance().getOverlayManager().addOverlay(this.currentGuiScreen);
 		}
 	}
 	
 	public void closeScreen() {
 		if(this.currentGuiScreen != null && this.isOpened()) {
 			Mouse.setGrabbed(true);
+			Game.getInstance().getOverlayManager().removeOverlay(this.currentGuiScreen);
 			this.currentGuiScreen.onClosing();
 			this.isScreenOpened = false;
 		}
@@ -99,12 +102,6 @@ public class GuiManager implements ITickListener, IOverlayRenderer {
 	public void onRenderTick(float partialTickTime) {
 		if(this.isOpened())
 			this.currentGuiScreen.onRenderTick(partialTickTime);
-	}
-	
-	@Override
-	public void renderOverlay(float partialTickTime) {
-		if(this.isOpened())
-			this.currentGuiScreen.renderOverlay(partialTickTime);
 	}
 
 }
