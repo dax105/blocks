@@ -51,6 +51,8 @@ public abstract class Block {
 		this.fallSound = "fall_hard";
 	}
 	
+	public abstract void onUpdate(int x, int y, int z, int type, World world);
+	public abstract void onNeighbourUpdate(int x, int y, int z, World world);
 	public abstract void onTick(int x, int y, int z, World world);
 	public abstract void onRenderTick(float partialTickTime, int x, int y, int z, World world);
 	public abstract void onClick(int mouseButton, int x, int y, int z, World world);

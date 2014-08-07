@@ -2,16 +2,23 @@ package dax.blocks.world;
 
 public class ScheduledUpdate {
 
-	public final int x;
-	public final int y;
-	public final int z;
+	public final int type;
 	public int ticks;
-	
-	public ScheduledUpdate(int x, int y, int z, int ticks) {
-		this.x = x;
-		this.y = y;
-		this.z = z;
+
+	public ScheduledUpdate(int type, int ticks) {
+		this.type = type;
 		this.ticks = ticks;
 	}
-	
+
+	@Override
+	public int hashCode() {
+		return type;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		ScheduledUpdate u = (ScheduledUpdate) obj;
+		return this.type == u.type && this.ticks == u.ticks;
+	}
+
 }

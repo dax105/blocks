@@ -26,5 +26,13 @@ public class BlockBasic extends Block {
 	public void onClick(int button, int x, int y, int z, World world) {
 	}
 
+	@Override
+	public void onUpdate(int x, int y, int z, int type, World world) {	
+	}
+
+	@Override
+	public void onNeighbourUpdate(int x, int y, int z, World world) {
+	}
+
 
 }

@@ -19,9 +19,7 @@ public class BlockPlant extends Block {
 
 	@Override
 	public void onTick(int x, int y, int z, World world) {
-		if(world.getBlock(x, y-1, z) == 0) {
-			world.setBlock(x, y, z, 0, true, true);
-		}
+
 	}
 
 	@Override
@@ -32,5 +30,18 @@ public class BlockPlant extends Block {
 	public void onClick(int button, int x, int y, int z, World world) {
 		world.setData(x, y, z, DataFlags.SPECIAL_TEXTURE, "true");
 		world.setChunkDirty(x >> 4, y/16, z >> 4);
+	}
+
+	@Override
+	public void onUpdate(int x, int y, int z, int type, World world) {
+
+	}
+
+	@Override
+	public void onNeighbourUpdate(int x, int y, int z, World world) {
+		int below = world.getBlock(x, y-1, z);
+		if(!(below == IDRegister.grass.getID() || below == IDRegister.dirt.getID())) {
+			world.setBlock(x, y, z, 0, true, true);
+		}
 	}
 }
