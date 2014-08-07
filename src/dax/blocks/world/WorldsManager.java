@@ -98,11 +98,12 @@ public class WorldsManager {
 	
 	public void exitWorld() {
 		if(this.ingame) {
+			Game.getInstance().getOverlayManager().removeOverlay(this.infoOverlay);
+			Game.getInstance().getOverlayManager().removeOverlay(this.currentWorld.getPlayer());
+			
 			this.currentWorld.saveAllChunks();
 			this.currentWorld = null;
-			this.ingame = false;
-			
-			Game.getInstance().getOverlayManager().removeOverlay(this.infoOverlay);
+			this.ingame = false;	
 		}
 	}
 }
