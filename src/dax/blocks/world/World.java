@@ -9,7 +9,6 @@ import dax.blocks.gui.ingame.GuiManager;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
@@ -23,7 +22,7 @@ import dax.blocks.Particle;
 import dax.blocks.block.Block;
 import dax.blocks.movable.entity.PlayerEntity;
 import dax.blocks.render.ITickListener;
-import dax.blocks.render.IWorldRenderer;
+import dax.blocks.render.RenderEngine;
 import dax.blocks.settings.Settings;
 import dax.blocks.util.Coord2D;
 import dax.blocks.util.Coord3D;
@@ -48,6 +47,7 @@ public class World implements ITickListener {
 	private IBlockDataManager blockDataManager;
 	private IItemDataManager itemDataManager;
 	private IDRegister idRegister;
+	private RenderEngine renderEngine;
 	
 	public int size;
 	public int sizeBlocks;
@@ -68,14 +68,16 @@ public class World implements ITickListener {
 		return this.vertices;
 	}
 
-	public World(boolean trees, Game game, boolean load, String worldName) {
+	public World(boolean trees, Game game, boolean load, String worldName, RenderEngine e) {
 		this.name = worldName;
+		this.renderEngine = e;
 		
 		this.idRegister = new IDRegister(this);
 		this.idRegister.registerDefaultBlocks();
 		this.idRegister.registerDefaultItems();
 
 		this.player = new PlayerEntity(this, 0, 128, 0);
+		game.getOverlayManager().addOverlay(this.player);
 
 		this.chunkProvider = new ChunkProvider(this, load);
 
@@ -83,9 +85,16 @@ public class World implements ITickListener {
 		
 		this.scheduledUpdates = new LinkedList<ScheduledUpdate>();
 		this.newlyScheduledUpdates = new LinkedList<ScheduledUpdate>();
+		this.tickListeners = new LinkedList<ITickListener>();
+		this.scheduledTickListenersAdding = new LinkedList<ITickListener>();
+		this.scheduledTickListenersRemoval = new LinkedList<ITickListener>();
 
 		chunkProvider.updateLoadedChunksInRadius((int) player.getPosX(),
 				(int) player.getPosZ(), Settings.getInstance().drawDistance.getValue());
+	}
+	
+	public RenderEngine getRenderEngine() {
+		return this.renderEngine;
 	}
 
 	public IDRegister getRegister() {
@@ -146,8 +155,8 @@ public class World implements ITickListener {
 				* velFuzziness;
 
 		Particle p = new Particle(this, x, y, z, velX, velY, velZ, 100, rand.nextFloat(), rand.nextFloat(), rand.nextFloat());
-		this.registerNewRenderable(p);
-
+		this.renderEngine.registerNewRenderable(p);
+		this.registerNewTickListener(p);
 	}
 
 	public void spawnParticle(float x, float y, float z) {
@@ -164,10 +173,22 @@ public class World implements ITickListener {
 		Particle p = new Particle(this, x, y, z, velX, velY, velZ,
 				50 + rand.nextInt(20), rand.nextFloat(), rand.nextFloat(),
 				rand.nextFloat());
-		this.registerNewRenderable(p);
-
+		this.renderEngine.registerNewRenderable(p);
+		this.registerNewTickListener(p);
 	}
 
+	
+	public void registerNewTickListener(ITickListener l) {
+		if(!this.tickListeners.contains(l)) {
+			this.scheduledTickListenersAdding.add(l);
+		}
+	}
+	
+	public void removeTickListener(ITickListener l) {
+		if(this.tickListeners.contains(l) && !this.scheduledTickListenersRemoval.contains(l)) {
+			this.scheduledTickListenersRemoval.add(l);
+		}
+	}
 
 	public boolean isOccluder(int x, int y, int z) {
 		int id = getBlock(x, y, z);

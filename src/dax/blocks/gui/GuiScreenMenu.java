@@ -34,11 +34,7 @@ public class GuiScreenMenu extends GuiScreen {
 		} else if (button.id == 2) {
 			game.openGuiScreen(new GuiScreenSettings(this));
 		} else if (button.id == 3) {
-			game.world.saveAllChunks();
-			game.world = null;
-			game.renderEngine = new RenderEngine(Settings.getInstance().shaders.getValue());
-			game.ingame = false;
-			game.openGuiScreen(new GuiScreenMainMenu(game));
+			Game.getInstance().exitGame();
 		}
 
 	}

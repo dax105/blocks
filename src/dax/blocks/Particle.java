@@ -1,11 +1,7 @@
 package dax.blocks;
 
 import java.util.Random;
-
-import org.lwjgl.opengl.GL11;
-
 import dax.blocks.collisions.AABB;
-import dax.blocks.render.IRenderable;
 import dax.blocks.render.ITickListener;
 import dax.blocks.render.IWorldRenderer;
 import dax.blocks.render.RenderEngine;
@@ -87,7 +83,8 @@ public class Particle implements ITickListener, IWorldRenderer {
 		
 		if (age > lifetime) {
 			this.dead = true;
-			this.world.registerNewRenderableRemoval(this);
+			this.world.getRenderEngine().removeRenderable(this);
+			this.world.removeTickListener(this);
 			return;
 		}
 		
@@ -150,8 +147,6 @@ public class Particle implements ITickListener, IWorldRenderer {
 	
 	@Override
 	public void renderWorld(float partialTickTime, World world, RenderEngine e) {
-		GL11.glBegin(GL11.GL_QUADS);
-		e.renderParticle(this, partialTickTime);
-		GL11.glEnd();
+		e.renderParticle(partialTickTime, this);
 	}
 }

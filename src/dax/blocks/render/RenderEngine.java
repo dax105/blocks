@@ -4,6 +4,7 @@ import java.nio.FloatBuffer;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
 
 import org.lwjgl.BufferUtils;
@@ -55,8 +56,10 @@ public class RenderEngine {
 	
 	public int program = 0;
 	public int blockAttributeID;
-
 	
+	private List<IWorldRenderer> renderables;
+	private List<IWorldRenderer> renderablesToRemove;
+	private List<IWorldRenderer> renderablesToAdd;
 
 	public RenderEngine() {
 		this(false);
@@ -68,6 +71,9 @@ public class RenderEngine {
 		this.rightModelviewVec = new float[3];
 		this.upModelviewVec = new float[3];
 		this.chunkDistComp = new ChunkDistanceComparator();
+		this.renderables = new LinkedList<IWorldRenderer>();
+		this.renderablesToAdd = new LinkedList<IWorldRenderer>();
+		this.renderablesToRemove = new LinkedList<IWorldRenderer>();
 		
 		this.loadShaders();
 
@@ -234,7 +240,7 @@ public class RenderEngine {
 		sEnable(FLAG_TEXTURE);
 		sEnable(FLAG_FOG);
 
-		renderSkybox(world.getPlayer().getPosXPartial(), world.getPlayer()
+		this.renderSkybox(world.getPlayer().getPosXPartial(), world.getPlayer()
 				.getPosYPartial() + PlayerEntity.EYES_HEIGHT, world.getPlayer()
 				.getPosZPartial());
 
@@ -244,13 +250,7 @@ public class RenderEngine {
 
 		GL11.glDisable(GL11.GL_TEXTURE_2D);
 
-		// Render particles
-		/*
-		 * GL11.glBegin(GL11.GL_QUADS); for (IRenderable r :
-		 * world.getRenderables()) { if(r instanceof Particle)
-		 * renderParticle((Particle)r, ptt); } GL11.glEnd();
-		 */
-
+		this.updateRenderables(ptt, world);
 
 		sEnable(FLAG_LIGHTING);
 		GL11.glEnable(GL11.GL_LIGHTING);
@@ -263,10 +263,27 @@ public class RenderEngine {
 			GL11.glPopMatrix();
 		}
 
+
+		// Render chunks
+		this.renderChunks(ptt, world);
+
+		if (Settings.getInstance().clouds.getValue()) {
+			renderClouds(world.getPlayer().getPosXPartial(), world.getPlayer()
+					.getPosZPartial());
+		}
+
+		this.renderSelectionBox(world);
+
+		GL11.glPopMatrix();
+
+		ARBShaderObjects.glUseProgramObjectARB(0);
+
+	}
+	
+	public void renderChunks(float ptt, World world) {
 		sEnable(FLAG_LIGHTING);
 		sEnable(FLAG_TEXTURE);
 
-		// Render chunks
 		GL11.glEnable(GL11.GL_CULL_FACE);
 		GL11.glEnable(GL11.GL_LIGHTING);
 		GL11.glEnable(GL11.GL_TEXTURE_2D);
@@ -376,13 +393,9 @@ public class RenderEngine {
 		GL11.glDisable(GL11.GL_LIGHTING);
 		sDisable(FLAG_LIGHTING);
 		sDisable(FLAG_FOG);
-
-		if (Settings.getInstance().clouds.getValue()) {
-			renderClouds(world.getPlayer().getPosXPartial(), world.getPlayer()
-					.getPosZPartial());
-		}
-
-		// Render selection box
+	}
+	
+	public void renderSelectionBox(World world) {
 		if (world.getPlayer().hasSelectedBlock()) {
 			GL11.glDisable(GL11.GL_DEPTH_TEST);
 			GL11.glDepthMask(false);
@@ -406,12 +419,6 @@ public class RenderEngine {
 			GL11.glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
 			GL11.glDepthMask(true);
 		}
-
-
-		GL11.glPopMatrix();
-
-		ARBShaderObjects.glUseProgramObjectARB(0);
-
 	}
 
 	public void renderClouds(float playerX, float playerZ) {
@@ -571,7 +578,8 @@ public class RenderEngine {
 		// TODO Actually do something here
 	}
 
-	public void renderParticle(Particle p, float ptt) {
+	public void renderParticle(float ptt, Particle p) {
+		GL11.glBegin(GL11.GL_QUADS);
 		GL11.glColor4f(p.r, p.g, p.b, 1);
 
 		float h = Particle.PARTICLE_SIZE / 2;
@@ -598,15 +606,37 @@ public class RenderEngine {
 		GL11.glVertex3f(px + rightup0n, py + rightup1n, pz + rightup2n);
 		GL11.glVertex3f(px + rightup0p, py + rightup1p, pz + rightup2p);
 		GL11.glVertex3f(px - rightup0n, py - rightup1n, pz - rightup2n);
-
-		// GL11.glVertex3f(px, py, pz);
-
-		// GL11.glVertex3f(px-Particle.PARTICLE_SIZE/2,
-		// py-Particle.PARTICLE_SIZE/2, pz-Particle.PARTICLE_SIZE/2);
-		// GL11.glVertex3f(px+Particle.PARTICLE_SIZE/2,
-		// py+Particle.PARTICLE_SIZE/2, pz+Particle.PARTICLE_SIZE/2);
+		GL11.glEnd();
 	}
 
 
-
+	public void registerNewRenderable(IWorldRenderer r) {
+		if(!this.renderables.contains(r)) {
+			this.renderablesToAdd.add(r);
+		}
+	}
+	
+	public void removeRenderable(IWorldRenderer r) {
+		if(this.renderables.contains(r)) {
+			this.renderablesToRemove.add(r);
+		}
+	}
+	
+	public void updateRenderables(float ptt, World world) {
+		for(IWorldRenderer r : this.renderables) {
+			r.renderWorld(ptt, world, this);
+		}
+		
+		for (Iterator<IWorldRenderer> it = this.renderablesToAdd.iterator(); it
+				.hasNext();) {
+			this.renderables.add(it.next());
+			it.remove();
+		}
+		
+		for (Iterator<IWorldRenderer> it = this.renderablesToRemove.iterator(); it
+				.hasNext();) {
+			this.renderables.remove(it.next());
+			it.remove();
+		}
+	}
 }

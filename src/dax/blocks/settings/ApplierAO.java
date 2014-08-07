@@ -11,7 +11,7 @@ public class ApplierAO extends Applier {
 
 		if (Game.getInstance().ingame) {
 			Game.getInstance().world.saveAllChunks();
-			Game.getInstance().world = new World(false, Game.getInstance(), true, Game.getInstance().world.name);
+			Game.getInstance().world = new World(false, Game.getInstance(), true, Game.getInstance().world.name, Game.getInstance().world.getRenderEngine());
 		}
 		
 		Game.getInstance().displayLoadingScreen();
