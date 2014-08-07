@@ -78,7 +78,7 @@ public class Game implements Runnable {
 
 	public static Game getInstance() {
 		if(Game.instance == null) {
-			new Game();
+			Game.instance = new Game();
 		}
 
 		return Game.instance;
