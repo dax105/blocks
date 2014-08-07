@@ -31,50 +31,54 @@ public class AtlasBuilder {
 	}
 	
 	public void addTexture(BufferedImage tex) {
-		if (isEmpty) {
-			isEmpty = false;	
+		if(this.isEmpty) {
+			this.isEmpty = false;	
 			
-			if (tex.getWidth() != tex.getHeight()) {
-				Console.println("Texture w/h mismatch, ratio must be 1:1! Exiting!");
+			if(tex.getWidth() != tex.getHeight()) {
+				Console.getInstance().out("Texture w/h mismatch, ratio must be 1:1! Exiting!");
 				System.exit(1);
 			}	
 			
-			texSize = tex.getWidth();
+			this.texSize = tex.getWidth();
 			
-			if (!GameMath.isPowerOfTwo(texSize)) {
+			if(!GameMath.isPowerOfTwo(this.texSize)) {
 				Console.getInstance().out("Texture size is not power of two! Exiting!");
 				System.exit(1);
 			}
 			
-		} else if (tex.getWidth() != texSize || tex.getHeight() != texSize){
-			Console.println("Texture size mismatch while building texture atlas! Exiting!");
+		} else if(tex.getWidth() != this.texSize || tex.getHeight() != this.texSize){
+			Console.getInstance().out("Texture size mismatch while building texture atlas! Exiting!");
 			System.exit(1);
 		}
 		
-		textures.add(tex);
+		this.textures.add(tex);
 	}
 	
 	public Texture buildAtlas(boolean avoidBleeding) {
-		Console.println("Building texture atlas...");
-		if (textures.size() == 0) {
-			Console.println("No textures added, cannot return empty texture atlas! Exiting!");
+		Console.getInstance().out("Building texture atlas...");
+		if(this.textures.size() == 0) {
+			Console.getInstance().out("No textures added, cannot return empty texture atlas! Exiting!");
 			System.exit(1);
 		}
 		
-		BufferedImage img = new BufferedImage(ATLAS_SIZE*(int)Math.round((EXPAND_RATIO*2+1))*texSize, ATLAS_SIZE*(int)Math.round((EXPAND_RATIO*2+1))*texSize, BufferedImage.TYPE_INT_ARGB);
+		BufferedImage img = new BufferedImage(
+				AtlasBuilder.ATLAS_SIZE * (int)Math.round((AtlasBuilder.EXPAND_RATIO * 2 + 1)) * this.texSize, 
+				AtlasBuilder.ATLAS_SIZE * (int)Math.round((AtlasBuilder.EXPAND_RATIO * 2 + 1)) * this.texSize, 
+				BufferedImage.TYPE_INT_ARGB
+		);
 		Graphics2D g = (Graphics2D) img.getGraphics();
 		
 		Console.println("Atlas size: " + img.getWidth() + "px"); 
 		
-		for (int i = 0; i < textures.size(); i++) {
-			Console.println("Adding texture with index " + i + " to the texture atlas image!");
-			BufferedImage tex = textures.get(i);
+		for(int i = 0; i < this.textures.size(); i++) {
+			Console.getInstance().out("Adding texture with index " + i + " to the texture atlas image!");
+			BufferedImage tex = this.textures.get(i);
 			
-			int offsetX = (int) ((i % 8) * (EXPAND_RATIO*2+1) * texSize);
-			int offsetY = (int) ((i / 8) * (EXPAND_RATIO*2+1) * texSize);
+			int offsetX = (int) ((i % 8) * (AtlasBuilder.EXPAND_RATIO*2+1) * this.texSize);
+			int offsetY = (int) ((i / 8) * (AtlasBuilder.EXPAND_RATIO*2+1) * this.texSize);
 			
-			int expand = (int)Math.round(EXPAND_RATIO*texSize);
-			int size = texSize;
+			int expand = (int)Math.round(AtlasBuilder.EXPAND_RATIO * this.texSize);
+			int size = this.texSize;
 			
 			g.drawImage(tex.getSubimage(size-expand, size-expand, expand, expand), offsetX, offsetY, null);
 			g.drawImage(tex.getSubimage(0, size-expand, size, expand), offsetX+expand, offsetY, null);

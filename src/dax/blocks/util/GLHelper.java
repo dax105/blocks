@@ -17,6 +17,7 @@ import dax.blocks.console.Console;
 import dax.blocks.settings.Settings;
 
 public class GLHelper {
+
 	public static void setOrtho(int width, int height) {
 		GL11.glMatrixMode(GL11.GL_PROJECTION);
 		GL11.glLoadIdentity();
@@ -43,7 +44,7 @@ public class GLHelper {
 	
 	public static void initGL(int width, int height) {
 		// Set perspective matrix
-		setPerspective(width, height);
+		GLHelper.setPerspective(width, height);
 
 		// Enable depth test
 		GL11.glEnable(GL11.GL_DEPTH_TEST);
@@ -192,38 +193,39 @@ public class GLHelper {
 	}
 
 	public static void drawTexture(Texture texture, float x, float y) {
-		drawTexture(texture, 0, texture.getWidth(), 0, texture.getHeight(), x,
+		GLHelper.drawTexture(texture, 0, texture.getWidth(), 0, texture.getHeight(), x,
 				x + texture.getImageWidth(), y, y + texture.getImageHeight());
 	}
 
 	public static void drawTexture(Texture texture, float textureX1,
 			float textureX2, float textureY1, float textureY2, float x, float y) {
-		drawTexture(texture, textureX1, textureX2, textureY1, textureY2, x, x
+		GLHelper.drawTexture(texture, textureX1, textureX2, textureY1, textureY2, x, x
 				+ texture.getImageWidth(), y, y + texture.getImageHeight());
 	}
 
 	public static void drawTexture(Texture texture, float x1, float x2, float y1, float y2) {
-		drawTexture(texture, 0, texture.getWidth(), 0, texture.getHeight(), x1, x2, y1, y2);
+		GLHelper.drawTexture(texture, 0, texture.getWidth(), 0, texture.getHeight(), x1, x2, y1, y2);
 	}
 	
 	public static void drawTextureCropped(Texture texture, float x, float y,
 			float cropXPercent, float cropYPercent) {
-		drawTexture(texture, 0, texture.getWidth() * cropXPercent, 0,
+		GLHelper.drawTexture(texture, 0, texture.getWidth() * cropXPercent, 0,
 				texture.getHeight() * cropYPercent, x, x + texture.getImageWidth()
 						* cropXPercent, y, y + texture.getImageHeight() * cropYPercent);
 	}
 
 	public static void drawFromAtlas(int id, float x, float y) {
-		drawFromAtlas(id, x, x + 16, y, y + 16);
+		GLHelper.drawFromAtlas(id, x, x + 16, y, y + 16);
 	}
 	
 	public static void drawFromAtlas(int id, float x1, float x2, float y1, float y2) {
-		drawTexture(TextureManager.atlas, TextureManager.getX1(id),
+		GLHelper.drawTexture(TextureManager.atlas, TextureManager.getX1(id),
 				TextureManager.getX2(id), TextureManager.getY1(id),
 				TextureManager.getY2(id), x1, x2, y1, y2);
 	}
 	
-	public static void drawRectangle(float r, float g, float b, float a, float x1, float x2, float y1, float y2) {
+	public static void drawRectangle(float r, float g, float b, float a, float x1, 
+			float x2, float y1, float y2) {
 		GL11.glColor4f(r, g, b, a);
 
 		GL11.glDisable(GL11.GL_TEXTURE_2D);
@@ -241,13 +243,14 @@ public class GLHelper {
 		GL11.glEnd();
 	}
 	
-	public static void drawRectangle(float r, float g, float b, float x1, float x2, float y1, float y2) {
-		drawRectangle(r, g, b, 1, x1, x2, y1, y2);
+	public static void drawRectangle(float r, float g, float b, float x1, float x2, 
+			float y1, float y2) {
+		GLHelper.drawRectangle(r, g, b, 1, x1, x2, y1, y2);
 	}
 	
 	public static void updateFiltering(boolean linear) {
 		TextureManager.atlas.bind();
-		if (linear) {
+		if(linear) {
 			GL11.glTexParameteri(GL11.GL_TEXTURE_2D,
 					GL11.GL_TEXTURE_MIN_FILTER, GL11.GL_LINEAR);
 			GL11.glTexParameteri(GL11.GL_TEXTURE_2D,
@@ -260,7 +263,8 @@ public class GLHelper {
 		}
 	}
 
-	public static void drawLine(float x1, float x2, float y1, float y2, int thickness, float r, float g, float b, float a) {
+	public static void drawLine(float x1, float x2, float y1, float y2, int thickness, 
+			float r, float g, float b, float a) {
 		GL11.glColor4f(r, g, b, a);
 		GL11.glLineWidth(thickness);
 		
@@ -273,7 +277,7 @@ public class GLHelper {
 	}
 	
 	public static void drawLine(float x1, float x2, float y1, float y2, int thickness) {
-		drawLine(x1, x2, y1, y2, thickness, 1, 1, 1, 1);
+		GLHelper.drawLine(x1, x2, y1, y2, thickness, 1, 1, 1, 1);
 	}
 
 	public static void renderLinedBox(float x0, float y0, float z0, float x1,

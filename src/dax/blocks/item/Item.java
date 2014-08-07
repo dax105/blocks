@@ -6,6 +6,7 @@ import dax.blocks.world.IDRegister;
 import dax.blocks.world.World;
 
 public abstract class Item {
+
 	private int id;
 	private String name;
 	private Texture texture;

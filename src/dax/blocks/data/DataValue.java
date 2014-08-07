@@ -3,6 +3,7 @@ package dax.blocks.data;
 import dax.blocks.settings.ObjectType;
 
 public class DataValue {
+
 	private ObjectType objectType;
 	private String data_String;
 	private int data_Integer;
@@ -14,15 +15,15 @@ public class DataValue {
 	public boolean equals(Object obj) {
 		if(obj instanceof DataValue) {
 			DataValue sVal = (DataValue)obj;
-			switch (sVal.objectType) {
-			case BOOLEAN:
-				return sVal.data_Boolean == this.data_Boolean;
-			case FLOAT:
-				return sVal.data_Float == this.data_Float;
-			case INTEGER:
-				return sVal.data_Integer == this.data_Integer;
-			case STRING:
-				return sVal.data_String.equals(this.data_String);
+			switch(sVal.objectType) {
+				case BOOLEAN:
+					return sVal.data_Boolean == this.data_Boolean;
+				case FLOAT:
+					return sVal.data_Float == this.data_Float;
+				case INTEGER:
+					return sVal.data_Integer == this.data_Integer;
+				case STRING:
+					return sVal.data_String.equals(this.data_String);
 			}
 		}
 		
@@ -38,8 +39,8 @@ public class DataValue {
 	}
 
 	public String getDataString() {
-		if (this.objectType != null)
-			if (this.objectType == ObjectType.STRING) {
+		if(this.objectType != null)
+			if(this.objectType == ObjectType.STRING) {
 				return data_String;
 			}
 
@@ -47,8 +48,8 @@ public class DataValue {
 	}
 
 	public int getDataInt() {
-		if (this.objectType != null)
-			if (this.objectType == ObjectType.INTEGER) {
+		if(this.objectType != null)
+			if(this.objectType == ObjectType.INTEGER) {
 				return data_Integer;
 			}
 
@@ -56,8 +57,8 @@ public class DataValue {
 	}
 
 	public float getDataFloat() {
-		if (this.objectType != null)
-			if (this.objectType == ObjectType.FLOAT) {
+		if(this.objectType != null)
+			if(this.objectType == ObjectType.FLOAT) {
 				return data_Float;
 			}
 
@@ -65,8 +66,8 @@ public class DataValue {
 	}
 
 	public boolean getDataBoolean() {
-		if (this.objectType != null)
-			if (this.objectType == ObjectType.BOOLEAN) {
+		if(this.objectType != null)
+			if(this.objectType == ObjectType.BOOLEAN) {
 				return data_Boolean;
 			}
 
@@ -75,16 +76,16 @@ public class DataValue {
 
 	public String getDataAsString() {
 		switch(this.objectType) {
-		case BOOLEAN:
-			return this.data_Boolean + "";
-		case FLOAT:
-			return this.data_Float + "";
-		case INTEGER:
-			return this.data_Integer + "";
-		case STRING:
-			return this.data_String;
-		default:
-			return null;
+			case BOOLEAN:
+				return this.data_Boolean + "";
+			case FLOAT:
+				return this.data_Float + "";
+			case INTEGER:
+				return this.data_Integer + "";
+			case STRING:
+				return this.data_String;
+			default:
+				return null;
 		}
 	}
 	

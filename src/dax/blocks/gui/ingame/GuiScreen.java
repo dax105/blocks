@@ -92,7 +92,7 @@ public abstract class GuiScreen implements ITickListener, IOverlayRenderer {
 	}
 
 	public int getHeight() {
-		return height;
+		return this.height;
 	}
 
 	public void setHeight(int height) {
@@ -100,7 +100,7 @@ public abstract class GuiScreen implements ITickListener, IOverlayRenderer {
 	}
 
 	public float getBackColorR() {
-		return backColorR;
+		return this.backColorR;
 	}
 
 	public void setBackColorR(float backColorR) {
@@ -108,7 +108,7 @@ public abstract class GuiScreen implements ITickListener, IOverlayRenderer {
 	}
 
 	public float getBackColorG() {
-		return backColorG;
+		return this.backColorG;
 	}
 
 	public void setBackColorG(float backColorG) {
@@ -116,7 +116,7 @@ public abstract class GuiScreen implements ITickListener, IOverlayRenderer {
 	}
 
 	public float getBackColorB() {
-		return backColorB;
+		return this.backColorB;
 	}
 
 	public void setBackColorB(float backColorB) {
@@ -124,7 +124,7 @@ public abstract class GuiScreen implements ITickListener, IOverlayRenderer {
 	}
 
 	public float getBackColorA() {
-		return backColorA;
+		return this.backColorA;
 	}
 
 	public void setBackColorA(float backColorA) {
@@ -132,11 +132,10 @@ public abstract class GuiScreen implements ITickListener, IOverlayRenderer {
 	}
 
 	public int getX() {
-		return x;
+		return this.x;
 	}
 
 	public int getY() {
-		return y;
+		return this.y;
 	}
-
 }

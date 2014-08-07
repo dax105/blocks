@@ -17,7 +17,7 @@ public class BlockStone extends BlockBasic {
 	}
 
 	public void updateColor(int x, int y, int z, World w) {
-		if (w.containsData(x, y, z, DataFlags.RECOLOR_R)) {
+		if(w.containsData(x, y, z, DataFlags.RECOLOR_R)) {
 			this.setColor(w.getDataFloat(x, y, z, DataFlags.RECOLOR_R),
 			w.getDataFloat(x, y, z, DataFlags.RECOLOR_G),
 			w.getDataFloat(x, y, z, DataFlags.RECOLOR_B));
@@ -34,11 +34,11 @@ public class BlockStone extends BlockBasic {
 	public void onClick(int button, int x, int y, int z, World world) {
 		recolor(x, y, z, world);
 
-		if (button != 10) {
-			for (int x2 = (x - 1); x2 < (x + 2); x2++) {
-				for (int y2 = (y - 1); y2 < (y + 2); y2++) {
-					for (int z2 = (z - 1); z2 < (z + 2); z2++) {
-						if (world.getBlock(x2, y2, z2) == this.getID()) {
+		if(button != 10) {
+			for(int x2 = (x - 1); x2 < (x + 2); x2++) {
+				for(int y2 = (y - 1); y2 < (y + 2); y2++) {
+					for(int z2 = (z - 1); z2 < (z + 2); z2++) {
+						if(world.getBlock(x2, y2, z2) == this.getID()) {
 							IDRegister.stone.onClick(10, x2, y2, z2, world);
 						}
 					}

@@ -12,7 +12,7 @@ public class ApplierFullscreen extends Applier {
 	
 	@Override
 	public boolean apply(Object value) {
-		if (!((Boolean)this.applyingObject.getValue()) && (Boolean)value) {
+		if(!((Boolean)this.applyingObject.getValue()) && (Boolean)value) {
 			this.lastWidth = Settings.getInstance().windowWidth.getValue();
 			this.lastHeight = Settings.getInstance().windowHeight.getValue();
 			
@@ -26,7 +26,11 @@ public class ApplierFullscreen extends Applier {
 		}
 		
 		
-		GLHelper.setDisplayMode(Settings.getInstance().windowWidth.getValue(), Settings.getInstance().windowHeight.getValue(), (Boolean)value);
+		GLHelper.setDisplayMode(
+				Settings.getInstance().windowWidth.getValue(), 
+				Settings.getInstance().windowHeight.getValue(), 
+				(Boolean)value
+		);
 		Game.getInstance().init();
 		return true;
 	}

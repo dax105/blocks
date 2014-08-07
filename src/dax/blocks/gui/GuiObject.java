@@ -5,12 +5,12 @@ import java.awt.Color;
 import org.lwjgl.opengl.GL11;
 
 public abstract class GuiObject {
-	public abstract void render();
 
+	public abstract void render();
 	public abstract void update();
 
 	public void drawRect(int x1, int y1, int x2, int y2, int color) {
-		Color col = getColorFromInt(color);
+		Color col = this.getColorFromInt(color);
 		GL11.glColor4ub((byte) col.getRed(), (byte) col.getGreen(), (byte) col.getBlue(), (byte) col.getAlpha());
 
 		GL11.glBegin(GL11.GL_QUADS);

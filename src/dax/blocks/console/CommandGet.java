@@ -18,7 +18,7 @@ public class CommandGet extends Command {
 	@Override
 	public boolean execute(String[] args) {
 
-		if (args.length >= 1) {
+		if(args.length >= 1) {
 			SettingsObject<?> o = Settings.getInstance().getObject(args[0]);
 			if(o != null) {
 				Console.println("Variable " + o.getName() + ": " + o.getReadableValue());

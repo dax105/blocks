@@ -25,52 +25,52 @@ public class GuiObjectChangingButton extends GuiObjectButton {
 			String[] lines, int startingLine, int id, GuiScreen parent) {
 		this(x1, y1, x2, y2, font, lines, id, parent);
 
-		setLine(startingLine);
+		this.setLine(startingLine);
 	}
 
 	public int getCurrentLine() {
-		return currentLine;
+		return this.currentLine;
 	}
 
 	public String getCurrentLineString() {
-		return lines[currentLine];
+		return this.lines[this.currentLine];
 	}
 
 	public int nextLine() {
-		currentLine++;
-		if (currentLine > (lines.length - 1)) {
-			currentLine = 0;
+		this.currentLine++;
+		if(this.currentLine > (this.lines.length - 1)) {
+			this.currentLine = 0;
 		}
 
-		this.text = lines[currentLine];
-		return currentLine;
+		this.text = this.lines[this.currentLine];
+		return this.currentLine;
 	}
 
 	public int previousLine() {
-		currentLine--;
-		if (currentLine < 0) {
-			currentLine = (lines.length - 1);
+		this.currentLine--;
+		if(this.currentLine < 0) {
+			this.currentLine = (this.lines.length - 1);
 		}
 
-		this.text = lines[currentLine];
-		return currentLine;
+		this.text = this.lines[this.currentLine];
+		return this.currentLine;
 	}
 
 	public void setLine(int line) {
-		if (line >= 0 && line <= (lines.length - 1)) {
+		if(line >= 0 && line <= (this.lines.length - 1)) {
 			this.currentLine = line;
-			this.text = lines[currentLine];
+			this.text = this.lines[this.currentLine];
 		}
 	}
 
 	@Override
 	protected void onClick() {
-		if (Mouse.getEventButton() == 0) {
+		if(Mouse.getEventButton() == 0) {
 			this.nextLine();
-			parent.buttonChanged(this, currentLine);
-		} else if (Mouse.getEventButton() == 1) {
+			this.parent.buttonChanged(this, this.currentLine);
+		} else if(Mouse.getEventButton() == 1) {
 			this.previousLine();
-			parent.buttonChanged(this, currentLine);
+			this.parent.buttonChanged(this, this.currentLine);
 		}
 	}
 

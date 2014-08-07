@@ -22,16 +22,16 @@ public abstract class Movable implements ITickListener {
 	protected float lastPosZ;
 
 	public void onTick() {
-		lastPosX = posX;
-		lastPosY = posY;
-		lastPosZ = posZ;
+		this.lastPosX = posX;
+		this.lastPosY = posY;
+		this.lastPosZ = posZ;
 		
-		updatePosition();
+		this.updatePosition();
 	}
 	
 	@Override
 	public void onRenderTick(float partialTickTime) {
-		updateRenderPosition(partialTickTime);
+		this.updateRenderPosition(partialTickTime);
 	}
 
 
@@ -40,30 +40,30 @@ public abstract class Movable implements ITickListener {
 	}
 
 	public Movable(float x, float y, float z, float velX, float velY, float velZ) {
-		setPosX(x);
-		setPosY(y);
-		setPosZ(z);
-		setLastPosX(x);
-		setLastPosY(y);
-		setLastPosZ(z);
-		setVelX(velX);
-		setVelY(velY);
-		setVelZ(velZ);
+		this.setPosX(x);
+		this.setPosY(y);
+		this.setPosZ(z);
+		this.setLastPosX(x);
+		this.setLastPosY(y);
+		this.setLastPosZ(z);
+		this.setVelX(velX);
+		this.setVelY(velY);
+		this.setVelZ(velZ);
 	}
 
 	private void updateRenderPosition(float ptt) {
-		float deltaX = posX - lastPosX;
-		this.posXPartial = lastPosX + deltaX*ptt;
+		float deltaX = this.posX - this.lastPosX;
+		this.posXPartial = this.lastPosX + deltaX*ptt;
 		
-		float deltaY = posY - lastPosY;
-		this.posYPartial = lastPosY + deltaY*ptt;
+		float deltaY = this.posY - this.lastPosY;
+		this.posYPartial = this.lastPosY + deltaY*ptt;
 		
-		float deltaZ = posZ - lastPosZ;
-		this.posZPartial = lastPosZ + deltaZ*ptt;
+		float deltaZ = this.posZ - this.lastPosZ;
+		this.posZPartial = this.lastPosZ + deltaZ*ptt;
 	}
 
 	public float getVelX() {
-		return velX;
+		return this.velX;
 	}
 
 	public void setVelX(float velX) {
@@ -71,7 +71,7 @@ public abstract class Movable implements ITickListener {
 	}
 
 	public float getVelY() {
-		return velY;
+		return this.velY;
 	}
 
 	public void setVelY(float velY) {
@@ -79,7 +79,7 @@ public abstract class Movable implements ITickListener {
 	}
 
 	public float getVelZ() {
-		return velZ;
+		return this.velZ;
 	}
 
 	public void setVelZ(float velZ) {
@@ -87,7 +87,7 @@ public abstract class Movable implements ITickListener {
 	}
 
 	public float getLastPosX() {
-		return lastPosX;
+		return this.lastPosX;
 	}
 
 	public void setLastPosX(float lastPosX) {
@@ -95,7 +95,7 @@ public abstract class Movable implements ITickListener {
 	}
 
 	public float getLastPosY() {
-		return lastPosY;
+		return this.lastPosY;
 	}
 
 	public void setLastPosY(float lastPosY) {
@@ -103,7 +103,7 @@ public abstract class Movable implements ITickListener {
 	}
 
 	public float getLastPosZ() {
-		return lastPosZ;
+		return this.lastPosZ;
 	}
 
 	public void setLastPosZ(float lastPosZ) {
@@ -113,15 +113,15 @@ public abstract class Movable implements ITickListener {
 	public abstract void updatePosition();
 	
 	public float getPosX() {
-		return posX;
+		return this.posX;
 	}
 	
 	public float getPosY() {
-		return posY;
+		return this.posY;
 	}
 	
 	public float getPosZ() {
-		return posZ;
+		return this.posZ;
 	}
 	
 	public void setPosX(float posX) {
@@ -137,15 +137,14 @@ public abstract class Movable implements ITickListener {
 	}
 	
 	public float getPosXPartial() {
-		return posXPartial;
+		return this.posXPartial;
 	}
 	
 	public float getPosYPartial() {
-		return posYPartial;
+		return this.posYPartial;
 	}
 	
 	public float getPosZPartial() {
-		return posZPartial;
+		return this.posZPartial;
 	}
-	
 }

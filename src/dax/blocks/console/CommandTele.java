@@ -16,7 +16,7 @@ public class CommandTele extends Command {
 
 	@Override
 	public boolean execute(String[] args) {
-		if (args.length >= 3) {
+		if(args.length >= 3) {
 			
 			try {
 				float x = Float.parseFloat(args[0]);

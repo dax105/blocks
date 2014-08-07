@@ -21,12 +21,11 @@ public class CommandVariables extends Command {
 
 		Console.println("List of all variables and their types:");
 
-		for (Entry<String, SettingsObject<?>> e : Settings.getInstance().objects.entrySet()) {
+		for(Entry<String, SettingsObject<?>> e : Settings.getInstance().objects.entrySet()) {
 			SettingsObject<?> o = e.getValue();
-			Console.println(SettingsObject.getConsoleRepresentation(o
-					.getObjectType())
-					+ " "
-					+ o.getReadableName() + " (" + o.getName() + "): " + o.getReadableValue());
+			Console.println(SettingsObject.getConsoleRepresentation(
+					o.getObjectType()) + " " + o.getReadableName() + " (" + o.getName() + "): " + o.getReadableValue()
+			);
 		}
 
 		return true;

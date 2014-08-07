@@ -19,7 +19,7 @@ public class CommandHelp extends Command {
 
 		Console.println("List of available commands:");
 		
-		for (Entry<String, Command> e : Console.getInstance().manager.commands.entrySet()) {
+		for(Entry<String, Command> e : Console.getInstance().manager.commands.entrySet()) {
 			Console.println(e.getValue().getName());
 		}
 		

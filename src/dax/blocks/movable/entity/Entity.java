@@ -20,7 +20,7 @@ public abstract class Entity extends Movable {
 	}
 
 	public World getWorld() {
-		return world;
+		return this.world;
 	}
 
 	public void setWorld(World world) {
@@ -28,7 +28,7 @@ public abstract class Entity extends Movable {
 	}
 	
 	public AABB getAABB() {
-		return bb;
+		return this.bb;
 	}
 
 	public void setPosition(float x, float y, float z) {
@@ -38,7 +38,7 @@ public abstract class Entity extends Movable {
 	}
 	
 	public float getLifes() {
-		return lifes;
+		return this.lifes;
 	}
 	
 	public void setLifes(float lifes) {
@@ -53,10 +53,10 @@ public abstract class Entity extends Movable {
 	}
 	
 	public void regenerate(int strength) {
-		setLifes(lifes + (strength * Entity.STRENGTH_MULTIPLIER));
+		this.setLifes(this.lifes + (strength * Entity.STRENGTH_MULTIPLIER));
 	}
 	
 	public void hurt(int strength) {
-		setLifes(lifes - (strength * Entity.STRENGTH_MULTIPLIER));
+		this.setLifes(this.lifes - (strength * Entity.STRENGTH_MULTIPLIER));
 	}
 }

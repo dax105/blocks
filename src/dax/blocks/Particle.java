@@ -42,7 +42,8 @@ public class Particle implements ITickListener, IWorldRenderer {
 	
 	public World world;
 	
-	public Particle(World world, float x, float y, float z, float velX, float velY, float velZ, int lifetime, float r, float g, float b) {
+	public Particle(World world, float x, float y, float z, float velX, float velY, 
+			float velZ, int lifetime, float r, float g, float b) {
 		this.world = world;
 		this.x = x;
 		this.y = y;
@@ -53,35 +54,42 @@ public class Particle implements ITickListener, IWorldRenderer {
 		this.lifetime = lifetime;
 		this.dead = false;
 		this.ground = false;
-		this.aabb = new AABB(x-PARTICLE_SIZE*0.5f, y-PARTICLE_SIZE*0.5f, z-PARTICLE_SIZE*0.5f, x+PARTICLE_SIZE*0.5f, y+PARTICLE_SIZE*0.5f, z+PARTICLE_SIZE*0.5f);
+		this.aabb = new AABB(
+				this.x - Particle.PARTICLE_SIZE * 0.5f, 
+				this.y - Particle.PARTICLE_SIZE * 0.5f, 
+				this.z - Particle.PARTICLE_SIZE * 0.5f, 
+				this.x + Particle.PARTICLE_SIZE * 0.5f, 
+				this.y + Particle.PARTICLE_SIZE * 0.5f, 
+				this.z + Particle.PARTICLE_SIZE * 0.5f
+		);
 		this.r = r;
 		this.g = g;
 		this.b = b;
 	}
 	
 	public float getPartialX(float ptt) {
-		float delta = x - lastX;
-		return lastX + delta*ptt;
+		float delta = this.x - this.lastX;
+		return this.lastX + delta * ptt;
 	}
 	
 	public float getPartialY(float ptt) {
-		float delta = y - lastY;
-		return lastY + delta*ptt;
+		float delta = this.y - this.lastY;
+		return this.lastY + delta * ptt;
 	}
 	
 	public float getPartialZ(float ptt) {
-		float delta = z - lastZ;
-		return lastZ + delta*ptt;
+		float delta = this.z - this.lastZ;
+		return this.lastZ + delta * ptt;
 	}
 	
 	public void onTick() {
-		lastX = x;
-		lastY = y;
-		lastZ = z;
+		this.lastX = this.x;
+		this.lastY = this.y;
+		this.lastZ = this.z;
 		
-		age++;
+		this.age++;
 		
-		if (age > lifetime) {
+		if(this.age > this.lifetime) {
 			this.dead = true;
 			this.world.getRenderEngine().removeRenderable(this);
 			this.world.removeTickListener(this);
@@ -90,11 +98,11 @@ public class Particle implements ITickListener, IWorldRenderer {
 		
 		this.velY -= World.GRAVITY;
 		
-		float maxVelX = velX;
-		float maxVelY = velY;
-		float maxVelZ = velZ;
+		float maxVelX = this.velX;
+		float maxVelY = this.velY;
+		float maxVelZ = this.velZ;
 		
-		float[] clipped = world.clipMovement(this.aabb, maxVelX, maxVelY, maxVelZ);
+		float[] clipped = this.world.clipMovement(this.aabb, maxVelX, maxVelY, maxVelZ);
 		
 		maxVelX = clipped[0];
 		maxVelY = clipped[1];
@@ -104,38 +112,38 @@ public class Particle implements ITickListener, IWorldRenderer {
 		boolean collidedY = false;
 		boolean collidedZ = false;
 		
-		x = aabb.x0+PARTICLE_SIZE/2;
-		y = aabb.y0+PARTICLE_SIZE/2;
-		z = aabb.z0+PARTICLE_SIZE/2;
+		this.x = this.aabb.x0 + Particle.PARTICLE_SIZE / 2;
+		this.y = this.aabb.y0 + Particle.PARTICLE_SIZE / 2;
+		this.z = this.aabb.z0 + Particle.PARTICLE_SIZE / 2;
 		
-		if (maxVelX != velX) {
+		if(maxVelX != this.velX) {
 			collidedX = true;
 		}
 		
-		if (maxVelY != velY) {
+		if(maxVelY != this.velY) {
 			collidedY = true;
 		}
 		
-		if (maxVelZ != velZ) {
+		if(maxVelZ != this.velZ) {
 			collidedZ = true;
 		}
 		
-		this.ground = maxVelY != velY && velY < 0.0F;
+		this.ground = maxVelY != this.velY && this.velY < 0.0F;
 		
-		this.velX *= ground ? FRICTION_GROUND : FRICTION_AIR;
-		this.velY *= ground ? FRICTION_GROUND : FRICTION_AIR;
-		this.velZ *= ground ? FRICTION_GROUND : FRICTION_AIR;
+		this.velX *= this.ground ? Particle.FRICTION_GROUND : Particle.FRICTION_AIR;
+		this.velY *= this.ground ? Particle.FRICTION_GROUND : Particle.FRICTION_AIR;
+		this.velZ *= this.ground ? Particle.FRICTION_GROUND : Particle.FRICTION_AIR;
 		
-		if (collidedX) {
-			this.velX = (float) (-velX*(BOUNCE_MIN+rand.nextDouble()*(BOUNCE_MAX-BOUNCE_MIN)));
+		if(collidedX) {
+			this.velX = (float) (-this.velX * (BOUNCE_MIN + rand.nextDouble() * (BOUNCE_MAX - BOUNCE_MIN)));
 		}
 		
-		if (collidedY) {
-			this.velY = (float) (-velY*(BOUNCE_MIN+rand.nextDouble()*(BOUNCE_MAX-BOUNCE_MIN)));
+		if(collidedY) {
+			this.velY = (float) (-this.velY * (BOUNCE_MIN + rand.nextDouble() * (BOUNCE_MAX - BOUNCE_MIN)));
 		}
 		
-		if (collidedZ) {
-			this.velZ = (float) (-velZ*(BOUNCE_MIN+rand.nextDouble()*(BOUNCE_MAX-BOUNCE_MIN)));
+		if(collidedZ) {
+			this.velZ = (float) (-this.velZ * (BOUNCE_MIN + rand.nextDouble() * (BOUNCE_MAX - BOUNCE_MIN)));
 		}
 		
 	}

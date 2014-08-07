@@ -8,22 +8,22 @@ public class CommandManager {
 	public Map<String, Command> commands = new HashMap<String, Command>();
 	
 	public Command getCommand(String name) {
-		return commands.get(name);
+		return this.commands.get(name);
 	}
 	
 	public CommandManager() {
-		registerCommand(new CommandSet()); 
-		registerCommand(new CommandGet()); 
-		registerCommand(new CommandReload()); 
-		registerCommand(new CommandHelp()); 
-		registerCommand(new CommandTele()); 
-		registerCommand(new CommandVariables());
-		registerCommand(new CommandDeleteWorld());
-		registerCommand(new CommandCullLock());
+		this.registerCommand(new CommandSet()); 
+		this.registerCommand(new CommandGet()); 
+		this.registerCommand(new CommandReload()); 
+		this.registerCommand(new CommandHelp()); 
+		this.registerCommand(new CommandTele()); 
+		this.registerCommand(new CommandVariables());
+		this.registerCommand(new CommandDeleteWorld());
+		this.registerCommand(new CommandCullLock());
 	}
 	
 	private void registerCommand(Command command) {
-		commands.put(command.getName(), command);
+		this.commands.put(command.getName(), command);
 	}
 	
 }

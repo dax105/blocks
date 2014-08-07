@@ -9,51 +9,61 @@ import org.lwjgl.input.Mouse;
 import org.newdawn.slick.Font;
 
 public abstract class GuiScreen {
-	Game game;
-	GuiScreen parent;
-	Font f;
+
+	protected Game game;
+	protected GuiScreen parent;
+	protected Font f;
+	protected ArrayList<GuiObject> objects = new ArrayList<GuiObject>();
 	
 	public GuiScreen(Game game) {
-		if (game.ingame) {
-			objects.add(new GuiObjectRectangle(0, 0, Settings.getInstance().windowWidth.getValue(), Settings.getInstance().windowHeight.getValue(), 0xA0000000));
+		if(game.ingame) {
+			this.objects.add(new GuiObjectRectangle(
+						0, 0, 
+						Settings.getInstance().windowWidth.getValue(), 
+						Settings.getInstance().windowHeight.getValue(), 
+						0xA0000000)
+			);
 		}
 		this.game = game;
-		parent = null;
-		f = game.font;
+		this.parent = null;
+		this.f = game.font;
 	}
 
 	public GuiScreen(GuiScreen parent) {
-		if (parent.game.ingame) {
-			objects.add(new GuiObjectRectangle(0, 0, Settings.getInstance().windowWidth.getValue(), Settings.getInstance().windowHeight.getValue(), 0xA0000000));
+		if(parent.game.ingame) {
+			this.objects.add(new GuiObjectRectangle(
+						0, 0, 
+						Settings.getInstance().windowWidth.getValue(), 
+						Settings.getInstance().windowHeight.getValue(), 
+						0xA0000000)
+			);
 		}
 		this.game = parent.game;
 		this.parent = parent;
-		f = game.font;
+		this.f = game.font;
 	}
 
-	ArrayList<GuiObject> objects = new ArrayList<GuiObject>();
-
 	public void render() {
-		for (GuiObject object : objects) {
+		for(GuiObject object : this.objects) {
 			object.render();
 		}
 	}
 
 	public void update() {
-		for (GuiObject object : objects) {
+		for(GuiObject object : this.objects) {
 			object.update();
 		}
 
-		while (Mouse.next()) {
+		while(Mouse.next()) {
 			;
 		}
 	}
 
 	public void close() {
-		if (parent != null) {
-			game.openGuiScreen(parent);
+		if(this.parent != null) {
+			this.game.openGuiScreen(this.parent);
 		} else {
-			game.closeGuiScreen();
+			this.game.closeGuiScreen();
 		}
 	}
 	

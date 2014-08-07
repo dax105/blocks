@@ -25,20 +25,20 @@ public class Keyconfig {
 	public static int zoom;
 	
 	public static void load() {
-		ahead = new int[] { Keyboard.KEY_W, Keyboard.KEY_UP };
-		back = new int[] { Keyboard.KEY_S, Keyboard.KEY_DOWN };
-		left = new int[] { Keyboard.KEY_A, Keyboard.KEY_LEFT };
-		right = new int[] { Keyboard.KEY_D, Keyboard.KEY_RIGHT };
-		jump = new int[] { Keyboard.KEY_SPACE };
-		boost = new int[] { Keyboard.KEY_LSHIFT, Keyboard.KEY_RSHIFT };
-		crouch = new int[] { Keyboard.KEY_LCONTROL, Keyboard.KEY_RCONTROL };
-		explosion = Keyboard.KEY_E;
-		particleFirework = Keyboard.KEY_P;
-		screenshot = Keyboard.KEY_F2;
-		console = new int[] { Keyboard.KEY_C, Keyboard.KEY_GRAVE };
-		fullscreen = Keyboard.KEY_F;
-		exit = Keyboard.KEY_ESCAPE;
-		zoom = Keyboard.KEY_Z;
+		Keyconfig.ahead = new int[] { Keyboard.KEY_W, Keyboard.KEY_UP };
+		Keyconfig.back = new int[] { Keyboard.KEY_S, Keyboard.KEY_DOWN };
+		Keyconfig.left = new int[] { Keyboard.KEY_A, Keyboard.KEY_LEFT };
+		Keyconfig.right = new int[] { Keyboard.KEY_D, Keyboard.KEY_RIGHT };
+		Keyconfig.jump = new int[] { Keyboard.KEY_SPACE };
+		Keyconfig.boost = new int[] { Keyboard.KEY_LSHIFT, Keyboard.KEY_RSHIFT };
+		Keyconfig.crouch = new int[] { Keyboard.KEY_LCONTROL, Keyboard.KEY_RCONTROL };
+		Keyconfig.explosion = Keyboard.KEY_E;
+		Keyconfig.particleFirework = Keyboard.KEY_P;
+		Keyconfig.screenshot = Keyboard.KEY_F2;
+		Keyconfig.console = new int[] { Keyboard.KEY_C, Keyboard.KEY_GRAVE };
+		Keyconfig.fullscreen = Keyboard.KEY_F;
+		Keyconfig.exit = Keyboard.KEY_ESCAPE;
+		Keyconfig.zoom = Keyboard.KEY_Z;
 	}
 	
 	public static void save(File config) {

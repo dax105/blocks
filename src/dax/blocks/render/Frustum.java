@@ -23,14 +23,14 @@ public class Frustum
     public static final int C = 2;
     public static final int D = 3;
 
-    float[][] frustum = new float[6][4];
+    private float[][] frustum = new float[6][4];
 
-    FloatBuffer modelBuffer;
-    FloatBuffer projectionBuffer;
+    private FloatBuffer modelBuffer;
+    private FloatBuffer projectionBuffer;
 
     public Frustum() {
-        modelBuffer = BufferUtils.createFloatBuffer(16);
-        projectionBuffer = BufferUtils.createFloatBuffer(16);
+        this.modelBuffer = BufferUtils.createFloatBuffer(16);
+        this.projectionBuffer = BufferUtils.createFloatBuffer(16);
     }
 
     public void normalizePlane(float[][] frustum, int side) {
@@ -47,15 +47,15 @@ public class Frustum
         float[] modelMatrix = new float[16];
         float[] clipMatrix = new float[16];
 
-        projectionBuffer.rewind();
-        glGetFloat(GL_PROJECTION_MATRIX, projectionBuffer);
-        projectionBuffer.rewind();
-        projectionBuffer.get(projectionMatrix);
+        this.projectionBuffer.rewind();
+        glGetFloat(GL_PROJECTION_MATRIX, this.projectionBuffer);
+        this.projectionBuffer.rewind();
+        this.projectionBuffer.get(projectionMatrix);
 
-        modelBuffer.rewind();
-        glGetFloat(GL_MODELVIEW_MATRIX, modelBuffer);
-        modelBuffer.rewind();
-        modelBuffer.get(modelMatrix);
+        this.modelBuffer.rewind();
+        glGetFloat(GL_MODELVIEW_MATRIX, this.modelBuffer);
+        this.modelBuffer.rewind();
+        this.modelBuffer.get(modelMatrix);
 
         clipMatrix[ 0] = modelMatrix[ 0] * projectionMatrix[ 0] + modelMatrix[ 1] * projectionMatrix[ 4] + modelMatrix[ 2] * projectionMatrix[ 8] + modelMatrix[ 3] * projectionMatrix[12];
         clipMatrix[ 1] = modelMatrix[ 0] * projectionMatrix[ 1] + modelMatrix[ 1] * projectionMatrix[ 5] + modelMatrix[ 2] * projectionMatrix[ 9] + modelMatrix[ 3] * projectionMatrix[13];
@@ -78,46 +78,46 @@ public class Frustum
         clipMatrix[15] = modelMatrix[12] * projectionMatrix[ 3] + modelMatrix[13] * projectionMatrix[ 7] + modelMatrix[14] * projectionMatrix[11] + modelMatrix[15] * projectionMatrix[15];
 
         // This will extract the LEFT side of the frustum
-        frustum[LEFT][A] = clipMatrix[ 3] + clipMatrix[ 0];
-        frustum[LEFT][B] = clipMatrix[ 7] + clipMatrix[ 4];
-        frustum[LEFT][C] = clipMatrix[11] + clipMatrix[ 8];
-        frustum[LEFT][D] = clipMatrix[15] + clipMatrix[12];
-        normalizePlane(frustum, LEFT);
+        this.frustum[Frustum.LEFT][Frustum.A] = clipMatrix[ 3] + clipMatrix[ 0];
+        this.frustum[Frustum.LEFT][Frustum.B] = clipMatrix[ 7] + clipMatrix[ 4];
+        this.frustum[Frustum.LEFT][Frustum.C] = clipMatrix[11] + clipMatrix[ 8];
+        this.frustum[Frustum.LEFT][Frustum.D] = clipMatrix[15] + clipMatrix[12];
+        this.normalizePlane(this.frustum, Frustum.LEFT);
 
         // This will extract the RIGHT side of the frustum
-        frustum[RIGHT][A] = clipMatrix[ 3] - clipMatrix[ 0];
-        frustum[RIGHT][B] = clipMatrix[ 7] - clipMatrix[ 4];
-        frustum[RIGHT][C] = clipMatrix[11] - clipMatrix[ 8];
-        frustum[RIGHT][D] = clipMatrix[15] - clipMatrix[12];
-        normalizePlane(frustum, RIGHT);
+        this.frustum[Frustum.RIGHT][Frustum.A] = clipMatrix[ 3] - clipMatrix[ 0];
+        this.frustum[Frustum.RIGHT][Frustum.B] = clipMatrix[ 7] - clipMatrix[ 4];
+        this.frustum[Frustum.RIGHT][Frustum.C] = clipMatrix[11] - clipMatrix[ 8];
+        this.frustum[Frustum.RIGHT][Frustum.D] = clipMatrix[15] - clipMatrix[12];
+        this.normalizePlane(this.frustum, Frustum.RIGHT);
 
         // This will extract the BOTTOM side of the frustum
-        frustum[BOTTOM][A] = clipMatrix[ 3] + clipMatrix[ 1];
-        frustum[BOTTOM][B] = clipMatrix[ 7] + clipMatrix[ 5];
-        frustum[BOTTOM][C] = clipMatrix[11] + clipMatrix[ 9];
-        frustum[BOTTOM][D] = clipMatrix[15] + clipMatrix[13];
-        normalizePlane(frustum, BOTTOM);
+        this.frustum[Frustum.BOTTOM][Frustum.A] = clipMatrix[ 3] + clipMatrix[ 1];
+        this.frustum[Frustum.BOTTOM][Frustum.B] = clipMatrix[ 7] + clipMatrix[ 5];
+        this.frustum[Frustum.BOTTOM][Frustum.C] = clipMatrix[11] + clipMatrix[ 9];
+        this.frustum[Frustum.BOTTOM][Frustum.D] = clipMatrix[15] + clipMatrix[13];
+        this.normalizePlane(this.frustum, Frustum.BOTTOM);
 
         // This will extract the TOP side of the frustum
-        frustum[TOP][A] = clipMatrix[ 3] - clipMatrix[ 1];
-        frustum[TOP][B] = clipMatrix[ 7] - clipMatrix[ 5];
-        frustum[TOP][C] = clipMatrix[11] - clipMatrix[ 9];
-        frustum[TOP][D] = clipMatrix[15] - clipMatrix[13];
-        normalizePlane(frustum, TOP);
+        this.frustum[Frustum.TOP][Frustum.A] = clipMatrix[ 3] - clipMatrix[ 1];
+        this.frustum[Frustum.TOP][Frustum.B] = clipMatrix[ 7] - clipMatrix[ 5];
+        this.frustum[Frustum.TOP][Frustum.C] = clipMatrix[11] - clipMatrix[ 9];
+        this.frustum[Frustum.TOP][Frustum.D] = clipMatrix[15] - clipMatrix[13];
+        this.normalizePlane(this.frustum, Frustum.TOP);
 
         // This will extract the FRONT side of the frustum
-        frustum[FRONT][A] = clipMatrix[ 3] + clipMatrix[ 2];
-        frustum[FRONT][B] = clipMatrix[ 7] + clipMatrix[ 6];
-        frustum[FRONT][C] = clipMatrix[11] + clipMatrix[10];
-        frustum[FRONT][D] = clipMatrix[15] + clipMatrix[14];
-        normalizePlane(frustum, FRONT);
+        this.frustum[Frustum.FRONT][Frustum.A] = clipMatrix[ 3] + clipMatrix[ 2];
+        this.frustum[Frustum.FRONT][Frustum.B] = clipMatrix[ 7] + clipMatrix[ 6];
+        this.frustum[Frustum.FRONT][Frustum.C] = clipMatrix[11] + clipMatrix[10];
+        this.frustum[Frustum.FRONT][Frustum.D] = clipMatrix[15] + clipMatrix[14];
+        this.normalizePlane(this.frustum, Frustum.FRONT);
 
         // This will extract the BACK side of the frustum
-        frustum[BACK][A] = clipMatrix[ 3] - clipMatrix[ 2];
-        frustum[BACK][B] = clipMatrix[ 7] - clipMatrix[ 6];
-        frustum[BACK][C] = clipMatrix[11] - clipMatrix[10];
-        frustum[BACK][D] = clipMatrix[15] - clipMatrix[14];
-        normalizePlane(frustum, BACK);
+        this.frustum[Frustum.BACK][Frustum.A] = clipMatrix[ 3] - clipMatrix[ 2];
+        this.frustum[Frustum.BACK][Frustum.B] = clipMatrix[ 7] - clipMatrix[ 6];
+        this.frustum[Frustum.BACK][Frustum.C] = clipMatrix[11] - clipMatrix[10];
+        this.frustum[Frustum.BACK][Frustum.D] = clipMatrix[15] - clipMatrix[14];
+        this.normalizePlane(this.frustum, Frustum.BACK);
     }
     
     public boolean cuboidInFrustum(float x0, float y0, float z0, float x1, float y1, float z1) {
@@ -134,21 +134,21 @@ public class Frustum
         float zmax = z0 + zsize;
     	
     	for(int i = 0; i < 6; i++ ) {
-            if(frustum[i][A] * (xmin) + frustum[i][B] * (ymin) + frustum[i][C] * (zmin) + frustum[i][D] > 0)
+            if(this.frustum[i][Frustum.A] * (xmin) + this.frustum[i][Frustum.B] * (ymin) + this.frustum[i][Frustum.C] * (zmin) + this.frustum[i][Frustum.D] > 0)
                 continue;
-            if(frustum[i][A] * (xmax) + frustum[i][B] * (ymin) + frustum[i][C] * (zmin) + frustum[i][D] > 0)
+            if(this.frustum[i][Frustum.A] * (xmax) + this.frustum[i][Frustum.B] * (ymin) + this.frustum[i][Frustum.C] * (zmin) + this.frustum[i][Frustum.D] > 0)
                 continue;
-            if(frustum[i][A] * (xmin) + frustum[i][B] * (ymax) + frustum[i][C] * (zmin) + frustum[i][D] > 0)
+            if(this.frustum[i][Frustum.A] * (xmin) + this.frustum[i][Frustum.B] * (ymax) + this.frustum[i][Frustum.C] * (zmin) + this.frustum[i][Frustum.D] > 0)
                 continue;
-            if(frustum[i][A] * (xmax) + frustum[i][B] * (ymax) + frustum[i][C] * (zmin) + frustum[i][D] > 0)
+            if(this.frustum[i][Frustum.A] * (xmax) + this.frustum[i][Frustum.B] * (ymax) + this.frustum[i][Frustum.C] * (zmin) + this.frustum[i][Frustum.D] > 0)
                 continue;
-            if(frustum[i][A] * (xmin) + frustum[i][B] * (ymin) + frustum[i][C] * (zmax) + frustum[i][D] > 0)
+            if(this.frustum[i][Frustum.A] * (xmin) + this.frustum[i][Frustum.B] * (ymin) + this.frustum[i][Frustum.C] * (zmax) + this.frustum[i][Frustum.D] > 0)
                 continue;
-            if(frustum[i][A] * (xmax) + frustum[i][B] * (ymin) + frustum[i][C] * (zmax) + frustum[i][D] > 0)
+            if(this.frustum[i][Frustum.A] * (xmax) + this.frustum[i][Frustum.B] * (ymin) + this.frustum[i][Frustum.C] * (zmax) + this.frustum[i][Frustum.D] > 0)
                 continue;
-            if(frustum[i][A] * (xmin) + frustum[i][B] * (ymax) + frustum[i][C] * (zmax) + frustum[i][D] > 0)
+            if(this.frustum[i][Frustum.A] * (xmin) + this.frustum[i][Frustum.B] * (ymax) + this.frustum[i][Frustum.C] * (zmax) + this.frustum[i][Frustum.D] > 0)
                 continue;
-            if(frustum[i][A] * (xmax) + frustum[i][B] * (ymax) + frustum[i][C] * (zmax) + frustum[i][D] > 0)
+            if(this.frustum[i][Frustum.A] * (xmax) + this.frustum[i][Frustum.B] * (ymax) + this.frustum[i][Frustum.C] * (zmax) + this.frustum[i][Frustum.D] > 0)
                 continue;
 
             return false;

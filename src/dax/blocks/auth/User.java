@@ -12,7 +12,7 @@ public class User {
 	}
 	
 	public String getUserName() {
-		return userName;
+		return this.userName;
 	}
 
 	public void setUserName(String userName) {
@@ -21,7 +21,7 @@ public class User {
 	}
 
 	public String getPassword() {
-		return password;
+		return this.password;
 	}
 
 	public void setPassword(String password) {
@@ -30,7 +30,7 @@ public class User {
 	}
 
 	public String getToken() {
-		return token;
+		return this.token;
 	}
 
 	public void setToken(String token) {
@@ -39,7 +39,7 @@ public class User {
 	}
 
 	public boolean isAuthenticated() {
-		return authenticated;
+		return this.authenticated;
 	}
 
 	public void setAuthenticated() {

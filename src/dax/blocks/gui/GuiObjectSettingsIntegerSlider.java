@@ -19,21 +19,40 @@ public class GuiObjectSettingsIntegerSlider extends GuiObjectSlider {
 
 	@Override
 	public void render() {
-		drawRect(x1, y1, x2, y2, 0xFF8C8C8C);
-		drawRect(x1 + 2, y1 + 2, x2 - 2, y2 - 2, 0xFF404040);
+		this.drawRect(this.x1, this.y1, this.x2, this.y2, 0xFF8C8C8C);
+		this.drawRect(this.x1 + 2, this.y1 + 2, this.x2 - 2, this.y2 - 2, 0xFF404040);
 		
-		int x = x1 + SLIDER_WIDTH/2 +2 + (int)Math.round(((float)(val-minVal) / (maxVal-minVal))*((x2-x1)-SLIDER_WIDTH-4));
+		int x = this.x1 + GuiObjectSlider.SLIDER_WIDTH / 2 + 2 + 
+			(int)Math.round(
+					((float)(this.val - this.minVal) / (this.maxVal - this.minVal)) * 
+					((x2 - x1) - GuiObjectSlider.SLIDER_WIDTH - 4)
+			);
 		
-		drawRect(x - SLIDER_WIDTH / 2 , y1 + 2, x + SLIDER_WIDTH / 2 , y2 - 2, 0xFF6E6E6E);
+		this.drawRect(
+				x - GuiObjectSlider.SLIDER_WIDTH / 2 , 
+				this.y1 + 2, 
+				x + GuiObjectSlider.SLIDER_WIDTH / 2 , 
+				this.y2 - 2, 0xFF6E6E6E
+		);
 		
 		GL11.glEnable(GL11.GL_TEXTURE_2D);
 		
-		String toDraw = formatString.replace("%v", (int)val + "");
-		font.drawString(x1 + (x2 - x1) / 2 - font.getWidth(toDraw) / 2, y1 + (y2 - y1) / 2 - font.getHeight(toDraw) / 2, toDraw);
+		String toDraw = formatString.replace("%v", (int)this.val + "");
+		this.font.drawString(
+				this.x1 + (this.x2 - this.x1) / 2 - this.font.getWidth(toDraw) / 2, 
+				this.y1 + (this.y2 - this.y1) / 2 - this.font.getHeight(toDraw) / 2, 
+				toDraw
+		);
 		
 		GL11.glDisable(GL11.GL_TEXTURE_2D);
-		if (hover) {
-			drawRect(x - SLIDER_WIDTH / 2, y1 + 2, x + SLIDER_WIDTH / 2, y2 - 2, 0xA0FFFFFF);
+		if(this.hover) {
+			this.drawRect(
+					x - GuiObjectSlider.SLIDER_WIDTH / 2, 
+					this.y1 + 2, 
+					x + GuiObjectSlider.SLIDER_WIDTH / 2, 
+					this.y2 - 2, 
+					0xA0FFFFFF
+			);
 		}
 	}
 	
@@ -41,6 +60,6 @@ public class GuiObjectSettingsIntegerSlider extends GuiObjectSlider {
 	public void update() {
 		super.update();
 		
-		object.setValue((int)val);
+		this.object.setValue((int)this.val);
 	}
 }

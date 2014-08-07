@@ -36,7 +36,7 @@ public class AuthManager {
 	}
 	
 	public void setDummyName(String name) {
-		if (this.currentUser == null)
+		if(this.currentUser == null)
 			this.currentUser = new User(name, "badpassword");
 		else {
 			this.currentUser.setUserName(name);
@@ -152,7 +152,7 @@ public class AuthManager {
 			BufferedReader rd = new BufferedReader(new InputStreamReader(is));
 			String line;
 			StringBuffer response = new StringBuffer();
-			while ((line = rd.readLine()) != null) {
+			while((line = rd.readLine()) != null) {
 				response.append(line);
 				response.append('\r');
 			}
@@ -166,11 +166,9 @@ public class AuthManager {
 
 		} finally {
 
-			if (connection != null) {
+			if(connection != null) {
 				connection.disconnect();
 			}
 		}
 	}
-
-
 }

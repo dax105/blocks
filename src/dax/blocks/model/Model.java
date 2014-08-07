@@ -6,10 +6,8 @@ import dax.blocks.settings.Settings;
 public class Model {
 
 	private int width, height, depth;
-
-	Voxel[][][] voxels;
-
 	private int displayList = -1;
+	protected Voxel[][][] voxels;
 
 	public void generateDisplayList() {
 		displayList = GL11.glGenLists(1);
@@ -20,64 +18,160 @@ public class Model {
 
 		GL11.glBegin(GL11.GL_QUADS);
 
-		for (int x = 0; x < voxels.length; x++) {
-			for (int y = 0; y < voxels[0].length; y++) {
-				for (int z = 0; z < voxels[0][0].length; z++) {
-					Voxel v = voxels[x][y][z];
+		for(int x = 0; x < this.voxels.length; x++) {
+			for(int y = 0; y < this.voxels[0].length; y++) {
+				for(int z = 0; z < this.voxels[0][0].length; z++) {
+					Voxel v = this.voxels[x][y][z];
 
-					if (v != null) {
+					if(v != null) {
 						// Top
-						if (isVoxelNull(x, y + 1, z)) {
+						if(this.isVoxelNull(x, y + 1, z)) {
 							GL11.glNormal3f(0, 1.0f, 0);
-							addVertexWithAO(x + 1f, y + 1f, z + 0f, v.getR(), v.getG(), v.getB(), isVoxelNull(x + 1, y + 1, z), isVoxelNull(x, y + 1, z - 1), isVoxelNull(x + 1, y + 1, z - 1)); // OK
-							addVertexWithAO(x + 0f, y + 1f, z + 0f, v.getR(), v.getG(), v.getB(), isVoxelNull(x - 1, y + 1, z), isVoxelNull(x, y + 1, z - 1), isVoxelNull(x - 1, y + 1, z - 1)); // OK
-							addVertexWithAO(x + 0f, y + 1f, z + 1f, v.getR(), v.getG(), v.getB(), isVoxelNull(x - 1, y + 1, z), isVoxelNull(x, y + 1, z + 1), isVoxelNull(x - 1, y + 1, z + 1)); // OK
-							addVertexWithAO(x + 1f, y + 1f, z + 1f, v.getR(), v.getG(), v.getB(), isVoxelNull(x + 1, y + 1, z), isVoxelNull(x, y + 1, z + 1), isVoxelNull(x + 1, y + 1, z + 1)); // OK
+							this.addVertexWithAO(
+									x + 1f, y + 1f, z + 0f, v.getR(), v.getG(), v.getB(), 
+									this.isVoxelNull(x + 1, y + 1, z), this.isVoxelNull(x, y + 1, z - 1), 
+									this.isVoxelNull(x + 1, y + 1, z - 1)
+							); // OK
+							this.addVertexWithAO(
+									x + 0f, y + 1f, z + 0f, v.getR(), v.getG(), v.getB(), 
+									this.isVoxelNull(x - 1, y + 1, z), this.isVoxelNull(x, y + 1, z - 1), 
+									this.isVoxelNull(x - 1, y + 1, z - 1)
+							); // OK
+							this.addVertexWithAO(
+									x + 0f, y + 1f, z + 1f, v.getR(), v.getG(), v.getB(), 
+									this.isVoxelNull(x - 1, y + 1, z), this.isVoxelNull(x, y + 1, z + 1), 
+									this.isVoxelNull(x - 1, y + 1, z + 1)
+							); // OK
+							this.addVertexWithAO(
+									x + 1f, y + 1f, z + 1f, v.getR(), v.getG(), v.getB(), 
+									this.isVoxelNull(x + 1, y + 1, z), this.isVoxelNull(x, y + 1, z + 1), 
+									this.isVoxelNull(x + 1, y + 1, z + 1)
+							); // OK
 						}
 
 						//Bottom
-						if (isVoxelNull(x, y - 1, z)) {
+						if(this.isVoxelNull(x, y - 1, z)) {
 							GL11.glNormal3f(0, -1.0f, 0);
-							addVertexWithAO(x + 1f, y + 0f, z + 1f, v.getR(), v.getG(), v.getB(), isVoxelNull(x + 1, y - 1, z), isVoxelNull(x, y - 1, z + 1), isVoxelNull(x + 1, y - 1, z + 1)); // OK
-							addVertexWithAO(x + 0f, y + 0f, z + 1f, v.getR(), v.getG(), v.getB(), isVoxelNull(x - 1, y - 1, z), isVoxelNull(x, y - 1, z + 1), isVoxelNull(x - 1, y - 1, z + 1)); // OK
-							addVertexWithAO(x + 0f, y + 0f, z + 0f, v.getR(), v.getG(), v.getB(), isVoxelNull(x - 1, y - 1, z), isVoxelNull(x, y - 1, z - 1), isVoxelNull(x - 1, y - 1, z - 1)); // OK
-							addVertexWithAO(x + 1f, y + 0f, z + 0f, v.getR(), v.getG(), v.getB(), isVoxelNull(x + 1, y - 1, z), isVoxelNull(x, y - 1, z - 1), isVoxelNull(x + 1, y - 1, z - 1)); // OK
+							this.addVertexWithAO(
+									x + 1f, y + 0f, z + 1f, v.getR(), v.getG(), v.getB(), 
+									this.isVoxelNull(x + 1, y - 1, z), this.isVoxelNull(x, y - 1, z + 1), 
+									this.isVoxelNull(x + 1, y - 1, z + 1)
+							); // OK
+							this.addVertexWithAO(
+									x + 0f, y + 0f, z + 1f, v.getR(), v.getG(), v.getB(), 
+									this.isVoxelNull(x - 1, y - 1, z), this.isVoxelNull(x, y - 1, z + 1), 
+									this.isVoxelNull(x - 1, y - 1, z + 1)
+							); // OK
+							this.addVertexWithAO(
+									x + 0f, y + 0f, z + 0f, v.getR(), v.getG(), v.getB(), 
+									this.isVoxelNull(x - 1, y - 1, z), this.isVoxelNull(x, y - 1, z - 1), 
+									this.isVoxelNull(x - 1, y - 1, z - 1)
+							); // OK
+							this.addVertexWithAO(
+									x + 1f, y + 0f, z + 0f, v.getR(), v.getG(), v.getB(), 
+									this.isVoxelNull(x + 1, y - 1, z), this.isVoxelNull(x, y - 1, z - 1), 
+									this.isVoxelNull(x + 1, y - 1, z - 1)
+							); // OK
 						}
 
 						//Front
-						if (isVoxelNull(x, y, z + 1)) {
+						if(this.isVoxelNull(x, y, z + 1)) {
 							GL11.glNormal3f(0.0f, 0.0f, 1.0f);
-							addVertexWithAO(x + 1f, y + 1f, z + 1f, v.getR(), v.getG(), v.getB(), isVoxelNull(x, y + 1, z + 1), isVoxelNull(x + 1, y, z + 1), isVoxelNull(x + 1, y + 1, z + 1)); // OK
-							addVertexWithAO(x + 0f, y + 1f, z + 1f, v.getR(), v.getG(), v.getB(), isVoxelNull(x - 1, y, z + 1), isVoxelNull(x, y + 1, z + 1), isVoxelNull(x - 1, y + 1, z + 1)); // OK
-							addVertexWithAO(x + 0f, y + 0f, z + 1f, v.getR(), v.getG(), v.getB(), isVoxelNull(x - 1, y, z + 1), isVoxelNull(x, y - 1, z + 1), isVoxelNull(x - 1, y - 1, z + 1)); // OK
-							addVertexWithAO(x + 1f, y + 0f, z + 1f, v.getR(), v.getG(), v.getB(), isVoxelNull(x, y - 1, z + 1), isVoxelNull(x + 1, y, z + 1), isVoxelNull(x + 1, y - 1, z + 1)); // OK
+							this.addVertexWithAO(
+									x + 1f, y + 1f, z + 1f, v.getR(), v.getG(), v.getB(), 
+									this.isVoxelNull(x, y + 1, z + 1), this.isVoxelNull(x + 1, y, z + 1), 
+									this.isVoxelNull(x + 1, y + 1, z + 1)
+							); // OK
+							this.addVertexWithAO(
+									x + 0f, y + 1f, z + 1f, v.getR(), v.getG(), v.getB(), 
+									this.isVoxelNull(x - 1, y, z + 1), this.isVoxelNull(x, y + 1, z + 1), 
+									this.isVoxelNull(x - 1, y + 1, z + 1)
+							); // OK
+							this.addVertexWithAO(
+									x + 0f, y + 0f, z + 1f, v.getR(), v.getG(), v.getB(), 
+									this.isVoxelNull(x - 1, y, z + 1), this.isVoxelNull(x, y - 1, z + 1), 
+									this.isVoxelNull(x - 1, y - 1, z + 1)
+							); // OK
+							this.addVertexWithAO(
+									x + 1f, y + 0f, z + 1f, v.getR(), v.getG(), v.getB(), 
+									this.isVoxelNull(x, y - 1, z + 1), this.isVoxelNull(x + 1, y, z + 1), 
+									this.isVoxelNull(x + 1, y - 1, z + 1)
+							); // OK
 						}
 
 						//Back
-						if (isVoxelNull(x, y, z - 1)) {	
+						if(this.isVoxelNull(x, y, z - 1)) {	
 							GL11.glNormal3f(0.0f, 0.0f, -1.0f);
-							addVertexWithAO(x + 1f, y + 0f, z + 0f, v.getR(), v.getG(), v.getB(), isVoxelNull(x, y - 1, z - 1), isVoxelNull(x + 1, y, z - 1), isVoxelNull(x + 1, y - 1, z - 1)); // OK
-							addVertexWithAO(x + 0f, y + 0f, z + 0f, v.getR(), v.getG(), v.getB(), isVoxelNull(x - 1, y, z - 1), isVoxelNull(x, y - 1, z - 1), isVoxelNull(x - 1, y - 1, z - 1)); // OK
-							addVertexWithAO(x + 0f, y + 1f, z + 0f, v.getR(), v.getG(), v.getB(), isVoxelNull(x - 1, y, z - 1), isVoxelNull(x, y + 1, z - 1), isVoxelNull(x - 1, y + 1, z - 1)); // OK
-							addVertexWithAO(x + 1f, y + 1f, z + 0f, v.getR(), v.getG(), v.getB(), isVoxelNull(x, y + 1, z - 1), isVoxelNull(x + 1, y, z - 1), isVoxelNull(x + 1, y + 1, z - 1)); // OK
+							this.addVertexWithAO(
+									x + 1f, y + 0f, z + 0f, v.getR(), v.getG(), v.getB(), 
+									this.isVoxelNull(x, y - 1, z - 1), this.isVoxelNull(x + 1, y, z - 1), 
+									this.isVoxelNull(x + 1, y - 1, z - 1)
+							); // OK
+							this.addVertexWithAO(
+									x + 0f, y + 0f, z + 0f, v.getR(), v.getG(), v.getB(), 
+									this.isVoxelNull(x - 1, y, z - 1), this.isVoxelNull(x, y - 1, z - 1), 
+									this.isVoxelNull(x - 1, y - 1, z - 1)
+							); // OK
+							this.addVertexWithAO(
+									x + 0f, y + 1f, z + 0f, v.getR(), v.getG(), v.getB(), 
+									this.isVoxelNull(x - 1, y, z - 1), this.isVoxelNull(x, y + 1, z - 1), 
+									this.isVoxelNull(x - 1, y + 1, z - 1)
+							); // OK
+							this.addVertexWithAO(
+									x + 1f, y + 1f, z + 0f, v.getR(), v.getG(), v.getB(), 
+									this.isVoxelNull(x, y + 1, z - 1), this.isVoxelNull(x + 1, y, z - 1), 
+									this.isVoxelNull(x + 1, y + 1, z - 1)
+							); // OK
 						}
 
 						//Left
-						if (isVoxelNull(x - 1, y, z)) {
+						if(this.isVoxelNull(x - 1, y, z)) {
 							GL11.glNormal3f(-1.0f, 0.0f, 0);
-							addVertexWithAO(x + 0f, y + 1f, z + 1f, v.getR(), v.getG(), v.getB(), isVoxelNull(x - 1, y, z + 1), isVoxelNull(x - 1, y + 1, z), isVoxelNull(x - 1, y + 1, z + 1)); // OK
-							addVertexWithAO(x + 0f, y + 1f, z + 0f, v.getR(), v.getG(), v.getB(), isVoxelNull(x - 1, y, z - 1), isVoxelNull(x - 1, y + 1, z), isVoxelNull(x - 1, y + 1, z - 1)); // OK
-							addVertexWithAO(x + 0f, y + 0f, z + 0f, v.getR(), v.getG(), v.getB(), isVoxelNull(x - 1, y, z - 1), isVoxelNull(x - 1, y - 1, z), isVoxelNull(x - 1, y - 1, z - 1)); // OK
-							addVertexWithAO(x + 0f, y + 0f, z + 1f, v.getR(), v.getG(), v.getB(), isVoxelNull(x - 1, y, z + 1), isVoxelNull(x - 1, y - 1, z), isVoxelNull(x - 1, y - 1, z + 1)); // OK
+							this.addVertexWithAO(
+									x + 0f, y + 1f, z + 1f, v.getR(), v.getG(), v.getB(), 
+									this.isVoxelNull(x - 1, y, z + 1), this.isVoxelNull(x - 1, y + 1, z), 
+									this.isVoxelNull(x - 1, y + 1, z + 1)
+							); // OK
+							this.addVertexWithAO(
+									x + 0f, y + 1f, z + 0f, v.getR(), v.getG(), v.getB(),
+									this.isVoxelNull(x - 1, y, z - 1), this.isVoxelNull(x - 1, y + 1, z), 
+									this.isVoxelNull(x - 1, y + 1, z - 1)
+							); // OK
+							this.addVertexWithAO(
+									x + 0f, y + 0f, z + 0f, v.getR(), v.getG(), v.getB(), 
+									this.isVoxelNull(x - 1, y, z - 1), this.isVoxelNull(x - 1, y - 1, z), 
+									this.isVoxelNull(x - 1, y - 1, z - 1)
+							); // OK
+							this.addVertexWithAO(
+									x + 0f, y + 0f, z + 1f, v.getR(), v.getG(), v.getB(), 
+									this.isVoxelNull(x - 1, y, z + 1), this.isVoxelNull(x - 1, y - 1, z), 
+									this.isVoxelNull(x - 1, y - 1, z + 1)
+							); // OK
 						}
 
 						//Right
-						if (isVoxelNull(x + 1, y, z)) {
+						if(this.isVoxelNull(x + 1, y, z)) {
 							GL11.glNormal3f(1.0f, 0.0f, 0);
-							addVertexWithAO(x + 1f, y + 1f, z + 0f, v.getR(), v.getG(), v.getB(), isVoxelNull(x + 1, y, z - 1), isVoxelNull(x + 1, y + 1, z), isVoxelNull(x + 1, y + 1, z - 1)); // OK
-							addVertexWithAO(x + 1f, y + 1f, z + 1f, v.getR(), v.getG(), v.getB(), isVoxelNull(x + 1, y, z + 1), isVoxelNull(x + 1, y + 1, z), isVoxelNull(x + 1, y + 1, z + 1)); // OK
-							addVertexWithAO(x + 1f, y + 0f, z + 1f, v.getR(), v.getG(), v.getB(), isVoxelNull(x + 1, y, z + 1), isVoxelNull(x + 1, y - 1, z), isVoxelNull(x + 1, y - 1, z + 1)); // OK
-							addVertexWithAO(x + 1f, y + 0f, z + 0f, v.getR(), v.getG(), v.getB(), isVoxelNull(x + 1, y, z - 1), isVoxelNull(x + 1, y - 1, z), isVoxelNull(x + 1, y - 1, z - 1)); // OK
+							this.addVertexWithAO(
+									x + 1f, y + 1f, z + 0f, v.getR(), v.getG(), v.getB(), 
+									this.isVoxelNull(x + 1, y, z - 1), this.isVoxelNull(x + 1, y + 1, z), 
+									this.isVoxelNull(x + 1, y + 1, z - 1)
+							); // OK
+							this.addVertexWithAO(
+									x + 1f, y + 1f, z + 1f, v.getR(), v.getG(), v.getB(), 
+									this.isVoxelNull(x + 1, y, z + 1), this.isVoxelNull(x + 1, y + 1, z), 
+									this.isVoxelNull(x + 1, y + 1, z + 1)
+							); // OK
+							this.addVertexWithAO(
+									x + 1f, y + 0f, z + 1f, v.getR(), v.getG(), v.getB(), 
+									this.isVoxelNull(x + 1, y, z + 1), this.isVoxelNull(x + 1, y - 1, z), 
+									this.isVoxelNull(x + 1, y - 1, z + 1)
+							); // OK
+							this.addVertexWithAO(
+									x + 1f, y + 0f, z + 0f, v.getR(), v.getG(), v.getB(), 
+									this.isVoxelNull(x + 1, y, z - 1), this.isVoxelNull(x + 1, y - 1, z), 
+									this.isVoxelNull(x + 1, y - 1, z - 1)
+							); // OK
 						}
 
 					}
@@ -93,7 +187,7 @@ public class Model {
 	private void addVertexWithAO(float x, float y, float z, float r, float g, float b, boolean s1, boolean s2, boolean c) {
 		int ao;
 
-		if (!s1 && !s2) {
+		if(!s1 && !s2) {
 			ao = 3;
 		} else {
 			ao = 0;
@@ -113,28 +207,28 @@ public class Model {
 
 	private boolean isVoxelNull(int x, int y, int z) {
 
-		if (x < 0 || x >= width) {
+		if (x < 0 || x >= this.width) {
 			return true;
 		}
 
-		if (y < 0 || y >= height) {
+		if (y < 0 || y >= this.height) {
 			return true;
 		}
 
-		if (z < 0 || z >= depth) {
+		if (z < 0 || z >= this.depth) {
 			return true;
 		}
 
-		return voxels[x][y][z] == null;
+		return this.voxels[x][y][z] == null;
 
 	}
 
 	public void createArray() {
-		voxels = new Voxel[width][height][depth];
+		this.voxels = new Voxel[this.width][this.height][this.depth];
 	}
 
 	public int getWidth() {
-		return width;
+		return this.width;
 	}
 
 	public void setWidth(int width) {
@@ -142,7 +236,7 @@ public class Model {
 	}
 
 	public int getHeight() {
-		return height;
+		return this.height;
 	}
 
 	public void setHeight(int height) {
@@ -150,7 +244,7 @@ public class Model {
 	}
 
 	public int getDepth() {
-		return depth;
+		return this.depth;
 	}
 
 	public void setDepth(int depth) {
@@ -158,7 +252,7 @@ public class Model {
 	}
 
 	public int getDisplayList() {
-		return displayList;
+		return this.displayList;
 	}
 
 }

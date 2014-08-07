@@ -13,8 +13,7 @@ public class CommandSet extends Command {
 
 	@Override
 	public boolean execute(String[] args) {
-		
-		if (args.length >= 2) {
+		if(args.length >= 2) {
 			SettingsObject<?> o = Settings.getInstance().getObject(args[0]);
 			if(o != null) {
 				if(o.getObjectType() == ObjectType.BOOLEAN) {
@@ -46,5 +45,4 @@ public class CommandSet extends Command {
 	public String getUsage() {
 		return "set [variable name] [value]";
 	}
-
 }

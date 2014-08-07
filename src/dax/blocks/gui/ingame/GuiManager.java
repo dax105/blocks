@@ -13,14 +13,14 @@ public class GuiManager implements ITickListener, IOverlayRenderer {
 	GuiScreen currentGuiScreen;
 	List<GuiScreen> screenList;
 	boolean isScreenOpened = false;
-	
-	private static GuiManager _instance;
+
+	private static GuiManager instance;	
 	public static GuiManager getInstance() {
-		if(_instance == null) {
-			_instance = new GuiManager();
+		if(GuiManager.instance == null) {
+			GuiManager.instance = new GuiManager();
 		}
 		
-		return _instance;
+		return GuiManager.instance;
 	}
 	
 	private GuiManager() {
@@ -36,9 +36,9 @@ public class GuiManager implements ITickListener, IOverlayRenderer {
 	}
 
 	public int registerNewScreen(GuiScreen screen) {
-		if(!screenList.contains(screen)) {
-			screenList.add(screen);
-			return screenList.size() - 1;
+		if(!this.screenList.contains(screen)) {
+			this.screenList.add(screen);
+			return this.screenList.size() - 1;
 		} else {
 			return -1;
 		}
@@ -52,17 +52,17 @@ public class GuiManager implements ITickListener, IOverlayRenderer {
 	}
 	
 	public void openScreen() {
-		if(currentGuiScreen != null && !this.isOpened()) {
+		if(this.currentGuiScreen != null && !this.isOpened()) {
 			Mouse.setGrabbed(false);
-			currentGuiScreen.onOpening();
+			this.currentGuiScreen.onOpening();
 			this.isScreenOpened = true;
 		}
 	}
 	
 	public void closeScreen() {
-		if(currentGuiScreen != null && this.isOpened()) {
+		if(this.currentGuiScreen != null && this.isOpened()) {
 			Mouse.setGrabbed(true);
-			currentGuiScreen.onClosing();
+			this.currentGuiScreen.onClosing();
 			this.isScreenOpened = false;
 		}
 	}
