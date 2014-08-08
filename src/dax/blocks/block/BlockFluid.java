@@ -32,24 +32,24 @@ public class BlockFluid extends BlockBasic {
 			}
 
 
-			if(world.getBlock(x, y - 1, z) == (0 | IDRegister.tallGrass.getID())) {
+			if(world.getBlock(x, y - 1, z) == 0) {
 				world.setBlock(x, y - 1, z, IDRegister.water.getID(), true,
 						true);
 				return;
 			}
-			if(world.getBlock(x + 1, y, z) == (0 | IDRegister.tallGrass.getID())) {
+			if(world.getBlock(x + 1, y, z) == 0) {
 				world.setBlock(x + 1, y, z, IDRegister.water.getID(), true,
 						true);
 			}
-			if(world.getBlock(x - 1, y, z) == (0 | IDRegister.tallGrass.getID())) {
+			if(world.getBlock(x - 1, y, z) == 0) {
 				world.setBlock(x - 1, y, z, IDRegister.water.getID(), true,
 						true);
 			}
-			if(world.getBlock(x, y, z + 1) == (0 | IDRegister.tallGrass.getID())) {
+			if(world.getBlock(x, y, z + 1) == 0) {
 				world.setBlock(x, y, z + 1, IDRegister.water.getID(), true,
 						true);
 			}
-			if(world.getBlock(x, y, z - 1) == (0 | IDRegister.tallGrass.getID())) {
+			if(world.getBlock(x, y, z - 1) == 0) {
 				world.setBlock(x, y, z - 1, IDRegister.water.getID(), true,
 						true);
 			}
