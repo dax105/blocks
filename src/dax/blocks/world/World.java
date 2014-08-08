@@ -217,8 +217,20 @@ public class World implements ITickListener {
 	}
 
 	public void scheduleUpdate(int x, int y, int z, int ticks, int type) {
-		this.newlyScheduledUpdates.put(new Coord3D(x, y, z),
-				new ScheduledUpdate(type, ticks));
+		Coord3D pos = new Coord3D(x, y, z);
+		
+		ScheduledUpdate u;
+		if ((u = this.scheduledUpdates.get(pos)) != null) {
+			if (u.type == type && u.ticks <= ticks) {
+				return;
+			}
+		} else if ((u = this.newlyScheduledUpdates.get(pos)) != null) {
+			if (u.type == type && u.ticks <= ticks) {
+				return;
+			}
+		}
+		
+		this.newlyScheduledUpdates.put(pos, new ScheduledUpdate(type, ticks));
 	}
 
 	public void menuUpdate() {
