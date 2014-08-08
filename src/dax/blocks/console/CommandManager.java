@@ -20,6 +20,7 @@ public class CommandManager {
 		this.registerCommand(new CommandVariables());
 		this.registerCommand(new CommandDeleteWorld());
 		this.registerCommand(new CommandCullLock());
+		this.registerCommand(new CommandDefaults());
 	}
 	
 	private void registerCommand(Command command) {

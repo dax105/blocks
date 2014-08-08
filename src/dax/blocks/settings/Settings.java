@@ -15,6 +15,13 @@ import dax.blocks.util.GLHelper;
 public class Settings {
 	
 	private static volatile Settings _instance;
+	
+	public void reset() {
+		synchronized(Settings.class) {
+			_instance = null;
+		}
+	}
+	
 	public static Settings getInstance() {
 		if(_instance == null) {
 			synchronized(Settings.class) {
