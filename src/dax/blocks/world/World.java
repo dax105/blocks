@@ -175,13 +175,13 @@ public class World implements ITickListener {
 	}
 
 	public void registerNewTickListener(ITickListener l) {
-		if (!this.tickListeners.contains(l)) {
+		if(!this.tickListeners.contains(l)) {
 			this.scheduledTickListenersAdding.add(l);
 		}
 	}
 
 	public void removeTickListener(ITickListener l) {
-		if (this.tickListeners.contains(l)
+		if(this.tickListeners.contains(l)
 				&& !this.scheduledTickListenersRemoval.contains(l)) {
 			this.scheduledTickListenersRemoval.add(l);
 		}
@@ -203,7 +203,7 @@ public class World implements ITickListener {
 
 	public void updateBlock(int x, int y, int z, int type) {
 		int id = this.getBlock(x, y, z);
-		if (id > 0) {
+		if(id > 0) {
 			this.getBlockObject(id).onUpdate(x, y, z, type, this);
 		}
 
@@ -211,13 +211,14 @@ public class World implements ITickListener {
 
 	public void neighbourUpdate(int x, int y, int z) {
 		int id = this.getBlock(x, y, z);
-		if (id > 0) {
+		if(id > 0) {
 			this.getBlockObject(id).onNeighbourUpdate(x, y, z, this);
 		}
 	}
-	
+
 	public void scheduleUpdate(int x, int y, int z, int ticks, int type) {
-		this.newlyScheduledUpdates.put(new Coord3D(x, y, z), new ScheduledUpdate(type, ticks));
+		this.newlyScheduledUpdates.put(new Coord3D(x, y, z),
+				new ScheduledUpdate(type, ticks));
 	}
 
 	public void menuUpdate() {
@@ -230,7 +231,7 @@ public class World implements ITickListener {
 	public void setChunkDirty(int x, int y, int z) {
 		Coord2D coord = this.getCoord2D(x, z);
 
-		if (this.chunkProvider.isChunkLoaded(coord)) {
+		if(this.chunkProvider.isChunkLoaded(coord)) {
 			this.chunkProvider.getChunk(coord).setDirty(y);
 		}
 	}
@@ -258,31 +259,31 @@ public class World implements ITickListener {
 
 		Coord2D coord = this.getCoord2D(cx, cz);
 
-		if (this.chunkProvider.isChunkLoaded(coord)) {
+		if(this.chunkProvider.isChunkLoaded(coord)) {
 			Chunk c = this.chunkProvider.getChunk(coord);
 
 			Coord3D pos = new Coord3D(x, y, z);
 			if(!scheduledUpdates.containsKey(pos)) {
 				scheduledUpdates.remove(pos);
 			}
-			
+
 			Block before = this.getBlockObject(x, y, z);
-			if (before != null) {
+			if(before != null) {
 				before.onRemoved(x, y, z, this);
 			}
 
 			c.setBlock(icx, y, icz, id, true);
 			c.changed = artificial;
-			
-			if (id != 0) {
+
+			if(id != 0) {
 				Block placed = this.getBlockObject(id);
 				placed.onPlaced(x, y, z, this);
 				this.neighbourUpdate(x, y, z);
 			}
-			
+
 			this.updateNeighbours(x, y, z);
 		}
-		
+
 	}
 
 	public void setBlockNoRebuild(int x, int y, int z, byte id) {
@@ -294,7 +295,7 @@ public class World implements ITickListener {
 
 		Coord2D coord = this.getCoord2D(cx, cz);
 
-		if (this.chunkProvider.isChunkLoaded(coord)) {
+		if(this.chunkProvider.isChunkLoaded(coord)) {
 			this.chunkProvider.getChunk(coord).setBlock(icx, y, icz, id, false);
 		}
 	}
@@ -308,27 +309,27 @@ public class World implements ITickListener {
 		float _y1 = bb.y1;
 		float _z1 = bb.z1;
 
-		if (xm < 0.0F) {
+		if(xm < 0.0F) {
 			_x0 += xm;
 		}
 
-		if (xm > 0.0F) {
+		if(xm > 0.0F) {
 			_x1 += xm;
 		}
 
-		if (ym < 0.0F) {
+		if(ym < 0.0F) {
 			_y0 += ym;
 		}
 
-		if (ym > 0.0F) {
+		if(ym > 0.0F) {
 			_y1 += ym;
 		}
 
-		if (zm < 0.0F) {
+		if(zm < 0.0F) {
 			_z0 += zm;
 		}
 
-		if (zm > 0.0F) {
+		if(zm > 0.0F) {
 			_z1 += zm;
 		}
 
@@ -343,9 +344,9 @@ public class World implements ITickListener {
 			for (int y = y0; y < y1; ++y) {
 				for (int z = z0; z < z1; ++z) {
 					int blockId = getBlock(x, y, z);
-					if (blockId > 0) {
+					if(blockId > 0) {
 						Block block = this.getBlockObject(blockId);
-						if (block.isCollidable()) {
+						if(block.isCollidable()) {
 							AABB blockBB = block.getOffsetAABB(x, y, z);
 							xm = blockBB.clipXCollide(bb, xm);
 						}
@@ -359,9 +360,9 @@ public class World implements ITickListener {
 			for (int y = y0; y < y1; ++y) {
 				for (int z = z0; z < z1; ++z) {
 					int blockId = getBlock(x, y, z);
-					if (blockId > 0) {
+					if(blockId > 0) {
 						Block block = this.getBlockObject(blockId);
-						if (block.isCollidable()) {
+						if(block.isCollidable()) {
 							AABB blockBB = block.getOffsetAABB(x, y, z);
 							ym = blockBB.clipYCollide(bb, ym);
 						}
@@ -375,9 +376,9 @@ public class World implements ITickListener {
 			for (int y = y0; y < y1; ++y) {
 				for (int z = z0; z < z1; ++z) {
 					int blockId = getBlock(x, y, z);
-					if (blockId > 0) {
+					if(blockId > 0) {
 						Block block = this.getBlockObject(blockId);
-						if (block.isCollidable()) {
+						if(block.isCollidable()) {
 							AABB blockBB = block.getOffsetAABB(x, y, z);
 							zm = blockBB.clipZCollide(bb, zm);
 						}
@@ -416,7 +417,7 @@ public class World implements ITickListener {
 	public void setData(int x, int y, int z, int key, String value) {
 		Map<Integer, DataValue> coordData = this.blockDataManager
 				.getValuesForCoord(x, y, z);
-		if (coordData.get(key) != null) {
+		if(coordData.get(key) != null) {
 			coordData.get(key).setData(value);
 		} else {
 			coordData.put(key, new DataValue(value));
@@ -424,7 +425,7 @@ public class World implements ITickListener {
 	}
 
 	public String getDataString(int x, int y, int z, int key) {
-		if (this.containsData(x, y, z, key))
+		if(this.containsData(x, y, z, key))
 			return this.blockDataManager.getValuesForCoord(x, y, z).get(key)
 					.getDataString();
 
@@ -432,7 +433,7 @@ public class World implements ITickListener {
 	}
 
 	public int getDataInt(int x, int y, int z, int key) {
-		if (this.containsData(x, y, z, key))
+		if(this.containsData(x, y, z, key))
 			return this.blockDataManager.getValuesForCoord(x, y, z).get(key)
 					.getDataInt();
 
@@ -440,7 +441,7 @@ public class World implements ITickListener {
 	}
 
 	public float getDataFloat(int x, int y, int z, int key) {
-		if (this.containsData(x, y, z, key))
+		if(this.containsData(x, y, z, key))
 			return this.blockDataManager.getValuesForCoord(x, y, z).get(key)
 					.getDataFloat();
 
@@ -448,7 +449,7 @@ public class World implements ITickListener {
 	}
 
 	public boolean getDataBoolean(int x, int y, int z, int key) {
-		if (this.containsData(x, y, z, key))
+		if(this.containsData(x, y, z, key))
 			return this.blockDataManager.getValuesForCoord(x, y, z).get(key)
 					.getDataBoolean();
 
@@ -456,10 +457,10 @@ public class World implements ITickListener {
 	}
 
 	public boolean containsData(int x, int y, int z, int key) {
-		if (blockDataManager == null)
+		if(blockDataManager == null)
 			return false;
 
-		if (!this.blockDataManager.containsData(x, y, z))
+		if(!this.blockDataManager.containsData(x, y, z))
 			return false;
 
 		return (this.blockDataManager.getValuesForCoord(x, y, z).get(key) != null);
@@ -473,14 +474,14 @@ public class World implements ITickListener {
 	public void setData(int identificator, int key, String value) {
 		Map<Integer, DataValue> coordData = itemDataManager
 				.getValuesForIdentificator(identificator);
-		if (coordData.get(key) != null)
+		if(coordData.get(key) != null)
 			coordData.get(key).setData(value);
 		else
 			coordData.put(key, new DataValue(value));
 	}
 
 	public String getDataString(int identificator, int key) {
-		if (containsData(identificator, key)) {
+		if(containsData(identificator, key)) {
 			return this.itemDataManager
 					.getValuesForIdentificator(identificator).get(key)
 					.getDataString();
@@ -490,7 +491,7 @@ public class World implements ITickListener {
 	}
 
 	public float getDataFloat(int identificator, int key) {
-		if (containsData(identificator, key)) {
+		if(containsData(identificator, key)) {
 			return this.itemDataManager
 					.getValuesForIdentificator(identificator).get(key)
 					.getDataFloat();
@@ -500,7 +501,7 @@ public class World implements ITickListener {
 	}
 
 	public boolean getDataBoolean(int identificator, int key) {
-		if (containsData(identificator, key)) {
+		if(containsData(identificator, key)) {
 			return this.itemDataManager
 					.getValuesForIdentificator(identificator).get(key)
 					.getDataBoolean();
@@ -510,7 +511,7 @@ public class World implements ITickListener {
 	}
 
 	public int getDataInt(int identificator, int key) {
-		if (containsData(identificator, key)) {
+		if(containsData(identificator, key)) {
 			return this.itemDataManager
 					.getValuesForIdentificator(identificator).get(key)
 					.getDataInt();
@@ -520,11 +521,11 @@ public class World implements ITickListener {
 	}
 
 	public boolean containsData(int identificator, int key) {
-		if (this.itemDataManager == null) {
+		if(this.itemDataManager == null) {
 			return false;
 		}
 
-		if (!this.itemDataManager.containsData(identificator)) {
+		if(!this.itemDataManager.containsData(identificator)) {
 			return false;
 		}
 
@@ -533,7 +534,7 @@ public class World implements ITickListener {
 	}
 
 	public void removeData(int identificator) {
-		if (this.itemDataManager.containsData(identificator))
+		if(this.itemDataManager.containsData(identificator))
 			this.itemDataManager.getValuesForIdentificator(identificator)
 					.clear();
 	}
@@ -561,38 +562,42 @@ public class World implements ITickListener {
 		}
 
 		for (Entry<Coord3D, Block> b : Block.tickingBlocks.entrySet()) {
-			if (b.getValue().isRequiringTick())
+			if(b.getValue().isRequiringTick())
 				b.getValue().onTick(b.getKey().x, b.getKey().y, b.getKey().z,
 						this);
 		}
 
-		Set<Entry<Coord3D, ScheduledUpdate>> newUpdates = newlyScheduledUpdates.entrySet();
-		
-		for (Iterator<Entry<Coord3D, ScheduledUpdate>> it = newUpdates.iterator(); it
-				.hasNext();) {
-			
+		Set<Entry<Coord3D, ScheduledUpdate>> newUpdates = newlyScheduledUpdates
+				.entrySet();
+
+		for (Iterator<Entry<Coord3D, ScheduledUpdate>> it = newUpdates
+				.iterator(); it.hasNext();) {
+
 			Entry<Coord3D, ScheduledUpdate> e = it.next();
-			
+
 			scheduledUpdates.put(e.getKey(), e.getValue());
 			it.remove();
 		}
-		
-		Set<Entry<Coord3D, ScheduledUpdate>> updates = scheduledUpdates.entrySet();
-		
+
+		Set<Entry<Coord3D, ScheduledUpdate>> updates = scheduledUpdates
+				.entrySet();
+
 		for (Iterator<Entry<Coord3D, ScheduledUpdate>> it = updates.iterator(); it
 				.hasNext();) {
-				
+
 			Entry<Coord3D, ScheduledUpdate> e = it.next();
-			
+
 			Coord3D pos = e.getKey();
 			ScheduledUpdate u = e.getValue();
-			
-				if (u.ticks > 0) {
-					u.ticks--;
-				} else {
-					this.updateBlock(pos.x, pos.y, pos.z, u.type);
-					it.remove();
-				}
+
+			if(u.ticks > 0) {
+				u.ticks--;
+			}
+
+			if(u.ticks <= 0) {
+				this.updateBlock(pos.x, pos.y, pos.z, u.type);
+				it.remove();
+			}
 		}
 
 		this.chunkProvider.updateLoadedChunksInRadius(
@@ -607,7 +612,7 @@ public class World implements ITickListener {
 		this.player.onRenderTick(partialTickTime);
 
 		for (Entry<Coord3D, Block> b : Block.tickingBlocks.entrySet()) {
-			if (b.getValue().isRequiringRenderTick())
+			if(b.getValue().isRequiringRenderTick())
 				b.getValue().onRenderTick(partialTickTime, b.getKey().x,
 						b.getKey().y, b.getKey().z, this);
 		}

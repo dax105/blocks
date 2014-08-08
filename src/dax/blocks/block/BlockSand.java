@@ -15,7 +15,7 @@ public class BlockSand extends BlockBasic {
 
 	@Override
 	public void onNeighbourUpdate(int x, int y, int z, World world) {
-		world.scheduleUpdate(x, y, z, 0, UpdateType.SAND_FALL);
+		world.scheduleUpdate(x, y, z, 2, UpdateType.SAND_FALL);
 	}
 
 	@Override
