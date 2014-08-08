@@ -2,7 +2,8 @@ package dax.blocks.block;
 
 import java.util.Random;
 
-import dax.blocks.data.DataFlags;
+import dax.blocks.data.IDataObject;
+import dax.blocks.data.block.StoneDataObject;
 import dax.blocks.sound.SoundManager;
 import dax.blocks.world.IDRegister;
 import dax.blocks.world.World;
@@ -17,17 +18,30 @@ public class BlockStone extends BlockBasic {
 	}
 
 	public void updateColor(int x, int y, int z, World w) {
-		if(w.containsData(x, y, z, DataFlags.RECOLOR_R)) {
-			this.setColor(w.getDataFloat(x, y, z, DataFlags.RECOLOR_R),
-			w.getDataFloat(x, y, z, DataFlags.RECOLOR_G),
-			w.getDataFloat(x, y, z, DataFlags.RECOLOR_B));
+		if(w.hasData(x, y, z)) {
+			StoneDataObject d = (StoneDataObject) w.getData(x, y, z);
+			
+			this.setColor(d.getColorR(), d.getColorG(), d.getColorB());
 		}
 	}
 
-	private void recolor(int x, int y, int z, World w) {
-		w.setData(x, y, z, DataFlags.RECOLOR_R, "" + rnd.nextFloat());
-		w.setData(x, y, z, DataFlags.RECOLOR_G, "" + rnd.nextFloat());
-		w.setData(x, y, z, DataFlags.RECOLOR_B, "" + rnd.nextFloat());
+	public void recolor(int x, int y, int z, World w) {
+		StoneDataObject d;
+		
+		if(!w.hasData(x, y, z)) {
+			d = (StoneDataObject) w.createData(x, y, z);
+		} else {
+			d = (StoneDataObject) w.getData(x, y, z);
+		}
+
+		d.setColorR(rnd.nextFloat());
+		d.setColorG(rnd.nextFloat());
+		d.setColorB(rnd.nextFloat());
+	}
+	
+	@Override
+	public IDataObject createDataObject() {
+		return new StoneDataObject(this);
 	}
 
 	@Override

@@ -3,6 +3,7 @@ package dax.blocks.block.renderer;
 import dax.blocks.TextureManager;
 import dax.blocks.block.Block;
 import dax.blocks.data.DataFlags;
+import dax.blocks.data.block.PlantDataObject;
 import dax.blocks.render.IChunkRenderer;
 import dax.blocks.world.World;
 
@@ -14,7 +15,7 @@ public class BlockRendererPlant implements IBlockRenderer {
 		renderer.color(1, 1, 1);
 		
 		int lastTexture = block.getSideTexture();
-		if(world.getDataBoolean(x, y, z, DataFlags.SPECIAL_TEXTURE)) {
+		if(world.hasData(x, y, z) && ((PlantDataObject)world.getData(x, y, z)).isTextured()) {
 			block.setSideTexture(2);
 		}	
 		

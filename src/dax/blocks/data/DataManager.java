@@ -2,18 +2,18 @@ package dax.blocks.data;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.Map;
 
 import dax.blocks.util.Coord3D;
+import dax.blocks.world.World;
 
 public class DataManager implements IBlockDataManager, IItemDataManager {
 	IBlockDataManager blockDataManager;
 	IItemDataManager itemDataManager;
 	
 	
-	public DataManager(File blockDataFile, File itemDataFile) throws IOException {
-		this.blockDataManager = new BlockDataManager(blockDataFile);
-		this.itemDataManager = new ItemDataManager(itemDataFile);
+	public DataManager(File blockDataFile, File itemDataFile, World world) throws IOException {
+		this.blockDataManager = new BlockDataManager(blockDataFile, world);
+		this.itemDataManager = new ItemDataManager(itemDataFile, world);
 	}
 	
 	public boolean containsData(Coord3D coord) {
@@ -28,25 +28,59 @@ public class DataManager implements IBlockDataManager, IItemDataManager {
 		return itemDataManager.containsData(identificator);
 	}
 	
-	public Map<Integer, DataValue> getValuesForCoord(Coord3D position) {
-		return blockDataManager.getValuesForCoord(position);
-	}
-	
-	public Map<Integer, DataValue> getValuesForCoord(int x, int y, int z) {
-		return blockDataManager.getValuesForCoord(x, y, z);
-	}
-	
-	public Map<Integer, DataValue> getValuesForIdentificator(int ident) {
-		return itemDataManager.getValuesForIdentificator(ident);
-	}
-	
+
 	public void load() throws IOException {
 		blockDataManager.load();
 		itemDataManager.load();
 	}
 	
 	public void save() throws IOException {
-		blockDataManager.save();
-		itemDataManager.save();
+		this.blockDataManager.save();
+		this.itemDataManager.save();
+	}
+
+	@Override
+	public IDataObject getDataForIdentificator(int ident) {
+		return this.itemDataManager.getDataForIdentificator(ident);
+	}
+
+	@Override
+	public void addDataForIdentificator(int ident, IDataObject object) {
+		this.itemDataManager.addDataForIdentificator(ident, object);
+	}
+
+	@Override
+	public IDataObject getDataForCoord(Coord3D position) {
+		return this.blockDataManager.getDataForCoord(position);
+	}
+
+	@Override
+	public IDataObject getDataForCoord(int x, int y, int z) {
+		return this.blockDataManager.getDataForCoord(x, y, z);
+	}
+
+	@Override
+	public void addDataForCoord(Coord3D position, IDataObject data) {
+		this.blockDataManager.addDataForCoord(position, data);
+	}
+
+	@Override
+	public void addDataForCoord(int x, int y, int z, IDataObject data) {
+		this.blockDataManager.addDataForCoord(x, y, z, data);
+	}
+
+	@Override
+	public void removeDataForIdentificator(int ident) {
+		this.itemDataManager.removeDataForIdentificator(ident);
+	}
+
+	@Override
+	public void removeDataForCoord(Coord3D position) {
+		this.blockDataManager.removeDataForCoord(position);
+	}
+
+	@Override
+	public void removeDataForCoord(int x, int y, int z) {
+		this.blockDataManager.removeDataForCoord(x, y, z);
 	}
 }

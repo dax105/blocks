@@ -6,6 +6,7 @@ import java.util.Map;
 import dax.blocks.block.renderer.BlockRendererBasic;
 import dax.blocks.block.renderer.IBlockRenderer;
 import dax.blocks.collisions.AABB;
+import dax.blocks.data.IDataObject;
 import dax.blocks.render.RenderPass;
 import dax.blocks.sound.SoundManager;
 import dax.blocks.util.Coord3D;
@@ -80,6 +81,10 @@ public abstract class Block {
 		this.colorR = 1;
 		this.colorG = 1;
 		this.colorB = 1;
+	}
+	
+	public IDataObject createDataObject() {
+		return null;
 	}
 	
 	public Block setShowedName(String name) {

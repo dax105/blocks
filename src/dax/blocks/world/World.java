@@ -2,10 +2,11 @@ package dax.blocks.world;
 
 import dax.blocks.collisions.AABB;
 import dax.blocks.data.DataManager;
-import dax.blocks.data.DataValue;
 import dax.blocks.data.IBlockDataManager;
+import dax.blocks.data.IDataObject;
 import dax.blocks.data.IItemDataManager;
 import dax.blocks.gui.ingame.GuiManager;
+import dax.blocks.item.Item;
 
 import java.io.File;
 import java.io.IOException;
@@ -131,7 +132,7 @@ public class World implements ITickListener {
 
 	public void createDataManagers(File blockDataFile, File itemDataFile) {
 		try {
-			DataManager n = new DataManager(blockDataFile, itemDataFile);
+			DataManager n = new DataManager(blockDataFile, itemDataFile, this);
 			this.itemDataManager = n;
 			this.blockDataManager = n;
 		} catch (IOException e) {
@@ -426,131 +427,70 @@ public class World implements ITickListener {
 	}
 
 	// .... DATA ....
-	public void setData(int x, int y, int z, int key, String value) {
-		Map<Integer, DataValue> coordData = this.blockDataManager
-				.getValuesForCoord(x, y, z);
-		if(coordData.get(key) != null) {
-			coordData.get(key).setData(value);
+	public IDataObject createData(int x, int y, int z) {
+		if(this.blockDataManager != null) {
+			IDataObject obj = this.getBlockObject(x, y, z).createDataObject();
+			this.blockDataManager.addDataForCoord(x, y, z, obj);
+			return obj;
 		} else {
-			coordData.put(key, new DataValue(value));
+			return null;
 		}
 	}
 
-	public String getDataString(int x, int y, int z, int key) {
-		if(this.containsData(x, y, z, key))
-			return this.blockDataManager.getValuesForCoord(x, y, z).get(key)
-					.getDataString();
-
-		return null;
+	public IDataObject getData(int x, int y, int z) {
+		if(this.blockDataManager != null) {
+			return this.blockDataManager.getDataForCoord(x, y, z);
+		} else {
+			return null;
+		}
 	}
 
-	public int getDataInt(int x, int y, int z, int key) {
-		if(this.containsData(x, y, z, key))
-			return this.blockDataManager.getValuesForCoord(x, y, z).get(key)
-					.getDataInt();
-
-		return 0;
-	}
-
-	public float getDataFloat(int x, int y, int z, int key) {
-		if(this.containsData(x, y, z, key))
-			return this.blockDataManager.getValuesForCoord(x, y, z).get(key)
-					.getDataFloat();
-
-		return 0;
-	}
-
-	public boolean getDataBoolean(int x, int y, int z, int key) {
-		if(this.containsData(x, y, z, key))
-			return this.blockDataManager.getValuesForCoord(x, y, z).get(key)
-					.getDataBoolean();
-
-		return false;
-	}
-
-	public boolean containsData(int x, int y, int z, int key) {
-		if(blockDataManager == null)
+	public boolean hasData(int x, int y, int z) {
+		if(this.blockDataManager != null) {
+			return this.blockDataManager.containsData(x, y, z);
+		} else {
 			return false;
-
-		if(!this.blockDataManager.containsData(x, y, z))
-			return false;
-
-		return (this.blockDataManager.getValuesForCoord(x, y, z).get(key) != null);
+		}
 	}
 
 	public void removeData(int x, int y, int z) {
-		this.blockDataManager.getValuesForCoord(x, y, z).clear();
-	}
-
-	// ..Item Data..
-	public void setData(int identificator, int key, String value) {
-		Map<Integer, DataValue> coordData = itemDataManager
-				.getValuesForIdentificator(identificator);
-		if(coordData.get(key) != null)
-			coordData.get(key).setData(value);
-		else
-			coordData.put(key, new DataValue(value));
-	}
-
-	public String getDataString(int identificator, int key) {
-		if(containsData(identificator, key)) {
-			return this.itemDataManager
-					.getValuesForIdentificator(identificator).get(key)
-					.getDataString();
+		if(this.hasData(x, y, z)) {
+			this.blockDataManager.removeDataForCoord(x, y, z);
 		}
-
-		return null;
 	}
 
-	public float getDataFloat(int identificator, int key) {
-		if(containsData(identificator, key)) {
-			return this.itemDataManager
-					.getValuesForIdentificator(identificator).get(key)
-					.getDataFloat();
+	public IDataObject createData(Item item, int itemIdent) {
+		if(this.itemDataManager != null) {
+			IDataObject obj = item.createDataObject();
+			this.itemDataManager.addDataForIdentificator(itemIdent, obj);
+			return obj;
+		} else {
+			return null;
 		}
-
-		return 0;
 	}
 
-	public boolean getDataBoolean(int identificator, int key) {
-		if(containsData(identificator, key)) {
-			return this.itemDataManager
-					.getValuesForIdentificator(identificator).get(key)
-					.getDataBoolean();
+	public IDataObject getData(int itemIdent) {
+		if(this.itemDataManager != null) {
+			return this.itemDataManager.getDataForIdentificator(itemIdent);
+		} else {
+			return null;
 		}
-
-		return false;
 	}
 
-	public int getDataInt(int identificator, int key) {
-		if(containsData(identificator, key)) {
-			return this.itemDataManager
-					.getValuesForIdentificator(identificator).get(key)
-					.getDataInt();
-		}
-
-		return 0;
-	}
-
-	public boolean containsData(int identificator, int key) {
-		if(this.itemDataManager == null) {
+	public boolean hasData(int itemIdent) {
+		if(this.itemDataManager != null) {
+			return this.itemDataManager.containsData(itemIdent);
+		} else {
 			return false;
 		}
+	}
 
-		if(!this.itemDataManager.containsData(identificator)) {
-			return false;
+	public void removeData(int itemIdent) {
+		if(this.hasData(itemIdent)) {
+			this.itemDataManager.removeDataForIdentificator(itemIdent);
 		}
-
-		return (this.itemDataManager.getValuesForIdentificator(identificator)
-				.get(key) != null);
 	}
-
-	public void removeData(int identificator) {
-		if(this.itemDataManager.containsData(identificator))
-			this.itemDataManager.getValuesForIdentificator(identificator)
-					.clear();
-	}
-
+	
 	// .... OVERRIDE METHODS ....
 	@Override
 	public void onTick() {

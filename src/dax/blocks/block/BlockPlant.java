@@ -1,7 +1,8 @@
 package dax.blocks.block;
 
 import dax.blocks.block.renderer.BlockRendererPlant;
-import dax.blocks.data.DataFlags;
+import dax.blocks.data.IDataObject;
+import dax.blocks.data.block.PlantDataObject;
 import dax.blocks.render.RenderPass;
 import dax.blocks.world.IDRegister;
 import dax.blocks.world.World;
@@ -16,6 +17,11 @@ public class BlockPlant extends Block {
 		setCollidable(false);
 		setRenderer(new BlockRendererPlant());
 	}
+	
+	@Override
+	public IDataObject createDataObject() {
+		return new PlantDataObject(this);
+	}
 
 	@Override
 	public void onTick(int x, int y, int z, World world) {
@@ -28,7 +34,16 @@ public class BlockPlant extends Block {
 
 	@Override
 	public void onClick(int button, int x, int y, int z, World world) {
-		world.setData(x, y, z, DataFlags.SPECIAL_TEXTURE, "true");
+		PlantDataObject d;
+		
+		if(!world.hasData(x, y, z)) {
+			d = (PlantDataObject) world.createData(x, y, z);
+		} else {
+			d = (PlantDataObject) world.getData(x, y, z);
+		}
+		
+		d.setTextured(!d.isTextured());
+		
 		world.setChunkDirty(x >> 4, y/16, z >> 4);
 	}
 

@@ -19,6 +19,8 @@ import org.lwjgl.BufferUtils;
 import org.lwjgl.opengl.Display;
 import org.lwjgl.opengl.GL11;
 
+import dax.blocks.settings.ObjectType;
+
 public class GameUtil {
 
 	public static boolean deleteDirectory(File directory) {
@@ -135,5 +137,33 @@ public class GameUtil {
 		}
 
 		return source.toString();
+	}
+
+	public static String objectTypeAsString(ObjectType type) {
+		switch(type) {
+		case BOOLEAN:
+			return "[bit]";
+		case FLOAT:
+			return "[flt]";
+		case INTEGER:
+			return "[int]";
+		case STRING:
+		default:
+			return "[str]";
+		}
+	}
+	
+	public static ObjectType stringAsObjectType(String type) {
+		switch(type) {
+		case "[bit]":
+			return ObjectType.BOOLEAN;
+		case "[flt]":
+			return ObjectType.FLOAT;
+		case "[int]":
+			return ObjectType.INTEGER;
+		case "[str]":
+		default:
+			return ObjectType.STRING;
+		}
 	}
 }

@@ -2,6 +2,7 @@ package dax.blocks.item;
 
 import org.newdawn.slick.opengl.Texture;
 
+import dax.blocks.data.IDataObject;
 import dax.blocks.world.IDRegister;
 import dax.blocks.world.World;
 
@@ -20,6 +21,10 @@ public abstract class Item {
 		this.id = register.getIDForName(name);
 		this.name = name;
 		this.showedName = new String(name);
+	}
+	
+	public IDataObject createDataObject() {
+		return null;
 	}
 	
 	public int getID() {
