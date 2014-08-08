@@ -121,7 +121,7 @@ public class GuiScreenSettings extends GuiScreen {
 			if(this.ingame) {
 				this.close();
 			} else {
-				this.game.openGuiScreen(parent);
+				this.game.openGuiScreen(super.parent);
 			}
 		}
 	}

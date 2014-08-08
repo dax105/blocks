@@ -24,8 +24,9 @@ public abstract class GuiScreen implements ITickListener, IOverlayRenderer {
 	public GuiScreen(int width, int height, float r, float g, float b, float a,
 			GuiManager guiManager) {
 		this(0, 0, width, height, r, g, b, a, guiManager);
+		
 		this.isInCenter = true;
-		this.updateCenteredPosition(guiManager.getScreenWidth(), guiManager.getScreenHeight());
+		this.updateCenteredPosition(this.guiManager.getScreenWidth(), this.guiManager.getScreenHeight());
 	}
 
 	public GuiScreen(int x, int y, int width, int height, float r, float g,

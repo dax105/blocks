@@ -10,6 +10,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Random;
+
 import dax.blocks.block.BlockPlant;
 import dax.blocks.settings.Settings;
 import dax.blocks.util.Coord2D;
@@ -38,6 +39,9 @@ public class ChunkProvider {
 	private SimplexNoise simplex3D_caves;
 
 	private SimplexNoise simplex2D_rainfall;
+	
+	//TODO: Temperature
+	@SuppressWarnings("unused")
 	private SimplexNoise simplex2D_temperature;
 
 	protected World world;

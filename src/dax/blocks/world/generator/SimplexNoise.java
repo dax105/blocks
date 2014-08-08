@@ -10,6 +10,9 @@ public class SimplexNoise {
 
 	private int largestFeature;
 	private double persistence;
+	
+	//TODO: Seed
+	@SuppressWarnings("unused")
 	private int seed;
 
 	public SimplexNoise(int largestFeature, double persistence, int seed) {

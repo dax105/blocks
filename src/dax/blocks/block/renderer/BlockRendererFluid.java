@@ -429,14 +429,10 @@ public class BlockRendererFluid implements IBlockRenderer {
 	}
 
 	@Override
-	public void preRender(World world, Block block, int x, int y, int z) {
-		// TODO Auto-generated method stub
-		
+	public void preRender(World world, Block block, int x, int y, int z) {	
 	}
 
 	@Override
 	public void postRender(World world, Block block, int x, int y, int z) {
-		// TODO Auto-generated method stub
-		
 	}
 }

@@ -107,14 +107,10 @@ public class BlockRendererPlant implements IBlockRenderer {
 
 	@Override
 	public void preRender(World world, Block block, int x, int y, int z) {
-		// TODO Auto-generated method stub
-		
 	}
 
 	@Override
 	public void postRender(World world, Block block, int x, int y, int z) {
-		// TODO Auto-generated method stub
-		
 	}
 
 }

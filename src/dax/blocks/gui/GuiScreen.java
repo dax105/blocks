@@ -32,6 +32,7 @@ public abstract class GuiScreen {
 
 	public GuiScreen(GuiScreen parent) {
 		this(parent.game);
+		this.parent = parent;
 	}
 
 	public void render() {

@@ -6,7 +6,6 @@ import java.util.List;
 import org.lwjgl.input.Mouse;
 
 import dax.blocks.Game;
-import dax.blocks.render.IOverlayRenderer;
 import dax.blocks.render.ITickListener;
 import dax.blocks.settings.Settings;
 
