@@ -27,13 +27,13 @@ public class StoneDataObject implements IDataObject {
 				if(parts[1].equals(GameUtil.objectTypeAsString(ObjectType.FLOAT))) {
 					switch(parts[2]) {
 					case "r":
-						this.colorR = Float.parseFloat(parts[3]);
+						this.colorR = Float.parseFloat(parts[3].replace(',', '.'));
 						break;
 					case "g":
-						this.colorG = Float.parseFloat(parts[3]);
+						this.colorG = Float.parseFloat(parts[3].replace(',', '.'));
 						break;
 					case "b":
-						this.colorB = Float.parseFloat(parts[3]);
+						this.colorB = Float.parseFloat(parts[3].replace(',', '.'));
 						break;
 					}
 				}

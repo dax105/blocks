@@ -427,14 +427,16 @@ public class World implements ITickListener {
 	}
 
 	// .... DATA ....
-	public IDataObject createData(int x, int y, int z) {
+	public IDataObject createData(int x, int y, int z, Block block) {
 		if(this.blockDataManager != null) {
-			IDataObject obj = this.getBlockObject(x, y, z).createDataObject();
-			this.blockDataManager.addDataForCoord(x, y, z, obj);
-			return obj;
-		} else {
-			return null;
+			if(block != null) {
+				IDataObject obj = block.createDataObject();
+				this.blockDataManager.addDataForCoord(x, y, z, obj);
+				return obj;
+			}
 		}
+		return null;
+
 	}
 
 	public IDataObject getData(int x, int y, int z) {

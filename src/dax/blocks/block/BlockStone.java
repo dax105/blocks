@@ -29,7 +29,7 @@ public class BlockStone extends BlockBasic {
 		StoneDataObject d;
 		
 		if(!w.hasData(x, y, z)) {
-			d = (StoneDataObject) w.createData(x, y, z);
+			d = (StoneDataObject) w.createData(x, y, z, this);
 		} else {
 			d = (StoneDataObject) w.getData(x, y, z);
 		}

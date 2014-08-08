@@ -37,7 +37,7 @@ public class BlockPlant extends Block {
 		PlantDataObject d;
 		
 		if(!world.hasData(x, y, z)) {
-			d = (PlantDataObject) world.createData(x, y, z);
+			d = (PlantDataObject) world.createData(x, y, z, this);
 		} else {
 			d = (PlantDataObject) world.getData(x, y, z);
 		}

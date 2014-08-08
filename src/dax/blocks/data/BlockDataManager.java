@@ -90,6 +90,14 @@ public class BlockDataManager implements IBlockDataManager {
 				continue;
 			}
 
+			if(started && line.charAt(0) == 'c' && passData != null) {
+				currentObject.load(new ArrayList<String>(passData));
+				this.values.put(coord, currentObject);
+
+				passData = null;
+				coord = null;
+			}
+			
 			if(started && line.charAt(0) == 'c' && passData == null) {
 				if(currentBlock == null) {
 					br.close();
@@ -104,15 +112,7 @@ public class BlockDataManager implements IBlockDataManager {
 				currentObject = currentBlock.createDataObject();
 				continue;
 			}
-
-			if(started && line.charAt(0) == 'c' && passData != null) {
-				currentObject.load(new ArrayList<String>(passData));
-				this.values.put(coord, currentObject);
-
-				passData = null;
-				coord = null;
-			}
-
+			
 			if(started && coord == null && line.charAt(0) == 'd') {
 				br.close();
 				throw new UnsupportedDataTypeException(
