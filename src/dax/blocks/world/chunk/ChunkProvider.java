@@ -394,11 +394,6 @@ public class ChunkProvider {
 							}
 						} else {
 							chunk.setBlock(x, y, z, IDRegister.stone.getID(), false);
-							
-							if(cRand.nextFloat() >= 0.99f) {
-								IDRegister.stone.onClick(10, xc * 16 + x, y, zc
-										* 16 + z, world);
-							}
 						}
 
 						depth++;

@@ -1,6 +1,5 @@
 package dax.blocks.console;
 
-import dax.blocks.Game;
 import dax.blocks.settings.Settings;
 
 public class CommandDefaults extends Command{

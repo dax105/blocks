@@ -2,7 +2,6 @@ package dax.blocks.block.renderer;
 
 import dax.blocks.TextureManager;
 import dax.blocks.block.Block;
-import dax.blocks.data.DataFlags;
 import dax.blocks.data.block.PlantDataObject;
 import dax.blocks.render.IChunkRenderer;
 import dax.blocks.world.World;
