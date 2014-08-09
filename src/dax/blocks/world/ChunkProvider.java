@@ -266,6 +266,7 @@ public class ChunkProvider {
 		
 		this.cl = new ChunkLoaderThread(this);
 		this.clThread = new Thread(cl);
+		this.clThread.setName("Chunk loader");
 		this.clThread.start();
 	}
 
