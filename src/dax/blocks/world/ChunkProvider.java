@@ -1,4 +1,4 @@
-package dax.blocks.world.chunk;
+package dax.blocks.world;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -15,10 +15,8 @@ import dax.blocks.block.BlockPlant;
 import dax.blocks.settings.Settings;
 import dax.blocks.util.Coord2D;
 import dax.blocks.util.GameMath;
-import dax.blocks.world.ChunkDistanceComparator;
-import dax.blocks.world.CoordDistanceComparator;
-import dax.blocks.world.IDRegister;
-import dax.blocks.world.World;
+import dax.blocks.world.chunk.Chunk;
+import dax.blocks.world.chunk.ChunkSaveManager;
 import dax.blocks.world.generator.Biome;
 import dax.blocks.world.generator.SimplexNoise;
 import dax.blocks.world.generator.TreeGenerator;
@@ -31,7 +29,7 @@ public class ChunkProvider {
 	public boolean loading = false;
 
 	private TreeGenerator treeGen;
-	protected Map<Coord2D, Chunk> loadedChunks;
+	public Map<Coord2D, Chunk> loadedChunks;
 	private LinkedHashMap<Coord2D, Chunk> cachedChunks;
 
 	private SimplexNoise simplex3D_1;
@@ -44,10 +42,10 @@ public class ChunkProvider {
 	@SuppressWarnings("unused")
 	private SimplexNoise simplex2D_temperature;
 
-	protected World world;
+	public World world;
 	public ChunkSaveManager loader;
 
-	protected int seed;
+	public int seed;
 
 	public boolean isChunkLoaded(Coord2D coord) {
 		return this.loadedChunks.containsKey(coord);

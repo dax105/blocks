@@ -30,7 +30,6 @@ import dax.blocks.settings.Settings;
 import dax.blocks.util.Coord2D;
 import dax.blocks.util.Coord3D;
 import dax.blocks.world.chunk.Chunk;
-import dax.blocks.world.chunk.ChunkProvider;
 
 public class World implements ITickListener {
 

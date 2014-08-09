@@ -15,6 +15,7 @@ import org.xerial.snappy.Snappy;
 import dax.blocks.Game;
 import dax.blocks.console.Console;
 import dax.blocks.util.Coord2D;
+import dax.blocks.world.ChunkProvider;
 import dax.blocks.world.World;
 import dax.blocks.world.WorldInfo;
 import dax.blocks.world.WorldsManager;

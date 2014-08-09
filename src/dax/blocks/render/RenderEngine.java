@@ -27,9 +27,9 @@ import dax.blocks.util.Coord2D;
 import dax.blocks.util.GLHelper;
 import dax.blocks.util.GameUtil;
 import dax.blocks.world.ChunkDistanceComparator;
+import dax.blocks.world.ChunkProvider;
 import dax.blocks.world.World;
 import dax.blocks.world.chunk.Chunk;
-import dax.blocks.world.chunk.ChunkProvider;
 
 public class RenderEngine {
 
