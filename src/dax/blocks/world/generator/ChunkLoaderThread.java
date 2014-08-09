@@ -14,17 +14,17 @@ public class ChunkLoaderThread implements Runnable {
 	
 	@Override
 	public void run() {
-		boolean work = true;
-		
-		while(work) {
+		while(true) {
 			Coord2D coord = provider.loadNeeded.poll();
-			if (coord != null) {
+			if(coord != null) {
 				provider.loadingChunks.add(coord);
 				Chunk c = provider.getChunk(coord.x, coord.y);
-				if (c != null) {
+				if(c != null) {
 					provider.loaded.putIfAbsent(coord, c);
 				}
 				provider.loadingChunks.remove(coord);
+			} else {
+				provider.clWait();
 			}
 		}
 	}

@@ -54,7 +54,10 @@ public class ChunkProvider {
 
 	public World world;
 	public ChunkSaveManager loader;
+	
+	private Thread clThread;
 	public ChunkLoaderThread cl;
+	private boolean clWaiting = false;
 
 	public int seed;
 
@@ -64,6 +67,28 @@ public class ChunkProvider {
 
 	public Chunk getChunk(Coord2D coord) {
 		return this.loadedChunks.get(coord);
+	}
+	
+	public void clWait() {		
+		if(!clWaiting) {
+			this.clWaiting = true;
+		synchronized (cl) {
+		try {
+			this.cl.wait();
+		} catch(InterruptedException e) {
+			e.printStackTrace();
+		}
+		}
+		}
+	}
+	
+	public void clResume() {
+		if(clWaiting) {
+			this.clWaiting = false;
+			synchronized (cl) {
+			this.cl.notify();
+			}
+		}
 	}
 	
 	public void updateLoadedChunksInRadius(int x, int y, int r) {
@@ -87,13 +112,17 @@ public class ChunkProvider {
 
 		Collections.sort(sortedCoords, new CoordDistanceComparator(x, y));
 
-		loadNeeded.clear();
+		this.loadNeeded.clear();
 		
 		for(Coord2D c : sortedCoords) {
 			loadNeeded.add(c);
 		}
 		
-		loading = loadNeeded.size() > 0;
+		this.loading = loadNeeded.size() > 0;
+		
+		if(this.loading) {
+			this.clResume();
+		}
 
 		List<Chunk> unpopulated = new LinkedList<Chunk>();
 		
@@ -236,7 +265,8 @@ public class ChunkProvider {
 		this.simplex2D_temperature = new SimplexNoise(1024, 0.2, this.seed+2);
 		
 		this.cl = new ChunkLoaderThread(this);
-		new Thread(cl).start();
+		this.clThread = new Thread(cl);
+		this.clThread.start();
 	}
 
 	public void loadChunk(Coord2D coord) {
