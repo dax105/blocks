@@ -104,8 +104,6 @@ public class ChunkSaveManager {
 		Game.getInstance().closeGuiScreen();
 	}
 
-	
-
 	public Chunk loadChunk(int cx, int cz) {
 		File dir = new File(WorldsManager.SAVES_DIR, this.name);
 		File file = new File(dir, "x" + cx + "z" + cz + ".ccf");

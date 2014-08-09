@@ -9,7 +9,11 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Queue;
 import java.util.Random;
+import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentLinkedQueue;
 
 import dax.blocks.block.BlockPlant;
 import dax.blocks.settings.Settings;
@@ -18,6 +22,7 @@ import dax.blocks.util.GameMath;
 import dax.blocks.world.chunk.Chunk;
 import dax.blocks.world.chunk.ChunkSaveManager;
 import dax.blocks.world.generator.Biome;
+import dax.blocks.world.generator.ChunkLoaderThread;
 import dax.blocks.world.generator.SimplexNoise;
 import dax.blocks.world.generator.TreeGenerator;
 
@@ -30,6 +35,11 @@ public class ChunkProvider {
 
 	private TreeGenerator treeGen;
 	public Map<Coord2D, Chunk> loadedChunks;
+	
+	public ConcurrentHashMap<Coord2D, Chunk> loaded = new ConcurrentHashMap<Coord2D, Chunk>();
+	public Queue<Coord2D> loadNeeded = new ConcurrentLinkedQueue<Coord2D>();
+	public Set<Coord2D> loadingChunks = Collections.newSetFromMap(new ConcurrentHashMap<Coord2D, Boolean>());
+	
 	private LinkedHashMap<Coord2D, Chunk> cachedChunks;
 
 	private SimplexNoise simplex3D_1;
@@ -44,6 +54,7 @@ public class ChunkProvider {
 
 	public World world;
 	public ChunkSaveManager loader;
+	public ChunkLoaderThread cl;
 
 	public int seed;
 
@@ -54,16 +65,21 @@ public class ChunkProvider {
 	public Chunk getChunk(Coord2D coord) {
 		return this.loadedChunks.get(coord);
 	}
-
+	
 	public void updateLoadedChunksInRadius(int x, int y, int r) {
-		int loaded = 0;
 
+		for(Iterator<Entry<Coord2D, Chunk>> it = this.loaded.entrySet().iterator(); it.hasNext();) {
+			Entry<Coord2D, Chunk> e = it.next();
+			this.loadedChunks.put(e.getKey(), e.getValue());
+			it.remove();
+		}
+		
 		List<Coord2D> sortedCoords = new ArrayList<Coord2D>();
 
 		for(int ix = x - r; ix <= x + r; ix++) {
 			for(int iy = y - r; iy <= y + r; iy++) {
 				Coord2D coord = new Coord2D(ix, iy);
-				if(!this.loadedChunks.containsKey(coord)) {
+				if(!this.loadedChunks.containsKey(coord) && !this.loadingChunks.contains(coord)) {
 					sortedCoords.add(coord);
 				}
 			}
@@ -71,16 +87,13 @@ public class ChunkProvider {
 
 		Collections.sort(sortedCoords, new CoordDistanceComparator(x, y));
 
+		loadNeeded.clear();
+		
 		for(Coord2D c : sortedCoords) {
-			if(loaded >= Settings.getInstance().loadsPerTick.getValue()) {
-				this.loading = true;
-				break;
-			} 
-			
-			this.loadChunk(c);
-			loaded++;
-			this.loading = false;
+			loadNeeded.add(c);
 		}
+		
+		loading = loadNeeded.size() > 0;
 
 		List<Chunk> unpopulated = new LinkedList<Chunk>();
 		
@@ -221,7 +234,9 @@ public class ChunkProvider {
 		this.simplex3D_caves = new SimplexNoise(64, 0.55, this.seed*3);
 		this.simplex2D_rainfall = new SimplexNoise(2048, 0.3, this.seed+1);
 		this.simplex2D_temperature = new SimplexNoise(1024, 0.2, this.seed+2);
-
+		
+		this.cl = new ChunkLoaderThread(this);
+		new Thread(cl).start();
 	}
 
 	public void loadChunk(Coord2D coord) {
@@ -392,11 +407,6 @@ public class ChunkProvider {
 							}
 						} else {
 							chunk.setBlock(x, y, z, IDRegister.stone.getID(), false);
-							
-							if(cRand.nextFloat() >= 0.99f) {
-								IDRegister.stone.onClick(10, xc * 16 + x, y, zc
-										* 16 + z, world);
-							}
 						}
 
 						depth++;

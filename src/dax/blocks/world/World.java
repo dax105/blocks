@@ -287,7 +287,7 @@ public class World implements ITickListener {
 			c.setBlock(icx, y, icz, id, true);
 			c.changed = artificial;
 
-			if(id != 0) {
+			if(id != 0 && notify) {
 				Block placed = this.getBlockObject(id);
 				placed.onPlaced(x, y, z, this);
 				this.neighbourUpdate(x, y, z);
