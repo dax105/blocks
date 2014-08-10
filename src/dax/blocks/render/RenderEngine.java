@@ -263,13 +263,13 @@ public class RenderEngine {
 		this.sEnable(RenderEngine.FLAG_LIGHTING);
 		GL11.glEnable(GL11.GL_LIGHTING);
 
-		for(int i = 0; i < 1; i++) {
+		/*for(int i = 0; i < 1; i++) {
 			GL11.glPushMatrix();
 			GL11.glTranslatef(i - 0.0625f, 49, 10);
 			GL11.glScalef(0.5f, 0.5f, 0.5f);
 			GL11.glCallList(ModelManager.getInstance().getModel("char").getDisplayList());
 			GL11.glPopMatrix();
-		}
+		}*/
 		
 		// Render chunks
 		this.renderChunks(ptt);
@@ -353,7 +353,7 @@ public class RenderEngine {
 		
 		chunkRenderer.afterBuilding();
 
-		List<RenderChunk> builtRenderChunks = new ArrayList<RenderChunk>();
+		List<RenderChunk> builtRenderChunks = new LinkedList<RenderChunk>();
 
 		for(Chunk c : visibleChunks) {
 			RenderChunk[] crcs = c.renderChunks;
