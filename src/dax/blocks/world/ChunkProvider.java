@@ -30,8 +30,6 @@ public class ChunkProvider {
 
 	private static final int SAMPLE_RATE_HORIZONTAL = 8;
 	private static final int SAMPLE_RATE_VERTICAL = 4;
-	
-	private static final int LOADER_THREADS = 2;
 
 	public boolean loading = false;
 
@@ -57,8 +55,8 @@ public class ChunkProvider {
 	public World world;
 	public ChunkSaveManager loader;
 	
-	private ChunkLoaderThread[] loaders = new ChunkLoaderThread[ChunkProvider.LOADER_THREADS];
-	private Thread[] loaderThreads = new Thread[ChunkProvider.LOADER_THREADS];
+	private ChunkLoaderThread[] loaders = new ChunkLoaderThread[Settings.getInstance().loaderThreads.getValue()];
+	private Thread[] loaderThreads = new Thread[Settings.getInstance().loaderThreads.getValue()];
 
 	public int seed;
 
@@ -249,7 +247,7 @@ public class ChunkProvider {
 		this.simplex2D_rainfall = new SimplexNoise(2048, 0.3, this.seed+1);
 		this.simplex2D_temperature = new SimplexNoise(1024, 0.2, this.seed+2);
 		
-		for(int i = 0; i < ChunkProvider.LOADER_THREADS; i++) {
+		for(int i = 0; i < Settings.getInstance().loaderThreads.getValue(); i++) {
 			this.loaders[i] = new ChunkLoaderThread(this);
 			this.loaderThreads[i] = new Thread(this.loaders[i]);
 			this.loaderThreads[i].setName("Chunk loader " + i);
