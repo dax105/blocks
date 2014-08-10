@@ -18,5 +18,8 @@ public interface IChunkRenderer {
 	public void color(float r, float b, float g, float a);
 	public void normal(float nx, float ny, float nz);
 	public void texCoord(float s, float t);
-	
+	public void beforeRendering();
+	public void afterRendering();
+	public void beforeBuilding();
+	public void afterBuilding();
 }

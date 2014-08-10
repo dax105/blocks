@@ -15,6 +15,7 @@ import org.lwjgl.opengl.Display;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL20;
 
+import dax.blocks.Game;
 import dax.blocks.Particle;
 import dax.blocks.TextureManager;
 import dax.blocks.block.Block;
@@ -311,7 +312,11 @@ public class RenderEngine {
 		Collections.sort(visibleChunks, this.chunkDistComp);
 
 		int generatedMeshes = 0;
-
+		
+		IChunkRenderer chunkRenderer = Game.getInstance().chunkRenderer;
+		
+		chunkRenderer.beforeBuilding();
+		
 		for(Chunk c : visibleChunks) {
 			if(c != null) {
 				for(int y = 0; y < 8; y++) {
@@ -345,6 +350,8 @@ public class RenderEngine {
 			}
 
 		}
+		
+		chunkRenderer.afterBuilding();
 
 		List<RenderChunk> builtRenderChunks = new ArrayList<RenderChunk>();
 
@@ -361,6 +368,8 @@ public class RenderEngine {
 
 		List<RenderChunk> culledRenderChunks = ChunkCull.cull(
 				builtRenderChunks, this.frustum, Settings.getInstance().frustumCulling.getValue(), Settings.getInstance().advancedCulling.getValue());
+		
+		chunkRenderer.beforeRendering();
 		
 		for(RenderChunk r : culledRenderChunks) {
 			if(r.getCm().isPresent(RenderPass.OPAQUE)) {
@@ -395,6 +404,8 @@ public class RenderEngine {
 				this.chunksDrawn++;
 			}
 		}
+		
+		chunkRenderer.afterRendering();
 
 		GL11.glDisable(GL11.GL_LIGHTING);
 		sDisable(FLAG_LIGHTING);

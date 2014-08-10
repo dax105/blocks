@@ -25,6 +25,8 @@ import dax.blocks.gui.ingame.GuiManager;
 import dax.blocks.model.ModelManager;
 import dax.blocks.profiler.Profiler;
 import dax.blocks.render.ChunkRendererDisplayList;
+import dax.blocks.render.ChunkRendererMappedVBO;
+import dax.blocks.render.ChunkRendererVBO;
 import dax.blocks.render.IChunkRenderer;
 import dax.blocks.settings.Keyconfig;
 import dax.blocks.settings.Settings;
@@ -45,7 +47,7 @@ public class Game implements Runnable {
 
 	private OverlayManager overlayManager;
 	public GuiScreen guiScreen;
-	public IChunkRenderer chunkRenderer = new ChunkRendererDisplayList();
+	public IChunkRenderer chunkRenderer = new ChunkRendererVBO();
 	public AuthManager authManager;
 
 	private static final int TPS = 20;
