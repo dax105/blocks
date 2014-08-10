@@ -30,6 +30,8 @@ public class ChunkProvider {
 
 	private static final int SAMPLE_RATE_HORIZONTAL = 8;
 	private static final int SAMPLE_RATE_VERTICAL = 4;
+	
+	private static final int LOADER_THREADS = 2;
 
 	public boolean loading = false;
 
@@ -55,9 +57,8 @@ public class ChunkProvider {
 	public World world;
 	public ChunkSaveManager loader;
 	
-	private Thread clThread;
-	public ChunkLoaderThread cl;
-	private boolean clWaiting = false;
+	private ChunkLoaderThread[] loaders = new ChunkLoaderThread[ChunkProvider.LOADER_THREADS];
+	private Thread[] loaderThreads = new Thread[ChunkProvider.LOADER_THREADS];
 
 	public int seed;
 
@@ -69,25 +70,9 @@ public class ChunkProvider {
 		return this.loadedChunks.get(coord);
 	}
 	
-	public void clWait() {		
-		if(!clWaiting) {
-			this.clWaiting = true;
-		synchronized (cl) {
-		try {
-			this.cl.wait();
-		} catch(InterruptedException e) {
-			e.printStackTrace();
-		}
-		}
-		}
-	}
-	
-	public void clResume() {
-		if(clWaiting) {
-			this.clWaiting = false;
-			synchronized (cl) {
-			this.cl.notify();
-			}
+	public void resumeAllLoaders() {
+		for(ChunkLoaderThread cl : loaders) {
+			cl.resume();
 		}
 	}
 	
@@ -121,7 +106,7 @@ public class ChunkProvider {
 		this.loading = loadNeeded.size() > 0;
 		
 		if(this.loading) {
-			this.clResume();
+			resumeAllLoaders();
 		}
 
 		List<Chunk> unpopulated = new LinkedList<Chunk>();
@@ -264,9 +249,11 @@ public class ChunkProvider {
 		this.simplex2D_rainfall = new SimplexNoise(2048, 0.3, this.seed+1);
 		this.simplex2D_temperature = new SimplexNoise(1024, 0.2, this.seed+2);
 		
-		this.cl = new ChunkLoaderThread(this);
-		this.clThread = new Thread(cl);
-		this.clThread.start();
+		for(int i = 0; i < ChunkProvider.LOADER_THREADS; i++) {
+			this.loaders[i] = new ChunkLoaderThread(this);
+			this.loaderThreads[i] = new Thread(this.loaders[i]);
+			this.loaderThreads[i].start();
+		}
 	}
 
 	public void loadChunk(Coord2D coord) {

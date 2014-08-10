@@ -6,12 +6,14 @@ import dax.blocks.world.chunk.Chunk;
 
 public class ChunkLoaderThread implements Runnable {
 
+	public boolean waiting;
+
 	private ChunkProvider provider;
-	
+
 	public ChunkLoaderThread(ChunkProvider provider) {
 		this.provider = provider;
 	}
-	
+
 	@Override
 	public void run() {
 		while(true) {
@@ -24,9 +26,31 @@ public class ChunkLoaderThread implements Runnable {
 				}
 				provider.loadingChunks.remove(coord);
 			} else {
-				provider.clWait();
+				this.pause();
 			}
 		}
 	}
-	
+
+	public void pause() {
+		if(!this.waiting) {
+			this.waiting = true;
+			synchronized(this) {
+				try {
+					this.wait();
+				} catch(InterruptedException e) {
+					e.printStackTrace();
+				}
+			}
+		}
+	}
+
+	public void resume() {
+		if(this.waiting) {
+			this.waiting = false;
+			synchronized(this) {
+				this.notify();
+			}
+		}
+	}
+
 }
