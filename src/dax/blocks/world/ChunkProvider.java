@@ -466,4 +466,15 @@ public class ChunkProvider {
 			return this.generateChunk(xc, zc);
 		}
 	}
+
+	private void stopAllLoaders() {
+		for(ChunkLoaderThread loader : this.loaders) {
+			loader.stop();
+			loader.resume();	
+		}
+	}
+	
+	public void cleanup() {
+		stopAllLoaders();
+	}
 }

@@ -647,4 +647,8 @@ public class RenderEngine {
 			it.remove();
 		}
 	}
+
+	public void cleanup() {
+		
+	}
 }

@@ -18,7 +18,7 @@ import dax.blocks.util.Coord2D;
 import dax.blocks.world.ChunkProvider;
 import dax.blocks.world.World;
 import dax.blocks.world.WorldInfo;
-import dax.blocks.world.WorldsManager;
+import dax.blocks.world.WorldManager;
 
 public class ChunkSaveManager {
 
@@ -29,7 +29,7 @@ public class ChunkSaveManager {
 	public static final int WORLD_VERSION = 1;
 	
 	public void tryToLoadWorld() {
-			File dir = new File(WorldsManager.SAVES_DIR, this.name);
+			File dir = new File(WorldManager.SAVES_DIR, this.name);
 			
 			if(!dir.exists()) {
 				dir.mkdir();
@@ -60,7 +60,7 @@ public class ChunkSaveManager {
 	}
 	
 	public boolean isChunkSaved(int cx, int cz) {
-		File dir = new File(WorldsManager.SAVES_DIR, this.name);
+		File dir = new File(WorldManager.SAVES_DIR, this.name);
 
 		if(!dir.exists()) {
 			dir.mkdir();
@@ -105,7 +105,7 @@ public class ChunkSaveManager {
 	}
 
 	public Chunk loadChunk(int cx, int cz) {
-		File dir = new File(WorldsManager.SAVES_DIR, this.name);
+		File dir = new File(WorldManager.SAVES_DIR, this.name);
 		File file = new File(dir, "x" + cx + "z" + cz + ".ccf");
 		byte[] fileData = new byte[(int) file.length()];
 		try {
@@ -136,7 +136,7 @@ public class ChunkSaveManager {
 		}
 
 		try {
-			File dir = new File(WorldsManager.SAVES_DIR, this.name);
+			File dir = new File(WorldManager.SAVES_DIR, this.name);
 
 			if(!dir.exists()) {
 				dir.mkdir();

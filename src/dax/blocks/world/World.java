@@ -409,7 +409,7 @@ public class World implements ITickListener {
 		}
 	}
 
-	public void deleteAllDisplayLists() {
+	public void deleteAllRenderChunks() {
 		for (Chunk c : this.chunkProvider.getAllLoadedChunks()) {
 			c.deleteAllRenderChunks();
 		}
@@ -571,6 +571,13 @@ public class World implements ITickListener {
 		}
 
 		GuiManager.getInstance().onRenderTick(partialTickTime);
+	}
+	
+	public void exit() {
+		this.renderEngine.cleanup();
+		this.chunkProvider.cleanup();
+		this.deleteAllRenderChunks();
+		this.saveAllChunks();
 	}
 
 }

@@ -23,7 +23,7 @@ public class ApplierAA extends Applier {
 		);
 		Game.getInstance().load(!Game.getInstance().getWorldsManager().isInGame());
 		
-		Game.getInstance().getCurrentWorld().deleteAllDisplayLists();
+		Game.getInstance().getCurrentWorld().deleteAllRenderChunks();
 		
 		return true;
 	}

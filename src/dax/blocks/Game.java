@@ -32,7 +32,7 @@ import dax.blocks.sound.SoundManager;
 import dax.blocks.util.GLHelper;
 import dax.blocks.util.GameUtil;
 import dax.blocks.world.World;
-import dax.blocks.world.WorldsManager;
+import dax.blocks.world.WorldManager;
 
 public class Game implements Runnable {
 	public static final String TITLE = Start.GAME_NAME + " v"
@@ -66,7 +66,7 @@ public class Game implements Runnable {
 	private String versionString = "version " + Start.GAME_VERSION;
 
 	private Profiler profiler = new Profiler();
-	private WorldsManager worldsManager = new WorldsManager();
+	private WorldManager worldsManager = new WorldManager();
 	private TrueTypeFont font;
 
 	private static Game instance = null;
@@ -91,7 +91,7 @@ public class Game implements Runnable {
 		return this.profiler;
 	}
 
-	public WorldsManager getWorldsManager() {
+	public WorldManager getWorldsManager() {
 		return this.worldsManager;
 	}
 

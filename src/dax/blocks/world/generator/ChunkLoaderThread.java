@@ -9,14 +9,19 @@ public class ChunkLoaderThread implements Runnable {
 	public boolean waiting;
 
 	private ChunkProvider provider;
+	private boolean running = true;
 
 	public ChunkLoaderThread(ChunkProvider provider) {
 		this.provider = provider;
 	}
 
+	public void stop() {
+		this.running = false;
+	}
+	
 	@Override
 	public void run() {
-		while(true) {
+		while(this.running) {
 			Coord2D coord = provider.loadNeeded.poll();
 			if(coord != null) {
 				provider.loadingChunks.add(coord);
