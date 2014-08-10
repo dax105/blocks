@@ -252,6 +252,7 @@ public class ChunkProvider {
 		for(int i = 0; i < ChunkProvider.LOADER_THREADS; i++) {
 			this.loaders[i] = new ChunkLoaderThread(this);
 			this.loaderThreads[i] = new Thread(this.loaders[i]);
+			this.loaderThreads[i].setName("Chunk loader " + i);
 			this.loaderThreads[i].start();
 		}
 	}
