@@ -137,7 +137,7 @@ public class TextureManager {
 		TextureManager.textureSizeCoord = TextureManager.atlas.getWidth() / TextureManager.ATLAS_SIZE / (AtlasBuilder.EXPAND_RATIO*2+1);
 		TextureManager.texSize = TextureManager.atlas.getWidth();
 		
-		if(Settings.getInstance().mipmaps.getValue()) {
+		/*if(Settings.getInstance().mipmaps.getValue()) {
 			GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MIN_FILTER, GL11.GL_LINEAR_MIPMAP_LINEAR);
 			GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MAG_FILTER, GL11.GL_NEAREST);
 		}
@@ -159,7 +159,7 @@ public class TextureManager {
 		
 		//GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL14.GL_GENERATE_MIPMAP, GL11.GL_TRUE);
 		//GL11.glTexParameteri (GL11.GL_TEXTURE_2D, GL12.GL_TEXTURE_MAX_LEVEL, 2-1);
-
+		*/
 	}
 	
 	public static float getX1(int texid) {
