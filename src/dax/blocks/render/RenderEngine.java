@@ -14,6 +14,7 @@ import org.lwjgl.opengl.ARBVertexShader;
 import org.lwjgl.opengl.Display;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL20;
+import org.lwjgl.util.glu.GLU;
 
 import dax.blocks.Game;
 import dax.blocks.Particle;
@@ -202,22 +203,28 @@ public class RenderEngine {
 	}
 
 	public void sDisable(String flag) {
+		if (this.enableShaders) {
 		int loc = GL20.glGetUniformLocation(this.program, flag);
 		GL20.glUniform1f(loc, 0.0f);
+		}
 	}
 
 	public void sEnable(String flag) {
+		if (this.enableShaders) {
 		int loc = GL20.glGetUniformLocation(this.program, flag);
 		GL20.glUniform1f(loc, 1.0f);
+		}
 	}
 
 	public void sSetFloat(String flag, float value) {
+		if (this.enableShaders) {
 		int loc = GL20.glGetUniformLocation(this.program, flag);
 		GL20.glUniform1f(loc, value);
+		}
 	}
 
 	
-	public void renderWorld(float ptt) {
+	public void renderWorld(float ptt) {	
 		this.chunksLoaded = 0;
 		this.chunksDrawn = 0;
 
@@ -288,6 +295,7 @@ public class RenderEngine {
 	}
 	
 	public void renderChunks(float ptt) {
+		
 		sEnable(FLAG_LIGHTING);
 		sEnable(FLAG_TEXTURE);
 
@@ -377,7 +385,7 @@ public class RenderEngine {
 				this.chunksDrawn++;
 			}
 		}
-
+		
 		GL11.glEnable(GL11.GL_ALPHA_TEST);
 		for(RenderChunk r : culledRenderChunks) {
 			if(r.getCm().isPresent(RenderPass.TRANSPARENT)) {
@@ -386,7 +394,7 @@ public class RenderEngine {
 			}
 		}
 		GL11.glDisable(GL11.GL_ALPHA_TEST);
-
+		
 		if(Settings.getInstance().twoPassTranslucent.getValue()) {
 			GL11.glColorMask(false, false, false, false);
 			for(RenderChunk r : culledRenderChunks) {

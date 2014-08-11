@@ -11,6 +11,7 @@ import org.lwjgl.input.Mouse;
 import org.lwjgl.openal.AL;
 import org.lwjgl.opengl.Display;
 import org.lwjgl.opengl.GL11;
+import org.lwjgl.util.glu.GLU;
 import org.newdawn.slick.Color;
 import org.newdawn.slick.TrueTypeFont;
 
@@ -127,6 +128,11 @@ public class Game implements Runnable {
 		long lastInfo = time;
 
 		while (!Display.isCloseRequested()) {
+			int e = GL11.glGetError();
+			if(e != 0) {
+				System.err.println("GL ERROR: " + e + " - " + GLU.gluErrorString(e));
+			}
+			
 			time = System.nanoTime();
 			while (time - lastTime >= Game.TICK_TIME * 1000000000) {
 				this.ticks++;
