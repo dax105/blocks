@@ -6,18 +6,17 @@ import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
 
 import dax.blocks.Game;
-import dax.blocks.TextureManager;
 import dax.blocks.block.Block;
 import dax.blocks.collisions.AABB;
 import dax.blocks.gui.ingame.GuiManager;
 import dax.blocks.item.stack.BasicBlockStack;
 import dax.blocks.item.stack.BasicItemStack;
 import dax.blocks.item.stack.IObjectStack;
+import dax.blocks.overlay.BasicLifesOverlay;
 import dax.blocks.render.IOverlayRenderer;
 import dax.blocks.settings.Keyconfig;
 import dax.blocks.settings.Settings;
 import dax.blocks.sound.SoundManager;
-import dax.blocks.util.GLHelper;
 import dax.blocks.world.Explosion;
 import dax.blocks.world.IDRegister;
 import dax.blocks.world.World;
@@ -33,7 +32,8 @@ public class PlayerEntity extends Entity implements IOverlayRenderer {
 	public static final int REGENERATION_TICKS = 20;
 
 	private IObjectStack inHand;
-
+	private BasicLifesOverlay lifesOverlay;
+	
 	private int lookingAtX;
 	private int lookingAtY;
 	private int lookingAtZ;
@@ -69,6 +69,7 @@ public class PlayerEntity extends Entity implements IOverlayRenderer {
 		this.bb = new AABB(this.posX - PlayerEntity.PLAYER_SIZE / 2, this.posY,
 				this.posZ - PlayerEntity.PLAYER_SIZE / 2, this.posX + PlayerEntity.PLAYER_SIZE / 2, this.posY
 						+ PlayerEntity.PLAYER_HEIGHT, this.posZ + PlayerEntity.PLAYER_SIZE / 2);
+		this.updateOverlay();
 	}
 
 	@Override
@@ -185,6 +186,8 @@ public class PlayerEntity extends Entity implements IOverlayRenderer {
 		if(!this.alive && !Settings.getInstance().peacefulMode.getValue()) {
 			Game.getInstance().getWorldsManager().exitWorld();
 		}
+		
+		this.updateOverlay();
 	}
 
 	private void updateStandingOn() {
@@ -268,16 +271,21 @@ public class PlayerEntity extends Entity implements IOverlayRenderer {
 		this.updateLookingAt();
 	}
 
+	public void updateOverlay() {
+		int heartsX = 80;
+		int heartsY = Settings.getInstance().windowHeight.getValue() - 43;
+		
+		if(this.lifesOverlay == null) {
+			this.lifesOverlay = new BasicLifesOverlay(this, heartsX, heartsY);
+			Game.getInstance().getOverlayManager().addOverlay(this.lifesOverlay);
+		} else {
+			this.lifesOverlay.setPosition(heartsX, heartsY);
+		}
+	}
+	
 	@Override
 	public void renderOverlay(float ptt) {
 		this.inHand.renderGUITexture(25, Settings.getInstance().windowHeight.getValue() - 75, 50, 50);
-		
-		int heartsX = 80;
-		int heartsY = Settings.getInstance().windowHeight.getValue() - 43;
-
-		GLHelper.drawTexture(TextureManager.life_zero, heartsX, heartsY);
-		GLHelper.drawTextureCropped(TextureManager.life_full, heartsX, heartsY,
-				this.lifes, 1);
 	}
 
 	@Override

@@ -25,7 +25,7 @@ public class CommandTele extends Command {
 				
 				Game game = Game.getInstance();
 				
-				if (game.getWorldsManager().isInGame()) {
+				if (!game.getWorldsManager().isInGame()) {
 					Console.println("You must be ingame to use command " + getName());
 					return false;
 				}

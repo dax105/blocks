@@ -45,17 +45,7 @@ public abstract class GuiScreen implements ITickListener, IOverlayRenderer {
 	public abstract void onOpening();
 
 	public abstract void onClosing();
-
-	@Override
-	public void onTick() {
-
-	}
-
-	@Override
-	public void onRenderTick(float partialTickTime) {
-
-	}
-
+	
 	@Override
 	public void renderOverlay(float partialTickTime) {
 		GLHelper.drawRectangle(this.backColorR, this.backColorG,
