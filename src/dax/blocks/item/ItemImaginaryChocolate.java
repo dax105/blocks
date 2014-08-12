@@ -33,7 +33,7 @@ public class ItemImaginaryChocolate extends Item {
 
 			@Override
 			public void onOpening() {
-				this.addControl(new SliderControl(10, 10, 80, 20, this));
+				this.addControl(new SliderControl(10, 10, 80, 80, 10, this));
 			}
 
 			@Override

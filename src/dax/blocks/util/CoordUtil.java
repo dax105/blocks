@@ -1,5 +1,7 @@
 package dax.blocks.util;
 
+import dax.blocks.settings.Settings;
+
 
 public class CoordUtil {
 
@@ -23,5 +25,9 @@ public class CoordUtil {
 		}
 		
 		return c;
+	}
+	
+	public static int getProperMouseY(int currentY) {
+		return Settings.getInstance().windowHeight.getValue() - currentY;
 	}
 }
