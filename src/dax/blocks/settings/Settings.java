@@ -35,6 +35,7 @@ public class Settings {
 	}
 	
 	public Map<String, SettingsObject<?>> objects = new HashMap<String, SettingsObject<?>>();
+	
 	public SettingsObject<Integer> drawDistance = (SettingsObject<Integer>) registerObject(new SettingsObject<Integer>(
 			"draw_distance", 10, "Render distance", "%v chunks", null));
 	public SettingsObject<Integer> consoleHeight = (SettingsObject<Integer>) registerObject(new SettingsObject<Integer>(
@@ -132,6 +133,10 @@ public class Settings {
 			"height", 480, "Window height", "%v px", new ApplierResolution()));
 	public SettingsObject<Integer> fpsLimit = (SettingsObject<Integer>) registerObject(new SettingsObject<Integer>(
 			"fps_limit", 0, "FPS Limit", null, null));
+	
+	public SettingsObject<Integer> loaderThreads = (SettingsObject<Integer>) registerObject(new SettingsObject<Integer>(
+			"loader_threads", 1, "Loader threads", null, null));
+	
 	public SettingsObject<Boolean> peacefulMode = (SettingsObject<Boolean>) registerObject(new SettingsObject<Boolean>(
 			"peaceful", false, "What is dead may never die", "%o", null));
 

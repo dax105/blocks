@@ -64,7 +64,7 @@ public class IDRegister {
 		this.items = new Item[1024];
 		this.itemCount = 0;
 		
-		IDRegister.dataFile = new File(new File(WorldsManager.SAVES_DIR, world.name), "ids");
+		IDRegister.dataFile = new File(new File(WorldManager.SAVES_DIR, world.name), "ids");
 		
 		try {
 			this.loadIDs(IDRegister.dataFile);

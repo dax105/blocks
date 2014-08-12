@@ -11,6 +11,7 @@ import org.lwjgl.input.Mouse;
 import org.lwjgl.openal.AL;
 import org.lwjgl.opengl.Display;
 import org.lwjgl.opengl.GL11;
+import org.lwjgl.util.glu.GLU;
 import org.newdawn.slick.Color;
 import org.newdawn.slick.TrueTypeFont;
 
@@ -25,6 +26,8 @@ import dax.blocks.gui.ingame.GuiManager;
 import dax.blocks.model.ModelManager;
 import dax.blocks.profiler.Profiler;
 import dax.blocks.render.ChunkRendererDisplayList;
+import dax.blocks.render.ChunkRendererMappedVBO;
+import dax.blocks.render.ChunkRendererVBO;
 import dax.blocks.render.IChunkRenderer;
 import dax.blocks.settings.Keyconfig;
 import dax.blocks.settings.Settings;
@@ -32,7 +35,7 @@ import dax.blocks.sound.SoundManager;
 import dax.blocks.util.GLHelper;
 import dax.blocks.util.GameUtil;
 import dax.blocks.world.World;
-import dax.blocks.world.WorldsManager;
+import dax.blocks.world.WorldManager;
 
 public class Game implements Runnable {
 	public static final String TITLE = Start.GAME_NAME + " v"
@@ -45,7 +48,7 @@ public class Game implements Runnable {
 
 	private OverlayManager overlayManager;
 	public GuiScreen guiScreen;
-	public IChunkRenderer chunkRenderer = new ChunkRendererDisplayList();
+	public IChunkRenderer chunkRenderer = new ChunkRendererVBO();
 	public AuthManager authManager;
 
 	private static final int TPS = 20;
@@ -66,7 +69,7 @@ public class Game implements Runnable {
 	private String versionString = "version " + Start.GAME_VERSION;
 
 	private Profiler profiler = new Profiler();
-	private WorldsManager worldsManager = new WorldsManager();
+	private WorldManager worldsManager = new WorldManager();
 	private TrueTypeFont font;
 
 	private static Game instance = null;
@@ -91,7 +94,7 @@ public class Game implements Runnable {
 		return this.profiler;
 	}
 
-	public WorldsManager getWorldsManager() {
+	public WorldManager getWorldsManager() {
 		return this.worldsManager;
 	}
 
@@ -125,6 +128,11 @@ public class Game implements Runnable {
 		long lastInfo = time;
 
 		while (!Display.isCloseRequested()) {
+			int e = GL11.glGetError();
+			if(e != 0) {
+				System.err.println("GL ERROR: " + e + " - " + GLU.gluErrorString(e));
+			}
+			
 			time = System.nanoTime();
 			while (time - lastTime >= Game.TICK_TIME * 1000000000) {
 				this.ticks++;
