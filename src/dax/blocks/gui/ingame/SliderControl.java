@@ -3,11 +3,8 @@ package dax.blocks.gui.ingame;
 import java.awt.Color;
 
 import org.lwjgl.input.Mouse;
-
-import dax.blocks.util.Coord2D;
 import dax.blocks.util.CoordUtil;
 import dax.blocks.util.GLHelper;
-import dax.blocks.util.GameUtil;
 import dax.blocks.util.Rectangle;
 
 public class SliderControl extends Control {
@@ -19,8 +16,6 @@ public class SliderControl extends Control {
 	private int sliderSize = 5;
 	private Rectangle sliderRectangle;
 
-	private boolean isHovered = false;
-	private int lastC = 0;
 	private boolean isMouseDown = false;
 	
 	public SliderControl(int relativeX, int relativeY, int width, int height,
@@ -32,8 +27,10 @@ public class SliderControl extends Control {
 	public SliderControl(int relativeX, int relativeY, int width, int height,
 			int backColor, int sliderColor, int sliderSize, GuiScreen screen) {
 		super(relativeX, relativeY, width, height, screen);
-		this.backgroundColor = GameUtil.getColorFromInt(backColor);
-		this.sliderColor = GameUtil.getColorFromInt(sliderColor);
+		/*this.backgroundColor = GameUtil.getColorFromInt(backColor);
+		this.sliderColor = GameUtil.getColorFromInt(sliderColor);*/
+		this.backgroundColor = Color.RED;
+		this.sliderColor = Color.BLUE;
 		this.sliderRectangle = new Rectangle(0, 0, 0, 0);
 		this.actualValue = 0.5f;
 		this.sliderSize = sliderSize;
@@ -62,17 +59,12 @@ public class SliderControl extends Control {
 	}
 
 	@Override
-	public void onTick() {
-		super.onTick();
-		
+	public void onRenderTick(float ptt) {
+		super.onRenderTick(ptt);
 		int mouseX = Mouse.getX();
 		int mouseY = CoordUtil.getProperMouseY(Mouse.getY());
-		this.isHovered = this.sliderRectangle.isInRectangle(new Coord2D(mouseX, mouseY));
 		
-		if(this.isHovered) {
-			this.updateMouse(mouseX, mouseY);
-		}
-		
+		this.updateMouse(mouseX, mouseY);
 		this.updateSliderRectangle();
 	}
 
@@ -95,22 +87,25 @@ public class SliderControl extends Control {
 
 	private void updateMouse(int mX, int mY) {
 		boolean mouseDown = Mouse.isButtonDown(0);
-		if(mouseDown && !this.isMouseDown) {
-			this.isMouseDown = true;
-			this.lastC = (this.horizontal ? mX : mY);
-			//return;
+		
+		if(mouseDown) {
+			if(this.horizontal) {
+				
+				int width = super.rectangle.getTopRight() - this.rectangle.getX() - this.sliderSize;
+				int clickedX = mX - super.rectangle.getX() - this.sliderSize / 2 + 1;
+				this.actualValue = ((float)(clickedX) / (float)width);
+				this.actualValue = (float) (0.01 * Math.floor(this.actualValue * 100.0));
+				
+				if(this.actualValue > 1) {
+					this.actualValue = 1;
+				}
+				
+				if(this.actualValue < 0) {
+					this.actualValue = 0;
+				}
+			}
 		}
 		
-		if(mouseDown && this.isMouseDown) {
-			int dif = (this.horizontal ? mX : mY) - this.lastC;
-			this.actualValue += dif / (super.rectangle.getWidth() - this.sliderSize);
-			this.lastC = (this.horizontal ? mX : mY);
-			return;
-		}
-		
-		if(!mouseDown && this.isMouseDown) {
-			this.isMouseDown = false;
-		}
 	}
 	
 	private void updateSliderRectangle() {
