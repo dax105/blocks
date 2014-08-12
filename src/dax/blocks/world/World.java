@@ -30,7 +30,6 @@ import dax.blocks.settings.Settings;
 import dax.blocks.util.Coord2D;
 import dax.blocks.util.Coord3D;
 import dax.blocks.world.chunk.Chunk;
-import dax.blocks.world.chunk.ChunkProvider;
 
 public class World implements ITickListener {
 
@@ -288,7 +287,7 @@ public class World implements ITickListener {
 			c.setBlock(icx, y, icz, id, true);
 			c.changed = artificial;
 
-			if(id != 0) {
+			if(id != 0 && notify) {
 				Block placed = this.getBlockObject(id);
 				placed.onPlaced(x, y, z, this);
 				this.neighbourUpdate(x, y, z);
@@ -410,7 +409,7 @@ public class World implements ITickListener {
 		}
 	}
 
-	public void deleteAllDisplayLists() {
+	public void deleteAllRenderChunks() {
 		for (Chunk c : this.chunkProvider.getAllLoadedChunks()) {
 			c.deleteAllRenderChunks();
 		}
@@ -572,6 +571,13 @@ public class World implements ITickListener {
 		}
 
 		GuiManager.getInstance().onRenderTick(partialTickTime);
+	}
+	
+	public void exit() {
+		this.renderEngine.cleanup();
+		this.chunkProvider.cleanup();
+		this.deleteAllRenderChunks();
+		this.saveAllChunks();
 	}
 
 }

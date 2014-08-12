@@ -12,7 +12,7 @@ import dax.blocks.render.RenderEngine;
 import dax.blocks.settings.Settings;
 import dax.blocks.util.GLHelper;
 
-public class WorldsManager {
+public class WorldManager {
 	
 	public static final String SAVES_DIR = "saves";
 	
@@ -21,7 +21,7 @@ public class WorldsManager {
 	private World currentWorld;
 	private InfoOverlay infoOverlay;
 
-	public WorldsManager() {
+	public WorldManager() {
 	}
 	
 	public void load() {
@@ -36,7 +36,7 @@ public class WorldsManager {
 
 		String[] names = this.savesDir.list();
 			for(String name : names) {
-				File d = new File(WorldsManager.SAVES_DIR, name);
+				File d = new File(WorldManager.SAVES_DIR, name);
 				if(d.isDirectory()) {
 					worlds.add(d);
 				}
@@ -101,7 +101,7 @@ public class WorldsManager {
 			Game.getInstance().getOverlayManager().removeOverlay(this.infoOverlay);
 			Game.getInstance().getOverlayManager().removeOverlay(this.currentWorld.getPlayer());
 			
-			this.currentWorld.saveAllChunks();
+			this.currentWorld.exit();
 			this.currentWorld = null;
 			this.ingame = false;	
 		}

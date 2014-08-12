@@ -51,7 +51,7 @@ public class WorldInfo {
 	
 	public void saveWorldInfo() {
 		try {
-			File dir = new File(WorldsManager.SAVES_DIR, this.worldName);
+			File dir = new File(WorldManager.SAVES_DIR, this.worldName);
 
 			if(!dir.exists()) {
 				dir.mkdir();

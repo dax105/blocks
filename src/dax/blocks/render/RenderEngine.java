@@ -14,7 +14,9 @@ import org.lwjgl.opengl.ARBVertexShader;
 import org.lwjgl.opengl.Display;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL20;
+import org.lwjgl.util.glu.GLU;
 
+import dax.blocks.Game;
 import dax.blocks.Particle;
 import dax.blocks.TextureManager;
 import dax.blocks.block.Block;
@@ -27,9 +29,9 @@ import dax.blocks.util.Coord2D;
 import dax.blocks.util.GLHelper;
 import dax.blocks.util.GameUtil;
 import dax.blocks.world.ChunkDistanceComparator;
+import dax.blocks.world.ChunkProvider;
 import dax.blocks.world.World;
 import dax.blocks.world.chunk.Chunk;
-import dax.blocks.world.chunk.ChunkProvider;
 
 public class RenderEngine {
 
@@ -201,22 +203,28 @@ public class RenderEngine {
 	}
 
 	public void sDisable(String flag) {
+		if (this.enableShaders) {
 		int loc = GL20.glGetUniformLocation(this.program, flag);
 		GL20.glUniform1f(loc, 0.0f);
+		}
 	}
 
 	public void sEnable(String flag) {
+		if (this.enableShaders) {
 		int loc = GL20.glGetUniformLocation(this.program, flag);
 		GL20.glUniform1f(loc, 1.0f);
+		}
 	}
 
 	public void sSetFloat(String flag, float value) {
+		if (this.enableShaders) {
 		int loc = GL20.glGetUniformLocation(this.program, flag);
 		GL20.glUniform1f(loc, value);
+		}
 	}
 
 	
-	public void renderWorld(float ptt) {
+	public void renderWorld(float ptt) {	
 		this.chunksLoaded = 0;
 		this.chunksDrawn = 0;
 
@@ -262,13 +270,13 @@ public class RenderEngine {
 		this.sEnable(RenderEngine.FLAG_LIGHTING);
 		GL11.glEnable(GL11.GL_LIGHTING);
 
-		for(int i = 0; i < 1; i++) {
+		/*for(int i = 0; i < 1; i++) {
 			GL11.glPushMatrix();
 			GL11.glTranslatef(i - 0.0625f, 49, 10);
 			GL11.glScalef(0.5f, 0.5f, 0.5f);
 			GL11.glCallList(ModelManager.getInstance().getModel("char").getDisplayList());
 			GL11.glPopMatrix();
-		}
+		}*/
 		
 		// Render chunks
 		this.renderChunks(ptt);
@@ -287,6 +295,7 @@ public class RenderEngine {
 	}
 	
 	public void renderChunks(float ptt) {
+		
 		sEnable(FLAG_LIGHTING);
 		sEnable(FLAG_TEXTURE);
 
@@ -311,7 +320,11 @@ public class RenderEngine {
 		Collections.sort(visibleChunks, this.chunkDistComp);
 
 		int generatedMeshes = 0;
-
+		
+		IChunkRenderer chunkRenderer = Game.getInstance().chunkRenderer;
+		
+		chunkRenderer.beforeBuilding();
+		
 		for(Chunk c : visibleChunks) {
 			if(c != null) {
 				for(int y = 0; y < 8; y++) {
@@ -345,8 +358,10 @@ public class RenderEngine {
 			}
 
 		}
+		
+		chunkRenderer.afterBuilding();
 
-		List<RenderChunk> builtRenderChunks = new ArrayList<RenderChunk>();
+		List<RenderChunk> builtRenderChunks = new LinkedList<RenderChunk>();
 
 		for(Chunk c : visibleChunks) {
 			RenderChunk[] crcs = c.renderChunks;
@@ -362,13 +377,15 @@ public class RenderEngine {
 		List<RenderChunk> culledRenderChunks = ChunkCull.cull(
 				builtRenderChunks, this.frustum, Settings.getInstance().frustumCulling.getValue(), Settings.getInstance().advancedCulling.getValue());
 		
+		chunkRenderer.beforeRendering();
+		
 		for(RenderChunk r : culledRenderChunks) {
 			if(r.getCm().isPresent(RenderPass.OPAQUE)) {
 				r.getCm().render(RenderPass.OPAQUE);
 				this.chunksDrawn++;
 			}
 		}
-
+		
 		GL11.glEnable(GL11.GL_ALPHA_TEST);
 		for(RenderChunk r : culledRenderChunks) {
 			if(r.getCm().isPresent(RenderPass.TRANSPARENT)) {
@@ -377,7 +394,7 @@ public class RenderEngine {
 			}
 		}
 		GL11.glDisable(GL11.GL_ALPHA_TEST);
-
+		
 		if(Settings.getInstance().twoPassTranslucent.getValue()) {
 			GL11.glColorMask(false, false, false, false);
 			for(RenderChunk r : culledRenderChunks) {
@@ -395,6 +412,8 @@ public class RenderEngine {
 				this.chunksDrawn++;
 			}
 		}
+		
+		chunkRenderer.afterRendering();
 
 		GL11.glDisable(GL11.GL_LIGHTING);
 		sDisable(FLAG_LIGHTING);
@@ -646,5 +665,9 @@ public class RenderEngine {
 			this.renderables.remove(it.next());
 			it.remove();
 		}
+	}
+
+	public void cleanup() {
+		
 	}
 }

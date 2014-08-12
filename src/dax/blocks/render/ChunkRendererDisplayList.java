@@ -148,4 +148,28 @@ public class ChunkRendererDisplayList implements IChunkRenderer {
 		return this.vertices;
 	}
 
+	@Override
+	public void beforeRendering() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void afterRendering() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void beforeBuilding() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void afterBuilding() {
+		// TODO Auto-generated method stub
+		
+	}
+
 }
