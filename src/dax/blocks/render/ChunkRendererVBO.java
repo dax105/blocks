@@ -13,7 +13,7 @@ public class ChunkRendererVBO implements IChunkRenderer {
 
 	private static final int BUFFER_SIZE_MEGS = 8;
 	private static final int BUFFER_SIZE_BYTES = BUFFER_SIZE_MEGS * 1024 * 1024;
-	private static final int BUFFER_SIZE = BUFFER_SIZE_BYTES << 2;
+	private static final int BUFFER_SIZE = BUFFER_SIZE_BYTES >> 2;
 
 	private int handle;
 	private int vertices = 0;
@@ -90,14 +90,15 @@ public class ChunkRendererVBO implements IChunkRenderer {
 	public void render(int handle) {		
 		GL15.glBindBuffer(GL15.GL_ARRAY_BUFFER, handle);
 		
-		int stride = (3+4+3+2) << 2;
-		
 		// Foku this shit, OpenGL doc sucks
-		// floats per vertex; type; stride (bytes); offset (bytes)
+		// data per vertex, type, stride (bytes), offset (bytes)
+		
+		int stride = 12 << 2;
+		
 		GL11.glVertexPointer(3, GL11.GL_FLOAT, stride, 0);
-		GL11.glColorPointer(4, GL11.GL_FLOAT, stride, (3 * 1) << 2);
-		GL11.glNormalPointer(GL11.GL_FLOAT, stride, (3 + 4) << 2);
-		GL11.glTexCoordPointer(2, GL11.GL_FLOAT, stride, (3 + 4 + 3) << 2);
+		GL11.glColorPointer(4, GL11.GL_FLOAT, stride, 3 << 2);
+		GL11.glNormalPointer(GL11.GL_FLOAT, stride, 7 << 2);
+		GL11.glTexCoordPointer(2, GL11.GL_FLOAT, stride, 10 << 2);
 		
 		GL11.glDrawArrays(GL11.GL_QUADS, 0, this.vertexCounts.get(handle));
 	}
@@ -185,17 +186,11 @@ public class ChunkRendererVBO implements IChunkRenderer {
 	@Override
 	public void beforeBuilding() {
 		GL11.glEnableClientState(GL11.GL_VERTEX_ARRAY);
-		GL11.glEnableClientState(GL11.GL_COLOR_ARRAY);
-		GL11.glEnableClientState(GL11.GL_TEXTURE_COORD_ARRAY);
-		GL11.glEnableClientState(GL11.GL_NORMAL_ARRAY);
 	}
 
 	@Override
 	public void afterBuilding() {
 		GL11.glDisableClientState(GL11.GL_VERTEX_ARRAY);
-		GL11.glDisableClientState(GL11.GL_COLOR_ARRAY);
-		GL11.glDisableClientState(GL11.GL_TEXTURE_COORD_ARRAY);
-		GL11.glDisableClientState(GL11.GL_NORMAL_ARRAY);
 	}
 
 }
