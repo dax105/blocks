@@ -1,4 +1,4 @@
-package dax.blocks.item.stack;
+package dax.blocks.inventory;
 
 import dax.blocks.world.World;
 
@@ -9,6 +9,9 @@ public interface IObjectStack {
 	public String getShowedDescription();
 	public int getCurrentItemsCount();
 	public void setCurrentItemsCount(int count) throws IllegalArgumentException;
+	
+	public void notifyDeletion();
+	
 	public boolean addItem();
 	public boolean removeItem();
 	public boolean shouldRecycle();

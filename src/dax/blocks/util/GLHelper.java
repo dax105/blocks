@@ -1,5 +1,6 @@
 package dax.blocks.util;
 
+import java.awt.Color;
 import java.nio.FloatBuffer;
 
 import org.lwjgl.BufferUtils;
@@ -246,6 +247,11 @@ public class GLHelper {
 	public static void drawRectangle(float r, float g, float b, float x1, float x2, 
 			float y1, float y2) {
 		GLHelper.drawRectangle(r, g, b, 1, x1, x2, y1, y2);
+	}
+	
+	public static void drawRectangle(int color, float x1, float x2, float y1, float y2) {
+		Color c = GameUtil.getColorFromInt(color);
+		GLHelper.drawRectangle(c.getRed(), c.getGreen(), c.getBlue(), c.getAlpha(), x1, x2, y1, y2);
 	}
 	
 	public static void updateFiltering(boolean linear) {
