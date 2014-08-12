@@ -1,4 +1,4 @@
-package dax.blocks;
+package dax.blocks.overlay;
 
 import java.util.Locale;
 
@@ -6,6 +6,8 @@ import org.lwjgl.opengl.Display;
 import org.lwjgl.opengl.GL11;
 import org.newdawn.slick.TrueTypeFont;
 
+import dax.blocks.FontManager;
+import dax.blocks.Game;
 import dax.blocks.profiler.Profiler;
 import dax.blocks.profiler.Section;
 import dax.blocks.render.IOverlayRenderer;
@@ -87,7 +89,7 @@ public class InfoOverlay implements IOverlayRenderer {
 		long allocatedMemory = runtime.totalMemory();
 		long freeMemory = runtime.freeMemory();
 
-		String fpsString = "FPS: " + game.fps + ", " + game.ticksString;
+		String fpsString = "FPS: " + game.getFPS() + ", Ticks: " + game.getTPS();
 		int stringWidth = font.getWidth(fpsString);
 		font.drawString(Settings.getInstance().windowWidth.getValue() - stringWidth - 2, font.getHeight() * 2,
 				fpsString);
