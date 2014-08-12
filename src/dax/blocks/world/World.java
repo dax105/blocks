@@ -345,12 +345,43 @@ public class World implements ITickListener {
 			_z1 += zm;
 		}
 
-		int x0 = (int) (_x0 - 1.0F);
-		int x1 = (int) (_x1 + 1.0F);
-		int y0 = (int) (_y0 - 1.0F);
-		int y1 = (int) (_y1 + 1.0F);
-		int z0 = (int) (_z0 - 1.0F);
-		int z1 = (int) (_z1 + 1.0F);
+		int x0 = (int) _x0;
+		int x1 = (int) _x1;
+		int y0 = (int) _y0;
+		int y1 = (int) _y1;
+		int z0 = (int) _z0;
+		int z1 = (int) _z1;
+		
+		if (x0 <= 0) {
+			x0--;
+		}
+		
+		if (y0 <= 0) {
+			y0--;
+		}
+		
+		if (z0 <= 0) {
+			z0--;
+		}
+		
+		if (x1 >= 0) {
+			x1++;
+		}
+		
+		if (y1 >= 0) {
+			y1++;
+		}
+		
+		if (z1 >= 0) {
+			z1++;
+		}
+		
+		//int x0 = (int) (_x0 - 1.0F);
+		//int x1 = (int) (_x1 + 1.0F);
+		//int y0 = (int) (_y0 - 1.0F);
+		//int y1 = (int) (_y1 + 1.0F);
+		//int z0 = (int) (_z0 - 1.0F);
+		//int z1 = (int) (_z1 + 1.0F);
 
 		for (int x = x0; x < x1; ++x) {
 			for (int y = y0; y < y1; ++y) {
