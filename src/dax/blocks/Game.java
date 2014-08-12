@@ -23,6 +23,7 @@ import dax.blocks.gui.GuiScreenMainMenu;
 import dax.blocks.gui.GuiScreenMenu;
 import dax.blocks.gui.ingame.GuiManager;
 import dax.blocks.model.ModelManager;
+import dax.blocks.overlay.OverlayManager;
 import dax.blocks.profiler.Profiler;
 import dax.blocks.render.ChunkRendererDisplayList;
 import dax.blocks.render.IChunkRenderer;
@@ -51,15 +52,14 @@ public class Game implements Runnable {
 	private static final int TPS = 20;
 	private static final double TICK_TIME = 1.0D / TPS;
 	private int ticks = 0;
+	private int lastTPS = 0;
 	String ticksString = "N/A";
 
 	private float animationProgress = 0;
 	private float lastProgress = 0;
-	long lastFrame;
 	private int fpsCounter;
-	int fps = 0;
+	private int fps = 0;
 	private long lastFPS;
-	int vertices = 0;
 	private float lastFov = 0;
 
 	private String loginString = "Unlogged";
@@ -136,7 +136,7 @@ public class Game implements Runnable {
 
 			if (time - lastInfo >= 1000000000) {
 				lastInfo += 1000000000;
-				this.ticksString = "Ticks: " + ticks;
+				this.lastTPS = this.ticks;
 				this.ticks = 0;
 				SoundManager.getInstance().updatePlaying();
 				SoundManager.getInstance().getMusicProvider().updateMusic();
@@ -486,6 +486,14 @@ public class Game implements Runnable {
 		this.fpsCounter++;
 	}
 
+	public int getTPS() {
+		return this.lastTPS;
+	}
+	
+	public int getFPS() {
+		return this.fps;
+	}
+	
 	public void toggleFullscreen() {
 		Settings.getInstance().fullscreen
 				.setValue(!Settings.getInstance().fullscreen.getValue());

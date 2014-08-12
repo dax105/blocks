@@ -7,7 +7,7 @@ import java.util.List;
 import java.util.logging.Logger;
 
 import dax.blocks.Game;
-import dax.blocks.InfoOverlay;
+import dax.blocks.overlay.InfoOverlay;
 import dax.blocks.render.RenderEngine;
 import dax.blocks.settings.Settings;
 import dax.blocks.util.GLHelper;
