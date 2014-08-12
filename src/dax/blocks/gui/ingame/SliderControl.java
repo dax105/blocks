@@ -15,11 +15,12 @@ public class SliderControl extends Control {
 	private float actualValue;
 	private Color backgroundColor;
 	private Color sliderColor;
-	private boolean horizontal = false;
+	private boolean horizontal = true;
 	private int sliderSize = 5;
 	private Rectangle sliderRectangle;
 
 	private boolean isHovered = false;
+	private int lastC = 0;
 	private boolean isMouseDown = false;
 	
 	public SliderControl(int relativeX, int relativeY, int width, int height,
@@ -94,7 +95,22 @@ public class SliderControl extends Control {
 
 	private void updateMouse(int mX, int mY) {
 		boolean mouseDown = Mouse.isButtonDown(0);
+		if(mouseDown && !this.isMouseDown) {
+			this.isMouseDown = true;
+			this.lastC = (this.horizontal ? mX : mY);
+			//return;
+		}
 		
+		if(mouseDown && this.isMouseDown) {
+			int dif = (this.horizontal ? mX : mY) - this.lastC;
+			this.actualValue += dif / (super.rectangle.getWidth() - this.sliderSize);
+			this.lastC = (this.horizontal ? mX : mY);
+			return;
+		}
+		
+		if(!mouseDown && this.isMouseDown) {
+			this.isMouseDown = false;
+		}
 	}
 	
 	private void updateSliderRectangle() {
