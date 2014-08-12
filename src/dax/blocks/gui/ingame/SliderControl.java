@@ -1,5 +1,6 @@
 package dax.blocks.gui.ingame;
 
+import dax.blocks.gui.GuiObjectSlider;
 import dax.blocks.util.GLHelper;
 import dax.blocks.util.Rectangle;
 
@@ -22,6 +23,7 @@ public class SliderControl extends Control {
 		this.backgroundColor = backColor;
 		this.sliderColor = sliderColor;
 		this.sliderRectangle = new Rectangle(0, 0, 0, 0);
+		this.actualValue = 0.5f;
 	}
 	
 	public void setHorizontal(boolean isHorizontal) {
@@ -48,12 +50,14 @@ public class SliderControl extends Control {
 	}
 
 	private void updateSliderRectangle() {
-		int usefulSize = horizontal ? super.rectangle.getWidth() - this.sliderWidth : 
-			super.rectangle.getHeight() - this.sliderWidth;
-		int sliderCenter = (int)(usefulSize * (this.actualValue / 100));
-		this.sliderRectangle.set(horizontal ? this.sliderWidth / 2 + sliderCenter : this.rectangle.getWidth() / 2,
-				horizontal ? this.rectangle.getHeight() / 2 : this.sliderWidth / 2 - sliderCenter, 
-				horizontal ? this.sliderWidth : this.rectangle.getWidth(), 
-						horizontal ? this.rectangle.getHeight() : this.sliderWidth);
+		
+		float val = this.actualValue;
+		
+		int minPos = super.rectangle.getX();
+		int maxPos = super.rectangle.getTopRight();
+		int diff = maxPos - minPos - this.sliderWidth;
+		int offset = (int) Math.round(diff * val);
+		
+		this.sliderRectangle.set(minPos+offset, super.rectangle.getY(), this.sliderWidth, super.rectangle.getHeight());
 	}
 }
