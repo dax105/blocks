@@ -1,7 +1,5 @@
 package dax.blocks.render;
 
-import java.nio.ByteBuffer;
-import java.nio.ByteOrder;
 import java.nio.FloatBuffer;
 import java.util.HashMap;
 import java.util.Map;
@@ -13,7 +11,9 @@ import dax.blocks.settings.Settings;
 
 public class ChunkRendererVBO implements IChunkRenderer {
 
-	private static final int BUFFER_SIZE = 4194304;
+	private static final int BUFFER_SIZE_MEGS = 8;
+	private static final int BUFFER_SIZE_BYTES = BUFFER_SIZE_MEGS * 1024 * 1024;
+	private static final int BUFFER_SIZE = BUFFER_SIZE_BYTES << 2;
 
 	private int handle;
 	private int vertices = 0;
@@ -50,12 +50,12 @@ public class ChunkRendererVBO implements IChunkRenderer {
 	    GL15.glBindBuffer(GL15.GL_ARRAY_BUFFER, this.handle);
 	    GL15.glBufferData(GL15.GL_ARRAY_BUFFER, this.drawBuffer, GL15.GL_STATIC_DRAW);
 	    
-	    this.drawBuffer.clear();
-		
 		this.vertexCounts.put(this.handle, this.vertices);
 	}
 	
 	private void reset() {
+	    this.drawBuffer.clear();
+		
 		this.handle = 0;
 		this.vertices = 0;
 		
