@@ -13,7 +13,7 @@ public class SliderControl extends Control {
 	private float actualValue;
 	private Color backgroundColor;
 	private Color sliderColor;
-	private boolean horizontal = false;
+	private boolean horizontal = true;
 	private int sliderSize = 0;
 	private Rectangle sliderRectangle;
 	private ISliderUpdateCallback callback;
@@ -23,6 +23,7 @@ public class SliderControl extends Control {
 			GuiScreen screen) {
 		this(screen.getWidth() - 20, 5, 10, screen.getHeight() - 10,
 				0xFFC0C0C0, 0x90000000, 5, iSliderUpdateCallback, screen);
+		this.setHorizontal(false);
 	}
 
 	public SliderControl(int relativeX, int relativeY, int width, int height,
@@ -42,6 +43,18 @@ public class SliderControl extends Control {
 		this.actualValue = 0.5f;
 		this.sliderSize = sliderSize;
 		this.callback = updateCallback;
+	}
+
+	public void setUpdateCallback(ISliderUpdateCallback c) {
+		this.callback = c;
+	}
+
+	public void setBackgroundColor(Color c) {
+		this.backgroundColor = c;
+	}
+
+	public void setSliderColor(Color c) {
+		this.sliderColor = c;
 	}
 
 	public void setSliderSize(int size) {
@@ -80,7 +93,9 @@ public class SliderControl extends Control {
 		int mouseX = Mouse.getX();
 		int mouseY = CoordUtil.getProperMouseY(Mouse.getY());
 
-		this.updateMouse(mouseX, mouseY);
+		if(super.rectangle.isInRectangle(new Coord2D(mouseX, mouseY))) {
+			this.updateMouse(mouseX, mouseY);
+		}
 		this.updateSliderRectangle();
 	}
 

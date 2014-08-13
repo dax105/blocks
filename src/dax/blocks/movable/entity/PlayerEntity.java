@@ -110,28 +110,27 @@ public class PlayerEntity extends Entity implements IOverlayRenderer {
 
 				if(Mouse.getEventButtonState()) {
 
-					if(Mouse.getEventButton() == 0
-							&& Keyconfig.isDown(Keyconfig.crouch)) {
+					if(Keyconfig.isDown(Keyconfig.crouch)) {
+						
 						if(hasSelected) {
-							this.inHand.useItem(0, this.lookingAtX,
-									this.lookingAtY, this.lookingAtZ, 0,
-									this.world);
-
 							this.world.getBlockObject(this.lookingAtX,
 									this.lookingAtY, this.lookingAtZ).onClick(
-									0, this.lookingAtX, this.lookingAtY,
+									Mouse.getEventButton(), this.lookingAtX, this.lookingAtY,
 									this.lookingAtZ, world);
 
+						} else {
+							this.inHand.useItem(Mouse.getEventButton(), this.lookingAtX,
+									this.lookingAtY, this.lookingAtZ, 0,
+									this.world);
 						}
+						
 					} else if(Mouse.getEventButton() == 0) {
 						if(this.hasSelected) {
 							this.world.setBlock(this.lookingAtX,
 									this.lookingAtY, this.lookingAtZ, 0, true,
 									true);
 						}
-					}
-
-					if(Mouse.getEventButton() == 1) {
+					} else if(Mouse.getEventButton() == 1) {
 						if(this.hasSelected
 								&& (this.lookingAtX != this.placesAtX
 										|| this.lookingAtY != this.placesAtY || this.lookingAtZ != this.placesAtZ)) {

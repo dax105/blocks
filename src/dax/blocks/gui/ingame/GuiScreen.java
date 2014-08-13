@@ -3,6 +3,8 @@ package dax.blocks.gui.ingame;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.newdawn.slick.Color;
+
 import dax.blocks.render.IOverlayRenderer;
 import dax.blocks.render.ITickListener;
 import dax.blocks.util.Coord2D;
@@ -12,7 +14,7 @@ import dax.blocks.util.GLHelper;
 public abstract class GuiScreen implements ITickListener, IOverlayRenderer {
 
 	private int x, y, width, height;
-	private float backColorR, backColorG, backColorB, backColorA;
+	private Color backColor;
 	private GuiManager guiManager;
 	private boolean isInCenter = false;
 	private List<Control> controls;
@@ -39,10 +41,7 @@ public abstract class GuiScreen implements ITickListener, IOverlayRenderer {
 		this.y = y;
 		this.width = width;
 		this.height = height;
-		this.backColorR = r;
-		this.backColorG = g;
-		this.backColorB = b;
-		this.backColorA = a;
+		this.backColor = new Color(r, g, b, a);
 		this.guiManager = guiManager;
 		this.controls = new ArrayList<Control>();
 	}
@@ -75,8 +74,8 @@ public abstract class GuiScreen implements ITickListener, IOverlayRenderer {
 	
 	@Override
 	public void renderOverlay(float partialTickTime) {
-		GLHelper.drawRectangle(this.backColorR, this.backColorG,
-				this.backColorB, this.backColorA, this.x, this.x + this.width,
+		GLHelper.drawRectangle(this.backColor.r, this.backColor.g,
+				this.backColor.b, this.backColor.a, this.x, this.x + this.width,
 				this.y, this.y + this.height);
 		
 		for(Control c : this.controls) {
@@ -121,36 +120,16 @@ public abstract class GuiScreen implements ITickListener, IOverlayRenderer {
 		this.height = height;
 	}
 
-	public float getBackColorR() {
-		return this.backColorR;
+	public void setColor(float r, float g, float b) {
+		this.backColor = new Color(r, g, b, 1f);
 	}
-
-	public void setBackColorR(float backColorR) {
-		this.backColorR = backColorR;
+	
+	public void setColor(int color) {
+		this.backColor = new Color(color);
 	}
-
-	public float getBackColorG() {
-		return this.backColorG;
-	}
-
-	public void setBackColorG(float backColorG) {
-		this.backColorG = backColorG;
-	}
-
-	public float getBackColorB() {
-		return this.backColorB;
-	}
-
-	public void setBackColorB(float backColorB) {
-		this.backColorB = backColorB;
-	}
-
-	public float getBackColorA() {
-		return this.backColorA;
-	}
-
-	public void setBackColorA(float backColorA) {
-		this.backColorA = backColorA;
+	
+	public Color getColor() {
+		return this.backColor;
 	}
 
 	public int getX() {
