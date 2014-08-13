@@ -175,14 +175,11 @@ public class World implements ITickListener {
 	}
 
 	public void registerNewTickListener(ITickListener l) {
-		if(!this.tickListeners.contains(l)) {
 			this.scheduledTickListenersAdding.add(l);
-		}
 	}
 
 	public void removeTickListener(ITickListener l) {
-		if(this.tickListeners.contains(l)
-				&& !this.scheduledTickListenersRemoval.contains(l)) {
+		if(!this.scheduledTickListenersRemoval.contains(l)) {
 			this.scheduledTickListenersRemoval.add(l);
 		}
 	}

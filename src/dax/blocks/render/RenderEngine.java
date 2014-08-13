@@ -638,15 +638,11 @@ public class RenderEngine {
 
 
 	public void registerNewRenderable(IWorldRenderer r) {
-		if(!this.renderables.contains(r)) {
-			this.renderablesToAdd.add(r);
-		}
+			this.renderablesToAdd.add(r);		
 	}
 	
 	public void removeRenderable(IWorldRenderer r) {
-		if(this.renderables.contains(r)) {
 			this.renderablesToRemove.add(r);
-		}
 	}
 	
 	public void updateRenderables(float ptt) {
