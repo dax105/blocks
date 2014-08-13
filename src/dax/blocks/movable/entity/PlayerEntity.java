@@ -33,7 +33,7 @@ public class PlayerEntity extends Entity implements IOverlayRenderer {
 
 	private IObjectStack inHand;
 	private BasicLifesOverlay lifesOverlay;
-	
+
 	private int lookingAtX;
 	private int lookingAtY;
 	private int lookingAtZ;
@@ -67,8 +67,10 @@ public class PlayerEntity extends Entity implements IOverlayRenderer {
 		super(world, x, y, z);
 		this.setSelectedBlockID(1);
 		this.bb = new AABB(this.posX - PlayerEntity.PLAYER_SIZE / 2, this.posY,
-				this.posZ - PlayerEntity.PLAYER_SIZE / 2, this.posX + PlayerEntity.PLAYER_SIZE / 2, this.posY
-						+ PlayerEntity.PLAYER_HEIGHT, this.posZ + PlayerEntity.PLAYER_SIZE / 2);
+				this.posZ - PlayerEntity.PLAYER_SIZE / 2, this.posX
+						+ PlayerEntity.PLAYER_SIZE / 2, this.posY
+						+ PlayerEntity.PLAYER_HEIGHT, this.posZ
+						+ PlayerEntity.PLAYER_SIZE / 2);
 		this.updateOverlay();
 	}
 
@@ -87,7 +89,8 @@ public class PlayerEntity extends Entity implements IOverlayRenderer {
 
 		if(Keyboard.isKeyDown(Keyconfig.explosion)) {
 			if(this.hasSelected) {
-				Explosion.explode(this.world, this.lookingAtX, this.lookingAtY, this.lookingAtZ);
+				Explosion.explode(this.world, this.lookingAtX, this.lookingAtY,
+						this.lookingAtZ);
 			}
 		}
 
@@ -95,73 +98,78 @@ public class PlayerEntity extends Entity implements IOverlayRenderer {
 			if(this.hasSelected) {
 				for(int i = 0; i < 50; i++) {
 					this.world.spawnParticleWithRandomDirectionFast(
-							this.lookingAtX,
-							this.lookingAtY + 1, 
-							this.lookingAtZ,
-							this.rand.nextInt(10), 0.3f
-					);
+							this.lookingAtX, this.lookingAtY + 1,
+							this.lookingAtZ, this.rand.nextInt(10), 0.3f);
 				}
 			}
 		}
 
 		while(Mouse.next()) {
-			
+
 			if(Mouse.isGrabbed()) {
-				
+
 				if(Mouse.getEventButtonState()) {
-					
+
 					if(Mouse.getEventButton() == 0
 							&& Keyconfig.isDown(Keyconfig.crouch)) {
 						if(hasSelected) {
-							this.inHand.useItem(0, this.lookingAtX, this.lookingAtY, this.lookingAtZ, 0, this.world);
-							
-							this.world.getBlockObject(this.lookingAtX, this.lookingAtY, this.lookingAtZ)
-								.onClick(0, this.lookingAtX, this.lookingAtY, this.lookingAtZ, world);
-							
+							this.inHand.useItem(0, this.lookingAtX,
+									this.lookingAtY, this.lookingAtZ, 0,
+									this.world);
+
+							this.world.getBlockObject(this.lookingAtX,
+									this.lookingAtY, this.lookingAtZ).onClick(
+									0, this.lookingAtX, this.lookingAtY,
+									this.lookingAtZ, world);
+
 						}
 					} else if(Mouse.getEventButton() == 0) {
 						if(this.hasSelected) {
-							this.world.setBlock(this.lookingAtX, this.lookingAtY, this.lookingAtZ,
-									0, true, true);
-						}
-					} 
-
-					if(Mouse.getEventButton() == 1) {
-						if(this.hasSelected	&& (this.lookingAtX != this.placesAtX || 
-									this.lookingAtY != this.placesAtY || this.lookingAtZ != this.placesAtZ)) {
-							this.inHand.useItem(1, this.placesAtX, this.placesAtY, this.placesAtZ, 0, this.world);
+							this.world.setBlock(this.lookingAtX,
+									this.lookingAtY, this.lookingAtZ, 0, true,
+									true);
 						}
 					}
-					
+
+					if(Mouse.getEventButton() == 1) {
+						if(this.hasSelected
+								&& (this.lookingAtX != this.placesAtX
+										|| this.lookingAtY != this.placesAtY || this.lookingAtZ != this.placesAtZ)) {
+							this.inHand.useItem(1, this.placesAtX,
+									this.placesAtY, this.placesAtZ, 0,
+									this.world);
+						}
+					}
+
 				}
 
 				this.updateBlock();
-				
+
 			} else {
 				if(Mouse.getEventButtonState() && Mouse.getEventButton() == 0) {
 					if(GuiManager.getInstance().isOpened())
 						GuiManager.getInstance().checkMouseClosing();
 				}
-				
-			}
-			
-		}
-		
-		if(this.inHand.shouldRecycle()) {
-			this.inHand = new BasicBlockStack(world.getBlockObject(this.inHand.getItemID()), 32);
-		}
-		
 
-		if (!this.wasOnGround && this.onGround) {
+			}
+
+		}
+
+		if(this.inHand.shouldRecycle()) {
+			this.inHand = new BasicBlockStack(world.getBlockObject(this.inHand
+					.getItemID()), 32);
+		}
+
+		if(!this.wasOnGround && this.onGround) {
 
 			Block block = this.standingOn;
 
-			if (block != null) {
+			if(block != null) {
 				SoundManager.getInstance().playSound(block.getFallSound(),
 						0.7f + this.rand.nextFloat() * 0.25f);
 
 				if(this.fallVelocity > 0.7f) {
-					int h = block.getFallHurt() * (int)(this.fallVelocity * 3);
+					int h = block.getFallHurt() * (int) (this.fallVelocity * 3);
 					this.hurt(h);
 				}
 			}
@@ -186,7 +194,7 @@ public class PlayerEntity extends Entity implements IOverlayRenderer {
 		if(!this.alive && !Settings.getInstance().peacefulMode.getValue()) {
 			Game.getInstance().getWorldsManager().exitWorld();
 		}
-		
+
 		this.updateOverlay();
 	}
 
@@ -202,7 +210,8 @@ public class PlayerEntity extends Entity implements IOverlayRenderer {
 			float[][] blocksAround = new float[3][3];
 			for(int x = 0; x < 3; x++) {
 				for(int z = 0; z < 3; z++) {
-					if(this.world.getBlock(blockX + x - 1, blockY, blockZ + z - 1) == 0) {
+					if(this.world.getBlock(blockX + x - 1, blockY, blockZ + z
+							- 1) == 0) {
 						blocksAround[x][z] = -1;
 					} else {
 						float xDist = x - 0.5f;
@@ -274,18 +283,20 @@ public class PlayerEntity extends Entity implements IOverlayRenderer {
 	public void updateOverlay() {
 		int heartsX = 80;
 		int heartsY = Settings.getInstance().windowHeight.getValue() - 43;
-		
+
 		if(this.lifesOverlay == null) {
 			this.lifesOverlay = new BasicLifesOverlay(this, heartsX, heartsY);
-			Game.getInstance().getOverlayManager().addOverlay(this.lifesOverlay);
+			Game.getInstance().getOverlayManager()
+					.addOverlay(this.lifesOverlay);
 		} else {
 			this.lifesOverlay.setPosition(heartsX, heartsY);
 		}
 	}
-	
+
 	@Override
 	public void renderOverlay(float ptt) {
-		this.inHand.renderGUITexture(25, Settings.getInstance().windowHeight.getValue() - 75, 50, 50);
+		this.inHand.renderGUITexture(25,
+				Settings.getInstance().windowHeight.getValue() - 75, 50, 50);
 	}
 
 	@Override
@@ -296,15 +307,18 @@ public class PlayerEntity extends Entity implements IOverlayRenderer {
 		int blockPosY = (int) Math.floor(this.posY);
 		int blockPosZ = (int) Math.floor(this.posZ);
 
-		boolean inWater = ((this.world.getBlockObject(blockPosX, blockPosY, blockPosZ) == IDRegister.water) || 
-				(this.world.getBlockObject(blockPosX, blockPosY + 1, 	blockPosZ) == IDRegister.water));
+		boolean inWater = ((this.world.getBlockObject(blockPosX, blockPosY,
+				blockPosZ) == IDRegister.water) || (this.world.getBlockObject(
+				blockPosX, blockPosY + 1, blockPosZ) == IDRegister.water));
 
-		float d0 = this.world.getBlockObject(blockPosX, blockPosY, blockPosZ) != null ? 
-				this.world.getBlockObject(blockPosX, blockPosY, blockPosZ).getDensity() : 1;
-				
-		float d1 = this.world.getBlockObject(blockPosX, blockPosY + 1, blockPosZ) != null ? 
-				this.world.getBlockObject(blockPosX, blockPosY + 1, blockPosZ).getDensity() : 1;
-				
+		float d0 = this.world.getBlockObject(blockPosX, blockPosY, blockPosZ) != null ? this.world
+				.getBlockObject(blockPosX, blockPosY, blockPosZ).getDensity()
+				: 1;
+
+		float d1 = this.world.getBlockObject(blockPosX, blockPosY + 1,
+				blockPosZ) != null ? this.world.getBlockObject(blockPosX,
+				blockPosY + 1, blockPosZ).getDensity() : 1;
+
 		float density = (d0 + d1) / 2f;
 		float frictionMultipler = 1f / density;
 
@@ -313,37 +327,39 @@ public class PlayerEntity extends Entity implements IOverlayRenderer {
 
 		float multi = 1;
 
-		if(Keyconfig.isDown(Keyconfig.boost)) {
-			multi = 15;
-		}
+		if(!GuiManager.getInstance().isOpened()) {
+			if(Keyconfig.isDown(Keyconfig.boost)) {
+				multi = 15;
+			}
 
-		if(Keyconfig.isDown(Keyconfig.ahead)) {
-			speedC -= this.onGround ? 0.25 * multi : 0.03 * multi;
-		}
+			if(Keyconfig.isDown(Keyconfig.ahead)) {
+				speedC -= this.onGround ? 0.25 * multi : 0.03 * multi;
+			}
 
-		if(Keyconfig.isDown(Keyconfig.back)) {
-		   speedC += this.onGround ? 0.25 * multi : 0.03 * multi;
-		}
+			if(Keyconfig.isDown(Keyconfig.back)) {
+				speedC += this.onGround ? 0.25 * multi : 0.03 * multi;
+			}
 
-		if(Keyconfig.isDown(Keyconfig.left)) {
-		   speedStrafeC -= this.onGround ? 0.25 * multi : 0.03 * multi;
-		}
+			if(Keyconfig.isDown(Keyconfig.left)) {
+				speedStrafeC -= this.onGround ? 0.25 * multi : 0.03 * multi;
+			}
 
-		if(Keyconfig.isDown(Keyconfig.right)) {
-		   speedStrafeC += this.onGround ? 0.25 * multi : 0.03 * multi;
-		}
+			if(Keyconfig.isDown(Keyconfig.right)) {
+				speedStrafeC += this.onGround ? 0.25 * multi : 0.03 * multi;
+			}
 
-		if(Keyconfig.isDown(Keyconfig.jump)) {
-			if(this.onGround) {
-				if(multi == 1) {
-					this.velY += PlayerEntity.JUMP_STRENGTH;
-				} else if(multi > 1) {
-					this.velY += PlayerEntity.JUMP_STRENGTH * 4;
-				} else {
-					this.velY += PlayerEntity.JUMP_STRENGTH * 0.95f;
+			if(Keyconfig.isDown(Keyconfig.jump)) {
+				if(this.onGround) {
+					if(multi == 1) {
+						this.velY += PlayerEntity.JUMP_STRENGTH;
+					} else if(multi > 1) {
+						this.velY += PlayerEntity.JUMP_STRENGTH * 4;
+					} else {
+						this.velY += PlayerEntity.JUMP_STRENGTH * 0.95f;
+					}
+				} else if(!this.onGround && inWater) {
+					this.velY += PlayerEntity.JUMP_STRENGTH / 4;
 				}
-			} else if(!this.onGround && inWater) {
-				this.velY += PlayerEntity.JUMP_STRENGTH / 4;
 			}
 		}
 
@@ -364,14 +380,17 @@ public class PlayerEntity extends Entity implements IOverlayRenderer {
 		this.speedStrafe *= this.onGround ? 0.5f : 0.9f;
 		this.speedStrafe *= frictionMultipler;
 
-		spf = (float) Math.sqrt(this.speed * this.speed + this.speedStrafe * this.speedStrafe);
+		spf = (float) Math.sqrt(this.speed * this.speed + this.speedStrafe
+				* this.speedStrafe);
 
 		this.velY -= World.GRAVITY;
 		this.velY *= frictionMultipler;
 
-		double toMoveZ = (this.posZ + Math.cos(-this.heading / 180 * Math.PI) * this.speed)
+		double toMoveZ = (this.posZ + Math.cos(-this.heading / 180 * Math.PI)
+				* this.speed)
 				+ (Math.cos((-this.heading + 90) / 180 * Math.PI) * this.speedStrafe);
-		double toMoveX = (this.posX + Math.sin(-this.heading / 180 * Math.PI) * this.speed)
+		double toMoveX = (this.posX + Math.sin(-this.heading / 180 * Math.PI)
+				* this.speed)
 				+ (Math.sin((-this.heading + 90) / 180 * Math.PI) * this.speedStrafe);
 		double toMoveY = (this.posY + (this.velY));
 
@@ -384,9 +403,9 @@ public class PlayerEntity extends Entity implements IOverlayRenderer {
 
 		float yab = ya;
 
-		float[] clipped = this.world.clipMovement(this.bb, xa, ya, za);	
+		float[] clipped = this.world.clipMovement(this.bb, xa, ya, za);
 		ya = clipped[1];
-		
+
 		this.onGround = yab != ya && yab < 0.0F;
 
 		if(this.onGround) {
@@ -409,12 +428,13 @@ public class PlayerEntity extends Entity implements IOverlayRenderer {
 
 		if(wh > 0) {
 			int newSelectedBlock = this.inHand.getItemID() + 1;
-			
+
 			if(newSelectedBlock == 18) {
-				this.inHand = new BasicItemStack(IDRegister.itemImaginaryChocolate, 1);
+				this.inHand = new BasicItemStack(
+						IDRegister.itemImaginaryChocolate, 1);
 				return;
 			}
-			
+
 			if(newSelectedBlock > (world.getRegister().getBlockCount())) {
 				newSelectedBlock = 1;
 			}
@@ -447,7 +467,8 @@ public class PlayerEntity extends Entity implements IOverlayRenderer {
 		float ymult = (float) Math.sin((-this.tilt + 90) / 180 * Math.PI);
 
 		float xChange = (float) (Math.cos((-this.heading + 90) / 180 * Math.PI) * ymult);
-		float zChange = (float) (-Math.sin((-this.heading + 90) / 180 * Math.PI) * ymult);
+		float zChange = (float) (-Math
+				.sin((-this.heading + 90) / 180 * Math.PI) * ymult);
 
 		for(float f = 0; f <= reach; f += 0.01f) {
 			xl = xn;
@@ -455,11 +476,12 @@ public class PlayerEntity extends Entity implements IOverlayRenderer {
 			zl = zn;
 
 			xn = (float) (this.getPosX() + f * xChange);
-			yn = (float) (this.getPosY() + PlayerEntity.EYES_HEIGHT + f * yChange);
+			yn = (float) (this.getPosY() + PlayerEntity.EYES_HEIGHT + f
+					* yChange);
 			zn = (float) (this.getPosZ() + f * zChange);
 
-			if(this.getWorld().getBlock((int) Math.floor(xn), (int) Math.floor(yn),
-					(int) Math.floor(zn)) > 0) {
+			if(this.getWorld().getBlock((int) Math.floor(xn),
+					(int) Math.floor(yn), (int) Math.floor(zn)) > 0) {
 				this.lookingAtX = (int) Math.floor(xn);
 				this.lookingAtY = (int) Math.floor(yn);
 				this.lookingAtZ = (int) Math.floor(zn);
@@ -480,8 +502,10 @@ public class PlayerEntity extends Entity implements IOverlayRenderer {
 	public void setPosition(float x, float y, float z) {
 		super.setPosition(x, y, z);
 		this.bb = new AABB(this.posX - PlayerEntity.PLAYER_SIZE / 2, this.posY,
-				this.posZ - PlayerEntity.PLAYER_SIZE / 2, this.posX + PlayerEntity.PLAYER_SIZE / 2, this.posY
-						+ PlayerEntity.PLAYER_HEIGHT, this.posZ + PlayerEntity.PLAYER_SIZE / 2);
+				this.posZ - PlayerEntity.PLAYER_SIZE / 2, this.posX
+						+ PlayerEntity.PLAYER_SIZE / 2, this.posY
+						+ PlayerEntity.PLAYER_HEIGHT, this.posZ
+						+ PlayerEntity.PLAYER_SIZE / 2);
 	}
 
 	public int getSelectedBlockID() {
@@ -489,7 +513,8 @@ public class PlayerEntity extends Entity implements IOverlayRenderer {
 	}
 
 	public void setSelectedBlockID(int selectedBlockID) {
-		this.inHand = new BasicBlockStack(world.getBlockObject(selectedBlockID), 32);
+		this.inHand = new BasicBlockStack(
+				world.getBlockObject(selectedBlockID), 32);
 	}
 
 	public float getHeading() {

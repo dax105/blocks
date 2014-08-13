@@ -3,6 +3,7 @@ package dax.blocks.item;
 import dax.blocks.TextureManager;
 import dax.blocks.gui.ingame.GuiManager;
 import dax.blocks.gui.ingame.GuiScreen;
+import dax.blocks.gui.ingame.ISliderUpdateCallback;
 import dax.blocks.gui.ingame.SliderControl;
 import dax.blocks.sound.SoundManager;
 import dax.blocks.world.IDRegister;
@@ -33,7 +34,15 @@ public class ItemImaginaryChocolate extends Item {
 
 			@Override
 			public void onOpening() {
-				this.addControl(new SliderControl(10, 10, 80, 80, 10, this));
+				
+				this.addControl(new SliderControl(new ISliderUpdateCallback() {
+
+					@Override
+					public void onUpdate(SliderControl caller, float value) {
+						System.out.println(caller.toString() + ": " + value);
+					}
+				}, this));
+				
 			}
 
 			@Override
