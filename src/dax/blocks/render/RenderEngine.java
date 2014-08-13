@@ -1,7 +1,6 @@
 package dax.blocks.render;
 
 import java.nio.FloatBuffer;
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -14,7 +13,6 @@ import org.lwjgl.opengl.ARBVertexShader;
 import org.lwjgl.opengl.Display;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL20;
-import org.lwjgl.util.glu.GLU;
 
 import dax.blocks.Game;
 import dax.blocks.Particle;
@@ -22,7 +20,6 @@ import dax.blocks.TextureManager;
 import dax.blocks.block.Block;
 import dax.blocks.console.CommandCullLock;
 import dax.blocks.console.Console;
-import dax.blocks.model.ModelManager;
 import dax.blocks.movable.entity.PlayerEntity;
 import dax.blocks.settings.Settings;
 import dax.blocks.util.Coord2D;

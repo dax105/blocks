@@ -1,6 +1,5 @@
 package dax.blocks.util;
 
-import java.awt.Color;
 import java.awt.image.BufferedImage;
 import java.io.BufferedReader;
 import java.io.File;
@@ -24,15 +23,6 @@ import dax.blocks.settings.ObjectType;
 
 public class GameUtil {
 
-	public static Color getColorFromInt(int col) {
-		int b = (col) & 0xFF;
-		int g = (col >> 8) & 0xFF;
-		int r = (col >> 16) & 0xFF;
-		int a = (col >> 24) & 0xFF;
-		Color color = new Color(r, g, b, a);
-		return color;
-	}
-	
 	public static boolean deleteDirectory(File directory) {
 		if(directory.exists()) {
 			File[] files = directory.listFiles();

@@ -3,7 +3,10 @@ package dax.blocks.gui;
 import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.Display;
 import org.lwjgl.opengl.GL11;
+import org.newdawn.slick.Color;
 import org.newdawn.slick.Font;
+
+import dax.blocks.util.GLHelper;
 
 public class GuiObjectSlider extends GuiObject {
 
@@ -30,6 +33,11 @@ public class GuiObjectSlider extends GuiObject {
 	protected boolean pressed = false;
 	protected boolean wasPressed = false;
 	protected boolean lock = false;
+	
+	protected Color c1 = new Color(0xFF8C8C8C);
+	protected Color c2 = new Color(0xFF404040);
+	protected Color c3 = new Color(0xFF6E6E6E);
+	protected Color c4 = new Color(0xA0FFFFFF);
 
 	public GuiObjectSlider(int x1, int y1, int x2, int y2, Font font, String formatString, int id, GuiScreen parent, float minVal, float maxVal, float val) {
 		this.x1 = x1;
@@ -47,22 +55,17 @@ public class GuiObjectSlider extends GuiObject {
 
 	@Override
 	public void render() {
-		this.drawRect(this.x1, this.y1, this.x2, this.y2, 0xFF8C8C8C);
-		this.drawRect(this.x1 + 2, this.y1 + 2, this.x2 - 2, this.y2 - 2, 0xFF404040);
+		GLHelper.drawRectangle(this.c1, this.x1, this.x2, this.y1, this.y2);
+		GLHelper.drawRectangle(this.c2, this.x1 + 2, this.x2 - 2, this.y1 + 2, this.y2 - 2);
 		
 		int x = this.x1 + GuiObjectSlider.SLIDER_WIDTH / 2 + 2 + 
 			(int)Math.round(
-				((float)(this.val - this.minVal) / (this.maxVal - this.minVal)) * 
-				((this.x2 - this.x1) - GuiObjectSlider.SLIDER_WIDTH - 4)
+					((float)(this.val - this.minVal) / (this.maxVal - this.minVal)) * 
+					((x2 - x1) - GuiObjectSlider.SLIDER_WIDTH - 4)
 			);
 		
-		this.drawRect(
-				x - GuiObjectSlider.SLIDER_WIDTH / 2 , 
-				this.y1 + 2, 
-				x + GuiObjectSlider.SLIDER_WIDTH / 2 , 
-				this.y2 - 2, 
-				0xFF6E6E6E
-		);
+		GLHelper.drawRectangle(this.c3, x - GuiObjectSlider.SLIDER_WIDTH / 2,
+				x + GuiObjectSlider.SLIDER_WIDTH / 2, this.y1 + 2, this.y2 - 2);
 		
 		GL11.glEnable(GL11.GL_TEXTURE_2D);
 		
@@ -75,13 +78,8 @@ public class GuiObjectSlider extends GuiObject {
 		
 		GL11.glDisable(GL11.GL_TEXTURE_2D);
 		if(this.hover) {
-			this.drawRect(
-					x - GuiObjectSlider.SLIDER_WIDTH / 2, 
-					this.y1 + 2, 
-					x + GuiObjectSlider.SLIDER_WIDTH / 2, 
-					this.y2 - 2, 
-					0xA0FFFFFF
-			);
+			GLHelper.drawRectangle(this.c4, x - GuiObjectSlider.SLIDER_WIDTH / 2,
+					x + GuiObjectSlider.SLIDER_WIDTH / 2, this.y1 + 2, this.y2 - 2);
 		}
 	}
 

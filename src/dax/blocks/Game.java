@@ -17,7 +17,6 @@ import org.newdawn.slick.TrueTypeFont;
 
 import dax.blocks.auth.AuthManager;
 import dax.blocks.console.Console;
-import dax.blocks.gui.GuiObjectBlank;
 import dax.blocks.gui.GuiScreen;
 import dax.blocks.gui.GuiScreenLoading;
 import dax.blocks.gui.GuiScreenMainMenu;
@@ -26,8 +25,6 @@ import dax.blocks.gui.ingame.GuiManager;
 import dax.blocks.model.ModelManager;
 import dax.blocks.overlay.OverlayManager;
 import dax.blocks.profiler.Profiler;
-import dax.blocks.render.ChunkRendererDisplayList;
-import dax.blocks.render.ChunkRendererMappedVBO;
 import dax.blocks.render.ChunkRendererVBO;
 import dax.blocks.render.IChunkRenderer;
 import dax.blocks.settings.Keyconfig;
@@ -393,6 +390,9 @@ public class Game implements Runnable {
 			}
 		}
 	}
+	
+	private Color consoleC1 = new Color(0xD0000000);
+	private Color consoleC2 = new Color(0x500030A0);
 
 	public void renderConsole(float ptt) {
 		GL11.glPushMatrix();
@@ -405,12 +405,13 @@ public class Game implements Runnable {
 		GL11.glTranslatef(0, -((1 - lerp) * cHeight), 0);
 
 		if (this.lastProgress > 0) {
-			GuiObjectBlank gui = new GuiObjectBlank();
-			gui.drawRect(0, 0, Settings.getInstance().windowWidth.getValue(),
-					cHeight, 0xD0000000);
-			gui.drawRect(0, cHeight - this.font.getLineHeight(),
-					Settings.getInstance().windowWidth.getValue(), cHeight,
-					0x500030A0);
+			GLHelper.drawRectangle(this.consoleC1, 0,
+					Settings.getInstance().windowWidth.getValue(), 0, cHeight);
+			
+			GLHelper.drawRectangle(this.consoleC2, 0,
+					Settings.getInstance().windowWidth.getValue(), cHeight - this.font.getLineHeight(), cHeight);
+			
+			
 			GL11.glEnable(GL11.GL_TEXTURE_2D);
 			String cursor = (this.ticks % Game.TPS >= Game.TPS / 2) ? "_" : "";
 			this.font.drawString(0, cHeight - this.font.getLineHeight(), "> "

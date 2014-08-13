@@ -3,7 +3,10 @@ package dax.blocks.gui;
 import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.Display;
 import org.lwjgl.opengl.GL11;
+import org.newdawn.slick.Color;
 import org.newdawn.slick.Font;
+
+import dax.blocks.util.GLHelper;
 
 public class GuiObjectButton extends GuiObject {
 
@@ -20,6 +23,10 @@ public class GuiObjectButton extends GuiObject {
 	private Font font;
 
 	protected boolean hover = false;
+	
+	Color c1 = new Color(0xFF8C8C8C);
+	Color c2 = new Color(0xFF6E6E6E);
+	Color c3 = new Color(0xA0FFFFFF);
 
 	public GuiObjectButton(int x1, int y1, int x2, int y2, Font font, String text, int id, GuiScreen parent) {
 		this.x1 = x1;
@@ -34,8 +41,9 @@ public class GuiObjectButton extends GuiObject {
 
 	@Override
 	public void render() {
-		this.drawRect(x1, y1, x2, y2, 0xFF8C8C8C);
-		this.drawRect(x1 + 2, y1 + 2, x2 - 2, y2 - 2, 0xFF6E6E6E);
+		GLHelper.drawRectangle(c1, x1, x2, y1, y2);
+		GLHelper.drawRectangle(c2, x1 + 2, x2 - 2, y1 + 2, y2 - 2);
+		
 		GL11.glEnable(GL11.GL_TEXTURE_2D);
 		this.font.drawString(
 				x1 + (x2 - x1) / 2 - this.font.getWidth(text) / 2, 
@@ -43,8 +51,9 @@ public class GuiObjectButton extends GuiObject {
 				this.text
 		);
 		GL11.glDisable(GL11.GL_TEXTURE_2D);
+		
 		if(this.hover) {
-			this.drawRect(x1, y1, x2, y2, 0xA0FFFFFF);
+			GLHelper.drawRectangle(c3, x1, x2, y1, y2);
 		}
 	}
 
