@@ -1,6 +1,9 @@
 package dax.blocks.gui.ingame;
 
 import org.newdawn.slick.Color;
+import org.newdawn.slick.TrueTypeFont;
+
+import dax.blocks.FontManager;
 
 public class ColorScreen extends GuiScreen {
 	
@@ -10,11 +13,13 @@ public class ColorScreen extends GuiScreen {
 	private Color mixColor;
 	private final Color sliderBackColor = Color.darkGray;
 	private IColorChangeCallback callback;
+	private TextControl t;
 	
-	public ColorScreen(int width, int height, Color initialColor, IColorChangeCallback callback, GuiManager guiManager) {
-		super(width, height, 1, 1, 1, 0.5f, guiManager);
+	public ColorScreen(Color initialColor, IColorChangeCallback callback, GuiManager guiManager) {
+		super(300, 100, 1, 1, 1, 0.5f, guiManager);
 		this.callback = callback;
 		
+		this.initTitle();
 		this.initSliders();
 		
 		this.r.setValue(initialColor.r);
@@ -28,14 +33,22 @@ public class ColorScreen extends GuiScreen {
 		this.addControl(b);
 	}
 	
+	private void initTitle() {
+		TrueTypeFont f = FontManager.getFont();
+		String title = "Change block color";
+		t = new TextControl((this.getWidth() / 2) - (f.getWidth(title) / 2), 5, f, title, this);
+		
+		this.addControl(t);
+	}
+	
 	private void initSliders() {
 		int x = 5;
-		int xW = super.getWidth() - 2 * x;
-		int hO = super.getHeight() / 6;
+		int fY = this.t.rectangle.getHeight() + 10;
+		int xW = this.getWidth() - 10;
 		
-		this.r = new SliderControl(x, hO, xW, 10, 5, this);
-		this.g = new SliderControl(x, hO * 2, xW, 10, 5, this);
-		this.b = new SliderControl(x, hO * 3, xW, 10, 5, this);
+		this.r = new SliderControl(x, fY, xW, 10, 5, this);
+		this.g = new SliderControl(x, fY + 15, xW, 10, 5, this);
+		this.b = new SliderControl(x, fY + 30, xW, 10, 5, this);
 		
 		ISliderUpdateCallback c = new ISliderUpdateCallback() {
 
@@ -48,6 +61,10 @@ public class ColorScreen extends GuiScreen {
 				} else if(caller == b) {
 					mixColor.b = value;
 				}
+				
+				backColor.r = mixColor.r;
+				backColor.g = mixColor.g;
+				backColor.b = mixColor.b;
 			}
 			
 		};

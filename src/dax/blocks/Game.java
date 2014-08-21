@@ -322,12 +322,10 @@ public class Game implements Runnable {
 		if (this.worldsManager.isInGame()) {
 
 			TextureManager.atlas.bind();
-
 			this.worldsManager.getWorld().getRenderEngine().renderWorld(ptt);
 
 			GLHelper.setOrtho(Settings.getInstance().windowWidth.getValue(),
 					Settings.getInstance().windowHeight.getValue());
-
 			this.getOverlayManager().renderOverlays(ptt);
 
 			this.updateFPS();

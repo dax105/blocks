@@ -18,6 +18,11 @@ public abstract class Control implements ITickListener {
 				width, height);
 	}
 	
+	public void setPosition(int relativeX, int relativeY) {
+		this.rectangle.set(relativeX + screen.getX(), relativeY + screen.getY(),
+				this.rectangle.getWidth(), this.rectangle.getHeight());
+	}
+	
 	@Override
 	public void onTick() {
 		this.rectangle.getPosition().set(screen.getX() + relativeX,

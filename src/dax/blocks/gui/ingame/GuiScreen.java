@@ -13,11 +13,11 @@ import dax.blocks.util.GLHelper;
 
 public abstract class GuiScreen implements ITickListener, IOverlayRenderer {
 
-	private int x, y, width, height;
-	private Color backColor;
-	private GuiManager guiManager;
-	private boolean isInCenter = false;
-	private List<Control> controls;
+	protected int x, y, width, height;
+	protected Color backColor;
+	protected GuiManager guiManager;
+	protected boolean isInCenter = false;
+	protected List<Control> controls;
 
 	public GuiScreen(int x, int y, int width, int height, GuiManager guiManager) {
 		this(x, y, width, height, 1, 1, 1, 0.5f, guiManager);
@@ -56,6 +56,10 @@ public abstract class GuiScreen implements ITickListener, IOverlayRenderer {
 	
 	public void removeControl(Control c) {
 		this.controls.remove(c);
+	}
+	
+	public List<Control> getControls() {
+		return this.controls;
 	}
 	
 	@Override

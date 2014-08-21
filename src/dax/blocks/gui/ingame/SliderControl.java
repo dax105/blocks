@@ -77,7 +77,7 @@ public class SliderControl extends Control {
 		if(value >= 0 && value <= 1) {
 			this.actualValue = value;
 
-			if(doCallback) {
+			if(doCallback && this.callback != null) {
 				this.callback.onUpdate(this, this.actualValue);
 			}
 		}
@@ -116,44 +116,49 @@ public class SliderControl extends Control {
 
 	private void updateMouse(int mX, int mY) {
 		boolean mouseDown = Mouse.isButtonDown(0);
-
+		float newValue = this.actualValue;
+		
+		
 		if(mouseDown) {
 
 			if(this.horizontal) {
 				int width = super.rectangle.getWidth() - this.sliderSize;
 				int clickedX = mX - super.rectangle.getX() - this.sliderSize
 						/ 2 + 1;
-				this.actualValue = ((float) (clickedX) / (float) width);
-				this.actualValue = (float) (0.01 * Math
-						.floor(this.actualValue * 100.0));
+				newValue = ((float) (clickedX) / (float) width);
+				newValue = (float) (0.01 * Math
+						.floor(newValue * 100.0));
 			} else {
 				int width = super.rectangle.getHeight() - this.sliderSize;
 				int clickedY = mY - super.rectangle.getY() - this.sliderSize
 						/ 2 + 1;
-				this.actualValue = ((float) (clickedY / (float) width));
-				this.actualValue = ((float) (0.01 * Math
-						.floor(this.actualValue * 100.0)));
+				newValue = ((float) (clickedY / (float) width));
+				newValue = ((float) (0.01 * Math
+						.floor(newValue * 100.0)));
 			}
 
-			if(this.actualValue > 1) {
-				this.actualValue = 1;
+			if(newValue > 1) {
+				newValue = 1;
 			}
 
-			if(this.actualValue < 0) {
-				this.actualValue = 0;
+			if(newValue < 0) {
+				newValue = 0;
 			}
 
-			this.callback.onUpdate(this, this.actualValue);
+			this.setValue(newValue, true);
 		}
 
 		if(super.rectangle.isInRectangle(new Coord2D(mX, mY))) {
 			int wh = Mouse.getDWheel();
-			if(wh < 0 && this.actualValue < 1) {
-				this.actualValue += 0.05;
-				this.callback.onUpdate(this, this.actualValue);
-			} else if(wh > 0 && this.actualValue > 0) {
-				this.actualValue -= 0.05;
-				this.callback.onUpdate(this, this.actualValue);
+			
+			if(wh < 0 && this.actualValue <= 0.95) {
+				this.setValue(this.actualValue + 0.05f, true);
+			} else if(wh < 0 && this.actualValue > 0.95) {
+				this.setValue(1, this.actualValue != 1);
+			} else if(wh > 0 && this.actualValue >= 0.05f) {
+				this.setValue(this.actualValue - 0.05f, true);
+			} else if(wh > 0 && this.actualValue < 0.05f) {
+				this.setValue(0, this.actualValue != 0);
 			}
 		}
 	}

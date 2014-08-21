@@ -15,7 +15,7 @@ import dax.blocks.world.World;
 
 public class BlockStone extends BlockBasic {
 	Random rnd;
-	Color currentColor = Color.white;
+	Color currentColor = new Color(255, 255, 255, 255);
 	ColorScreen clrScreen;
 	int clrScreenID;
 	
@@ -59,10 +59,12 @@ public class BlockStone extends BlockBasic {
 	@Override
 	public void onClick(int button, int x, int y, int z, World world) {
 		if(clrScreen == null) {
-			clrScreen = new ColorScreen(100, 100, Color.white, new IColorChangeCallback() {
+			clrScreen = new ColorScreen(new Color(255, 255, 255, 255), new IColorChangeCallback() {
 				@Override
 				public void onColorChanged(ColorScreen caller, Color newColor) {
-					currentColor = newColor;
+					currentColor.r = newColor.r;
+					currentColor.g = newColor.g;
+					currentColor.b = newColor.b;
 				}			}, GuiManager.getInstance());
 
 			this.clrScreenID = GuiManager.getInstance().registerNewScreen(clrScreen);
