@@ -13,7 +13,7 @@ public class Particle implements ITickListener, IWorldRenderer {
 	public static final float BOUNCE_MIN = 0.1f;
 	public static final float FRICTION_AIR = 0.985f;
 	public static final float FRICTION_GROUND = 0.75f;
-	public static final float PARTICLE_SIZE = 0.075f;
+	public static final float PARTICLE_SIZE = 0.2f;
 	
 	public final float r;
 	public final float g;
@@ -91,9 +91,6 @@ public class Particle implements ITickListener, IWorldRenderer {
 		
 		if(this.age > this.lifetime) {
 			this.dead = true;
-			this.world.getRenderEngine().removeRenderable(this);
-			this.world.removeTickListener(this);
-			return;
 		}
 		
 		this.velY -= World.GRAVITY;
@@ -155,6 +152,6 @@ public class Particle implements ITickListener, IWorldRenderer {
 	
 	@Override
 	public void renderWorld(float partialTickTime, World world, RenderEngine e) {
-		e.renderParticle(partialTickTime, this);
+
 	}
 }

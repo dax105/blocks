@@ -266,6 +266,8 @@ public class RenderEngine {
 		GL11.glDisable(GL11.GL_TEXTURE_2D);
 
 		this.updateRenderables(ptt);
+		
+		this.renderWorld.getParticleEngine().onRenderTick(ptt);
 
 		this.sEnable(RenderEngine.FLAG_LIGHTING);
 		GL11.glEnable(GL11.GL_LIGHTING);
@@ -604,39 +606,7 @@ public class RenderEngine {
 	public void renderUnlockedBlock(float x, float y, float z, Block block) {
 		// TODO Actually do something here
 	}
-
-	public void renderParticle(float ptt, Particle p) {
-		GL11.glBegin(GL11.GL_QUADS);
-		GL11.glColor4f(p.r, p.g, p.b, 1);
-
-		float h = Particle.PARTICLE_SIZE / 2;
-		float sizemutipler = (h / 1);
-
-		float rightup0p = (this.rightModelviewVec[0] + this.upModelviewVec[0])
-				* sizemutipler;
-		float rightup1p = (this.rightModelviewVec[1] + this.upModelviewVec[1])
-				* sizemutipler;
-		float rightup2p = (this.rightModelviewVec[2] + this.upModelviewVec[2])
-				* sizemutipler;
-		float rightup0n = (this.rightModelviewVec[0] - this.upModelviewVec[0])
-				* sizemutipler;
-		float rightup1n = (this.rightModelviewVec[1] - this.upModelviewVec[1])
-				* sizemutipler;
-		float rightup2n = (this.rightModelviewVec[2] - this.upModelviewVec[2])
-				* sizemutipler;
-
-		float px = p.getPartialX(ptt);
-		float py = p.getPartialY(ptt);
-		float pz = p.getPartialZ(ptt);
-
-		GL11.glVertex3f(px - rightup0p, py - rightup1p, pz - rightup2p);
-		GL11.glVertex3f(px + rightup0n, py + rightup1n, pz + rightup2n);
-		GL11.glVertex3f(px + rightup0p, py + rightup1p, pz + rightup2p);
-		GL11.glVertex3f(px - rightup0n, py - rightup1n, pz - rightup2n);
-		GL11.glEnd();
-	}
-
-
+	
 	public void registerNewRenderable(IWorldRenderer r) {
 			this.renderablesToAdd.add(r);		
 	}
@@ -663,6 +633,14 @@ public class RenderEngine {
 		}
 	}
 
+	public float[] getRightModelviewVec() {
+		return rightModelviewVec;
+	}
+
+	public float[] getUpModelviewVec() {
+		return upModelviewVec;
+	}
+	
 	public void cleanup() {
 		
 	}

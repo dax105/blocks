@@ -50,6 +50,7 @@ public class World implements ITickListener {
 	private IItemDataManager itemDataManager;
 	private IDRegister idRegister;
 	private RenderEngine renderEngine;
+	private ParticleEngine particleEngine;
 
 	public int size;
 	public int sizeBlocks;
@@ -68,6 +69,7 @@ public class World implements ITickListener {
 	public World(String worldName, RenderEngine e) {
 		this.name = worldName;
 		this.renderEngine = e;
+		this.particleEngine = new ParticleEngine(this);
 		e.setWorld(this);
 
 		this.idRegister = new IDRegister(this);
@@ -150,10 +152,9 @@ public class World implements ITickListener {
 				- this.rand.nextFloat() * velFuzziness;
 		float velZ = velhalf - this.rand.nextFloat() * vel
 				- this.rand.nextFloat() * velFuzziness;
-		Particle p = new Particle(this, x, y, z, velX, velY, velZ, 100,
+		Particle p = new Particle(this, x, y, z, velX, velY, velZ, 1000000,
 				rand.nextFloat(), rand.nextFloat(), rand.nextFloat());
-		this.renderEngine.registerNewRenderable(p);
-		this.registerNewTickListener(p);
+		this.particleEngine.addParticle(p);
 	}
 
 	public void spawnParticle(float x, float y, float z) {
@@ -170,8 +171,7 @@ public class World implements ITickListener {
 		Particle p = new Particle(this, x, y, z, velX, velY, velZ,
 				50 + rand.nextInt(20), rand.nextFloat(), rand.nextFloat(),
 				rand.nextFloat());
-		this.renderEngine.registerNewRenderable(p);
-		this.registerNewTickListener(p);
+		this.particleEngine.addParticle(p);
 	}
 
 	public void registerNewTickListener(ITickListener l) {
@@ -541,6 +541,8 @@ public class World implements ITickListener {
 			this.tickListeners.remove(it.next());
 			it.remove();
 		}
+		
+		this.particleEngine.onTick();
 
 		for (Entry<Coord3D, Block> b : Block.tickingBlocks.entrySet()) {
 			if(b.getValue().isRequiringTick())
@@ -599,6 +601,10 @@ public class World implements ITickListener {
 		}
 
 		GuiManager.getInstance().onRenderTick(partialTickTime);
+	}
+	
+	public ParticleEngine getParticleEngine() {
+		return particleEngine;
 	}
 	
 	public void exit() {
