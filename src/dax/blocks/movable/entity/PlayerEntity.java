@@ -103,7 +103,7 @@ public class PlayerEntity extends Entity implements IOverlayRenderer {
 				}
 			}
 		}
-
+		
 		while(Mouse.next()) {
 
 			if(Mouse.isGrabbed()) {
@@ -300,6 +300,92 @@ public class PlayerEntity extends Entity implements IOverlayRenderer {
 
 	@Override
 	public void updatePosition() {
+		if(Settings.getInstance().noclip.getValue()) {
+			
+			this.wasOnGround = this.onGround;
+
+			float frictionMultipler = 0.7f;
+
+			float speedC = 0;
+			float speedStrafeC = 0;
+
+			float multi = 1;
+
+			if(!GuiManager.getInstance().isOpened()) {
+				if(Keyconfig.isDown(Keyconfig.boost)) {
+					multi = 8;
+				}
+
+				if(Keyconfig.isDown(Keyconfig.ahead)) {
+					speedC -= 0.4f * multi;
+				}
+
+				if(Keyconfig.isDown(Keyconfig.back)) {
+					speedC += 0.4f * multi;
+				}
+
+				if(Keyconfig.isDown(Keyconfig.left)) {
+					speedStrafeC -= 0.4f * multi;
+				}
+
+				if(Keyconfig.isDown(Keyconfig.right)) {
+					speedStrafeC += 0.4f * multi;
+				}
+
+				if(Keyconfig.isDown(Keyconfig.jump)) {
+					this.velY += 0.4f * multi;
+				}
+				
+				if(Keyconfig.isDown(Keyconfig.crouch)) {
+					this.velY -= 0.4f * multi;
+				}
+			}
+
+			float xsq = Math.abs(speedC) * Math.abs(speedC);
+			float ysq = Math.abs(speedStrafeC) * Math.abs(speedStrafeC);
+			float sp = (float) Math.sqrt(xsq + ysq);
+			if(sp > PlayerEntity.MAX_WALK_SPEED * multi) {
+				float mult = PlayerEntity.MAX_WALK_SPEED * multi / sp;
+				speedC *= mult;
+				speedStrafeC *= mult;
+			}
+			
+			this.speed += speedC;
+			this.speedStrafe += speedStrafeC;
+
+			this.speed *= frictionMultipler;
+			this.speedStrafe *= frictionMultipler;
+
+			spf = (float) Math.sqrt(this.speed * this.speed + this.speedStrafe
+					* this.speedStrafe);
+
+			this.velY *= frictionMultipler;
+
+			double toMoveZ = (this.posZ + Math.cos(-this.heading / 180 * Math.PI)
+					* this.speed)
+					+ (Math.cos((-this.heading + 90) / 180 * Math.PI) * this.speedStrafe);
+			double toMoveX = (this.posX + Math.sin(-this.heading / 180 * Math.PI)
+					* this.speed)
+					+ (Math.sin((-this.heading + 90) / 180 * Math.PI) * this.speedStrafe);
+			double toMoveY = (this.posY + (this.velY));
+
+			float xa = (float) -(this.posX - toMoveX);
+			float ya = (float) -(this.posY - toMoveY);
+			float za = (float) -(this.posZ - toMoveZ);
+
+			this.velX = xa;
+			this.velZ = za;
+
+			this.bb.move(xa, ya, za);
+
+			this.onGround = false;
+
+			this.posX = (this.bb.x0 + this.bb.x1) / 2.0F;
+			this.posY = this.bb.y0;
+			this.posZ = (this.bb.z0 + this.bb.z1) / 2.0F;
+			
+			return;
+		}
 		this.wasOnGround = this.onGround;
 
 		int blockPosX = (int) Math.floor(this.posX);
