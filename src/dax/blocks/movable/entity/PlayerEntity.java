@@ -341,14 +341,7 @@ public class PlayerEntity extends Entity implements IOverlayRenderer {
 				}
 			}
 
-			float xsq = Math.abs(speedC) * Math.abs(speedC);
-			float ysq = Math.abs(speedStrafeC) * Math.abs(speedStrafeC);
-			float sp = (float) Math.sqrt(xsq + ysq);
-			if(sp > PlayerEntity.MAX_WALK_SPEED * multi) {
-				float mult = PlayerEntity.MAX_WALK_SPEED * multi / sp;
-				speedC *= mult;
-				speedStrafeC *= mult;
-			}
+
 			
 			this.speed += speedC;
 			this.speedStrafe += speedStrafeC;
