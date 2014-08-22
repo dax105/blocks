@@ -1,7 +1,6 @@
 package dax.blocks;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ListIterator;
 
@@ -68,6 +67,7 @@ public class Game implements Runnable {
 	private Profiler profiler = new Profiler();
 	private WorldManager worldsManager = new WorldManager();
 	private TrueTypeFont font;
+	private Keyconfig keyconfigLoader = new Keyconfig();
 
 	private static Game instance = null;
 
@@ -179,10 +179,11 @@ public class Game implements Runnable {
 
 		Display.destroy();
 		AL.destroy();
-
+		
 		try {
 			Settings.getInstance().saveToFile(this.configFile);
-		} catch (FileNotFoundException e) {
+			this.keyconfigLoader.save();
+		} catch (IOException e) {
 			e.printStackTrace();
 		}
 
@@ -200,7 +201,7 @@ public class Game implements Runnable {
 		ModelManager.getInstance().load();
 
 		this.displayLoadingScreen("Loading keyconfig...");
-		Keyconfig.load();
+		this.keyconfigLoader.load(new File("keyconfig"));
 
 		this.displayLoadingScreen("Creating world config");
 		this.worldsManager.load();
