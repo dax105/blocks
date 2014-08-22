@@ -24,6 +24,8 @@ public class Keyconfig {
 	
 	public static int zoom;
 	
+	public static int toggleNoClip;
+	
 	public static void load() {
 		Keyconfig.ahead = new int[] { Keyboard.KEY_W, Keyboard.KEY_UP };
 		Keyconfig.back = new int[] { Keyboard.KEY_S, Keyboard.KEY_DOWN };
@@ -39,6 +41,7 @@ public class Keyconfig {
 		Keyconfig.fullscreen = Keyboard.KEY_F;
 		Keyconfig.exit = Keyboard.KEY_ESCAPE;
 		Keyconfig.zoom = Keyboard.KEY_Z;
+		Keyconfig.toggleNoClip = Keyboard.KEY_N;
 	}
 	
 	public static void save(File config) {

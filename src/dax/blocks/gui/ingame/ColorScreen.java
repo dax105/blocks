@@ -11,13 +11,16 @@ public class ColorScreen extends GuiScreen {
 	private SliderControl g;
 	private SliderControl b;
 	private Color mixColor;
-	private final Color sliderBackColor = Color.darkGray;
+	private final Color sliderBackColor;
 	private IColorChangeCallback callback;
 	private TextControl t;
 	
 	public ColorScreen(Color initialColor, IColorChangeCallback callback, GuiManager guiManager) {
 		super(300, 100, 1, 1, 1, 0.5f, guiManager);
 		this.callback = callback;
+		this.sliderBackColor = new Color(Color.darkGray);
+		this.sliderBackColor.a = 0.6f;
+		
 		
 		this.initTitle();
 		this.initSliders();
