@@ -1,10 +1,12 @@
 package dax.blocks;
 
 import java.util.Random;
+
 import dax.blocks.collisions.AABB;
 import dax.blocks.render.ITickListener;
 import dax.blocks.render.IWorldRenderer;
 import dax.blocks.render.RenderEngine;
+import dax.blocks.util.GameMath;
 import dax.blocks.world.World;
 
 public class Particle implements ITickListener, IWorldRenderer {
@@ -125,22 +127,27 @@ public class Particle implements ITickListener, IWorldRenderer {
 			collidedZ = true;
 		}
 		
-		this.ground = maxVelY != this.velY && this.velY < 0.0F;
+		this.ground = maxVelY != this.velY && this.velY < 0;
 		
-		this.velX *= this.ground ? Particle.FRICTION_GROUND : Particle.FRICTION_AIR;
-		this.velY *= this.ground ? Particle.FRICTION_GROUND : Particle.FRICTION_AIR;
-		this.velZ *= this.ground ? Particle.FRICTION_GROUND : Particle.FRICTION_AIR;
-		
-		if(collidedX) {
-			this.velX = (float) (-this.velX * (BOUNCE_MIN + rand.nextDouble() * (BOUNCE_MAX - BOUNCE_MIN)));
+		if(GameMath.shouldCareAbout(this.velX)) {
+			this.velX *= this.ground ? Particle.FRICTION_GROUND : Particle.FRICTION_AIR;
+			if(collidedX) {
+				this.velX = (float) (-this.velX * (BOUNCE_MIN + rand.nextFloat() * (BOUNCE_MAX - BOUNCE_MIN)));
+			}
 		}
 		
-		if(collidedY) {
-			this.velY = (float) (-this.velY * (BOUNCE_MIN + rand.nextDouble() * (BOUNCE_MAX - BOUNCE_MIN)));
+		if(GameMath.shouldCareAbout(this.velY)) {
+			this.velY *= this.ground ? Particle.FRICTION_GROUND : Particle.FRICTION_AIR;
+			if(collidedY) {
+				this.velY = (float) (-this.velY * (BOUNCE_MIN + rand.nextFloat() * (BOUNCE_MAX - BOUNCE_MIN)));
+			}
 		}
 		
-		if(collidedZ) {
-			this.velZ = (float) (-this.velZ * (BOUNCE_MIN + rand.nextDouble() * (BOUNCE_MAX - BOUNCE_MIN)));
+		if(GameMath.shouldCareAbout(this.velZ)) {
+			this.velZ *= this.ground ? Particle.FRICTION_GROUND : Particle.FRICTION_AIR;
+			if(collidedZ) {
+				this.velZ = (float) (-this.velZ * (BOUNCE_MIN + rand.nextFloat() * (BOUNCE_MAX - BOUNCE_MIN)));
+			}
 		}
 		
 	}

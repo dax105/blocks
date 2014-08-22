@@ -32,5 +32,9 @@ public class GameMath {
 	public static boolean isPowerOfTwo(int x) {
 	    return (x != 0) && ((x & (x - 1)) == 0);
 	}
+	
+	public static boolean shouldCareAbout(float f) {
+		return (f > 0.001f || f < -0.001f);
+	}
 
 }
