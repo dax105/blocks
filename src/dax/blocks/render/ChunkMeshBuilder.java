@@ -24,7 +24,7 @@ public class ChunkMeshBuilder {
 			int blockOffsetX = c.x * 16;
 			int blockOffsetZ = c.z * 16;
 
-			int opaqueCount = 0, transparentCount = 0, translucentCount = 0;
+			int opaqueCount = 0, translucentCount = 0;
 			
 			int minX = 100;
 			int minY = 100;
@@ -54,9 +54,6 @@ public class ChunkMeshBuilder {
 								case RenderPass.OPAQUE:
 									opaqueCount++;
 									break;
-								case RenderPass.TRANSPARENT:
-									transparentCount++;
-									break;
 								case RenderPass.TRANSLUCENT:
 									translucentCount++;
 									break;	
@@ -69,7 +66,7 @@ public class ChunkMeshBuilder {
 
 			cm.setBounds(minX, minY, minZ, maxX, maxY, maxZ);
 			
-			if(opaqueCount == 0 && transparentCount == 0 && translucentCount == 0) {
+			if(opaqueCount == 0 && translucentCount == 0) {
 				profiler.build.end();
 				return cm;
 			}
@@ -117,45 +114,6 @@ public class ChunkMeshBuilder {
 					renderer.delete(renderer.getHandle());
 				} else {
 					cm.setHandle(RenderPass.OPAQUE, renderer.getHandle());
-				}
-				
-			}
-
-			if(transparentCount > 0) {
-				renderer.begin();
-
-				// All gl calls to draw the chunk (TRANSPARENT PASS) should be here
-
-				for(int x = 0; x < 16; x++) {
-					for(int z = 0; z < 16; z++) {
-						for(int y = startY; y < endY; y++) {
-							int blockID = c.getBlock(x, y, z);
-							if(blockID > 0) {
-								Block block = c.world.getBlockObject(blockID);
-
-								if(block.getRenderPass() == RenderPass.TRANSPARENT) {
-
-									int calcX = x + blockOffsetX;
-									int calcY = y;
-									int calcZ = z + blockOffsetZ;
-
-									block.getRenderer().preRender(c.world, block, calcX, calcY, calcZ);
-									block.getRenderer().render(renderer, c.world, block, calcX, calcY, calcZ);
-									block.getRenderer().postRender(c.world, block, calcX, calcY, calcZ);
-
-								}
-								
-								//GL20.glVertexAttrib1f(attrib, 0);
-							}
-						}
-					}
-				}
-				renderer.end();
-				
-				if (renderer.getVertexCount() == 0) {
-					renderer.delete(renderer.getHandle());
-				} else {
-					cm.setHandle(RenderPass.TRANSPARENT, renderer.getHandle());
 				}
 				
 			}
