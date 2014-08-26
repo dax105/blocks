@@ -36,6 +36,8 @@ public class Explosion {
 
 						if(distSq < radiusFuzzed * radiusFuzzed) {
 							world.setBlock(x, y, z, (byte) 0, true, false);
+							
+							world.spawnParticleWithRandomDirectionFast(x, y, z, 3, 1);
 						}
 					}
 				}

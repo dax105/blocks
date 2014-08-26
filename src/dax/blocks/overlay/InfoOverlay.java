@@ -34,7 +34,7 @@ public class InfoOverlay implements IOverlayRenderer {
 
 		if(Settings.getInstance().debug.getValue()) {
 			GL11.glLineWidth(1);
-
+			GL11.glDisable(GL11.GL_TEXTURE_2D);
 			GL11.glBegin(GL11.GL_LINES);
 
 			int offset = Display.getWidth() - Section.MAX_RECORDS;
@@ -75,33 +75,21 @@ public class InfoOverlay implements IOverlayRenderer {
 					* 10);
 
 			GL11.glColor4f(1.0f, 0, 0.3f, 1.0f);
-			GL11.glVertex2f(Display.getWidth() - Section.MAX_RECORDS,
-					Display.getHeight() - avgBuild * 10);
-			GL11.glVertex2f(Display.getWidth(), Display.getHeight() - avgBuild
-					* 10);
 
+			GL11.glVertex2f(Display.getWidth()-Section.MAX_RECORDS, Display.getHeight()-avgBuild*10);
+			GL11.glVertex2f(Display.getWidth(), Display.getHeight()-avgBuild*10);
+			
 			GL11.glEnd();
-
-			String tickText = "avg tick "
-					+ String.format(Locale.ENGLISH, "%.2f", avgTick) + "ms";
-			FontManager.getFont().drawString(
-					offset - FontManager.getFont().getWidth(tickText) - 2,
-					(int) (Display.getHeight() - avgTick * 10 - FontManager
-							.getFont().getLineHeight() * 0.75f), tickText);
-
-			String renderText = "avg render "
-					+ String.format(Locale.ENGLISH, "%.2f", avgRender) + "ms";
-			FontManager.getFont().drawString(
-					offset - FontManager.getFont().getWidth(renderText) - 2,
-					(int) (Display.getHeight() - avgRender * 10 - FontManager
-							.getFont().getLineHeight() * 0.75f), renderText);
-
-			String buildText = "avg build"
-					+ String.format(Locale.ENGLISH, "%.2f", avgBuild) + "ms";
-			FontManager.getFont().drawString(
-					offset - FontManager.getFont().getWidth(buildText) - 2,
-					(int) (Display.getHeight() - avgBuild * 10 - FontManager
-							.getFont().getLineHeight() * 0.75f), buildText);
+			GL11.glEnable(GL11.GL_TEXTURE_2D);
+			
+			String tickText = String.format(Locale.ENGLISH, "avg tick %.2f", avgTick) + "ms";
+			FontManager.getFont().drawString((int)(offset-FontManager.getFont().getWidth(tickText)-2), (int)(Display.getHeight()-avgTick*10-FontManager.getFont().getLineHeight()*0.75f), tickText);
+			
+			String renderText = String.format(Locale.ENGLISH, "avg render %.2f", avgRender) + "ms";
+			FontManager.getFont().drawString((int)(offset-FontManager.getFont().getWidth(renderText)-2), (int)(Display.getHeight()-avgRender*10-FontManager.getFont().getLineHeight()*0.75f), renderText);
+			
+			String buildText = String.format(Locale.ENGLISH, "avg build %.2f", avgBuild) + "ms";
+			FontManager.getFont().drawString((int)(offset-FontManager.getFont().getWidth(buildText)-2), (int)(Display.getHeight()-avgBuild*10-FontManager.getFont().getLineHeight()*0.75f), buildText);
 		}
 
 		GL11.glColor4f(1, 1, 1, 1);

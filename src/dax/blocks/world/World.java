@@ -50,6 +50,7 @@ public class World implements ITickListener {
 	private IItemDataManager itemDataManager;
 	private IDRegister idRegister;
 	private RenderEngine renderEngine;
+	private ParticleEngine particleEngine;
 
 	public int size;
 	public int sizeBlocks;
@@ -68,6 +69,7 @@ public class World implements ITickListener {
 	public World(String worldName, RenderEngine e) {
 		this.name = worldName;
 		this.renderEngine = e;
+		this.particleEngine = new ParticleEngine(this);
 		e.setWorld(this);
 
 		this.idRegister = new IDRegister(this);
@@ -150,10 +152,9 @@ public class World implements ITickListener {
 				- this.rand.nextFloat() * velFuzziness;
 		float velZ = velhalf - this.rand.nextFloat() * vel
 				- this.rand.nextFloat() * velFuzziness;
-		Particle p = new Particle(this, x, y, z, velX, velY, velZ, 100,
+		Particle p = new Particle(this, x, y, z, velX, velY, velZ, 1000000,
 				rand.nextFloat(), rand.nextFloat(), rand.nextFloat());
-		this.renderEngine.registerNewRenderable(p);
-		this.registerNewTickListener(p);
+		this.particleEngine.addParticle(p);
 	}
 
 	public void spawnParticle(float x, float y, float z) {
@@ -170,19 +171,15 @@ public class World implements ITickListener {
 		Particle p = new Particle(this, x, y, z, velX, velY, velZ,
 				50 + rand.nextInt(20), rand.nextFloat(), rand.nextFloat(),
 				rand.nextFloat());
-		this.renderEngine.registerNewRenderable(p);
-		this.registerNewTickListener(p);
+		this.particleEngine.addParticle(p);
 	}
 
 	public void registerNewTickListener(ITickListener l) {
-		if(!this.tickListeners.contains(l)) {
 			this.scheduledTickListenersAdding.add(l);
-		}
 	}
 
 	public void removeTickListener(ITickListener l) {
-		if(this.tickListeners.contains(l)
-				&& !this.scheduledTickListenersRemoval.contains(l)) {
+		if(!this.scheduledTickListenersRemoval.contains(l)) {
 			this.scheduledTickListenersRemoval.add(l);
 		}
 	}
@@ -345,12 +342,43 @@ public class World implements ITickListener {
 			_z1 += zm;
 		}
 
-		int x0 = (int) (_x0 - 1.0F);
-		int x1 = (int) (_x1 + 1.0F);
-		int y0 = (int) (_y0 - 1.0F);
-		int y1 = (int) (_y1 + 1.0F);
-		int z0 = (int) (_z0 - 1.0F);
-		int z1 = (int) (_z1 + 1.0F);
+		int x0 = (int) _x0;
+		int x1 = (int) _x1;
+		int y0 = (int) _y0;
+		int y1 = (int) _y1;
+		int z0 = (int) _z0;
+		int z1 = (int) _z1;
+		
+		if (x0 <= 0) {
+			x0--;
+		}
+		
+		if (y0 <= 0) {
+			y0--;
+		}
+		
+		if (z0 <= 0) {
+			z0--;
+		}
+		
+		if (x1 >= 0) {
+			x1++;
+		}
+		
+		if (y1 >= 0) {
+			y1++;
+		}
+		
+		if (z1 >= 0) {
+			z1++;
+		}
+		
+		//int x0 = (int) (_x0 - 1.0F);
+		//int x1 = (int) (_x1 + 1.0F);
+		//int y0 = (int) (_y0 - 1.0F);
+		//int y1 = (int) (_y1 + 1.0F);
+		//int z0 = (int) (_z0 - 1.0F);
+		//int z1 = (int) (_z1 + 1.0F);
 
 		for (int x = x0; x < x1; ++x) {
 			for (int y = y0; y < y1; ++y) {
@@ -513,6 +541,8 @@ public class World implements ITickListener {
 			this.tickListeners.remove(it.next());
 			it.remove();
 		}
+		
+		this.particleEngine.onTick();
 
 		for (Entry<Coord3D, Block> b : Block.tickingBlocks.entrySet()) {
 			if(b.getValue().isRequiringTick())
@@ -571,6 +601,10 @@ public class World implements ITickListener {
 		}
 
 		GuiManager.getInstance().onRenderTick(partialTickTime);
+	}
+	
+	public ParticleEngine getParticleEngine() {
+		return particleEngine;
 	}
 	
 	public void exit() {
