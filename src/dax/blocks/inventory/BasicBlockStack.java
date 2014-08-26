@@ -1,4 +1,4 @@
-package dax.blocks.item.stack;
+package dax.blocks.inventory;
 
 import dax.blocks.FontManager;
 import dax.blocks.block.Block;
@@ -55,7 +55,7 @@ public class BasicBlockStack implements IObjectStack {
 		}
 		
 		if(count < 1) {
-			this.shouldRecycle = true;
+			this.notifyDeletion();
 		}
 		
 		this.items = count;
@@ -103,7 +103,7 @@ public class BasicBlockStack implements IObjectStack {
 			this.setCurrentItemsCount(items - 1);
 			return true;
 		} else {
-			this.shouldRecycle = true;
+			this.notifyDeletion();
 			return true;
 		}
 	}
@@ -111,6 +111,11 @@ public class BasicBlockStack implements IObjectStack {
 	@Override
 	public boolean shouldRecycle() {
 		return this.shouldRecycle;
+	}
+
+	@Override
+	public void notifyDeletion() {
+		this.shouldRecycle = true;
 	}
 
 }

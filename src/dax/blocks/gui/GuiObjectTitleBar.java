@@ -1,7 +1,10 @@
 package dax.blocks.gui;
 
 import org.lwjgl.opengl.GL11;
+import org.newdawn.slick.Color;
 import org.newdawn.slick.Font;
+
+import dax.blocks.util.GLHelper;
 
 public class GuiObjectTitleBar extends GuiObject {
 	private String text;
@@ -12,6 +15,8 @@ public class GuiObjectTitleBar extends GuiObject {
 	private int y2;
 
 	private Font font;
+	
+	private Color c = new Color(0xFF004FA3);
 
 	public void setText(String text) {
 		this.text = text;
@@ -28,7 +33,7 @@ public class GuiObjectTitleBar extends GuiObject {
 
 	@Override
 	public void render() {
-		this.drawRect(this.x1, this.y1, this.x2, this.y2, 0xFF004FA3);
+		GLHelper.drawRectangle(this.c, this.x1, this.x2, this.y1, this.y2);
 		GL11.glEnable(GL11.GL_TEXTURE_2D);
 		this.font.drawString(
 				this.x1 + (this.x2 - this.x1) / 2 - this.font.getWidth(this.text) / 2, 

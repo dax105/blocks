@@ -10,6 +10,7 @@ import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL12;
 import org.lwjgl.opengl.PixelFormat;
 import org.lwjgl.util.glu.GLU;
+import org.newdawn.slick.Color;
 import org.newdawn.slick.opengl.Texture;
 
 import dax.blocks.TextureManager;
@@ -246,6 +247,10 @@ public class GLHelper {
 	public static void drawRectangle(float r, float g, float b, float x1, float x2, 
 			float y1, float y2) {
 		GLHelper.drawRectangle(r, g, b, 1, x1, x2, y1, y2);
+	}
+	
+	public static void drawRectangle(Color color, float x1, float x2, float y1, float y2) {
+		GLHelper.drawRectangle(color.r, color.g, color.b, color.a, x1, x2, y1, y2);
 	}
 	
 	public static void updateFiltering(boolean linear) {

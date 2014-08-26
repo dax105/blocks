@@ -4,6 +4,7 @@ import org.lwjgl.opengl.GL11;
 import org.newdawn.slick.Font;
 
 import dax.blocks.settings.SettingsObject;
+import dax.blocks.util.GLHelper;
 
 public class GuiObjectSettingsIntegerSlider extends GuiObjectSlider {
 	private SettingsObject<Integer> object;
@@ -19,8 +20,8 @@ public class GuiObjectSettingsIntegerSlider extends GuiObjectSlider {
 
 	@Override
 	public void render() {
-		this.drawRect(this.x1, this.y1, this.x2, this.y2, 0xFF8C8C8C);
-		this.drawRect(this.x1 + 2, this.y1 + 2, this.x2 - 2, this.y2 - 2, 0xFF404040);
+		GLHelper.drawRectangle(this.c1, this.x1, this.x2, this.y1, this.y2);
+		GLHelper.drawRectangle(this.c2, this.x1 + 2, this.x2 - 2, this.y1 + 2, this.y2 - 2);
 		
 		int x = this.x1 + GuiObjectSlider.SLIDER_WIDTH / 2 + 2 + 
 			(int)Math.round(
@@ -28,12 +29,8 @@ public class GuiObjectSettingsIntegerSlider extends GuiObjectSlider {
 					((x2 - x1) - GuiObjectSlider.SLIDER_WIDTH - 4)
 			);
 		
-		this.drawRect(
-				x - GuiObjectSlider.SLIDER_WIDTH / 2 , 
-				this.y1 + 2, 
-				x + GuiObjectSlider.SLIDER_WIDTH / 2 , 
-				this.y2 - 2, 0xFF6E6E6E
-		);
+		GLHelper.drawRectangle(this.c3, x - GuiObjectSlider.SLIDER_WIDTH / 2,
+				x + GuiObjectSlider.SLIDER_WIDTH / 2, this.y1 + 2, this.y2 - 2);
 		
 		GL11.glEnable(GL11.GL_TEXTURE_2D);
 		
@@ -46,13 +43,8 @@ public class GuiObjectSettingsIntegerSlider extends GuiObjectSlider {
 		
 		GL11.glDisable(GL11.GL_TEXTURE_2D);
 		if(this.hover) {
-			this.drawRect(
-					x - GuiObjectSlider.SLIDER_WIDTH / 2, 
-					this.y1 + 2, 
-					x + GuiObjectSlider.SLIDER_WIDTH / 2, 
-					this.y2 - 2, 
-					0xA0FFFFFF
-			);
+			GLHelper.drawRectangle(this.c4, x - GuiObjectSlider.SLIDER_WIDTH / 2,
+					x + GuiObjectSlider.SLIDER_WIDTH / 2, this.y1 + 2, this.y2 - 2);
 		}
 	}
 	

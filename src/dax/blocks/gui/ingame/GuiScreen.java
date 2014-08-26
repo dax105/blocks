@@ -1,5 +1,10 @@
 package dax.blocks.gui.ingame;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import org.newdawn.slick.Color;
+
 import dax.blocks.render.IOverlayRenderer;
 import dax.blocks.render.ITickListener;
 import dax.blocks.util.Coord2D;
@@ -8,10 +13,11 @@ import dax.blocks.util.GLHelper;
 
 public abstract class GuiScreen implements ITickListener, IOverlayRenderer {
 
-	private int x, y, width, height;
-	private float backColorR, backColorG, backColorB, backColorA;
-	private GuiManager guiManager;
-	private boolean isInCenter = false;
+	protected int x, y, width, height;
+	protected Color backColor;
+	protected GuiManager guiManager;
+	protected boolean isInCenter = false;
+	protected List<Control> controls;
 
 	public GuiScreen(int x, int y, int width, int height, GuiManager guiManager) {
 		this(x, y, width, height, 1, 1, 1, 0.5f, guiManager);
@@ -35,22 +41,50 @@ public abstract class GuiScreen implements ITickListener, IOverlayRenderer {
 		this.y = y;
 		this.width = width;
 		this.height = height;
-		this.backColorR = r;
-		this.backColorG = g;
-		this.backColorB = b;
-		this.backColorA = a;
+		this.backColor = new Color(r, g, b, a);
 		this.guiManager = guiManager;
+		this.controls = new ArrayList<Control>();
 	}
 
 	public abstract void onOpening();
 
 	public abstract void onClosing();
 	
+	public void addControl(Control c) {
+		this.controls.add(c);
+	}
+	
+	public void removeControl(Control c) {
+		this.controls.remove(c);
+	}
+	
+	public List<Control> getControls() {
+		return this.controls;
+	}
+	
+	@Override
+	public void onTick() {
+		for(Control c : this.controls) {
+			c.onTick();
+		}
+	}
+	
+	@Override
+	public void onRenderTick(float ptt) {
+		for(Control c : this.controls) {
+			c.onRenderTick(ptt);
+		}
+	}
+	
 	@Override
 	public void renderOverlay(float partialTickTime) {
-		GLHelper.drawRectangle(this.backColorR, this.backColorG,
-				this.backColorB, this.backColorA, this.x, this.x + this.width,
+		GLHelper.drawRectangle(this.backColor.r, this.backColor.g,
+				this.backColor.b, this.backColor.a, this.x, this.x + this.width,
 				this.y, this.y + this.height);
+		
+		for(Control c : this.controls) {
+			c.render();
+		}
 	}
 
 	public boolean isCentered() {
@@ -90,36 +124,16 @@ public abstract class GuiScreen implements ITickListener, IOverlayRenderer {
 		this.height = height;
 	}
 
-	public float getBackColorR() {
-		return this.backColorR;
+	public void setColor(float r, float g, float b) {
+		this.backColor = new Color(r, g, b, 1f);
 	}
-
-	public void setBackColorR(float backColorR) {
-		this.backColorR = backColorR;
+	
+	public void setColor(int color) {
+		this.backColor = new Color(color);
 	}
-
-	public float getBackColorG() {
-		return this.backColorG;
-	}
-
-	public void setBackColorG(float backColorG) {
-		this.backColorG = backColorG;
-	}
-
-	public float getBackColorB() {
-		return this.backColorB;
-	}
-
-	public void setBackColorB(float backColorB) {
-		this.backColorB = backColorB;
-	}
-
-	public float getBackColorA() {
-		return this.backColorA;
-	}
-
-	public void setBackColorA(float backColorA) {
-		this.backColorA = backColorA;
+	
+	public Color getColor() {
+		return this.backColor;
 	}
 
 	public int getX() {

@@ -1,0 +1,15 @@
+ahead 17,200
+back 31,208
+left 30,203
+right 32,205
+jump 57
+boost 42,54
+crouch 29,157
+console 46,41
+explosion 18
+particleFirework 25
+screenshot 60
+fullscreen 33
+exit 1
+zoom 44
+toggleNoClip 49

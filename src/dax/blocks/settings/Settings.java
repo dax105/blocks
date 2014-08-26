@@ -132,13 +132,13 @@ public class Settings {
 	public SettingsObject<Integer> windowHeight = (SettingsObject<Integer>) registerObject(new SettingsObject<Integer>(
 			"height", 480, "Window height", "%v px", new ApplierResolution()));
 	public SettingsObject<Integer> fpsLimit = (SettingsObject<Integer>) registerObject(new SettingsObject<Integer>(
-			"fps_limit", 0, "FPS Limit", null, null));
-	
+			"fps_limit", 0, "FPS Limit", null, null));	
 	public SettingsObject<Integer> loaderThreads = (SettingsObject<Integer>) registerObject(new SettingsObject<Integer>(
-			"loader_threads", 1, "Loader threads", null, null));
-	
+			"loader_threads", 1, "Loader threads", null, null));	
 	public SettingsObject<Boolean> peacefulMode = (SettingsObject<Boolean>) registerObject(new SettingsObject<Boolean>(
 			"peaceful", false, "What is dead may never die", "%o", null));
+	public SettingsObject<Boolean> noclip = (SettingsObject<Boolean>) registerObject(new SettingsObject<Boolean>(
+			"noclip", false, "Noclip", "%o", null));
 
 	private Settings() {
 		

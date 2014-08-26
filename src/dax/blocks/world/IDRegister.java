@@ -104,8 +104,7 @@ public class IDRegister {
 			IDRegister.glass = registerBlock(new BlockBasic("oots/blockGlass", this)
 					.setAllTextures(9).setOpaque(false).setCullSame(true)
 					.setFootStepSound(SoundManager.footstep_stone)
-					.setFallSound("fall_hard")
-					.setRenderPass(RenderPass.TRANSPARENT));
+					.setFallSound("fall_hard"));
 			IDRegister.leaves = registerBlock(new BlockBasic("oots/blockLeaves", this)
 					.setAllTextures(
 							Settings.getInstance().transparentLeaves.getValue() ? 10
@@ -114,10 +113,7 @@ public class IDRegister {
 							!Settings.getInstance().transparentLeaves
 									.getValue())
 					.setFootStepSound(SoundManager.footstep_grass)
-					.setFallSound("fall_soft")
-					.setRenderPass(
-							Settings.getInstance().transparentLeaves.getValue() ? RenderPass.TRANSPARENT
-									: RenderPass.OPAQUE));
+					.setFallSound("fall_soft"));
 			IDRegister.bedrock = registerBlock(new BlockBasic("oots/blockBedrock", this)
 					.setAllTextures(12)
 					.setFootStepSound(SoundManager.footstep_stone)

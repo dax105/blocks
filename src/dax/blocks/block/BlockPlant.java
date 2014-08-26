@@ -13,7 +13,6 @@ public class BlockPlant extends Block {
 		super(name, r);
 		setOpaque(false);
 		setOccluder(false);
-		setRenderPass(RenderPass.TRANSPARENT);
 		setCollidable(false);
 		setRenderer(new BlockRendererPlant());
 	}
