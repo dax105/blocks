@@ -380,6 +380,8 @@ public class RenderEngine {
 
 		chunkRenderer.beforeRendering();
 
+		GL11.glEnable(GL11.GL_ALPHA_TEST);
+		
 		for(RenderChunk r : culledRenderChunks) {
 			if(r.getCm().isPresent(RenderPass.OPAQUE)) {
 				r.getCm().render(RenderPass.OPAQUE);
@@ -387,13 +389,6 @@ public class RenderEngine {
 			}
 		}
 
-		GL11.glEnable(GL11.GL_ALPHA_TEST);
-		for(RenderChunk r : culledRenderChunks) {
-			if(r.getCm().isPresent(RenderPass.TRANSPARENT)) {
-				r.getCm().render(RenderPass.TRANSPARENT);
-				this.chunksDrawn++;
-			}
-		}
 		GL11.glDisable(GL11.GL_ALPHA_TEST);
 
 		if(Settings.getInstance().twoPassTranslucent.getValue()) {
