@@ -54,9 +54,8 @@ public class Game implements Runnable {
 	private int lastTPS = 0;
 	String ticksString = "N/A";
 
-	private float animationProgress = 0;
-	private float lastProgress = 0;
-	private int fpsCounter;
+	private float consoleAnimationProgress = 0;
+	private float lastConsoleAnimationProgress = 0;
 	private int fps = 0;
 	private long lastFPS;
 	private float lastFov = 0;
@@ -125,10 +124,23 @@ public class Game implements Runnable {
 		long lastInfo = time;
 
 		while (!Display.isCloseRequested()) {
+			
+			long loopStart = System.nanoTime();
+			
 			int e = GL11.glGetError();
 			if(e != 0) {
 				System.err.println("GL ERROR: " + e + " - " + GLU.gluErrorString(e));
-			}
+			}	
+
+			this.profiler.render.start();
+			float partialTickTime = (time - lastTime)
+					/ ((float) TICK_TIME * 1000000000);
+
+			this.onRender(partialTickTime);
+			this.render(partialTickTime);
+
+			Display.update();
+			this.profiler.render.end();
 			
 			time = System.nanoTime();
 			while (time - lastTime >= Game.TICK_TIME * 1000000000) {
@@ -146,16 +158,10 @@ public class Game implements Runnable {
 				SoundManager.getInstance().updatePlaying();
 				SoundManager.getInstance().getMusicProvider().updateMusic();
 			}
-
-			this.profiler.render.start();
-			float partialTickTime = (time - lastTime)
-					/ ((float) TICK_TIME * 1000000000);
-
-			this.onRender(partialTickTime);
-			this.render(partialTickTime);
-
-			Display.update();
-			this.profiler.render.end();
+			
+			long loopEnd = System.nanoTime();
+			
+			this.fps = (int) (1000000000 / (loopEnd - loopStart));
 
 			if (Settings.getInstance().fpsLimit.getValue() > 0)
 				Display.sync(Settings.getInstance().fpsLimit.getValue());
@@ -289,16 +295,16 @@ public class Game implements Runnable {
 			this.worldsManager.getWorld().menuUpdate();
 		}
 
-		this.lastProgress = this.animationProgress;
+		this.lastConsoleAnimationProgress = this.consoleAnimationProgress;
 
-		this.animationProgress += this.consoleOpen ? 0.150f : -0.150f;
+		this.consoleAnimationProgress += this.consoleOpen ? 0.150f : -0.150f;
 
-		if (this.animationProgress < 0) {
-			this.animationProgress = 0;
+		if (this.consoleAnimationProgress < 0) {
+			this.consoleAnimationProgress = 0;
 		}
 
-		if (this.animationProgress > 1) {
-			this.animationProgress = 1;
+		if (this.consoleAnimationProgress > 1) {
+			this.consoleAnimationProgress = 1;
 		}
 	}
 
@@ -316,7 +322,7 @@ public class Game implements Runnable {
 		if (this.guiScreen != null || this.consoleOpen) {
 			ptt = 1;
 		}
-
+		
 		// Clear old frame
 		GL11.glClear(GL11.GL_COLOR_BUFFER_BIT | GL11.GL_DEPTH_BUFFER_BIT);
 
@@ -329,7 +335,6 @@ public class Game implements Runnable {
 					Settings.getInstance().windowHeight.getValue());
 			this.getOverlayManager().renderOverlays(ptt);
 
-			this.updateFPS();
 		}
 
 		GLHelper.setOrtho(Settings.getInstance().windowWidth.getValue(),
@@ -398,12 +403,12 @@ public class Game implements Runnable {
 
 		int cHeight = Settings.getInstance().consoleHeight.getValue();
 
-		float lerp = this.lastProgress
-				+ (this.animationProgress - this.lastProgress) * ptt;
+		float lerp = this.lastConsoleAnimationProgress
+				+ (this.consoleAnimationProgress - this.lastConsoleAnimationProgress) * ptt;
 
 		GL11.glTranslatef(0, -((1 - lerp) * cHeight), 0);
 
-		if (this.lastProgress > 0) {
+		if (this.lastConsoleAnimationProgress > 0) {
 			GLHelper.drawRectangle(this.consoleC1, 0,
 					Settings.getInstance().windowWidth.getValue(), 0, cHeight);
 			
@@ -483,15 +488,6 @@ public class Game implements Runnable {
 
 	public long getTime() {
 		return (Sys.getTime() * 1000) / Sys.getTimerResolution();
-	}
-
-	public void updateFPS() {
-		if (this.getTime() - this.lastFPS > 1000) {
-			this.fps = fpsCounter;
-			this.fpsCounter = 0;
-			this.lastFPS += 1000;
-		}
-		this.fpsCounter++;
 	}
 
 	public int getTPS() {
