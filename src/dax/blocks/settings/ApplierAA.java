@@ -7,6 +7,10 @@ import dax.blocks.util.GLHelper;
 
 public class ApplierAA extends Applier {
 
+	public ApplierAA(Game game) {
+		super(game);
+	}
+
 	@Override
 	public boolean apply(Object val) {	
 		Display.destroy();
@@ -21,11 +25,14 @@ public class ApplierAA extends Applier {
 				Settings.getInstance().windowWidth.getValue(), 
 				Settings.getInstance().windowHeight.getValue()
 		);
-		Game.getInstance().load(!Game.getInstance().getWorldsManager().isInGame());
-		
-		Game.getInstance().getCurrentWorld().deleteAllRenderChunks();
+		this.game.load(!this.game.getWorldsManager().isInGame());
+		this.game.getCurrentWorld().deleteAllRenderChunks();
 		
 		return true;
+	}
+
+	@Override
+	public void afterApplying() {
 	}
 
 }

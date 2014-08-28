@@ -4,6 +4,10 @@ import dax.blocks.Game;
 
 public class CommandTele extends Command {
 
+	public CommandTele(Console console) {
+		super(console);
+	}
+
 	@Override
 	public String getName() {
 		return "tele";
@@ -23,10 +27,10 @@ public class CommandTele extends Command {
 				float y = Float.parseFloat(args[1]);
 				float z = Float.parseFloat(args[2]);
 				
-				Game game = Game.getInstance();
+				Game game = super.console.getGame();
 				
 				if (!game.getWorldsManager().isInGame()) {
-					Console.println("You must be ingame to use command " + getName());
+					super.console.println("You must be ingame to use command " + getName());
 					return false;
 				}
 				
@@ -34,13 +38,13 @@ public class CommandTele extends Command {
 				
 				return true;
 			} catch (NumberFormatException e) {
-				Console.println("Invalid values!");
+				super.console.println("Invalid values!");
 				e.printStackTrace();
 				return false;
 			}
 		} else {
-			Console.println("Not enough arguments, correct usage: ");
-			Console.println(getUsage());
+			super.console.println("Not enough arguments, correct usage: ");
+			super.console.println(getUsage());
 		}
 		
 		return false;

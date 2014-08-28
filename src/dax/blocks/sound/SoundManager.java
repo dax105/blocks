@@ -4,7 +4,6 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.logging.Logger;
-import dax.blocks.console.Console;
 import paulscode.sound.ListenerData;
 import paulscode.sound.SoundSystem;
 import paulscode.sound.SoundSystemConfig;
@@ -118,7 +117,7 @@ public class SoundManager {
 			if(this.isWorking)
 				this.system.backgroundMusic(name, SoundManager.music.get(name), loop);
 		} else {
-			Console.println("Music called " + name + " does not exist");
+			System.out.println("Music called " + name + " does not exist");
 		}
 	}
 	

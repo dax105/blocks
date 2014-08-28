@@ -3,7 +3,6 @@ package dax.blocks.block;
 import dax.blocks.block.renderer.BlockRendererPlant;
 import dax.blocks.data.IDataObject;
 import dax.blocks.data.block.PlantDataObject;
-import dax.blocks.render.RenderPass;
 import dax.blocks.world.IDRegister;
 import dax.blocks.world.World;
 

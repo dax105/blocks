@@ -20,8 +20,10 @@ public class WorldManager {
 	private boolean ingame;
 	private World currentWorld;
 	private InfoOverlay infoOverlay;
-
-	public WorldManager() {
+	private Game game;
+	
+	public WorldManager(Game g) {
+		this.game = g;
 	}
 	
 	public void load() {
@@ -84,22 +86,20 @@ public class WorldManager {
 	public World startWorld(String name) {
 		this.ingame = true;
 		GLHelper.updateFiltering(Settings.getInstance().linearFiltering.getValue());
-		RenderEngine e = new RenderEngine(Settings.getInstance().shaders.getValue());
-		this.currentWorld = new World(name, e);
+		RenderEngine e = new RenderEngine(this.game, Settings.getInstance().shaders.getValue());
+		this.currentWorld = new World(this.game, name, e);
 		
-		this.infoOverlay = new InfoOverlay(Game.getInstance());
-		Game.getInstance().getOverlayManager().addOverlay(this.infoOverlay);
-		
-		//TODO: Remove dependency on Game
-		Game.getInstance().closeGuiScreen();
+		this.infoOverlay = new InfoOverlay(this.game);
+		this.game.getOverlayManager().addOverlay(this.infoOverlay);
+		this.game.closeGuiScreen();
 		
 		return this.currentWorld;
 	}
 	
 	public void exitWorld() {
 		if(this.ingame) {
-			Game.getInstance().getOverlayManager().removeOverlay(this.infoOverlay);
-			Game.getInstance().getOverlayManager().removeOverlay(this.currentWorld.getPlayer());
+			this.game.getOverlayManager().removeOverlay(this.infoOverlay);
+			this.game.getOverlayManager().removeOverlay(this.currentWorld.getPlayer());
 			
 			this.currentWorld.exit();
 			this.currentWorld = null;

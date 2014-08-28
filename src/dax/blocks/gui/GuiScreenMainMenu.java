@@ -56,7 +56,7 @@ public class GuiScreenMainMenu extends GuiScreen {
 	@Override
 	public void buttonPress(GuiObjectButton button) {
 		if(button.id == 0) {
-			SoundManager.getInstance().getMusicProvider().updateMusic();
+			SoundManager.getInstance().getMusicProvider().updateMusic(this.game);
 			this.game.displayLoadingScreen();
 			this.game.getWorldsManager().startWorld("this_will_be_changable");
 		} else if(button.id == 1) {
@@ -80,6 +80,6 @@ public class GuiScreenMainMenu extends GuiScreen {
 
 	@Override
 	public void onOpening() {
-		SoundManager.getInstance().getMusicProvider().updateMusic();
+		SoundManager.getInstance().getMusicProvider().updateMusic(this.game);
 	}
 }

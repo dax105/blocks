@@ -5,20 +5,27 @@ import dax.blocks.model.ModelManager;
 
 public class ApplierAO extends Applier {
 
+	public ApplierAO(Game game) {
+		super(game);
+	}
+
 	@Override
 	public boolean apply(Object val) {
-
-		if(Game.getInstance().getWorldsManager().isInGame()) {
-			String wName = Game.getInstance().getCurrentWorld().name;
-			Game.getInstance().getWorldsManager().exitWorld();
-			Game.getInstance().getWorldsManager().startWorld(wName);
+		this.game.displayLoadingScreen();
+		ModelManager.getInstance().load();
+		this.game.closeGuiScreen();
+		
+		if(this.game.getWorldsManager().isInGame()) {
+			String wName = this.game.getCurrentWorld().name;
+			this.game.getWorldsManager().exitWorld();
+			this.game.getWorldsManager().startWorld(wName);
 		}
 		
-		Game.getInstance().displayLoadingScreen();
-		ModelManager.getInstance().load();
-		Game.getInstance().closeGuiScreen();
-		
 		return true;
+	}
+
+	@Override
+	public void afterApplying() {
 	}
 
 }

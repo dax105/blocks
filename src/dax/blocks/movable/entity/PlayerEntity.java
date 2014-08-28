@@ -5,10 +5,8 @@ import java.util.Random;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
 
-import dax.blocks.Game;
 import dax.blocks.block.Block;
 import dax.blocks.collisions.AABB;
-import dax.blocks.gui.ingame.GuiManager;
 import dax.blocks.inventory.BasicBlockStack;
 import dax.blocks.inventory.BasicItemStack;
 import dax.blocks.inventory.IObjectStack;
@@ -146,8 +144,8 @@ public class PlayerEntity extends Entity implements IOverlayRenderer {
 
 			} else {
 				if(Mouse.getEventButtonState() && Mouse.getEventButton() == 0) {
-					if(GuiManager.getInstance().isOpened())
-						GuiManager.getInstance().checkMouseClosing();
+					if(this.world.getGui().isOpened())
+						this.world.getGui().checkMouseClosing();
 				}
 
 			}
@@ -191,7 +189,7 @@ public class PlayerEntity extends Entity implements IOverlayRenderer {
 		}
 
 		if(!this.alive && !Settings.getInstance().peacefulMode.getValue()) {
-			Game.getInstance().getWorldsManager().exitWorld();
+			this.world.getGame().getWorldsManager().exitWorld();
 		}
 
 		this.updateOverlay();
@@ -285,7 +283,7 @@ public class PlayerEntity extends Entity implements IOverlayRenderer {
 
 		if(this.lifesOverlay == null) {
 			this.lifesOverlay = new BasicLifesOverlay(this, heartsX, heartsY);
-			Game.getInstance().getOverlayManager()
+			this.world.getGame().getOverlayManager()
 					.addOverlay(this.lifesOverlay);
 		} else {
 			this.lifesOverlay.setPosition(heartsX, heartsY);
@@ -311,7 +309,7 @@ public class PlayerEntity extends Entity implements IOverlayRenderer {
 
 			float multi = 1;
 
-			if(!GuiManager.getInstance().isOpened()) {
+			if(!this.world.getGui().isOpened()) {
 				if(Keyconfig.isDown(Keyconfig.boost)) {
 					multi = 8;
 				}
@@ -405,7 +403,7 @@ public class PlayerEntity extends Entity implements IOverlayRenderer {
 
 		float multi = 1;
 
-		if(!GuiManager.getInstance().isOpened()) {
+		if(!this.world.getGui().isOpened()) {
 			if(Keyconfig.isDown(Keyconfig.boost)) {
 				multi = 15;
 			}

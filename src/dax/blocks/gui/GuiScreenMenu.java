@@ -71,8 +71,8 @@ public class GuiScreenMenu extends GuiScreen {
 		} else if (button.id == 2) {
 			game.openGuiScreen(new GuiScreenSettings(this));
 		} else if (button.id == 3) {
-			Game.getInstance().getWorldsManager().exitWorld();
-			Game.getInstance().openGuiScreen(new GuiScreenMainMenu(Game.getInstance()));
+			this.game.getWorldsManager().exitWorld();
+			this.game.openGuiScreen(new GuiScreenMainMenu(this.game));
 		}
 
 	}

@@ -7,19 +7,22 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Scanner;
 
-import dax.blocks.console.Console;
-import dax.blocks.sound.SoundManager;
-import dax.blocks.util.GLHelper;
+import dax.blocks.Game;
 
 @SuppressWarnings("unchecked")
 public class Settings {
 	
 	private static volatile Settings _instance;
+	private static volatile Game _gInstance;
 	
 	public void reset() {
 		synchronized(Settings.class) {
 			_instance = null;
 		}
+	}
+	
+	public static void setGame(Game game) {
+		Settings._gInstance = game;
 	}
 	
 	public static Settings getInstance() {
@@ -33,6 +36,7 @@ public class Settings {
 			
 		return _instance;
 	}
+
 	
 	public Map<String, SettingsObject<?>> objects = new HashMap<String, SettingsObject<?>>();
 	
@@ -41,7 +45,7 @@ public class Settings {
 	public SettingsObject<Integer> consoleHeight = (SettingsObject<Integer>) registerObject(new SettingsObject<Integer>(
 			"console_height", 200, "Console height", "%v px", null));
 	public SettingsObject<Integer> aaSamples = (SettingsObject<Integer>) registerObject(new SettingsObject<Integer>(
-			"aa_samples", 0, "AA samples", null, new ApplierAA()));
+			"aa_samples", 0, "AA samples", null, new ApplierAA(Settings._gInstance)));
 	public SettingsObject<Integer> anisotropic = (SettingsObject<Integer>) registerObject(new SettingsObject<Integer>(
 			"anisotropic", 0, "AF value", null, null));
 	public SettingsObject<Integer> explosionRadius = (SettingsObject<Integer>) registerObject(new SettingsObject<Integer>(
@@ -57,17 +61,11 @@ public class Settings {
 	public SettingsObject<Boolean> debug = (SettingsObject<Boolean>) registerObject(new SettingsObject<Boolean>(
 			"debug", false, "Show debug info", "%o", null));
 	public SettingsObject<Boolean> fullscreen = (SettingsObject<Boolean>) registerObject(new SettingsObject<Boolean>(
-			"fullscreen", false, "Fullscreen mode", "%o", new ApplierFullscreen()));
+			"fullscreen", false, "Fullscreen mode", "%o", new ApplierFullscreen(Settings._gInstance)));
 	public SettingsObject<Boolean> mipmaps = (SettingsObject<Boolean>) registerObject(new SettingsObject<Boolean>(
 			"mipmaps", true, "Mipmapping", "%o", null));
 	public SettingsObject<Boolean> sound = (SettingsObject<Boolean>) registerObject(new SettingsObject<Boolean>(
-			"sound", true, "Sound", "%o", new Applier() {
-				@Override
-				public boolean apply(Object val) {
-					SoundManager.getInstance().updateVolume((boolean) val, soundVolume.getValue());
-					return true;
-				}
-			}));	
+			"sound", true, "Sound", "%o", new ApplierSound(Settings._gInstance)));	
 	public SettingsObject<Boolean> frustumCulling = (SettingsObject<Boolean>) registerObject(new SettingsObject<Boolean>(
 			"culling_frustum", true, "Frustum culling", "%o", null));
 	public SettingsObject<Boolean> advancedCulling = (SettingsObject<Boolean>) registerObject(new SettingsObject<Boolean>(
@@ -80,7 +78,7 @@ public class Settings {
 			"enable_shaders", false, "Enable shaders", "%o", null));
 	public SettingsObject<Boolean> transparentLeaves = (SettingsObject<Boolean>) registerObject(new SettingsObject<Boolean>(
 			"transparent_leaves", true, "Transparent leaves", "%o",
-			new ApplierLeaves()));
+			new ApplierLeaves(Settings._gInstance)));
 	public SettingsObject<Boolean> twoPassTranslucent = (SettingsObject<Boolean>) registerObject(new SettingsObject<Boolean>(
 			"two_pass_translucent", true, "Two pass rendering", "%o", null));
 	public SettingsObject<Boolean> clouds = (SettingsObject<Boolean>) registerObject(new SettingsObject<Boolean>(
@@ -90,47 +88,15 @@ public class Settings {
 	public SettingsObject<Float> reach = (SettingsObject<Float>) registerObject(new SettingsObject<Float>(
 			"reach", 20.0f, "Block reach radius", "%v blocks", null));
 	public SettingsObject<Float> aoIntensity = (SettingsObject<Float>) registerObject(new SettingsObject<Float>(
-			"ao_intensity", 0.25f, "AO Intensity", null, new ApplierAO()));
+			"ao_intensity", 0.25f, "AO Intensity", null, new ApplierAO(Settings._gInstance)));
 	public SettingsObject<Float> soundVolume = (SettingsObject<Float>) registerObject(new SettingsObject<Float>(
-			"sound_volume", 1f, "Sound volume (0.0 - 1.0)", null,
-			new Applier() {
-				@Override
-				public boolean apply(Object val) {
-					SoundManager.getInstance().updateVolume(sound.getValue(), (float) val);
-					return true;
-				}
-			}));
+			"sound_volume", 1f, "Sound volume (0.0 - 1.0)", null, new ApplierSound(Settings._gInstance)));
 	public SettingsObject<String> resolution = (SettingsObject<String>) registerObject(new SettingsObject<String>(
-			"resolution", "800x480", "Window resolution", null, new Applier() {
-
-				@Override
-				public boolean apply(Object value) {
-					String[] res = value.toString().split("x");
-					if (res.length < 2)
-						return false;
-
-					try {
-						int width = Integer.parseInt(res[0]);
-						int height = Integer.parseInt(res[1]);
-
-						windowWidth.setValue(width, true);
-						windowHeight.setValue(height, true);
-						
-						GLHelper.setDisplayMode(windowWidth.getValue(), windowHeight.getValue(),
-								fullscreen.getValue());
-
-						return true;
-
-					} catch (NumberFormatException e) {
-						return false;
-					}
-				}
-
-			}));
+			"resolution", "800x480", "Window resolution", null, new ApplierResolution(Settings._gInstance)));
 	public SettingsObject<Integer> windowWidth = (SettingsObject<Integer>) registerObject(new SettingsObject<Integer>(
-			"width", 800, "Window width", "%v px", new ApplierResolution()));
+			"width", 800, "Window width", "%v px", new ApplierResolution(Settings._gInstance)));
 	public SettingsObject<Integer> windowHeight = (SettingsObject<Integer>) registerObject(new SettingsObject<Integer>(
-			"height", 480, "Window height", "%v px", new ApplierResolution()));
+			"height", 480, "Window height", "%v px", new ApplierResolution(Settings._gInstance)));
 	public SettingsObject<Integer> fpsLimit = (SettingsObject<Integer>) registerObject(new SettingsObject<Integer>(
 			"fps_limit", 0, "FPS Limit", null, null));	
 	public SettingsObject<Integer> loaderThreads = (SettingsObject<Integer>) registerObject(new SettingsObject<Integer>(
@@ -141,7 +107,6 @@ public class Settings {
 			"noclip", false, "Noclip", "%o", null));
 
 	private Settings() {
-		
 	}
 	
 	private SettingsObject<?> registerObject(SettingsObject<?> object) {
@@ -207,32 +172,32 @@ public class Settings {
 				case INTEGER:
 					((SettingsObject<Integer>) getObject(name)).setValue(
 							Integer.parseInt(value), apply);
-					Console.println("Set value of int " + name + " to "
+					Settings._gInstance.getConsole().println("Set value of int " + name + " to "
 							+ Integer.parseInt(value));
 					break;
 				case FLOAT:
 					((SettingsObject<Float>) getObject(name)).setValue(
 							Float.parseFloat(value), apply);
-					Console.println("Set value of float " + name + " to "
+					Settings._gInstance.getConsole().println("Set value of float " + name + " to "
 							+ Float.parseFloat(value));
 					break;
 				case BOOLEAN:
 					((SettingsObject<Boolean>) getObject(name)).setValue(
 							Boolean.parseBoolean(value), apply);
-					Console.println("Set value of boolean " + name + " to "
+					Settings._gInstance.getConsole().println("Set value of boolean " + name + " to "
 							+ Boolean.parseBoolean(value));
 					break;
 				case STRING:
 					((SettingsObject<String>) getObject(name)).setValue(value,
 							apply);
-					Console.println("Set value of string " + name + " to "
+					Settings._gInstance.getConsole().println("Set value of string " + name + " to "
 							+ value);
 					break;
 				default:
 					break;
 				}
 			} catch (NumberFormatException e) {
-				Console.println("Incorrect value!");
+				Settings._gInstance.getConsole().println("Incorrect value!");
 				e.printStackTrace();
 			}
 		}
@@ -240,7 +205,7 @@ public class Settings {
 
 	public void setValue(String name, Object value) {
 		((SettingsObject<Object>) getObject(name)).setValue(value);
-		Console.println("Set value of boolean " + name + " to "
+		Settings._gInstance.getConsole().println("Set value of boolean " + name + " to "
 				+ value.toString());
 	}
 

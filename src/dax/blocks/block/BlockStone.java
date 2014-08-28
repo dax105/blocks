@@ -7,7 +7,6 @@ import org.newdawn.slick.Color;
 import dax.blocks.data.IDataObject;
 import dax.blocks.data.block.StoneDataObject;
 import dax.blocks.gui.ingame.ColorScreen;
-import dax.blocks.gui.ingame.GuiManager;
 import dax.blocks.gui.ingame.IColorChangeCallback;
 import dax.blocks.sound.SoundManager;
 import dax.blocks.world.IDRegister;
@@ -65,14 +64,14 @@ public class BlockStone extends BlockBasic {
 					currentColor.r = newColor.r;
 					currentColor.g = newColor.g;
 					currentColor.b = newColor.b;
-				}			}, GuiManager.getInstance());
+				}			}, world.getGui());
 
-			this.clrScreenID = GuiManager.getInstance().registerNewScreen(clrScreen);
+			this.clrScreenID = world.getGui().registerNewScreen(clrScreen);
 		}
 		
 		if(button == 0) {
-			GuiManager.getInstance().setCurrentScreen(this.clrScreenID);
-			GuiManager.getInstance().openScreen();
+			world.getGui().setCurrentScreen(this.clrScreenID);
+			world.getGui().openScreen();
 		} else {
 			this.recolor(x, y, z, world);
 		}

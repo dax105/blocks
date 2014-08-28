@@ -1,7 +1,6 @@
 package dax.blocks.item;
 
 import dax.blocks.TextureManager;
-import dax.blocks.gui.ingame.GuiManager;
 import dax.blocks.gui.ingame.GuiScreen;
 import dax.blocks.gui.ingame.ISliderUpdateCallback;
 import dax.blocks.gui.ingame.SliderControl;
@@ -29,8 +28,8 @@ public class ItemImaginaryChocolate extends Item {
 			int uniqueIdentifier, World world) {
 		world.getPlayer().setLifes(1);
 		SoundManager.getInstance().playSound("holy_chorus");
-		GuiManager.getInstance().setCurrentScreen(
-				GuiManager.getInstance().registerNewScreen(new GuiScreen(100, 100, GuiManager.getInstance()) {
+		world.getGui().setCurrentScreen(
+				world.getGui().registerNewScreen(new GuiScreen(100, 100, world.getGui()) {
 
 			@Override
 			public void onOpening() {
@@ -52,6 +51,6 @@ public class ItemImaginaryChocolate extends Item {
 			
 		}));
 		
-		GuiManager.getInstance().openScreen();
+		world.getGui().openScreen();
 	}
 }

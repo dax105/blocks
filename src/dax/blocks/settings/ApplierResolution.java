@@ -1,39 +1,60 @@
 package dax.blocks.settings;
 
 import dax.blocks.Game;
-import dax.blocks.gui.ingame.GuiManager;
 import dax.blocks.util.GLHelper;
 
 public class ApplierResolution extends Applier {
 
+	public ApplierResolution(Game game) {
+		super(game);
+	}
+
 	@Override
 	public boolean apply(Object val) {
-		int width = Settings.getInstance().windowWidth.getValue();
-		int height = Settings.getInstance().windowHeight.getValue();
+		int w = Settings.getInstance().windowWidth.getValue();
+		int h = Settings.getInstance().windowHeight.getValue();
 
 		if(this.applyingObject == Settings.getInstance().windowWidth) {
-			width = (Integer) val;
-		}
+			w = (Integer) val;
+			this.changeBoth((Integer) val, h);
+		} else if(this.applyingObject == Settings.getInstance().windowHeight) {
+			h = (Integer) val;
+			this.changeBoth(w, (Integer) val);
+		} else if(this.applyingObject == Settings.getInstance().resolution) {
+			String[] parts = val.toString().split("x");
+			if(parts.length == 2) {
+				try {
+					w = Integer.parseInt(parts[0]);
+					h = Integer.parseInt(parts[1]);
 
-		if(this.applyingObject == Settings.getInstance().windowHeight) {
-			height = (Integer) val;
-		}
-
-		if(width > 200 && height > 200) {
-
-			GLHelper.setDisplayMode(width, height, Settings.getInstance().fullscreen.getValue());
-
-			if (Game.getInstance().guiScreen != null) {
-				Game.getInstance().closeGuiScreen();
+					this.changeBoth(w, h);
+				} catch(Exception e) {
+					return false;
+				}
+			} else {
+				return false;
 			}
 		}
-		
-		Settings.getInstance().resolution.setValue(width + "x" + height, false);
 
-		if(GuiManager.getInstance().getCurrentScreen() != null)
-			GuiManager.getInstance().getCurrentScreen().updateCenteredPosition(width, height);
-		
+		if(this.game.guiScreen != null) {
+			this.game.closeGuiScreen();
+		}
+
+		if(this.game.getCurrentWorld() != null)
+			if(this.game.getCurrentWorld().getGui().getCurrentScreen() != null)
+				this.game.getCurrentWorld().getGui().getCurrentScreen()
+						.updateCenteredPosition(w, h);
+
 		return true;
 
+	}
+
+	private void changeBoth(int w, int h) {
+		GLHelper.setDisplayMode(w, h,
+				Settings.getInstance().fullscreen.getValue());
+	}
+
+	@Override
+	public void afterApplying() {
 	}
 }

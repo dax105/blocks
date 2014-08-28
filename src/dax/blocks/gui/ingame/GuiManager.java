@@ -13,18 +13,11 @@ public class GuiManager implements ITickListener {
 	GuiScreen currentGuiScreen;
 	List<GuiScreen> screenList;
 	boolean isScreenOpened = false;
-
-	private static GuiManager instance;	
-	public static GuiManager getInstance() {
-		if(GuiManager.instance == null) {
-			GuiManager.instance = new GuiManager();
-		}
-		
-		return GuiManager.instance;
-	}
+	private Game game;
 	
-	private GuiManager() {
+	public GuiManager(Game game) {
 		this.screenList = new ArrayList<>();
+		this.game = game;
 	}
 	
 	public int getScreenWidth() {
@@ -56,14 +49,14 @@ public class GuiManager implements ITickListener {
 			Mouse.setGrabbed(false);
 			this.currentGuiScreen.onOpening();
 			this.isScreenOpened = true;
-			Game.getInstance().getOverlayManager().addOverlay(this.currentGuiScreen);
+			this.game.getOverlayManager().addOverlay(this.currentGuiScreen);
 		}
 	}
 	
 	public void closeScreen() {
 		if(this.currentGuiScreen != null && this.isOpened()) {
 			Mouse.setGrabbed(true);
-			Game.getInstance().getOverlayManager().removeOverlay(this.currentGuiScreen);
+			this.game.getOverlayManager().removeOverlay(this.currentGuiScreen);
 			this.currentGuiScreen.onClosing();
 			this.isScreenOpened = false;
 		}

@@ -20,7 +20,6 @@ import dax.blocks.gui.GuiScreen;
 import dax.blocks.gui.GuiScreenLoading;
 import dax.blocks.gui.GuiScreenMainMenu;
 import dax.blocks.gui.GuiScreenMenu;
-import dax.blocks.gui.ingame.GuiManager;
 import dax.blocks.model.ModelManager;
 import dax.blocks.overlay.OverlayManager;
 import dax.blocks.profiler.Profiler;
@@ -43,7 +42,7 @@ public class Game implements Runnable {
 	public boolean showbg = false;
 	public boolean consoleOpen = false;
 
-	private OverlayManager overlayManager;
+	private OverlayManager overlayManager = new OverlayManager();
 	public GuiScreen guiScreen;
 	public IChunkRenderer chunkRenderer = new ChunkRendererVBO();
 	public AuthManager authManager;
@@ -65,22 +64,13 @@ public class Game implements Runnable {
 	private String versionString = "version " + Start.GAME_VERSION;
 
 	private Profiler profiler = new Profiler();
-	private WorldManager worldsManager = new WorldManager();
+	private WorldManager worldsManager = new WorldManager(this);
 	private TrueTypeFont font;
 	private Keyconfig keyconfigLoader = new Keyconfig();
-
-	private static Game instance = null;
-
-	public static Game getInstance() {
-		if (Game.instance == null) {
-			Game.instance = new Game();
-		}
-
-		return Game.instance;
-	}
-
-	private Game() {
-		this.overlayManager = new OverlayManager();
+	private Console console;
+	
+	public Game() {
+		Settings.setGame(this);
 	}
 
 	public OverlayManager getOverlayManager() {
@@ -98,11 +88,18 @@ public class Game implements Runnable {
 	public World getCurrentWorld() {
 		return this.worldsManager.getWorld();
 	}
+	
+	public Console getConsole() {
+		return this.console;
+	}
 
 	// .... RUN METHODS ....
 
 	@Override
 	public void run() {
+		
+		this.console = new Console(this);
+		
 		try {
 			if (!this.configFile.exists()) {
 				this.configFile.createNewFile();
@@ -144,7 +141,7 @@ public class Game implements Runnable {
 				this.lastTPS = this.ticks;
 				this.ticks = 0;
 				SoundManager.getInstance().updatePlaying();
-				SoundManager.getInstance().getMusicProvider().updateMusic();
+				SoundManager.getInstance().getMusicProvider().updateMusic(this);
 			}
 
 			this.profiler.render.start();
@@ -195,7 +192,7 @@ public class Game implements Runnable {
 		this.font = FontManager.getFont();
 
 		this.displayLoadingScreen("Loading textures...");
-		TextureManager.load();
+		TextureManager.load(this);
 
 		this.displayLoadingScreen("Loading models...");
 		ModelManager.getInstance().load();
@@ -230,14 +227,14 @@ public class Game implements Runnable {
 				}
 
 				if (this.consoleOpen) {
-					Console.getInstance().charTyped(
+					this.console.charTyped(
 							Keyboard.getEventCharacter(),
 							Keyboard.getEventKey());
 				}
 
 				if (Keyconfig.isDownEvent(Keyconfig.console)) {
 					if (!this.consoleOpen) {
-						Console.getInstance().clearInput();
+						this.console.clearInput();
 						this.consoleOpen = true;
 					}
 				}
@@ -247,10 +244,15 @@ public class Game implements Runnable {
 					this.toggleFullscreen();
 				}
 
+				if(Keyboard.getEventKey() == Keyconfig.toggleNoClip) {
+					Settings.getInstance().noclip.setValue(
+							!Settings.getInstance().noclip.getValue());
+				}
+				
 				if (Keyboard.getEventKey() == Keyconfig.exit) {
 					if (!this.consoleOpen) {
-						if (GuiManager.getInstance().isOpened()) {
-							GuiManager.getInstance().closeScreen();
+						if (this.getCurrentWorld().getGui().isOpened()) {
+							this.getCurrentWorld().getGui().closeScreen();
 						} else {
 							if (this.guiScreen != null) {
 								this.closeGuiScreen();
@@ -414,15 +416,15 @@ public class Game implements Runnable {
 			GL11.glEnable(GL11.GL_TEXTURE_2D);
 			String cursor = (this.ticks % Game.TPS >= Game.TPS / 2) ? "_" : "";
 			this.font.drawString(0, cHeight - this.font.getLineHeight(), "> "
-					+ Console.getInstance().currentCommand + cursor);
+					+ this.console.currentCommand + cursor);
 			String info = Game.TITLE;
 			this.font.drawString(Settings.getInstance().windowWidth.getValue()
 					- this.font.getWidth(info) - 2,
 					cHeight - this.font.getLineHeight() * 2, info,
 					new org.newdawn.slick.Color(120, 120, 120));
 
-			ListIterator<String> li = Console.getInstance().lines
-					.listIterator(Console.getInstance().lines.size());
+			ListIterator<String> li = this.console.lines
+					.listIterator(this.console.lines.size());
 
 			int offset = 0;
 
@@ -432,7 +434,7 @@ public class Game implements Runnable {
 				this.font
 						.drawString(0, cHeight - this.font.getLineHeight()
 								- offset
-								- Console.getInstance().getTranslation(), li
+								- this.console.getTranslation(), li
 								.previous(), new org.newdawn.slick.Color(200,
 								200, 200));
 			}

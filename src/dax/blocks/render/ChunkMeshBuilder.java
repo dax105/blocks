@@ -7,15 +7,15 @@ import dax.blocks.world.chunk.Chunk;
 
 public class ChunkMeshBuilder {
 
-	public static ChunkMesh generateMesh(Chunk c, int cy) {
+	public static ChunkMesh generateMesh(Game game, Chunk c, int cy) {
 		
-		Profiler profiler = Game.getInstance().getProfiler();
+		Profiler profiler = game.getProfiler();
 		
 		profiler.build.start();
 		
 		if(c != null) {
 
-			IChunkRenderer renderer = Game.getInstance().chunkRenderer;
+			IChunkRenderer renderer = game.chunkRenderer;
 			ChunkMesh cm = new ChunkMesh(renderer);
 			
 			int startY = cy * 16;

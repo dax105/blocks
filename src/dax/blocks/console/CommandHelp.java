@@ -4,6 +4,10 @@ import java.util.Map.Entry;
 
 public class CommandHelp extends Command {
 
+	public CommandHelp(Console console) {
+		super(console);
+	}
+
 	@Override
 	public String getName() {
 		return "help";
@@ -17,10 +21,10 @@ public class CommandHelp extends Command {
 	@Override
 	public boolean execute(String[] args) {
 
-		Console.println("List of available commands:");
+		this.console.println("List of available commands:");
 		
-		for(Entry<String, Command> e : Console.getInstance().manager.commands.entrySet()) {
-			Console.println(e.getValue().getName());
+		for(Entry<String, Command> e : this.console.manager.commands.entrySet()) {
+			this.console.println(e.getValue().getName());
 		}
 		
 		return true;

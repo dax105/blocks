@@ -113,7 +113,7 @@ public class Chunk {
 			if(this.renderChunks[y].isBuilt()) {
 				this.deleteRenderChunk(y);
 			}		
-			this.renderChunks[y].setCm(ChunkMeshBuilder.generateMesh(this, y));
+			this.renderChunks[y].setCm(ChunkMeshBuilder.generateMesh(world.getGame(), this, y));
 		}
 	}
 

@@ -8,37 +8,31 @@ import java.util.List;
 import org.lwjgl.input.Keyboard;
 
 import dax.blocks.FontManager;
+import dax.blocks.Game;
 
 public class Console {
 
 	public static final int MAX_LINES = 100;
 	public static final int MAX_MEMORY = 100;
-	private static Console instance;
 
 	public List<String> lines = new ArrayList<String>();
 	public List<String> memory = new ArrayList<String>();
 
 	public CommandManager manager = new CommandManager();
+	private Game game;
 	public String currentCommand = "";
 	public int memPos = 0;
 	public boolean memUsed = false;
 	public int displayOffset = 0;
 	private Date now = new Date();
 	private String characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789._-!,=%()[]{}<>#&@* ";
-
-	public static Console getInstance() {
-		if(Console.instance == null)
-			Console.instance = new Console();
-		
-		return Console.instance;
+	
+	public void println(String ln) {
+		this.out(ln);
 	}
 	
-	public static void println(String ln) {
-		getInstance().out(ln);
-	}
-	
-	private Console() {
-		
+	public Console(Game game) {
+		this.game = game;
 	}
 	
 	public void clearInput() {
@@ -156,5 +150,9 @@ public class Console {
 				}
 			}
 		}
+	}
+	
+	public Game getGame() {
+		return this.game;
 	}
 }

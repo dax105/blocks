@@ -51,7 +51,9 @@ public class World implements ITickListener {
 	private IDRegister idRegister;
 	private RenderEngine renderEngine;
 	private ParticleEngine particleEngine;
-
+	private Game game;
+	private GuiManager gui;
+	
 	public int size;
 	public int sizeBlocks;
 
@@ -66,8 +68,10 @@ public class World implements ITickListener {
 		return this.vertices;
 	}
 
-	public World(String worldName, RenderEngine e) {
+	public World(Game game, String worldName, RenderEngine e) {
+		this.gui = new GuiManager(game);
 		this.name = worldName;
+		this.game = game;
 		this.renderEngine = e;
 		this.particleEngine = new ParticleEngine(this);
 		e.setWorld(this);
@@ -77,7 +81,7 @@ public class World implements ITickListener {
 		this.idRegister.registerDefaultItems();
 
 		this.player = new PlayerEntity(this, 0, 128, 0);
-		Game.getInstance().getOverlayManager().addOverlay(this.player);
+		game.getOverlayManager().addOverlay(this.player);
 
 		this.chunkProvider = new ChunkProvider(this, true);
 
@@ -444,7 +448,7 @@ public class World implements ITickListener {
 	}
 
 	public void saveAllChunks() {
-		this.chunkProvider.loader.saveAll();
+		this.chunkProvider.loader.saveAll(this.game);
 
 		try {
 			this.idRegister.saveIDs(IDRegister.dataFile);
@@ -523,7 +527,7 @@ public class World implements ITickListener {
 	// .... OVERRIDE METHODS ....
 	@Override
 	public void onTick() {
-		GuiManager.getInstance().onTick();
+		this.gui.onTick();
 		this.player.onTick();
 
 		for (ITickListener r : this.tickListeners) {
@@ -600,11 +604,19 @@ public class World implements ITickListener {
 						b.getKey().y, b.getKey().z, this);
 		}
 
-		GuiManager.getInstance().onRenderTick(partialTickTime);
+		this.gui.onRenderTick(partialTickTime);
 	}
 	
 	public ParticleEngine getParticleEngine() {
 		return particleEngine;
+	}
+	
+	public Game getGame() {
+		return this.game;
+	}
+	
+	public GuiManager getGui() {
+		return this.gui;
 	}
 	
 	public void exit() {

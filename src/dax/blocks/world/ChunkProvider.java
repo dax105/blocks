@@ -238,7 +238,7 @@ public class ChunkProvider {
 		this.seed = seed;
 		this.world = world;
 		this.loader = new ChunkSaveManager(this, world.name);
-		this.loader.tryToLoadWorld();
+		this.loader.tryToLoadWorld(world.getGame());
 		
 		this.treeGen = new TreeGenerator(this.world);
 		this.simplex3D_1 = new SimplexNoise(512, 0.425, this.seed);
