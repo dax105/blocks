@@ -18,7 +18,6 @@ import dax.blocks.Game;
 import dax.blocks.TextureManager;
 import dax.blocks.block.Block;
 import dax.blocks.console.CommandCullLock;
-import dax.blocks.console.Console;
 import dax.blocks.movable.entity.PlayerEntity;
 import dax.blocks.settings.Settings;
 import dax.blocks.util.Coord2D;
@@ -60,12 +59,14 @@ public class RenderEngine {
 	private List<IWorldRenderer> renderablesToAdd;
 
 	private World renderWorld;
+	private Game game;
 
-	public RenderEngine() {
-		this(false);
+	public RenderEngine(Game game) {
+		this(game, false);
 	}
 
-	public RenderEngine(boolean enableShaders) {
+	public RenderEngine(Game game, boolean enableShaders) {
+		this.game = game;
 		this.enableShaders = enableShaders;
 		this.frustum = new Frustum();
 		this.rightModelviewVec = new float[3];
@@ -139,7 +140,7 @@ public class RenderEngine {
 		}
 
 		blockAttributeID = GL20.glGetAttribLocation(this.program, "blockid");
-		Console.println("Shader seems to be loaded!");
+		this.game.getConsole().println("Shader seems to be loaded!");
 	}
 
 	private int createShader(String filename, int shaderType) throws Exception {
@@ -319,7 +320,7 @@ public class RenderEngine {
 
 		int generatedMeshes = 0;
 
-		IChunkRenderer chunkRenderer = Game.getInstance().chunkRenderer;
+		IChunkRenderer chunkRenderer = this.game.chunkRenderer;
 
 		chunkRenderer.beforeBuilding();
 

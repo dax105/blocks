@@ -6,21 +6,26 @@ import java.util.Map;
 public class CommandManager {
 
 	public Map<String, Command> commands = new HashMap<String, Command>();
+	private Console c;
+	
+	public CommandManager(Console c) {
+		this.c = c;
+	}
 	
 	public Command getCommand(String name) {
 		return this.commands.get(name);
 	}
 	
 	public CommandManager() {
-		this.registerCommand(new CommandSet()); 
-		this.registerCommand(new CommandGet()); 
-		this.registerCommand(new CommandReload()); 
-		this.registerCommand(new CommandHelp()); 
-		this.registerCommand(new CommandTele()); 
-		this.registerCommand(new CommandVariables());
-		this.registerCommand(new CommandDeleteWorld());
-		this.registerCommand(new CommandCullLock());
-		this.registerCommand(new CommandDefaults());
+		this.registerCommand(new CommandSet(this.c)); 
+		this.registerCommand(new CommandGet(this.c)); 
+		this.registerCommand(new CommandReload(this.c)); 
+		this.registerCommand(new CommandHelp(this.c)); 
+		this.registerCommand(new CommandTele(this.c)); 
+		this.registerCommand(new CommandVariables(this.c));
+		this.registerCommand(new CommandDeleteWorld(this.c));
+		this.registerCommand(new CommandCullLock(this.c));
+		this.registerCommand(new CommandDefaults(this.c));
 	}
 	
 	private void registerCommand(Command command) {

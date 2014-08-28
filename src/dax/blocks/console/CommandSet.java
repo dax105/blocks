@@ -6,6 +6,10 @@ import dax.blocks.settings.SettingsObject;
 
 public class CommandSet extends Command {
 
+	public CommandSet(Console console) {
+		super(console);
+	}
+
 	@Override
 	public String getName() {
 		return "set";
@@ -30,12 +34,11 @@ public class CommandSet extends Command {
 				Settings.getInstance().setValue(o.getName(), args[1]);
 				return true;
 			} else {
-				Console.println("Unknown variable \"" + args[0] + "\"");
+				this.console.println("Unknown variable \"" + args[0] + "\"");
 			}
 		} else {
-			Console.println("Not enough arguments, correct usage:");
-			Console.println(getUsage());
-			
+			this.console.println("Not enough arguments, correct usage:");
+			this.console.println(getUsage());	
 		}
 		
 		return false;

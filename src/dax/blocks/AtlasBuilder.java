@@ -12,7 +12,6 @@ import javax.imageio.ImageIO;
 import org.newdawn.slick.opengl.Texture;
 import org.newdawn.slick.util.BufferedImageUtil;
 
-import dax.blocks.console.Console;
 import dax.blocks.util.GameMath;
 
 public class AtlasBuilder {
@@ -25,6 +24,11 @@ public class AtlasBuilder {
 	private int texSize;
 	
 	private boolean isEmpty = true;
+	private Game game;
+	
+	public AtlasBuilder(Game game) {
+		this.game = game;
+	}
 	
 	public int getTexSize() {
 		return this.texSize;
@@ -35,19 +39,19 @@ public class AtlasBuilder {
 			this.isEmpty = false;	
 			
 			if(tex.getWidth() != tex.getHeight()) {
-				Console.getInstance().out("Texture w/h mismatch, ratio must be 1:1! Exiting!");
+				this.game.getConsole().out("Texture w/h mismatch, ratio must be 1:1! Exiting!");
 				System.exit(1);
 			}	
 			
 			this.texSize = tex.getWidth();
 			
 			if(!GameMath.isPowerOfTwo(this.texSize)) {
-				Console.getInstance().out("Texture size is not power of two! Exiting!");
+				this.game.getConsole().out("Texture size is not power of two! Exiting!");
 				System.exit(1);
 			}
 			
 		} else if(tex.getWidth() != this.texSize || tex.getHeight() != this.texSize){
-			Console.getInstance().out("Texture size mismatch while building texture atlas! Exiting!");
+			this.game.getConsole().out("Texture size mismatch while building texture atlas! Exiting!");
 			System.exit(1);
 		}
 		
@@ -55,9 +59,9 @@ public class AtlasBuilder {
 	}
 	
 	public Texture buildAtlas(boolean avoidBleeding) {
-		Console.getInstance().out("Building texture atlas...");
+		this.game.getConsole().out("Building texture atlas...");
 		if(this.textures.size() == 0) {
-			Console.getInstance().out("No textures added, cannot return empty texture atlas! Exiting!");
+			this.game.getConsole().out("No textures added, cannot return empty texture atlas! Exiting!");
 			System.exit(1);
 		}
 		
@@ -68,10 +72,10 @@ public class AtlasBuilder {
 		);
 		Graphics2D g = (Graphics2D) img.getGraphics();
 		
-		Console.println("Atlas size: " + img.getWidth() + "px"); 
+		this.game.getConsole().println("Atlas size: " + img.getWidth() + "px"); 
 		
 		for(int i = 0; i < this.textures.size(); i++) {
-			Console.getInstance().out("Adding texture with index " + i + " to the texture atlas image!");
+			this.game.getConsole().out("Adding texture with index " + i + " to the texture atlas image!");
 			BufferedImage tex = this.textures.get(i);
 			
 			int offsetX = (int) ((i % 8) * (AtlasBuilder.EXPAND_RATIO*2+1) * this.texSize);
@@ -110,7 +114,7 @@ public class AtlasBuilder {
 		    e.printStackTrace();
 		}
 		
-		Console.println("Texture atlas built successfully!");
+		this.game.getConsole().println("Texture atlas built successfully!");
 		
 		return atlas;
 	}

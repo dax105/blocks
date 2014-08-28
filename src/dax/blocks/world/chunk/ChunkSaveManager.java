@@ -13,7 +13,6 @@ import java.util.logging.Logger;
 import org.xerial.snappy.Snappy;
 
 import dax.blocks.Game;
-import dax.blocks.console.Console;
 import dax.blocks.util.Coord2D;
 import dax.blocks.world.ChunkProvider;
 import dax.blocks.world.World;
@@ -28,7 +27,7 @@ public class ChunkSaveManager {
 	
 	public static final int WORLD_VERSION = 1;
 	
-	public void tryToLoadWorld() {
+	public void tryToLoadWorld(Game game) {
 			File dir = new File(WorldManager.SAVES_DIR, this.name);
 			
 			if(!dir.exists()) {
@@ -40,17 +39,17 @@ public class ChunkSaveManager {
 			File file = new File(dir, "world" + ".txt");
 
 			if(!file.exists()) {
-				Console.println("World save not found!");
+				game.getConsole().println("World save not found!");
 				return;
 			}
 
-			WorldInfo i = Game.getInstance().getWorldsManager().getWorld(name);
+			WorldInfo i = game.getWorldsManager().getWorld(name);
 			this.world.getPlayer().setPosition(i.getPlayerX(), i.getPlayerY(), i.getPlayerZ());
 			this.world.getPlayer().setTilt(i.getPlayerTilt());
 			this.world.getPlayer().setHeading(i.getPlayerHeading());
 			this.provider.seed = i.getWorldSeed();
 			
-			Console.println("World info sucessfully loaded!");
+			game.getConsole().println("World info sucessfully loaded!");
 	}
 	
 	public ChunkSaveManager(ChunkProvider provider, String saveName) {
@@ -71,8 +70,8 @@ public class ChunkSaveManager {
 		return file.exists();
 	}
 
-	public void saveAll() {
-		Game.getInstance().displayLoadingScreen("Saving...");
+	public void saveAll(Game game) {
+		game.displayLoadingScreen("Saving...");
 		Iterator<Entry<Coord2D, Chunk>> it = provider.loadedChunks.entrySet().iterator();
 		while(it.hasNext()) {
 			Entry<Coord2D, Chunk> pairs = it.next();
@@ -83,7 +82,7 @@ public class ChunkSaveManager {
 			this.saveChunk(c);
 		}
 
-		WorldInfo i = Game.getInstance().getWorldsManager().getWorld(this.name);
+		WorldInfo i = game.getWorldsManager().getWorld(this.name);
 		if(i == null) i = new WorldInfo(this.name);
 		
 		i.setPlayerX(this.world.getPlayer().getPosX());
@@ -101,7 +100,8 @@ public class ChunkSaveManager {
 		} catch (IOException e) {
 			Logger.getGlobal().warning("Can't save data file!");
 		}
-		Game.getInstance().closeGuiScreen();
+
+		game.closeGuiScreen();
 	}
 
 	public Chunk loadChunk(int cx, int cz) {

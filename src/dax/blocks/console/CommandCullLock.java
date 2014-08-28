@@ -1,9 +1,12 @@
 package dax.blocks.console;
 
-import dax.blocks.Game;
 import dax.blocks.movable.entity.PlayerEntity;
 
 public class CommandCullLock extends Command {
+
+	public CommandCullLock(Console console) {
+		super(console);
+	}
 
 	// I know, this is ugly, but I DONT CARE!
 	public static boolean locked = false;
@@ -24,15 +27,15 @@ public class CommandCullLock extends Command {
 	@Override
 	public boolean execute(String[] args) {
 		if(!CommandCullLock.locked) {
-			PlayerEntity player = Game.getInstance().getCurrentWorld().getPlayer();
+			PlayerEntity player = this.console.getGame().getCurrentWorld().getPlayer();
 			CommandCullLock.lockedX = player.getPosX();
 			CommandCullLock.lockedY = player.getPosY();
 			CommandCullLock.lockedZ = player.getPosZ();
 			
-			Console.println("Culling locked!");
+			this.console.println("Culling locked!");
 			CommandCullLock.locked = true;
 		} else {
-			Console.println("Culling unlocked!");
+			this.console.println("Culling unlocked!");
 			CommandCullLock.locked = false;
 		}
 		

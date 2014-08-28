@@ -14,7 +14,6 @@ import org.newdawn.slick.Color;
 import org.newdawn.slick.opengl.Texture;
 
 import dax.blocks.TextureManager;
-import dax.blocks.console.Console;
 import dax.blocks.settings.Settings;
 
 public class GLHelper {
@@ -141,7 +140,7 @@ public class GLHelper {
 			}
 
 			if (targetDisplayMode == null) {
-				Console.println("Failed to find value mode: " + width + "x"
+				System.out.println("Failed to find value mode: " + width + "x"
 						+ height + " fs=" + fullscreen);
 				return;
 			}
@@ -154,7 +153,7 @@ public class GLHelper {
 				try {
 					Display.create(new PixelFormat(8, 8, 0, Settings.getInstance().aaSamples
 							.getValue()));
-					Console.println("Display created!");
+					System.out.println("Display created!");
 					// Display.create();
 				} catch (LWJGLException e) {
 					e.printStackTrace();
@@ -162,7 +161,7 @@ public class GLHelper {
 			}
 
 		} catch (LWJGLException e) {
-			Console.println("Unable to setup mode " + width + "x" + height
+			System.out.println("Unable to setup mode " + width + "x" + height
 					+ " fullscreen=" + fullscreen + e);
 		}
 	}

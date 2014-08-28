@@ -10,10 +10,9 @@ import org.newdawn.slick.opengl.Texture;
 import org.newdawn.slick.opengl.TextureLoader;
 import org.newdawn.slick.util.ResourceLoader;
 
-import dax.blocks.console.Console;
-
 public class TextureManager {
 
+	private static Game game;
 	public static final int ATLAS_SIZE = 8;
 	public static float textureSizeCoord;
 	public static float texSize;
@@ -39,7 +38,7 @@ public class TextureManager {
 	private static Texture loadTex(String path) {
 		try {
 			Texture tex = TextureLoader.getTexture("PNG", ResourceLoader.getResourceAsStream(path));
-			Console.println("Successfully loaded texture from " + path);
+			TextureManager.game.getConsole().println("Successfully loaded texture from " + path);
 			return tex;
 		} catch (IOException e) {
 			System.err.println("Can't load texture from " + path + ", perhaps the file doesn't exist?");
@@ -51,7 +50,7 @@ public class TextureManager {
 	public static BufferedImage loadImage(String path) {
 		try {
 			BufferedImage image = ImageIO.read(ResourceLoader.getResourceAsStream(path));
-			Console.println("Successfully loaded texture as image from " + path);
+			TextureManager.game.getConsole().println("Successfully loaded texture as image from " + path);
 			return image;
 		} catch (IOException e) {
 			System.err.println("Can't load texture as image from " + path + ", perhaps the file doesn't exist?");
@@ -60,7 +59,8 @@ public class TextureManager {
 		return null;
 	}
 
-	public static void load() {
+	public static void load(Game game) {
+		TextureManager.game = game;
 		TextureManager.logo = TextureManager.loadTex("dax/blocks/res/textures/logo.png");
 		TextureManager.menuBg = TextureManager.loadTex("dax/blocks/res/textures/menubg.png");
 		TextureManager.clouds = TextureManager.loadTex("dax/blocks/res/textures/clouds.png");
@@ -103,7 +103,7 @@ public class TextureManager {
 		GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MIN_FILTER, GL11.GL_NEAREST);
 		GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MAG_FILTER, GL11.GL_NEAREST);
 		
-		AtlasBuilder ab = new AtlasBuilder();
+		AtlasBuilder ab = new AtlasBuilder(TextureManager.game);
 		ab.addTexture(TextureManager.loadImage("dax/blocks/res/textures/blocks/stone.png"));
 		ab.addTexture(TextureManager.loadImage("dax/blocks/res/textures/blocks/cobblestone_mossy.png"));
 		ab.addTexture(TextureManager.loadImage("dax/blocks/res/textures/blocks/planks_oak.png"));

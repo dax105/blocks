@@ -6,7 +6,8 @@ public class Start {
 	public static final String GAME_NAME = "Order of the Stone";
 
 	public static void main(String[] args) {
-		Game game = Game.getInstance();
+		Game game = new Game();
+		
 		if(args.length > 2) {
 			game.doLogin(args[0], args[1], args[2]);
 		} else {

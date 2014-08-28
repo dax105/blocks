@@ -5,6 +5,10 @@ import dax.blocks.settings.SettingsObject;
 
 public class CommandGet extends Command {
 
+	public CommandGet(Console console) {
+		super(console);
+	}
+
 	@Override
 	public String getName() {
 		return "get";
@@ -21,11 +25,11 @@ public class CommandGet extends Command {
 		if(args.length >= 1) {
 			SettingsObject<?> o = Settings.getInstance().getObject(args[0]);
 			if(o != null) {
-				Console.println("Variable " + o.getName() + ": " + o.getReadableValue());
+				this.console.println("Variable " + o.getName() + ": " + o.getReadableValue());
 			}
 		} else {
-			Console.println("Not enough arguments, correct usage:");
-			Console.println(getUsage());			
+			this.console.println("Not enough arguments, correct usage:");
+			this.console.println(getUsage());			
 		}
 		
 		return false;
