@@ -7,16 +7,13 @@ public class CommandManager {
 
 	public Map<String, Command> commands = new HashMap<String, Command>();
 	private Console c;
-	
-	public CommandManager(Console c) {
-		this.c = c;
-	}
-	
 	public Command getCommand(String name) {
 		return this.commands.get(name);
 	}
 	
-	public CommandManager() {
+	public CommandManager(Console c) {
+		this.c = c;
+		
 		this.registerCommand(new CommandSet(this.c)); 
 		this.registerCommand(new CommandGet(this.c)); 
 		this.registerCommand(new CommandReload(this.c)); 

@@ -18,7 +18,7 @@ public class Console {
 	public List<String> lines = new ArrayList<String>();
 	public List<String> memory = new ArrayList<String>();
 
-	public CommandManager manager = new CommandManager();
+	public CommandManager manager;
 	private Game game;
 	public String currentCommand = "";
 	public int memPos = 0;
@@ -33,6 +33,7 @@ public class Console {
 	
 	public Console(Game game) {
 		this.game = game;
+		this.manager = new CommandManager(this);
 	}
 	
 	public void clearInput() {
