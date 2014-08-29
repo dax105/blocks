@@ -17,9 +17,12 @@ public class Section {
 		this.start = System.nanoTime();
 	}
 	
-	public void end() {
-		this.times[this.currentPos] = (System.nanoTime() - this.start) / 1000000f;
+	public int end() {
+		long current = System.nanoTime();
+		this.times[this.currentPos] = (current - this.start) / 1000000f;
+		int t = (int) (current - this.start);
 		this.currentPos = this.currentPos >= Section.MAX_RECORDS-1 ? 0 : this.currentPos + 1;
+		return t;
 	}
 	
 	public float[] getTimes() {

@@ -551,10 +551,10 @@ public class PlayerEntity extends Entity implements IOverlayRenderer {
 			yl = yn;
 			zl = zn;
 
-			xn = (float) (this.getPosX() + f * xChange);
-			yn = (float) (this.getPosY() + PlayerEntity.EYES_HEIGHT + f
+			xn = (float) (this.getPosXPartial() + f * xChange);
+			yn = (float) (this.getPosYPartial() + PlayerEntity.EYES_HEIGHT + f
 					* yChange);
-			zn = (float) (this.getPosZ() + f * zChange);
+			zn = (float) (this.getPosZPartial() + f * zChange);
 
 			if(this.getWorld().getBlock((int) Math.floor(xn),
 					(int) Math.floor(yn), (int) Math.floor(zn)) > 0) {

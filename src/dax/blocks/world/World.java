@@ -29,6 +29,7 @@ import dax.blocks.render.RenderEngine;
 import dax.blocks.settings.Settings;
 import dax.blocks.util.Coord2D;
 import dax.blocks.util.Coord3D;
+import dax.blocks.util.GameMath;
 import dax.blocks.world.chunk.Chunk;
 
 public class World implements ITickListener {
@@ -384,6 +385,7 @@ public class World implements ITickListener {
 		//int z0 = (int) (_z0 - 1.0F);
 		//int z1 = (int) (_z1 + 1.0F);
 
+		if(GameMath.shouldCareAbout(xm)) {
 		for (int x = x0; x < x1; ++x) {
 			for (int y = y0; y < y1; ++y) {
 				for (int z = z0; z < z1; ++z) {
@@ -399,7 +401,9 @@ public class World implements ITickListener {
 			}
 		}
 		bb.move(xm, 0.0F, 0.0F);
+		}
 
+		if(GameMath.shouldCareAbout(ym)) {
 		for (int x = x0; x < x1; ++x) {
 			for (int y = y0; y < y1; ++y) {
 				for (int z = z0; z < z1; ++z) {
@@ -415,7 +419,9 @@ public class World implements ITickListener {
 			}
 		}
 		bb.move(0.0F, ym, 0.0F);
+		}
 
+		if(GameMath.shouldCareAbout(zm)) {
 		for (int x = x0; x < x1; ++x) {
 			for (int y = y0; y < y1; ++y) {
 				for (int z = z0; z < z1; ++z) {
@@ -431,6 +437,7 @@ public class World implements ITickListener {
 			}
 		}
 		bb.move(0.0F, 0.0F, zm);
+		}
 
 		return new float[] { xm, ym, zm };
 	}

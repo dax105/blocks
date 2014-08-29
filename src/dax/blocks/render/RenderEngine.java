@@ -92,9 +92,9 @@ public class RenderEngine {
 
 	private void loadShaders() {
 		try {
-			this.vertShader = createShader("dax/blocks/shaders/screenN.vsh",
+			this.vertShader = createShader("dax/blocks/shaders/screen.vsh",
 					ARBVertexShader.GL_VERTEX_SHADER_ARB);
-			this.fragShader = createShader("dax/blocks/shaders/screenN.fsh",
+			this.fragShader = createShader("dax/blocks/shaders/screen.fsh",
 					ARBFragmentShader.GL_FRAGMENT_SHADER_ARB);
 		} catch(Exception exc) {
 			System.err.println("============================================\n"
