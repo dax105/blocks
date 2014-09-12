@@ -52,7 +52,6 @@ public class RenderEngine {
 	private boolean enableShaders;
 
 	public int program = 0;
-	public int blockAttributeID;
 
 	private List<IWorldRenderer> renderables;
 	private List<IWorldRenderer> renderablesToRemove;
@@ -139,7 +138,6 @@ public class RenderEngine {
 			System.err.println(getLogInfo(this.program));
 		}
 
-		blockAttributeID = GL20.glGetAttribLocation(this.program, "blockid");
 		this.game.getConsole().println("Shader seems to be loaded!");
 	}
 
@@ -235,6 +233,11 @@ public class RenderEngine {
 				Settings.getInstance().drawDistance.getValue() * 16 - 8);
 
 		this.ptt = ptt;
+		
+		GLHelper.setOrtho(Display.getWidth(), Display.getHeight());
+		this.renderSky(this.game.getWorldsManager().getWorld().getPlayer().getTilt());
+		GLHelper.setPerspective(Display.getWidth(), Display.getHeight());
+		
 		this.pushPlayerMatrix(this.renderWorld.getPlayer());
 		this.updateBeforeRendering(this.ptt);
 
@@ -485,120 +488,43 @@ public class RenderEngine {
 	}
 
 	public void renderSky(float rot) {
-		GL11.glPushMatrix();
-		GL11.glPushAttrib(GL11.GL_ENABLE_BIT);
+		
+		float expansion = 1.5f;
+		
 		GL11.glDisable(GL11.GL_CULL_FACE);
 		GL11.glDisable(GL11.GL_DEPTH_TEST);
+		
 		GL11.glDisable(GL11.GL_LIGHTING);
-		GL11.glDisable(GL11.GL_BLEND);
+		GL11.glDisable(GL11.GL_TEXTURE_2D);
+		sDisable(FLAG_TEXTURE);
+		sDisable(FLAG_LIGHTING);
+		
+		rot += 90f;
+		float p = 1-(rot/180f);
 
 		GL11.glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
 
+		GL11.glPushMatrix();
+		
+		GL11.glTranslatef(0, -Display.getHeight()*p*(expansion-1), 0);
+		
 		GL11.glBegin(GL11.GL_QUADS);
-		GL11.glColor3f(0.9f, 0.9f, 1.0f);
+		GL11.glColor3f(172/255f, 221/255f, 252/255f);
 		GL11.glVertex2f(0, 0);
-		GL11.glColor3f(0.9f, 0.9f, 1.0f);
 		GL11.glVertex2f(Display.getWidth(), 0);
-		GL11.glColor3f(0.8f, 0.8f, 1.0f);
-		GL11.glVertex2f(Display.getWidth(), Display.getHeight());
-		GL11.glColor3f(0.8f, 0.8f, 1.0f);
-		GL11.glVertex2f(0, Display.getHeight());
+		GL11.glColor3f(15/255f, 100/255f, 250/255f);
+		GL11.glVertex2f(Display.getWidth(), Display.getHeight()*expansion);
+		GL11.glVertex2f(0, Display.getHeight()*expansion);
 		GL11.glEnd();
-
-		GL11.glPopAttrib();
+		
 		GL11.glPopMatrix();
+		
+		GL11.glEnable(GL11.GL_CULL_FACE);
+		GL11.glEnable(GL11.GL_DEPTH_TEST);
 	}
 
 	public void renderSkybox(float x, float y, float z) {
-		// Store the current matrix
-		GL11.glPushMatrix();
-
-		GL11.glTranslatef(x, y, z);
-
-		// Enable/Disable features
-		GL11.glPushAttrib(GL11.GL_ENABLE_BIT);
-		GL11.glEnable(GL11.GL_TEXTURE_2D);
-		GL11.glDisable(GL11.GL_CULL_FACE);
-		GL11.glDisable(GL11.GL_DEPTH_TEST);
-		GL11.glDisable(GL11.GL_LIGHTING);
-		GL11.glDisable(GL11.GL_BLEND);
-		// Just in case we set all vertices to white.
-		// GL11.glColor4f(1,1,1,1);
-		// Render the front quad
-		TextureManager.skybox_side.bind();
-		GL11.glBegin(GL11.GL_QUADS);
-		GL11.glTexCoord2f(0, 1);
-		GL11.glVertex3f(0.5f, -0.5f, -0.5f);
-		GL11.glTexCoord2f(1, 1);
-		GL11.glVertex3f(-0.5f, -0.5f, -0.5f);
-		GL11.glTexCoord2f(1, 0);
-		GL11.glVertex3f(-0.5f, 0.5f, -0.5f);
-		GL11.glTexCoord2f(0, 0);
-		GL11.glVertex3f(0.5f, 0.5f, -0.5f);
-		GL11.glEnd();
-		// Render the left quad
-		// TextureManager.skybox_left.bind();
-		GL11.glBegin(GL11.GL_QUADS);
-		GL11.glTexCoord2f(0, 1);
-		GL11.glVertex3f(0.5f, -0.5f, 0.5f);
-		GL11.glTexCoord2f(1, 1);
-		GL11.glVertex3f(0.5f, -0.5f, -0.5f);
-		GL11.glTexCoord2f(1, 0);
-		GL11.glVertex3f(0.5f, 0.5f, -0.5f);
-		GL11.glTexCoord2f(0, 0);
-		GL11.glVertex3f(0.5f, 0.5f, 0.5f);
-		GL11.glEnd();
-		// Render the back quad
-		// TextureManager.skybox_back.bind();
-		GL11.glBegin(GL11.GL_QUADS);
-		GL11.glTexCoord2f(0, 1);
-		GL11.glVertex3f(-0.5f, -0.5f, 0.5f);
-		GL11.glTexCoord2f(1, 1);
-		GL11.glVertex3f(0.5f, -0.5f, 0.5f);
-		GL11.glTexCoord2f(1, 0);
-		GL11.glVertex3f(0.5f, 0.5f, 0.5f);
-		GL11.glTexCoord2f(0, 0);
-		GL11.glVertex3f(-0.5f, 0.5f, 0.5f);
-		GL11.glEnd();
-		// Render the right quad
-		// TextureManager.skybox_right.bind();
-		GL11.glBegin(GL11.GL_QUADS);
-		GL11.glTexCoord2f(0, 1);
-		GL11.glVertex3f(-0.5f, -0.5f, -0.5f);
-		GL11.glTexCoord2f(1, 1);
-		GL11.glVertex3f(-0.5f, -0.5f, 0.5f);
-		GL11.glTexCoord2f(1, 0);
-		GL11.glVertex3f(-0.5f, 0.5f, 0.5f);
-		GL11.glTexCoord2f(0, 0);
-		GL11.glVertex3f(-0.5f, 0.5f, -0.5f);
-		GL11.glEnd();
-		// Render the top quad
-		TextureManager.skybox_top.bind();
-		GL11.glBegin(GL11.GL_QUADS);
-		GL11.glTexCoord2f(1, 1);
-		GL11.glVertex3f(-0.5f, 0.5f, -0.5f);
-		GL11.glTexCoord2f(1, 0);
-		GL11.glVertex3f(-0.5f, 0.5f, 0.5f);
-		GL11.glTexCoord2f(0, 0);
-		GL11.glVertex3f(0.5f, 0.5f, 0.5f);
-		GL11.glTexCoord2f(0, 1);
-		GL11.glVertex3f(0.5f, 0.5f, -0.5f);
-		GL11.glEnd();
-		// Render the bottom quad
-		TextureManager.skybox_bottom.bind();
-		GL11.glBegin(GL11.GL_QUADS);
-		GL11.glTexCoord2f(0, 0);
-		GL11.glVertex3f(-0.5f, -0.5f, -0.5f);
-		GL11.glTexCoord2f(0, 1);
-		GL11.glVertex3f(-0.5f, -0.5f, 0.5f);
-		GL11.glTexCoord2f(1, 1);
-		GL11.glVertex3f(0.5f, -0.5f, 0.5f);
-		GL11.glTexCoord2f(1, 0);
-		GL11.glVertex3f(0.5f, -0.5f, -0.5f);
-		GL11.glEnd();
-		// Restore enable bits and matrix
-		GL11.glPopAttrib();
-		GL11.glPopMatrix();
+		
 	}
 
 	public void renderUnlockedBlock(float x, float y, float z, Block block) {

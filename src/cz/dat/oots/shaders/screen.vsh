@@ -10,14 +10,11 @@
 //= END OF EDITABLE VARIABLES =//
 //=============================//
 
-attribute float blockid;
-
 uniform float lighting;
 
 varying vec4 color;
 varying vec4 vposition;
 varying float vdist;
-varying float blockidinterp;
 
 uniform float time;
 
@@ -26,7 +23,6 @@ float rand(vec3 co){
 }
 
 void main() {
-	blockidinterp = blockid;
 	
 	vec3 vertexPosition = (gl_ModelViewMatrix * gl_Vertex).xyz;
 	vec3 lightDirection = normalize(gl_LightSource[0].position.xyz);
@@ -45,11 +41,6 @@ void main() {
 	}	
 
     vec4 vertex = gl_Vertex;
-    
-    if (blockid == 12) {
-    	float distanceSquared = vertex.x * vertex.x + vertex.z * vertex.z;
-    	vertex.y -= sin(time*2.0+sqrt(distanceSquared)*1.5)*0.125;
-    }
     
     #ifdef ENABLE_ACID
     
@@ -79,7 +70,7 @@ void main() {
     gl_Position = gl_ProjectionMatrix * position;
     vposition = position;
     
-    vdist = distance(vposition.xyz, vec3(0.0, 0.0, 0.0));
+    vdist = distance(vposition.xyz, vec3(0.0));
     
     //gl_Position = gl_ModelViewProjectionMatrix * gl_Vertex;
     gl_TexCoord[0] = gl_MultiTexCoord0;
