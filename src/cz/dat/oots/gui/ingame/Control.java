@@ -33,5 +33,11 @@ public abstract class Control implements ITickListener {
 	public void onRenderTick(float partialTickTime) {	
 	}
 	
+	public void onParentOpened() {
+	}
+
+	public void onParentClosed() {
+	}
+	
 	public abstract void render();
 }

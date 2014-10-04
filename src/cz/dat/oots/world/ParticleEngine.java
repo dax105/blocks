@@ -54,7 +54,6 @@ public class ParticleEngine implements ITickListener {
 				it.remove();
 			}
 		}
-		System.out.println(particles.size());
 	}
 
 	@Override

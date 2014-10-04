@@ -91,6 +91,9 @@ public class ColorScreen extends GuiScreen {
 	
 	@Override
 	public void onOpening() {
+		this.r.onParentOpened();
+		this.g.onParentOpened();
+		this.b.onParentOpened();
 	}
 
 	@Override

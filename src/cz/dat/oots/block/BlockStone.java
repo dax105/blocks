@@ -45,8 +45,6 @@ public class BlockStone extends BlockBasic {
 		d.setColorR(currentColor.r);
 		d.setColorG(currentColor.g);
 		d.setColorB(currentColor.b);
-		
-		System.out.println(currentColor.r + ", " + currentColor.g + ", " + currentColor.b);
 	}
 	
 	@Override
