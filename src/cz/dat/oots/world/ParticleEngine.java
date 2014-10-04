@@ -23,6 +23,7 @@ public class ParticleEngine implements ITickListener {
 	// private ParticleComparator sorter;
 	private FloatBuffer drawBuffer;
 
+	@SuppressWarnings("unused")
 	private World world;
 	private RenderEngine renderEngine;
 	private int handle;

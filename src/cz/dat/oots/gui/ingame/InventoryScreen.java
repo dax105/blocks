@@ -1,9 +1,5 @@
 package cz.dat.oots.gui.ingame;
 
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
-
 import cz.dat.oots.inventory.IInventory;
 
 public abstract class InventoryScreen extends GuiScreen {

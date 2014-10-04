@@ -35,10 +35,11 @@ public class TextureManager {
 	
 	public static Texture imaginary_chocolate;
 
-	private static Texture loadTex(String path) {
+	public static Texture loadTex(String path) {
 		try {
 			Texture tex = TextureLoader.getTexture("PNG", ResourceLoader.getResourceAsStream(path));
-			TextureManager.game.getConsole().println("Successfully loaded texture from " + path);
+			if(TextureManager.game != null)
+				TextureManager.game.getConsole().println("Successfully loaded texture from " + path);
 			return tex;
 		} catch (IOException e) {
 			System.err.println("Can't load texture from " + path + ", perhaps the file doesn't exist?");
@@ -131,30 +132,6 @@ public class TextureManager {
 		
 		TextureManager.textureSizeCoord = TextureManager.atlas.getWidth() / TextureManager.ATLAS_SIZE / (AtlasBuilder.EXPAND_RATIO*2+1);
 		TextureManager.texSize = TextureManager.atlas.getWidth();
-		
-		/*if(Settings.getInstance().mipmaps.getValue()) {
-			GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MIN_FILTER, GL11.GL_LINEAR_MIPMAP_LINEAR);
-			GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MAG_FILTER, GL11.GL_NEAREST);
-		}
-		
-		GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MIN_FILTER, GL11.GL_NEAREST);
-		
-		GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL12.GL_TEXTURE_MAX_LEVEL, 0);
-		
-		try {
-			EXTFramebufferObject.glGenerateMipmapEXT(GL11.GL_TEXTURE_2D);
-		} catch(Exception e) {
-			
-			JOptionPane.showMessageDialog(null, "An error occured while generating mipmaps! \n" + e + e.getStackTrace());
-			
-			e.printStackTrace();
-		}
-		
-		GL11.glTexParameteri(GL11.GL_TEXTURE_2D, EXTTextureFilterAnisotropic.GL_TEXTURE_MAX_ANISOTROPY_EXT, Settings.getInstance().anisotropic.getValue());
-		
-		//GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL14.GL_GENERATE_MIPMAP, GL11.GL_TRUE);
-		//GL11.glTexParameteri (GL11.GL_TEXTURE_2D, GL12.GL_TEXTURE_MAX_LEVEL, 2-1);
-		*/
 	}
 	
 	public static float getX1(int texid) {

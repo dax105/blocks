@@ -20,6 +20,7 @@ import cz.dat.oots.gui.GuiScreen;
 import cz.dat.oots.gui.GuiScreenLoading;
 import cz.dat.oots.gui.GuiScreenMainMenu;
 import cz.dat.oots.gui.GuiScreenMenu;
+import cz.dat.oots.gui.GuiScreenSplash;
 import cz.dat.oots.model.ModelManager;
 import cz.dat.oots.overlay.OverlayManager;
 import cz.dat.oots.profiler.Profiler;
@@ -56,7 +57,6 @@ public class Game implements Runnable {
 	private float consoleAnimationProgress = 0;
 	private float lastConsoleAnimationProgress = 0;
 	private int fps = 0;
-	private long lastFPS;
 	private float lastFov = 0;
 
 	private String loginString = "Unlogged";
@@ -166,7 +166,7 @@ public class Game implements Runnable {
 
 		this.exit();
 	}
-
+	
 	public void init() {
 		GLHelper.initGL(Settings.getInstance().windowWidth.getValue(),
 				Settings.getInstance().windowHeight.getValue());
@@ -194,24 +194,20 @@ public class Game implements Runnable {
 	}
 
 	public void load(boolean toMenu) {
+		this.displaySplash();
+		
 		FontManager.getInstance().load();
 		this.font = FontManager.getFont();
-
-		this.displayLoadingScreen("Loading textures...");
+		
 		TextureManager.load(this);
-
-		this.displayLoadingScreen("Loading models...");
 		ModelManager.getInstance().load();
-
-		this.displayLoadingScreen("Loading keyconfig...");
 		this.keyconfigLoader.load(new File("keyconfig"));
-
-		this.displayLoadingScreen("Creating world config");
 		this.worldsManager.load();
 
-		this.displayLoadingScreen("Loading sounds...");
-
-		this.lastFPS = getTime();
+		try {
+			Thread.sleep(1500);
+		} catch(InterruptedException e) {
+		}
 
 		this.showbg = true;
 
@@ -325,18 +321,15 @@ public class Game implements Runnable {
 			ptt = 1;
 		}
 		
-		// Clear old frame
 		GL11.glClear(GL11.GL_COLOR_BUFFER_BIT | GL11.GL_DEPTH_BUFFER_BIT);
 
 		if (this.worldsManager.isInGame()) {
-
 			TextureManager.atlas.bind();
 			this.worldsManager.getWorld().getRenderEngine().renderWorld(ptt);
 
 			GLHelper.setOrtho(Settings.getInstance().windowWidth.getValue(),
 					Settings.getInstance().windowHeight.getValue());
 			this.getOverlayManager().renderOverlays(ptt);
-
 		}
 
 		GLHelper.setOrtho(Settings.getInstance().windowWidth.getValue(),
@@ -472,21 +465,25 @@ public class Game implements Runnable {
 		}
 	}
 
+	public void displaySplash() {
+		this.openGuiScreen(new GuiScreenSplash(this));
+		this.render(0);
+		Display.update();
+	}
+	
 	public void displayLoadingScreen(String text) {
-		// isIngame = false;
 		this.openGuiScreen(new GuiScreenLoading(this, text));
 		this.render(0);
 		Display.update();
 	}
 
 	public void displayLoadingScreen() {
-		// isIngame = false;
 		this.openGuiScreen(new GuiScreenLoading(this));
 		this.render(0);
 		Display.update();
 	}
 
-	// .... NEMAMZDANIKCEMU METHODS ....
+	// .... FPS AND OTHER METHODS ....
 
 	public long getTime() {
 		return (Sys.getTime() * 1000) / Sys.getTimerResolution();
