@@ -1,19 +1,21 @@
 package cz.dat.oots.inventory;
 
-import cz.dat.oots.FontManager;
 import cz.dat.oots.block.Block;
-import cz.dat.oots.util.GLHelper;
+import cz.dat.oots.inventory.renderer.BasicBlockRenderer;
+import cz.dat.oots.inventory.renderer.IObjectStackRenderer;
 import cz.dat.oots.world.World;
 
 public class BasicBlockStack implements IObjectStack {
 
-	int items;
-	String renderString;
-	Block innerBlock;
-	String desc;
-	boolean shouldRecycle;
+	private int items;
+	private Block innerBlock;
+	private String desc;
+	private boolean shouldRecycle;
+	private BasicBlockRenderer renderer;
 	
 	public BasicBlockStack(Block block, int count) {
+		this.renderer = new BasicBlockRenderer(this, block);
+		
 		if(count > this.getMaximumItemsPerStack() || count < 1) {
 			count = 1;
 		}
@@ -59,7 +61,7 @@ public class BasicBlockStack implements IObjectStack {
 		}
 		
 		this.items = count;
-		this.renderString = "" + this.items;
+		this.renderer.updateRenderString(count);
 	}
 
 	@Override
@@ -78,14 +80,7 @@ public class BasicBlockStack implements IObjectStack {
 	@Override
 	public void renderTickItems(float partialTickTime, World world) {
 	}
-
-	@Override
-	public void renderGUITexture(int x, int y, int width, int height) {
-		GLHelper.drawFromAtlas(this.innerBlock.getSideTexture(), x, x + width, y, y + height);
-		FontManager.getFont().drawString(x + width - FontManager.getFont().getWidth(this.renderString) - 2,
-				y + height - FontManager.getFont().getHeight(), this.renderString);
-		
-	}
+	
 
 	@Override
 	public boolean addItem() {
@@ -116,6 +111,11 @@ public class BasicBlockStack implements IObjectStack {
 	@Override
 	public void notifyDeletion() {
 		this.shouldRecycle = true;
+	}
+
+	@Override
+	public IObjectStackRenderer getRenderer() {
+		return this.renderer;
 	}
 
 }

@@ -2,19 +2,22 @@ package cz.dat.oots.inventory;
 
 import java.util.Random;
 
+import cz.dat.oots.inventory.renderer.BasicItemRenderer;
+import cz.dat.oots.inventory.renderer.IObjectStackRenderer;
 import cz.dat.oots.item.Item;
-import cz.dat.oots.util.GLHelper;
 import cz.dat.oots.world.World;
 
 public class BasicItemStack implements IObjectStack {
 
-	int items = 1;
-	Item innerItem;
-	int[] itemInstanceIdentificators;
-	Random rand = new Random();
-	boolean shouldRecycle;
+	private int items = 1;
+	private Item innerItem;
+	private int[] itemInstanceIdentificators;
+	private Random rand = new Random();
+	private boolean shouldRecycle;
+	private BasicItemRenderer renderer;
 	
 	public BasicItemStack(Item itemFor, int count) {
+		this.renderer = new BasicItemRenderer(this, itemFor);
 		if(count > this.getMaximumItemsPerStack() || count < 1) {
 			count = 1;
 		}
@@ -62,11 +65,6 @@ public class BasicItemStack implements IObjectStack {
 		for(int i = 0; i < this.getCurrentItemsCount(); i++) {
 			innerItem.onRenderTick(partialTickTime, this.itemInstanceIdentificators[i], w);
 		}
-	}
-
-	@Override
-	public void renderGUITexture(int x, int y, int width, int height) {
-		GLHelper.drawTexture(innerItem.getTexture(), x, x + width, y, y + height);
 	}
 
 	@Override
@@ -134,6 +132,11 @@ public class BasicItemStack implements IObjectStack {
 	@Override
 	public void notifyDeletion() {
 		this.shouldRecycle = true;
+	}
+
+	@Override
+	public IObjectStackRenderer getRenderer() {
+		return this.renderer;
 	}
 
 }

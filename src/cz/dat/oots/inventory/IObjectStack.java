@@ -1,5 +1,6 @@
 package cz.dat.oots.inventory;
 
+import cz.dat.oots.inventory.renderer.IObjectStackRenderer;
 import cz.dat.oots.world.World;
 
 public interface IObjectStack {
@@ -17,7 +18,8 @@ public interface IObjectStack {
 	public boolean shouldRecycle();
 	
 	public void useItem(int mouseButton, int x, int y, int z, int item, World world) throws IllegalArgumentException;
-	public void tickItems(World world);
-	public void renderTickItems(float partialTickTime, World world);
-	public void renderGUITexture(int x, int y, int width, int height);
+	public void tickItems(World w);
+	public void renderTickItems(float partialTickTime, World w);
+	
+	public IObjectStackRenderer getRenderer();
 }
