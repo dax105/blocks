@@ -17,7 +17,7 @@ public class GuiObjectText extends GuiObject {
 	public void setText(String text) {
 		this.text = text;
 	}
-	
+
 	public GuiObjectText(int x1, int y1, int x2, int y2, Font font, String text) {
 		this.x1 = x1;
 		this.y1 = y1;
@@ -31,10 +31,10 @@ public class GuiObjectText extends GuiObject {
 	public void render() {
 		GL11.glEnable(GL11.GL_TEXTURE_2D);
 		this.font.drawString(
-				this.x1 + (this.x2 - this.x1) / 2 - this.font.getWidth(this.text) / 2, 
-				this.y1 + (this.y2 - this.y1) / 2 - this.font.getHeight(this.text) / 2, 
-				this.text
-		);
+				this.x1 + (this.x2 - this.x1) / 2
+						- this.font.getWidth(this.text) / 2,
+				this.y1 + (this.y2 - this.y1) / 2
+						- this.font.getHeight(this.text) / 2, this.text);
 		GL11.glDisable(GL11.GL_TEXTURE_2D);
 	}
 
@@ -42,5 +42,5 @@ public class GuiObjectText extends GuiObject {
 	public void update() {
 
 	}
-	
+
 }

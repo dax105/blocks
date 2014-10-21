@@ -8,9 +8,9 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Random;
 import java.util.Set;
 import java.util.logging.Logger;
-import java.util.Random;
 
 import cz.dat.oots.Game;
 import cz.dat.oots.Particle;
@@ -25,7 +25,6 @@ import cz.dat.oots.item.Item;
 import cz.dat.oots.movable.entity.PlayerEntity;
 import cz.dat.oots.render.ITickListener;
 import cz.dat.oots.render.RenderEngine;
-import cz.dat.oots.settings.Settings;
 import cz.dat.oots.util.Coord2D;
 import cz.dat.oots.util.Coord3D;
 import cz.dat.oots.util.GameMath;
@@ -54,7 +53,7 @@ public class World implements ITickListener {
 	private ParticleEngine particleEngine;
 	private Game game;
 	private GuiManager gui;
-	
+
 	public int size;
 	public int sizeBlocks;
 
@@ -96,7 +95,7 @@ public class World implements ITickListener {
 
 		this.chunkProvider.updateLoadedChunksInRadius(
 				(int) this.player.getPosX(), (int) this.player.getPosZ(),
-				Settings.getInstance().drawDistance.getValue());
+				this.game.s().drawDistance.getValue());
 	}
 
 	public RenderEngine getRenderEngine() {
@@ -141,7 +140,7 @@ public class World implements ITickListener {
 			DataManager n = new DataManager(blockDataFile, itemDataFile, this);
 			this.itemDataManager = n;
 			this.blockDataManager = n;
-		} catch (IOException e) {
+		} catch(IOException e) {
 			Logger.getGlobal().warning("Can't create data file!");
 		}
 	}
@@ -157,8 +156,9 @@ public class World implements ITickListener {
 				- this.rand.nextFloat() * velFuzziness;
 		float velZ = velhalf - this.rand.nextFloat() * vel
 				- this.rand.nextFloat() * velFuzziness;
-		Particle p = new Particle(this, x, y, z, velX, velY, velZ, (int)(100 * rand.nextFloat()),
-				rand.nextFloat(), rand.nextFloat(), rand.nextFloat());
+		Particle p = new Particle(this, x, y, z, velX, velY, velZ,
+				(int) (100 * rand.nextFloat()), rand.nextFloat(),
+				rand.nextFloat(), rand.nextFloat());
 		this.particleEngine.addParticle(p);
 	}
 
@@ -180,7 +180,7 @@ public class World implements ITickListener {
 	}
 
 	public void registerNewTickListener(ITickListener l) {
-			this.scheduledTickListenersAdding.add(l);
+		this.scheduledTickListenersAdding.add(l);
 	}
 
 	public void removeTickListener(ITickListener l) {
@@ -220,18 +220,18 @@ public class World implements ITickListener {
 
 	public void scheduleUpdate(int x, int y, int z, int ticks, int type) {
 		Coord3D pos = new Coord3D(x, y, z);
-		
+
 		ScheduledUpdate u;
-		if ((u = this.scheduledUpdates.get(pos)) != null) {
-			if (u.type == type && u.ticks <= ticks) {
+		if((u = this.scheduledUpdates.get(pos)) != null) {
+			if(u.type == type && u.ticks <= ticks) {
 				return;
 			}
-		} else if ((u = this.newlyScheduledUpdates.get(pos)) != null) {
-			if (u.type == type && u.ticks <= ticks) {
+		} else if((u = this.newlyScheduledUpdates.get(pos)) != null) {
+			if(u.type == type && u.ticks <= ticks) {
 				return;
 			}
 		}
-		
+
 		this.newlyScheduledUpdates.put(pos, new ScheduledUpdate(type, ticks));
 	}
 
@@ -239,7 +239,7 @@ public class World implements ITickListener {
 		this.chunkProvider.updateLoadedChunksInRadius(
 				((int) Math.floor(this.player.getPosX())) >> 4,
 				((int) Math.floor(this.player.getPosZ())) >> 4,
-				Settings.getInstance().drawDistance.getValue() + 1);
+				this.game.s().drawDistance.getValue() + 1);
 	}
 
 	public void setChunkDirty(int x, int y, int z) {
@@ -353,103 +353,103 @@ public class World implements ITickListener {
 		int y1 = (int) _y1;
 		int z0 = (int) _z0;
 		int z1 = (int) _z1;
-		
-		if (x0 <= 0) {
+
+		if(x0 <= 0) {
 			x0--;
 		}
-		
-		if (y0 <= 0) {
+
+		if(y0 <= 0) {
 			y0--;
 		}
-		
-		if (z0 <= 0) {
+
+		if(z0 <= 0) {
 			z0--;
 		}
-		
-		if (x1 >= 0) {
+
+		if(x1 >= 0) {
 			x1++;
 		}
-		
-		if (y1 >= 0) {
+
+		if(y1 >= 0) {
 			y1++;
 		}
-		
-		if (z1 >= 0) {
+
+		if(z1 >= 0) {
 			z1++;
 		}
-		
-		//int x0 = (int) (_x0 - 1.0F);
-		//int x1 = (int) (_x1 + 1.0F);
-		//int y0 = (int) (_y0 - 1.0F);
-		//int y1 = (int) (_y1 + 1.0F);
-		//int z0 = (int) (_z0 - 1.0F);
-		//int z1 = (int) (_z1 + 1.0F);
+
+		// int x0 = (int) (_x0 - 1.0F);
+		// int x1 = (int) (_x1 + 1.0F);
+		// int y0 = (int) (_y0 - 1.0F);
+		// int y1 = (int) (_y1 + 1.0F);
+		// int z0 = (int) (_z0 - 1.0F);
+		// int z1 = (int) (_z1 + 1.0F);
 
 		if(GameMath.shouldCareAbout(xm)) {
-		for (int x = x0; x < x1; ++x) {
-			for (int y = y0; y < y1; ++y) {
-				for (int z = z0; z < z1; ++z) {
-					int blockId = getBlock(x, y, z);
-					if(blockId > 0) {
-						Block block = this.getBlockObject(blockId);
-						if(block.isCollidable()) {
-							AABB blockBB = block.getOffsetAABB(x, y, z);
-							xm = blockBB.clipXCollide(bb, xm);
+			for(int x = x0; x < x1; ++x) {
+				for(int y = y0; y < y1; ++y) {
+					for(int z = z0; z < z1; ++z) {
+						int blockId = getBlock(x, y, z);
+						if(blockId > 0) {
+							Block block = this.getBlockObject(blockId);
+							if(block.isCollidable()) {
+								AABB blockBB = block.getOffsetAABB(x, y, z);
+								xm = blockBB.clipXCollide(bb, xm);
+							}
 						}
 					}
 				}
 			}
-		}
-		bb.move(xm, 0.0F, 0.0F);
+			bb.move(xm, 0.0F, 0.0F);
 		}
 
 		if(GameMath.shouldCareAbout(ym)) {
-		for (int x = x0; x < x1; ++x) {
-			for (int y = y0; y < y1; ++y) {
-				for (int z = z0; z < z1; ++z) {
-					int blockId = getBlock(x, y, z);
-					if(blockId > 0) {
-						Block block = this.getBlockObject(blockId);
-						if(block.isCollidable()) {
-							AABB blockBB = block.getOffsetAABB(x, y, z);
-							ym = blockBB.clipYCollide(bb, ym);
+			for(int x = x0; x < x1; ++x) {
+				for(int y = y0; y < y1; ++y) {
+					for(int z = z0; z < z1; ++z) {
+						int blockId = getBlock(x, y, z);
+						if(blockId > 0) {
+							Block block = this.getBlockObject(blockId);
+							if(block.isCollidable()) {
+								AABB blockBB = block.getOffsetAABB(x, y, z);
+								ym = blockBB.clipYCollide(bb, ym);
+							}
 						}
 					}
 				}
 			}
-		}
-		bb.move(0.0F, ym, 0.0F);
+			bb.move(0.0F, ym, 0.0F);
 		}
 
 		if(GameMath.shouldCareAbout(zm)) {
-		for (int x = x0; x < x1; ++x) {
-			for (int y = y0; y < y1; ++y) {
-				for (int z = z0; z < z1; ++z) {
-					int blockId = getBlock(x, y, z);
-					if(blockId > 0) {
-						Block block = this.getBlockObject(blockId);
-						if(block.isCollidable()) {
-							AABB blockBB = block.getOffsetAABB(x, y, z);
-							zm = blockBB.clipZCollide(bb, zm);
+			for(int x = x0; x < x1; ++x) {
+				for(int y = y0; y < y1; ++y) {
+					for(int z = z0; z < z1; ++z) {
+						int blockId = getBlock(x, y, z);
+						if(blockId > 0) {
+							Block block = this.getBlockObject(blockId);
+							if(block.isCollidable()) {
+								AABB blockBB = block.getOffsetAABB(x, y, z);
+								zm = blockBB.clipZCollide(bb, zm);
+							}
 						}
 					}
 				}
 			}
-		}
-		bb.move(0.0F, 0.0F, zm);
+			bb.move(0.0F, 0.0F, zm);
 		}
 
 		return new float[] { xm, ym, zm };
 	}
 
 	public void setAllChunksDirty() {
-		for (Chunk c : this.chunkProvider.getAllLoadedChunks()) {
+		for(Chunk c : this.chunkProvider.getAllLoadedChunks()) {
 			c.setAllDirty();
 		}
 	}
 
 	public void deleteAllRenderChunks() {
-		for (Chunk c : this.chunkProvider.getAllLoadedChunks()) {
+		for(Chunk c : this.chunkProvider.getAllLoadedChunks()) {
 			c.deleteAllRenderChunks();
 		}
 	}
@@ -459,7 +459,7 @@ public class World implements ITickListener {
 
 		try {
 			this.idRegister.saveIDs(IDRegister.dataFile);
-		} catch (IOException e) {
+		} catch(IOException e) {
 			e.printStackTrace();
 		}
 	}
@@ -530,32 +530,32 @@ public class World implements ITickListener {
 			this.itemDataManager.removeDataForIdentificator(itemIdent);
 		}
 	}
-	
+
 	// .... OVERRIDE METHODS ....
 	@Override
 	public void onTick() {
 		this.gui.onTick();
 		this.player.onTick();
 
-		for (ITickListener r : this.tickListeners) {
+		for(ITickListener r : this.tickListeners) {
 			r.onTick();
 		}
 
-		for (Iterator<ITickListener> it = this.scheduledTickListenersAdding
+		for(Iterator<ITickListener> it = this.scheduledTickListenersAdding
 				.iterator(); it.hasNext();) {
 			this.tickListeners.add(it.next());
 			it.remove();
 		}
 
-		for (Iterator<ITickListener> it = this.scheduledTickListenersRemoval
+		for(Iterator<ITickListener> it = this.scheduledTickListenersRemoval
 				.iterator(); it.hasNext();) {
 			this.tickListeners.remove(it.next());
 			it.remove();
 		}
-		
+
 		this.particleEngine.onTick();
 
-		for (Entry<Coord3D, Block> b : Block.tickingBlocks.entrySet()) {
+		for(Entry<Coord3D, Block> b : Block.tickingBlocks.entrySet()) {
 			if(b.getValue().isRequiringTick())
 				b.getValue().onTick(b.getKey().x, b.getKey().y, b.getKey().z,
 						this);
@@ -564,7 +564,7 @@ public class World implements ITickListener {
 		Set<Entry<Coord3D, ScheduledUpdate>> newUpdates = newlyScheduledUpdates
 				.entrySet();
 
-		for (Iterator<Entry<Coord3D, ScheduledUpdate>> it = newUpdates
+		for(Iterator<Entry<Coord3D, ScheduledUpdate>> it = newUpdates
 				.iterator(); it.hasNext();) {
 
 			Entry<Coord3D, ScheduledUpdate> e = it.next();
@@ -576,7 +576,7 @@ public class World implements ITickListener {
 		Set<Entry<Coord3D, ScheduledUpdate>> updates = scheduledUpdates
 				.entrySet();
 
-		for (Iterator<Entry<Coord3D, ScheduledUpdate>> it = updates.iterator(); it
+		for(Iterator<Entry<Coord3D, ScheduledUpdate>> it = updates.iterator(); it
 				.hasNext();) {
 
 			Entry<Coord3D, ScheduledUpdate> e = it.next();
@@ -597,7 +597,7 @@ public class World implements ITickListener {
 		this.chunkProvider.updateLoadedChunksInRadius(
 				((int) Math.floor(this.player.getPosX())) >> 4,
 				((int) Math.floor(this.player.getPosZ())) >> 4,
-				Settings.getInstance().drawDistance.getValue() + 1);
+				this.game.s().drawDistance.getValue() + 1);
 
 	}
 
@@ -605,7 +605,7 @@ public class World implements ITickListener {
 	public void onRenderTick(float partialTickTime) {
 		this.player.onRenderTick(partialTickTime);
 
-		for (Entry<Coord3D, Block> b : Block.tickingBlocks.entrySet()) {
+		for(Entry<Coord3D, Block> b : Block.tickingBlocks.entrySet()) {
 			if(b.getValue().isRequiringRenderTick())
 				b.getValue().onRenderTick(partialTickTime, b.getKey().x,
 						b.getKey().y, b.getKey().z, this);
@@ -613,19 +613,19 @@ public class World implements ITickListener {
 
 		this.gui.onRenderTick(partialTickTime);
 	}
-	
+
 	public ParticleEngine getParticleEngine() {
 		return particleEngine;
 	}
-	
+
 	public Game getGame() {
 		return this.game;
 	}
-	
+
 	public GuiManager getGui() {
 		return this.gui;
 	}
-	
+
 	public void exit() {
 		this.renderEngine.cleanup();
 		this.chunkProvider.cleanup();

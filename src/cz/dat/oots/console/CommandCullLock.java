@@ -13,7 +13,7 @@ public class CommandCullLock extends Command {
 	public static float lockedX;
 	public static float lockedY;
 	public static float lockedZ;
-	
+
 	@Override
 	public String getName() {
 		return "culllock";
@@ -27,21 +27,20 @@ public class CommandCullLock extends Command {
 	@Override
 	public boolean execute(String[] args) {
 		if(!CommandCullLock.locked) {
-			PlayerEntity player = this.console.getGame().getCurrentWorld().getPlayer();
+			PlayerEntity player = this.console.getGame().getCurrentWorld()
+					.getPlayer();
 			CommandCullLock.lockedX = player.getPosX();
 			CommandCullLock.lockedY = player.getPosY();
 			CommandCullLock.lockedZ = player.getPosZ();
-			
+
 			this.console.println("Culling locked!");
 			CommandCullLock.locked = true;
 		} else {
 			this.console.println("Culling unlocked!");
 			CommandCullLock.locked = false;
 		}
-		
+
 		return true;
 	}
 
-	
-	
 }

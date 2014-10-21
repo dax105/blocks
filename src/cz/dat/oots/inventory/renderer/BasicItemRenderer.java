@@ -11,7 +11,7 @@ public class BasicItemRenderer implements IObjectStackRenderer {
 	public static final int DEFAULT_SIZE = 32;
 	private IObjectStack stack;
 	private Texture texture;
-	
+
 	public BasicItemRenderer(IObjectStack stack, Item i) {
 		this.stack = stack;
 		this.texture = i.getTexture();
@@ -36,7 +36,7 @@ public class BasicItemRenderer implements IObjectStackRenderer {
 	public void render(float ptt, int x, int y, World world) {
 		this.render(ptt, x, y, BasicItemRenderer.DEFAULT_SIZE,
 				BasicItemRenderer.DEFAULT_SIZE, world);
-		
+
 	}
-	
+
 }

@@ -73,13 +73,13 @@ public class Keyconfig {
 			Scanner s;
 			try {
 				s = new Scanner(configFile);
-				while (s.hasNextLine()) {
+				while(s.hasNextLine()) {
 					String l = s.nextLine();
 					this.a(l);
 				}
-				
+
 				s.close();
-				
+
 				for(IKeyconfigLoader l : this.loaders) {
 					l.load(configFile);
 				}
@@ -103,11 +103,11 @@ public class Keyconfig {
 		}
 	}
 
-	//The secret I will take to the grave
+	// The secret I will take to the grave
 	private void a(String line) {
 		String[] p = line.split(" ");
-		
-		switch (p[0]){
+
+		switch(p[0]) {
 		case "ahead":
 			Keyconfig.ahead = this.d(p[1]);
 			break;
@@ -184,19 +184,19 @@ public class Keyconfig {
 		String ret = sb.toString();
 		return ret.substring(0, ret.length() - 1);
 	}
-	
+
 	private int[] d(String s) {
 		String[] p = s.split(",");
 		int[] r = new int[p.length];
 		for(int i = 0; i < p.length; i++) {
 			r[i] = Integer.parseInt(p[i]);
 		}
-		
-		
+
 		return r;
 	}
-	//Don't ever, EVER, try to do something with these bloody methods
-	
+
+	// Don't ever, EVER, try to do something with these bloody methods
+
 	public static boolean isDown(int[] keys) {
 		for(int k : keys) {
 			if(Keyboard.isKeyDown(k))

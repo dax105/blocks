@@ -16,11 +16,12 @@ public class WorldInfo {
 	private float playerZ;
 	private float playerTilt;
 	private float playerHeading;
-	
-	public static WorldInfo constructFromFile(File f) throws FileNotFoundException {
+
+	public static WorldInfo constructFromFile(File f)
+			throws FileNotFoundException {
 		WorldInfo w = new WorldInfo(f.getParentFile().getName());
 		w.setWorldDirectory(f.getParent());
-		
+
 		Scanner s = new Scanner(f);
 		while(s.hasNextLine()) {
 			String l = s.nextLine();
@@ -45,12 +46,11 @@ public class WorldInfo {
 			}
 
 		}
-		
-		s.close();	
+
+		s.close();
 		return w;
 	}
-	
-	
+
 	public void saveWorldInfo() {
 		try {
 			File dir = new File(WorldManager.SAVES_DIR, this.worldName);
@@ -76,11 +76,11 @@ public class WorldInfo {
 
 			pw.close();
 
-		} catch (FileNotFoundException e) {
+		} catch(FileNotFoundException e) {
 			e.printStackTrace();
 		}
 	}
-	
+
 	public String getWorldName() {
 		return this.worldName;
 	}

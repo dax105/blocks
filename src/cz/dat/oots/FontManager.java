@@ -15,41 +15,44 @@ public class FontManager {
 		if(_instance == null) {
 			_instance = new FontManager();
 		}
-		
+
 		return _instance;
 	}
-	
+
 	public static TrueTypeFont getFont() {
 		return getInstance().text;
 	}
-	
+
 	private FontManager() {
-		
+
 	}
-	
-	
+
 	public void load() {
-		this.text = this.loadFont(ResourceLoader.getResourceAsStream("cz/dat/oots/res/fonts/roboto.ttf"), Font.PLAIN, 12, true);
+		this.text = this.loadFont(ResourceLoader
+				.getResourceAsStream("cz/dat/oots/res/fonts/roboto.ttf"),
+				Font.PLAIN, 12, true);
 	}
-	
-	public TrueTypeFont loadFont(InputStream in, int style, int size, boolean antiAlias) {
+
+	public TrueTypeFont loadFont(InputStream in, int style, int size,
+			boolean antiAlias) {
 		Font font = null;
 		try {
 			font = Font.createFont(Font.TRUETYPE_FONT, in);
 			font = font.deriveFont(style, size);
-		} catch (Exception e) {
+		} catch(Exception e) {
 			e.printStackTrace();
 		}
 		return this.loadFont(font, antiAlias);
 	}
-	
-	public TrueTypeFont loadFont(String name, int style, int size, boolean antiAlias) {
+
+	public TrueTypeFont loadFont(String name, int style, int size,
+			boolean antiAlias) {
 		Font font = new Font(name, style, size);
 		return this.loadFont(font, antiAlias);
 	}
-	
+
 	public TrueTypeFont loadFont(Font font, boolean antiAlias) {
 		return new TrueTypeFont(font, antiAlias);
 	}
-	
+
 }

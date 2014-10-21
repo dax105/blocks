@@ -20,14 +20,15 @@ public class CommandReload extends Command {
 
 	@Override
 	public boolean execute(String[] args) {
-		
+
 		Game game = this.console.getGame();
-		
-		if (game.getWorldsManager().isInGame()) {
+
+		if(game.getWorldsManager().isInGame()) {
 			game.getWorldsManager().startWorld(game.getCurrentWorld().name);
 			return true;
 		} else {
-			this.console.println("You must be ingame to use command " + getName());
+			this.console.println("You must be ingame to use command "
+					+ getName());
 			return false;
 		}
 	}

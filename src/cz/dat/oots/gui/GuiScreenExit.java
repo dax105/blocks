@@ -1,6 +1,6 @@
 package cz.dat.oots.gui;
 
-import cz.dat.oots.settings.Settings;
+import org.lwjgl.opengl.Display;
 
 public class GuiScreenExit extends GuiScreen {
 
@@ -11,37 +11,27 @@ public class GuiScreenExit extends GuiScreen {
 	public GuiScreenExit(GuiScreen parent) {
 		super(parent);
 		this.objects.add(new GuiObjectRectangle(
-					(Settings.getInstance().windowWidth.getValue() - width - overflow) / 2, 
-					(Settings.getInstance().windowHeight.getValue() - height - overflow) / 2, 
-					(Settings.getInstance().windowWidth.getValue() + width + overflow) / 2, 
-					(Settings.getInstance().windowHeight.getValue() + height + overflow) / 2, 
-					0xA0000000)
-		);
+				(Display.getWidth() - width - overflow) / 2, (Display
+						.getHeight() - height - overflow) / 2, (Display
+						.getWidth() + width + overflow) / 2, (Display
+						.getHeight() + height + overflow) / 2, 0xA0000000));
 
 		this.objects.add(new GuiObjectTitleBar(
-					(Settings.getInstance().windowWidth.getValue() - width) / 2, 
-					(Settings.getInstance().windowHeight.getValue() - height) / 2, 
-					(Settings.getInstance().windowWidth.getValue() + width) / 2, 
-					((Settings.getInstance().windowHeight.getValue() - height) / 2) + 30, 
-					this.f, 
-					"Do you really want to exit?")
-		);
+				(Display.getWidth() - width) / 2,
+				(Display.getHeight() - height) / 2,
+				(Display.getWidth() + width) / 2,
+				((Display.getHeight() - height) / 2) + 30, this.f,
+				"Do you really want to exit?"));
 
-		this.objects.add(new GuiObjectButton(
-					(Settings.getInstance().windowWidth.getValue() - width) / 2, 
-					(Settings.getInstance().windowHeight.getValue() + height) / 2 - 24, 
-					(Settings.getInstance().windowWidth.getValue()) / 2, 
-					((Settings.getInstance().windowHeight.getValue() + height) / 2), 
-					this.f, "No", 0, this)
-		);
+		this.objects.add(new GuiObjectButton((Display.getWidth() - width) / 2,
+				(Display.getHeight() + height) / 2 - 24,
+				(Display.getWidth()) / 2, ((Display.getHeight() + height) / 2),
+				this.f, "No", 0, this));
 
-		this.objects.add(new GuiObjectButton(
-					(Settings.getInstance().windowWidth.getValue() + 8) / 2, 
-					(Settings.getInstance().windowHeight.getValue() + height) / 2 - 24, 
-					(Settings.getInstance().windowWidth.getValue() + width) / 2, 
-					((Settings.getInstance().windowHeight.getValue() + height) / 2), 
-					this.f, "Yes", 1, this)
-		);
+		this.objects.add(new GuiObjectButton((Display.getWidth() + 8) / 2,
+				(Display.getHeight() + height) / 2 - 24,
+				(Display.getWidth() + width) / 2,
+				((Display.getHeight() + height) / 2), this.f, "Yes", 1, this));
 	}
 
 	@Override
@@ -62,7 +52,7 @@ public class GuiScreenExit extends GuiScreen {
 
 	@Override
 	public void buttonChanged(GuiObjectChangingButton button, int line) {
-		
+
 	}
 
 	@Override

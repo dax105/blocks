@@ -11,12 +11,14 @@ public class ApplierSound extends Applier {
 
 	@Override
 	public boolean apply(Object val) {
-		if(super.applyingObject == Settings.getInstance().sound) {
-			SoundManager.getInstance().updateVolume((boolean) val, Settings.getInstance().soundVolume.getValue());
+		if(super.applyingObject == this.settings.sound) {
+			SoundManager.getInstance().updateVolume((boolean) val,
+					this.settings.soundVolume.getValue());
 		} else {
-			SoundManager.getInstance().updateVolume(Settings.getInstance().sound.getValue(), (float) val);
+			SoundManager.getInstance().updateVolume(
+					this.settings.sound.getValue(), (float) val);
 		}
-		
+
 		return true;
 	}
 

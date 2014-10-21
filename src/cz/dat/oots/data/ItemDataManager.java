@@ -85,7 +85,8 @@ public class ItemDataManager implements IItemDataManager {
 				continue;
 			}
 
-			if(started && (line.charAt(0) == 'r' || line.charAt(0) == 'e') && passData != null) {
+			if(started && (line.charAt(0) == 'r' || line.charAt(0) == 'e')
+					&& passData != null) {
 				currentObject.load(new ArrayList<String>(passData));
 				this.values.put(identificator, currentObject);
 
@@ -102,7 +103,7 @@ public class ItemDataManager implements IItemDataManager {
 			if(started && line.charAt(0) == 'd') {
 				passData.add(line);
 			}
-			
+
 			if(started && line.charAt(0) == 'e') {
 				br.close();
 				return;

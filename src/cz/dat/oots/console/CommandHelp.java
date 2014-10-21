@@ -22,11 +22,11 @@ public class CommandHelp extends Command {
 	public boolean execute(String[] args) {
 
 		this.console.println("List of available commands:");
-		
+
 		for(Entry<String, Command> e : this.console.manager.commands.entrySet()) {
 			this.console.println(e.getValue().getName());
 		}
-		
+
 		return true;
 	}
 

@@ -24,10 +24,10 @@ public class CommandDeleteWorld extends Command {
 	@Override
 	public boolean execute(String[] args) {
 		Game game = this.console.getGame();
-		
+
 		String wName = this.console.getGame().getCurrentWorld().name;
 		game.getWorldsManager().exitWorld();
-		
+
 		GameUtil.deleteDirectory(new File("saves", wName));
 		game.closeGuiScreen();
 		return true;

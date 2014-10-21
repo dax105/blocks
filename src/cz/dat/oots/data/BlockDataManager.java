@@ -85,21 +85,22 @@ public class BlockDataManager implements IBlockDataManager {
 				continue;
 			}
 
-			if(started && (line.charAt(0) == 'c' || line.charAt(0) == 'e') && passData != null) {
+			if(started && (line.charAt(0) == 'c' || line.charAt(0) == 'e')
+					&& passData != null) {
 				currentObject.load(new ArrayList<String>(passData));
 				this.values.put(coord, currentObject);
 
 				passData = null;
 				coord = null;
 			}
-			
+
 			if(started && line.charAt(0) == 'c' && passData == null) {
 				if(currentBlock == null) {
 					br.close();
 					throw new UnsupportedDataTypeException(
 							"Invalid file contents (B-C-d-d)!");
 				}
-				
+
 				String[] parts = line.split(";");
 				coord = new Coord3D(Integer.parseInt(parts[1]),
 						Integer.parseInt(parts[2]), Integer.parseInt(parts[3]));
@@ -107,7 +108,7 @@ public class BlockDataManager implements IBlockDataManager {
 				currentObject = currentBlock.createDataObject();
 				continue;
 			}
-			
+
 			if(started && coord == null && line.charAt(0) == 'd') {
 				br.close();
 				throw new UnsupportedDataTypeException(
@@ -117,7 +118,7 @@ public class BlockDataManager implements IBlockDataManager {
 			if(started && line.charAt(0) == 'd') {
 				passData.add(line);
 			}
-			
+
 			if(started && line.charAt(0) == 'e') {
 				br.close();
 				return;

@@ -14,7 +14,7 @@ public class GuiObjectChangingButton extends GuiObjectButton {
 		super(x1, y1, x2, y2, font, (lines == null || lines.length == 0) ? ""
 				: lines[0], id, parent);
 
-		if (lines == null || lines.length == 0) {
+		if(lines == null || lines.length == 0) {
 			throw new IllegalArgumentException();
 		}
 

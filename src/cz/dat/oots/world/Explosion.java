@@ -2,7 +2,6 @@ package cz.dat.oots.world;
 
 import java.util.Random;
 
-import cz.dat.oots.settings.Settings;
 import cz.dat.oots.sound.SoundManager;
 
 public class Explosion {
@@ -10,10 +9,11 @@ public class Explosion {
 	private static Random rand = new Random();
 
 	public static void explode(World world, float ex, float ey, float ez) {
-		int radius = Settings.getInstance().explosionRadius.getValue();
+		int radius = world.getGame().s().explosionRadius.getValue();
 		float fuzzyness = 1.5f;
 
-		SoundManager.getInstance().playSound("explosion", 0.8f + Explosion.rand.nextFloat() * 0.4f);
+		SoundManager.getInstance().playSound("explosion",
+				0.8f + Explosion.rand.nextFloat() * 0.4f);
 
 		for(int x = (int) ex - radius; x < ex + radius; x++) {
 			for(int y = (int) ey - radius; y < ey + radius; y++) {
@@ -37,8 +37,9 @@ public class Explosion {
 
 						if(distSq < radiusFuzzed * radiusFuzzed) {
 							world.setBlock(x, y, z, (byte) 0, true, false);
-							
-							world.spawnParticleWithRandomDirectionFast(x, y, z, 3, 1);
+
+							world.spawnParticleWithRandomDirectionFast(x, y, z,
+									3, 1);
 						}
 					}
 				}

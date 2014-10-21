@@ -59,7 +59,7 @@ public class ParticleEngine implements ITickListener {
 	@Override
 	public void onRenderTick(float partialTickTime) {
 		if(Keyboard.isKeyDown(Keyboard.KEY_I)) {
-			
+
 			float[] rightModelviewVec = this.renderEngine
 					.getRightModelviewVec();
 			float[] upModelviewVec = this.renderEngine.getUpModelviewVec();
@@ -99,7 +99,6 @@ public class ParticleEngine implements ITickListener {
 			GL11.glEnd();
 		} else {
 
-		
 			GL11.glEnableClientState(GL11.GL_VERTEX_ARRAY);
 			GL11.glEnableClientState(GL11.GL_COLOR_ARRAY);
 			GL11.glEnableClientState(GL11.GL_TEXTURE_COORD_ARRAY);

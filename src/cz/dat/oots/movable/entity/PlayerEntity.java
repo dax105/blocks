@@ -14,7 +14,6 @@ import cz.dat.oots.inventory.IObjectStack;
 import cz.dat.oots.overlay.BasicLifesOverlay;
 import cz.dat.oots.render.IOverlayRenderer;
 import cz.dat.oots.settings.Keyconfig;
-import cz.dat.oots.settings.Settings;
 import cz.dat.oots.sound.SoundManager;
 import cz.dat.oots.world.Explosion;
 import cz.dat.oots.world.IDRegister;
@@ -102,7 +101,7 @@ public class PlayerEntity extends Entity implements IOverlayRenderer {
 				}
 			}
 		}
-		
+
 		while(Mouse.next()) {
 
 			if(Mouse.isGrabbed()) {
@@ -110,19 +109,19 @@ public class PlayerEntity extends Entity implements IOverlayRenderer {
 				if(Mouse.getEventButtonState()) {
 
 					if(Keyconfig.isDown(Keyconfig.crouch)) {
-						
+
 						if(hasSelected) {
 							this.world.getBlockObject(this.lookingAtX,
 									this.lookingAtY, this.lookingAtZ).onClick(
-									Mouse.getEventButton(), this.lookingAtX, this.lookingAtY,
-									this.lookingAtZ, world);
+									Mouse.getEventButton(), this.lookingAtX,
+									this.lookingAtY, this.lookingAtZ, world);
 
 						} else {
-							this.inHand.useItem(Mouse.getEventButton(), this.lookingAtX,
-									this.lookingAtY, this.lookingAtZ, 0,
-									this.world);
+							this.inHand.useItem(Mouse.getEventButton(),
+									this.lookingAtX, this.lookingAtY,
+									this.lookingAtZ, 0, this.world);
 						}
-						
+
 					} else if(Mouse.getEventButton() == 0) {
 						if(this.hasSelected) {
 							this.world.setBlock(this.lookingAtX,
@@ -189,7 +188,7 @@ public class PlayerEntity extends Entity implements IOverlayRenderer {
 			this.stepTimer += PlayerEntity.STEP_TIMER_FULL;
 		}
 
-		if(!this.alive && !Settings.getInstance().peacefulMode.getValue()) {
+		if(!this.alive && !this.world.getGame().s().peacefulMode.getValue()) {
 			this.world.getGame().getWorldsManager().exitWorld();
 		}
 
@@ -280,7 +279,7 @@ public class PlayerEntity extends Entity implements IOverlayRenderer {
 
 	public void updateOverlay() {
 		int heartsX = 80;
-		int heartsY = Settings.getInstance().windowHeight.getValue() - 43;
+		int heartsY = Display.getHeight() - 43;
 
 		if(this.lifesOverlay == null) {
 			this.lifesOverlay = new BasicLifesOverlay(this, heartsX, heartsY);
@@ -293,13 +292,14 @@ public class PlayerEntity extends Entity implements IOverlayRenderer {
 
 	@Override
 	public void renderOverlay(float ptt) {
-		this.inHand.getRenderer().render(ptt, 25, Display.getHeight() - 75, 50, 50, this.world);
+		this.inHand.getRenderer().render(ptt, 25, Display.getHeight() - 75, 50,
+				50, this.world);
 	}
 
 	@Override
 	public void updatePosition() {
-		if(Settings.getInstance().noclip.getValue()) {
-			
+		if(this.world.getGame().s().noclip.getValue()) {
+
 			this.wasOnGround = this.onGround;
 
 			float frictionMultipler = 0.7f;
@@ -333,14 +333,12 @@ public class PlayerEntity extends Entity implements IOverlayRenderer {
 				if(Keyconfig.isDown(Keyconfig.jump)) {
 					this.velY += 0.4f * multi;
 				}
-				
+
 				if(Keyconfig.isDown(Keyconfig.crouch)) {
 					this.velY -= 0.4f * multi;
 				}
 			}
 
-
-			
 			this.speed += speedC;
 			this.speedStrafe += speedStrafeC;
 
@@ -352,10 +350,12 @@ public class PlayerEntity extends Entity implements IOverlayRenderer {
 
 			this.velY *= frictionMultipler;
 
-			double toMoveZ = (this.posZ + Math.cos(-this.heading / 180 * Math.PI)
+			double toMoveZ = (this.posZ + Math.cos(-this.heading / 180
+					* Math.PI)
 					* this.speed)
 					+ (Math.cos((-this.heading + 90) / 180 * Math.PI) * this.speedStrafe);
-			double toMoveX = (this.posX + Math.sin(-this.heading / 180 * Math.PI)
+			double toMoveX = (this.posX + Math.sin(-this.heading / 180
+					* Math.PI)
 					* this.speed)
 					+ (Math.sin((-this.heading + 90) / 180 * Math.PI) * this.speedStrafe);
 			double toMoveY = (this.posY + (this.velY));
@@ -374,7 +374,7 @@ public class PlayerEntity extends Entity implements IOverlayRenderer {
 			this.posX = (this.bb.x0 + this.bb.x1) / 2.0F;
 			this.posY = this.bb.y0;
 			this.posZ = (this.bb.z0 + this.bb.z1) / 2.0F;
-			
+
 			return;
 		}
 		this.wasOnGround = this.onGround;
@@ -529,7 +529,7 @@ public class PlayerEntity extends Entity implements IOverlayRenderer {
 	}
 
 	private void updateLookingAt() {
-		float reach = Settings.getInstance().reach.getValue();
+		float reach = this.world.getGame().s().reach.getValue();
 
 		float xn = (float) this.getPosXPartial();
 		float yn = (float) this.getPosYPartial() + PlayerEntity.PLAYER_HEIGHT;

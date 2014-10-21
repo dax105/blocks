@@ -14,38 +14,43 @@ public class StoneDataObject implements IDataObject {
 	private float colorR;
 	private float colorG;
 	private float colorB;
-	
+
 	public StoneDataObject(BlockStone stone) {
 		this.blockID = stone.getID();
 	}
-	
+
 	@Override
 	public void load(List<String> values) {
 		for(String line : values) {
 			String[] parts = line.split(";");
 			if(parts[0].equals("d")) {
-				if(parts[1].equals(GameUtil.objectTypeAsString(ObjectType.FLOAT))) {
+				if(parts[1].equals(GameUtil
+						.objectTypeAsString(ObjectType.FLOAT))) {
 					switch(parts[2]) {
 					case "r":
-						this.colorR = Float.parseFloat(parts[3].replace(',', '.'));
+						this.colorR = Float.parseFloat(parts[3].replace(',',
+								'.'));
 						break;
 					case "g":
-						this.colorG = Float.parseFloat(parts[3].replace(',', '.'));
+						this.colorG = Float.parseFloat(parts[3].replace(',',
+								'.'));
 						break;
 					case "b":
-						this.colorB = Float.parseFloat(parts[3].replace(',', '.'));
+						this.colorB = Float.parseFloat(parts[3].replace(',',
+								'.'));
 						break;
 					}
 				}
 			}
 		}
-		
+
 	}
 
 	@Override
 	public List<String> save() {
 		ArrayList<String> ret = new ArrayList<String>();
-		String def = "d;" + GameUtil.objectTypeAsString(ObjectType.FLOAT) + ";%s;%f";
+		String def = "d;" + GameUtil.objectTypeAsString(ObjectType.FLOAT)
+				+ ";%s;%f";
 		ret.add(String.format(def, "r", this.colorR));
 		ret.add(String.format(def, "g", this.colorG));
 		ret.add(String.format(def, "b", this.colorB));

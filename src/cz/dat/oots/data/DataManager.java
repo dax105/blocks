@@ -9,31 +9,30 @@ import cz.dat.oots.world.World;
 public class DataManager implements IBlockDataManager, IItemDataManager {
 	IBlockDataManager blockDataManager;
 	IItemDataManager itemDataManager;
-	
-	
-	public DataManager(File blockDataFile, File itemDataFile, World world) throws IOException {
+
+	public DataManager(File blockDataFile, File itemDataFile, World world)
+			throws IOException {
 		this.blockDataManager = new BlockDataManager(blockDataFile, world);
 		this.itemDataManager = new ItemDataManager(itemDataFile, world);
 	}
-	
+
 	public boolean containsData(Coord3D coord) {
 		return blockDataManager.containsData(coord);
 	}
-	
+
 	public boolean containsData(int x, int y, int z) {
-		return blockDataManager.containsData(x , y, z);
+		return blockDataManager.containsData(x, y, z);
 	}
-	
+
 	public boolean containsData(int identificator) {
 		return itemDataManager.containsData(identificator);
 	}
-	
 
 	public void load() throws IOException {
 		blockDataManager.load();
 		itemDataManager.load();
 	}
-	
+
 	public void save() throws IOException {
 		this.blockDataManager.save();
 		this.itemDataManager.save();

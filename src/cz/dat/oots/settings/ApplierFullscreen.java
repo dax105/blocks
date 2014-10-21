@@ -7,7 +7,7 @@ import cz.dat.oots.Game;
 import cz.dat.oots.util.GLHelper;
 
 public class ApplierFullscreen extends Applier {
-	
+
 	public ApplierFullscreen(Game game) {
 		super(game);
 	}
@@ -23,10 +23,12 @@ public class ApplierFullscreen extends Applier {
 			Toolkit toolkit = Toolkit.getDefaultToolkit();
 			Dimension screenSize = toolkit.getScreenSize();
 
-			GLHelper.setDisplayMode(screenSize.width, screenSize.height, true);
+			GLHelper.setDisplayMode(screenSize.width, screenSize.height,
+					this.settings.aaSamples.getValue(), true);
 		} else if(wasFullscreen && !((Boolean) value)) {
-			GLHelper.setDisplayMode(Settings.getInstance().windowWidth.getValue(),
-					Settings.getInstance().windowHeight.getValue(), false);
+			GLHelper.setDisplayMode(this.settings.windowWidth.getValue(),
+					this.settings.windowHeight.getValue(),
+					this.settings.aaSamples.getValue(), false);
 		} else {
 			return false;
 		}

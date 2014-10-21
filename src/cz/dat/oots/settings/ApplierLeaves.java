@@ -12,14 +12,14 @@ public class ApplierLeaves extends Applier {
 	@Override
 	public boolean apply(Object val) {
 		boolean transp = (boolean) val;
-		
+
 		IDRegister.leaves.setOpaque(!transp);
 		IDRegister.leaves.setAllTextures(transp ? 10 : 19);
-		
+
 		if(this.game.getWorldsManager().isInGame()) {
 			this.game.getCurrentWorld().setAllChunksDirty();
 		}
-		
+
 		return true;
 	}
 

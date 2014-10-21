@@ -15,19 +15,20 @@ public class BasicItemStack implements IObjectStack {
 	private Random rand = new Random();
 	private boolean shouldRecycle;
 	private BasicItemRenderer renderer;
-	
+
 	public BasicItemStack(Item itemFor, int count) {
 		this.renderer = new BasicItemRenderer(this, itemFor);
 		if(count > this.getMaximumItemsPerStack() || count < 1) {
 			count = 1;
 		}
-		
-		this.itemInstanceIdentificators = new int[this.getMaximumItemsPerStack()];
+
+		this.itemInstanceIdentificators = new int[this
+				.getMaximumItemsPerStack()];
 		this.innerItem = itemFor;
-		
+
 		this.setCurrentItemsCount(count);
 	}
-	
+
 	@Override
 	public int getMaximumItemsPerStack() {
 		return 16;
@@ -63,30 +64,34 @@ public class BasicItemStack implements IObjectStack {
 	@Override
 	public void renderTickItems(float partialTickTime, World w) {
 		for(int i = 0; i < this.getCurrentItemsCount(); i++) {
-			innerItem.onRenderTick(partialTickTime, this.itemInstanceIdentificators[i], w);
+			innerItem.onRenderTick(partialTickTime,
+					this.itemInstanceIdentificators[i], w);
 		}
 	}
 
 	@Override
 	public void setCurrentItemsCount(int count) throws IllegalArgumentException {
 		if(count > this.getMaximumItemsPerStack()) {
-			throw new IllegalArgumentException("Count must be greater than 0 and smaller the maximum items per stack");
+			throw new IllegalArgumentException(
+					"Count must be greater than 0 and smaller the maximum items per stack");
 		}
-		
+
 		if(count < 1) {
 			this.notifyDeletion();
 			return;
 		}
-		
+
 		this.items = count;
-		
+
 		for(int i = 0; i < this.getCurrentItemsCount(); i++) {
 			if(this.itemInstanceIdentificators[i] == 0) {
-				this.itemInstanceIdentificators[i] = innerItem.getName().hashCode() + rand.nextInt(7) * rand.nextInt(13);
+				this.itemInstanceIdentificators[i] = innerItem.getName()
+						.hashCode() + rand.nextInt(7) * rand.nextInt(13);
 			}
 		}
-		
-		for(int i = this.getCurrentItemsCount(); i < this.getMaximumItemsPerStack(); i++) {
+
+		for(int i = this.getCurrentItemsCount(); i < this
+				.getMaximumItemsPerStack(); i++) {
 			if(this.itemInstanceIdentificators[i] != 0) {
 				this.itemInstanceIdentificators[i] = 0;
 			}
@@ -97,10 +102,12 @@ public class BasicItemStack implements IObjectStack {
 	public void useItem(int mouseButton, int x, int y, int z, int item,
 			World world) throws IllegalArgumentException {
 		if(this.itemInstanceIdentificators[item] == 0) {
-			throw new IllegalArgumentException("This ItemStack holds only " + this.getCurrentItemsCount() + " items!");
+			throw new IllegalArgumentException("This ItemStack holds only "
+					+ this.getCurrentItemsCount() + " items!");
 		}
-		
-		this.innerItem.onUse(mouseButton, x, y, z, this.itemInstanceIdentificators[item], world);
+
+		this.innerItem.onUse(mouseButton, x, y, z,
+				this.itemInstanceIdentificators[item], world);
 	}
 
 	@Override
@@ -109,7 +116,7 @@ public class BasicItemStack implements IObjectStack {
 			this.setCurrentItemsCount(items + 1);
 			return true;
 		}
-		
+
 		return false;
 	}
 
