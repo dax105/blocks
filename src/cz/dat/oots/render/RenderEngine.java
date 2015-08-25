@@ -2,27 +2,37 @@ package cz.dat.oots.render;
 
 import java.nio.FloatBuffer;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 
 import org.lwjgl.BufferUtils;
+import org.lwjgl.input.Keyboard;
 import org.lwjgl.opengl.ARBFragmentShader;
 import org.lwjgl.opengl.ARBShaderObjects;
 import org.lwjgl.opengl.ARBVertexShader;
 import org.lwjgl.opengl.Display;
+import org.lwjgl.opengl.EXTFramebufferObject;
 import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GL14;
 import org.lwjgl.opengl.GL20;
+import org.newdawn.slick.opengl.TextureImpl;
 
 import cz.dat.oots.Game;
 import cz.dat.oots.TextureManager;
 import cz.dat.oots.block.Block;
 import cz.dat.oots.console.CommandCullLock;
 import cz.dat.oots.movable.entity.PlayerEntity;
+import cz.dat.oots.render.shader.ShaderProgram;
 import cz.dat.oots.settings.Settings;
 import cz.dat.oots.util.Coord2D;
 import cz.dat.oots.util.GLHelper;
 import cz.dat.oots.util.GameUtil;
+import cz.dat.oots.util.gl.FramebufferObject;
+import cz.dat.oots.util.gl.RenderbufferObject;
+import cz.dat.oots.util.gl.Texture2D;
 import cz.dat.oots.world.ChunkDistanceComparator;
 import cz.dat.oots.world.World;
 import cz.dat.oots.world.chunk.Chunk;
@@ -46,12 +56,12 @@ public class RenderEngine {
 
 	public int chunksDrawn = 0;
 	public int chunksLoaded = 0;
-	int vertShader = 0, fragShader = 0;
+	public int vertices = 0;
 
 	public boolean building = false;
-	private boolean enableShaders;
-
-	public int program = 0;
+	
+	private ShaderProgram worldShader = new ShaderProgram("cz/dat/oots/shaders/world");
+	private ShaderProgram screenShader = new ShaderProgram("cz/dat/oots/shaders/screen");
 
 	private List<IWorldRenderer> renderables;
 	private List<IWorldRenderer> renderablesToRemove;
@@ -59,6 +69,9 @@ public class RenderEngine {
 
 	private World renderWorld;
 	private Game game;
+	
+	private Map<String, FramebufferObject> fbos;
+	private Texture2D screenTex;
 
 	public RenderEngine(Game game) {
 		this(game, false);
@@ -66,7 +79,6 @@ public class RenderEngine {
 
 	public RenderEngine(Game game, boolean enableShaders) {
 		this.game = game;
-		this.enableShaders = enableShaders;
 		this.frustum = new Frustum();
 		this.rightModelviewVec = new float[3];
 		this.upModelviewVec = new float[3];
@@ -74,102 +86,62 @@ public class RenderEngine {
 		this.renderables = new LinkedList<IWorldRenderer>();
 		this.renderablesToAdd = new LinkedList<IWorldRenderer>();
 		this.renderablesToRemove = new LinkedList<IWorldRenderer>();
-
-		this.loadShaders();
-
-		if(program == 0)
-			return;
-
-		if(enableShaders) {
-			this.attachShaders();
-		}
+		
+		this.fbos = new HashMap<String, FramebufferObject>();
+		
+		FramebufferObject screen = new FramebufferObject(Display.getWidth(), Display.getHeight());		
+		Texture2D ctex = new Texture2D(screen, GL11.GL_RGBA8, GL11.GL_RGBA, GL11.GL_INT);
+		Texture2D dtex = new Texture2D(screen, GL14.GL_DEPTH_COMPONENT24, GL11.GL_DEPTH_COMPONENT, GL11.GL_FLOAT);
+		
+		//RenderbufferObject rbo = new RenderbufferObject(screen.getWidth(), screen.getHeight(), GL14.GL_DEPTH_COMPONENT24);
+		
+		screen.attachTexture(ctex, EXTFramebufferObject.GL_COLOR_ATTACHMENT0_EXT);
+		screen.attachTexture(dtex, EXTFramebufferObject.GL_DEPTH_ATTACHMENT_EXT);
+		//screen.attachRenderbufferObject(rbo, EXTFramebufferObject.GL_DEPTH_ATTACHMENT_EXT);
+		
+		System.out.println("Framebuffer status: " + screen.isComplete());
+		
+		this.fbos.put("screen", screen);
+		this.screenTex = ctex;
+		
+		TextureImpl.bindNone();
+		FramebufferObject.bindNone();
+		
+	}
+	
+	public void drawFullscreenTexture(Texture2D tex) {		
+		int w = Display.getWidth();
+		int h = Display.getHeight();
+		
+		GLHelper.setOrtho(w, h);
+		
+		if (!Keyboard.isKeyDown(Keyboard.KEY_T))
+		ARBShaderObjects.glUseProgramObjectARB(this.screenShader.getProgramID());
+		
+		this.screenShader.setUniform1f("time", System.nanoTime()/1000000000f);
+		
+		GL11.glEnable(GL11.GL_TEXTURE_2D);
+		GL11.glDisable(GL11.GL_LIGHTING);
+		GL11.glDisable(GL11.GL_DEPTH_TEST);
+		GL11.glBindTexture(GL11.GL_TEXTURE_2D, tex.getId());
+		
+		GL11.glColor3f(1, 1, 1);
+		GL11.glBegin(GL11.GL_QUADS);
+		GL11.glTexCoord2f(0, 1);
+		GL11.glVertex2f(0, 0);
+		GL11.glTexCoord2f(1, 1);
+		GL11.glVertex2f(w, 0);
+		GL11.glTexCoord2f(1, 0);
+		GL11.glVertex2f(w, h);
+		GL11.glTexCoord2f(0, 0);
+		GL11.glVertex2f(0, h);
+		GL11.glEnd();
+		
+		ARBShaderObjects.glUseProgramObjectARB(0);
 	}
 
 	public void setWorld(World world) {
 		this.renderWorld = world;
-	}
-
-	private void loadShaders() {
-		try {
-			this.vertShader = createShader("cz/dat/oots/shaders/screen.vsh",
-					ARBVertexShader.GL_VERTEX_SHADER_ARB);
-			this.fragShader = createShader("cz/dat/oots/shaders/screen.fsh",
-					ARBFragmentShader.GL_FRAGMENT_SHADER_ARB);
-		} catch(Exception exc) {
-			System.err.println("============================================\n"
-					+ "=AN ERROR OCCURED WHILE LOADING THE SHADER!=\n"
-					+ "============================================");
-
-			exc.printStackTrace();
-
-			System.err.println(getLogInfo(this.program));
-		} finally {
-			if(vertShader == 0 || fragShader == 0)
-				return;
-		}
-
-		program = ARBShaderObjects.glCreateProgramObjectARB();
-	}
-
-	private void attachShaders() {
-		/*
-		 * if the vertex and fragment shaders setup sucessfully, attach them to
-		 * the shader program, link the shader program (into the GL context I
-		 * suppose), and validate
-		 */
-		ARBShaderObjects.glAttachObjectARB(this.program, this.vertShader);
-		ARBShaderObjects.glAttachObjectARB(this.program, this.fragShader);
-
-		ARBShaderObjects.glLinkProgramARB(this.program);
-		if(ARBShaderObjects.glGetObjectParameteriARB(this.program,
-				ARBShaderObjects.GL_OBJECT_LINK_STATUS_ARB) == GL11.GL_FALSE) {
-			System.err.println("============================================\n"
-					+ "=AN ERROR OCCURED WHILE LOADING THE SHADER!=\n"
-					+ "============================================");
-			System.err.println(getLogInfo(this.program));
-		}
-
-		ARBShaderObjects.glValidateProgramARB(this.program);
-		if(ARBShaderObjects.glGetObjectParameteriARB(this.program,
-				ARBShaderObjects.GL_OBJECT_VALIDATE_STATUS_ARB) == GL11.GL_FALSE) {
-			System.err.println("============================================\n"
-					+ "=AN ERROR OCCURED WHILE LOADING THE SHADER!=\n"
-					+ "============================================");
-			System.err.println(getLogInfo(this.program));
-		}
-
-		this.game.getConsole().println("Shader seems to be loaded!");
-	}
-
-	private int createShader(String filename, int shaderType) throws Exception {
-		int shader = 0;
-		try {
-			shader = ARBShaderObjects.glCreateShaderObjectARB(shaderType);
-
-			if(shader == 0)
-				return 0;
-
-			ARBShaderObjects.glShaderSourceARB(shader, GameUtil
-					.readFileAsString(getClass().getClassLoader()
-							.getResourceAsStream(filename)));
-			ARBShaderObjects.glCompileShaderARB(shader);
-
-			if(ARBShaderObjects.glGetObjectParameteriARB(shader,
-					ARBShaderObjects.GL_OBJECT_COMPILE_STATUS_ARB) == GL11.GL_FALSE)
-				throw new RuntimeException("Error creating shader: "
-						+ this.getLogInfo(shader));
-
-			return shader;
-		} catch(Exception exc) {
-			ARBShaderObjects.glDeleteObjectARB(shader);
-			throw exc;
-		}
-	}
-
-	private String getLogInfo(int obj) {
-		return ARBShaderObjects.glGetInfoLogARB(obj, ARBShaderObjects
-				.glGetObjectParameteriARB(obj,
-						ARBShaderObjects.GL_OBJECT_INFO_LOG_LENGTH_ARB));
 	}
 
 	public void updateBeforeRendering(float ptt) {
@@ -196,47 +168,30 @@ public class RenderEngine {
 				- PlayerEntity.EYES_HEIGHT, -player.getPosZPartial());
 	}
 
-	public void sDisable(String flag) {
-		if(this.enableShaders) {
-			int loc = GL20.glGetUniformLocation(this.program, flag);
-			GL20.glUniform1f(loc, 0.0f);
-		}
-	}
-
-	public void sEnable(String flag) {
-		if(this.enableShaders) {
-			int loc = GL20.glGetUniformLocation(this.program, flag);
-			GL20.glUniform1f(loc, 1.0f);
-		}
-	}
-
-	public void sSetFloat(String flag, float value) {
-		if(this.enableShaders) {
-			int loc = GL20.glGetUniformLocation(this.program, flag);
-			GL20.glUniform1f(loc, value);
-		}
-	}
-
 	public void renderWorld(float ptt) {
+		//GL11.glEnable(GL11.GL_TEXTURE_2D);
+		//Texture2D.bindNone();
+		this.fbos.get("screen").checkBind();
+		
+		GL11.glClearColor(1, 1, 1, 1);
+		GL11.glClear(GL11.GL_COLOR_BUFFER_BIT | GL11.GL_DEPTH_BUFFER_BIT);
+		
 		this.chunksLoaded = 0;
 		this.chunksDrawn = 0;
 
 		GL11.glColor3f(1, 1, 1);
+		
+		ARBShaderObjects.glUseProgramObjectARB(this.worldShader.getProgramID());
 
-		if(this.enableShaders) {
-			ARBShaderObjects.glUseProgramObjectARB(this.program);
-		}
-
-		this.sSetFloat(RenderEngine.UNIFORM_TIME,
-				System.nanoTime() / 1000000000f);
-		this.sSetFloat(RenderEngine.UNIFORM_FOG_DISTANCE,
-				Settings.getInstance().drawDistance.getValue() * 16 - 8);
+		this.worldShader.setUniform1f("time", System.nanoTime() / 1000000000f);
+		this.worldShader.setUniform1f("fogDist", Settings.getInstance().drawDistance.getValue() * 16 - 8);
 
 		this.ptt = ptt;
 		
-		GLHelper.setOrtho(Display.getWidth(), Display.getHeight());
-		this.renderSky(this.game.getWorldsManager().getWorld().getPlayer().getTilt());
-		GLHelper.setPerspective(Display.getWidth(), Display.getHeight());
+		//GLHelper.setOrtho(Display.getWidth(), Display.getHeight());
+		//this.renderSky(this.game.getWorldsManager().getWorld().getPlayer().getTilt());
+		//GLHelper.setPerspective(Display.getWidth(), Display.getHeight());
+		
 		
 		this.pushPlayerMatrix(this.renderWorld.getPlayer());
 		this.updateBeforeRendering(this.ptt);
@@ -249,18 +204,15 @@ public class RenderEngine {
 		GL11.glDisable(GL11.GL_TEXTURE_2D);
 		GL11.glDisable(GL11.GL_LIGHTING);
 
-		this.sDisable(RenderEngine.FLAG_LIGHTING);
-		this.sEnable(RenderEngine.FLAG_TEXTURE);
-		this.sEnable(RenderEngine.FLAG_FOG);
-
-		this.renderSkybox(this.renderWorld.getPlayer().getPosXPartial(),
-				this.renderWorld.getPlayer().getPosYPartial()
-						+ PlayerEntity.EYES_HEIGHT, this.renderWorld
-						.getPlayer().getPosZPartial());
-
+		this.worldShader.setUniform1f(RenderEngine.FLAG_LIGHTING, 0);
+		this.worldShader.setUniform1f(RenderEngine.FLAG_TEXTURE, 1);
+		this.worldShader.setUniform1f(RenderEngine.FLAG_FOG, 1);
+		
+		this.renderSkybox(this.renderWorld.getPlayer().getPosXPartial(), this.renderWorld.getPlayer().getPosYPartial() + PlayerEntity.EYES_HEIGHT, this.renderWorld.getPlayer().getPosZPartial());
+		
 		TextureManager.atlas.bind();
 
-		this.sDisable(RenderEngine.FLAG_TEXTURE);
+		this.worldShader.setUniform1f(RenderEngine.FLAG_TEXTURE, 0);
 
 		GL11.glDisable(GL11.GL_TEXTURE_2D);
 
@@ -268,17 +220,8 @@ public class RenderEngine {
 		
 		this.renderWorld.getParticleEngine().onRenderTick(ptt);
 
-		this.sEnable(RenderEngine.FLAG_LIGHTING);
-		GL11.glEnable(GL11.GL_LIGHTING);
-
-		/*
-		 * for(int i = 0; i < 1; i++) { GL11.glPushMatrix(); GL11.glTranslatef(i
-		 * - 0.0625f, 49, 10); GL11.glScalef(0.5f, 0.5f, 0.5f);
-		 * GL11.glCallList(ModelManager
-		 * .getInstance().getModel("char").getDisplayList());
-		 * GL11.glPopMatrix(); }
-		 */
-
+		GL20.glUseProgram(this.worldShader.getProgramID());
+		
 		// Render chunks
 		this.renderChunks(ptt);
 
@@ -287,22 +230,32 @@ public class RenderEngine {
 					this.renderWorld.getPlayer().getPosZPartial());
 		}
 
+		this.worldShader.setUniform1f(RenderEngine.FLAG_TEXTURE, 0);
+		GL11.glDisable(GL11.GL_TEXTURE_2D);
 		this.renderSelectionBox();
 
 		GL11.glPopMatrix();
 
 		ARBShaderObjects.glUseProgramObjectARB(0);
+		
+		FramebufferObject.bindNone();
+		
+		drawFullscreenTexture(this.screenTex);
 
 	}
 
 	public void renderChunks(float ptt) {
 
-		sEnable(FLAG_LIGHTING);
-		sEnable(FLAG_TEXTURE);
+		this.worldShader.setUniform1f(RenderEngine.FLAG_LIGHTING, 1);
+		this.worldShader.setUniform1f(RenderEngine.FLAG_TEXTURE, 1);
 
 		GL11.glEnable(GL11.GL_CULL_FACE);
 		GL11.glEnable(GL11.GL_LIGHTING);
 		GL11.glEnable(GL11.GL_TEXTURE_2D);
+		
+		GL11.glColor4f(1, 1, 1, 1);
+		
+		TextureManager.atlas.bind();
 
 		int pcx = (int) Math.floor(this.renderWorld.getPlayer().getPosX()) >> 4;
 		int pcz = (int) Math.floor(this.renderWorld.getPlayer().getPosZ()) >> 4;
@@ -387,7 +340,11 @@ public class RenderEngine {
 
 		GL11.glEnable(GL11.GL_ALPHA_TEST);
 		
+		this.vertices = 0;
+		
 		for(RenderChunk r : culledRenderChunks) {
+			this.vertices += r.getCm().getTotalVertices();
+			
 			if(r.getCm().isPresent(RenderPass.OPAQUE)) {
 				r.getCm().render(RenderPass.OPAQUE);
 				this.chunksDrawn++;
@@ -417,8 +374,17 @@ public class RenderEngine {
 		chunkRenderer.afterRendering();
 
 		GL11.glDisable(GL11.GL_LIGHTING);
-		sDisable(FLAG_LIGHTING);
-		sDisable(FLAG_FOG);
+		this.worldShader.setUniform1f(RenderEngine.FLAG_LIGHTING, 0);
+		this.worldShader.setUniform1f(RenderEngine.FLAG_FOG, 0);
+		GL11.glDisable(GL11.GL_TEXTURE_2D);
+		TextureImpl.bindNone();
+		
+		GLHelper.drawLine(Settings.getInstance().windowWidth.getValue() / 2,
+				Settings.getInstance().windowWidth.getValue() / 2,
+				(Settings.getInstance().windowHeight.getValue() / 2) - 10,
+				(Settings.getInstance().windowHeight.getValue() / 2) + 10, 2,
+				0, 0, 0, 0.5f);
+		GL11.glColor4f(1, 1, 1, 1);
 	}
 
 	public void renderSelectionBox() {
@@ -487,44 +453,96 @@ public class RenderEngine {
 		TextureManager.atlas.bind();
 	}
 
-	public void renderSky(float rot) {
-		
-		float expansion = 1.5f;
-		
+	public void renderSkybox(float x, float y, float z) {
+		// Store the current matrix
+		GL11.glPushMatrix();
+
+		GL11.glTranslatef(x, y, z);
+
+		// Enable/Disable features
+		GL11.glPushAttrib(GL11.GL_ENABLE_BIT);
+		GL11.glEnable(GL11.GL_TEXTURE_2D);
 		GL11.glDisable(GL11.GL_CULL_FACE);
 		GL11.glDisable(GL11.GL_DEPTH_TEST);
-		
 		GL11.glDisable(GL11.GL_LIGHTING);
-		GL11.glDisable(GL11.GL_TEXTURE_2D);
-		sDisable(FLAG_TEXTURE);
-		sDisable(FLAG_LIGHTING);
-		
-		rot += 90f;
-		float p = 1-(rot/180f);
-
-		GL11.glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
-
-		GL11.glPushMatrix();
-		
-		GL11.glTranslatef(0, -Display.getHeight()*p*(expansion-1), 0);
-		
+		GL11.glDisable(GL11.GL_BLEND);
+		// Just in case we set all vertices to white.
+		// GL11.glColor4f(1,1,1,1);
+		// Render the front quad
+		TextureManager.skybox_side.bind();
 		GL11.glBegin(GL11.GL_QUADS);
-		GL11.glColor3f(172/255f, 221/255f, 252/255f);
-		GL11.glVertex2f(0, 0);
-		GL11.glVertex2f(Display.getWidth(), 0);
-		GL11.glColor3f(15/255f, 100/255f, 250/255f);
-		GL11.glVertex2f(Display.getWidth(), Display.getHeight()*expansion);
-		GL11.glVertex2f(0, Display.getHeight()*expansion);
+		GL11.glTexCoord2f(0, 1);
+		GL11.glVertex3f(0.5f, -0.5f, -0.5f);
+		GL11.glTexCoord2f(1, 1);
+		GL11.glVertex3f(-0.5f, -0.5f, -0.5f);
+		GL11.glTexCoord2f(1, 0);
+		GL11.glVertex3f(-0.5f, 0.5f, -0.5f);
+		GL11.glTexCoord2f(0, 0);
+		GL11.glVertex3f(0.5f, 0.5f, -0.5f);
 		GL11.glEnd();
-		
+		// Render the left quad
+		// TextureManager.skybox_left.bind();
+		GL11.glBegin(GL11.GL_QUADS);
+		GL11.glTexCoord2f(0, 1);
+		GL11.glVertex3f(0.5f, -0.5f, 0.5f);
+		GL11.glTexCoord2f(1, 1);
+		GL11.glVertex3f(0.5f, -0.5f, -0.5f);
+		GL11.glTexCoord2f(1, 0);
+		GL11.glVertex3f(0.5f, 0.5f, -0.5f);
+		GL11.glTexCoord2f(0, 0);
+		GL11.glVertex3f(0.5f, 0.5f, 0.5f);
+		GL11.glEnd();
+		// Render the back quad
+		// TextureManager.skybox_back.bind();
+		GL11.glBegin(GL11.GL_QUADS);
+		GL11.glTexCoord2f(0, 1);
+		GL11.glVertex3f(-0.5f, -0.5f, 0.5f);
+		GL11.glTexCoord2f(1, 1);
+		GL11.glVertex3f(0.5f, -0.5f, 0.5f);
+		GL11.glTexCoord2f(1, 0);
+		GL11.glVertex3f(0.5f, 0.5f, 0.5f);
+		GL11.glTexCoord2f(0, 0);
+		GL11.glVertex3f(-0.5f, 0.5f, 0.5f);
+		GL11.glEnd();
+		// Render the right quad
+		// TextureManager.skybox_right.bind();
+		GL11.glBegin(GL11.GL_QUADS);
+		GL11.glTexCoord2f(0, 1);
+		GL11.glVertex3f(-0.5f, -0.5f, -0.5f);
+		GL11.glTexCoord2f(1, 1);
+		GL11.glVertex3f(-0.5f, -0.5f, 0.5f);
+		GL11.glTexCoord2f(1, 0);
+		GL11.glVertex3f(-0.5f, 0.5f, 0.5f);
+		GL11.glTexCoord2f(0, 0);
+		GL11.glVertex3f(-0.5f, 0.5f, -0.5f);
+		GL11.glEnd();
+		// Render the top quad
+		TextureManager.skybox_top.bind();
+		GL11.glBegin(GL11.GL_QUADS);
+		GL11.glTexCoord2f(1, 1);
+		GL11.glVertex3f(-0.5f, 0.5f, -0.5f);
+		GL11.glTexCoord2f(1, 0);
+		GL11.glVertex3f(-0.5f, 0.5f, 0.5f);
+		GL11.glTexCoord2f(0, 0);
+		GL11.glVertex3f(0.5f, 0.5f, 0.5f);
+		GL11.glTexCoord2f(0, 1);
+		GL11.glVertex3f(0.5f, 0.5f, -0.5f);
+		GL11.glEnd();
+		// Render the bottom quad
+		TextureManager.skybox_bottom.bind();
+		GL11.glBegin(GL11.GL_QUADS);
+		GL11.glTexCoord2f(0, 0);
+		GL11.glVertex3f(-0.5f, -0.5f, -0.5f);
+		GL11.glTexCoord2f(0, 1);
+		GL11.glVertex3f(-0.5f, -0.5f, 0.5f);
+		GL11.glTexCoord2f(1, 1);
+		GL11.glVertex3f(0.5f, -0.5f, 0.5f);
+		GL11.glTexCoord2f(1, 0);
+		GL11.glVertex3f(0.5f, -0.5f, -0.5f);
+		GL11.glEnd();
+		// Restore enable bits and matrix
+		GL11.glPopAttrib();
 		GL11.glPopMatrix();
-		
-		GL11.glEnable(GL11.GL_CULL_FACE);
-		GL11.glEnable(GL11.GL_DEPTH_TEST);
-	}
-
-	public void renderSkybox(float x, float y, float z) {
-		
 	}
 
 	public void renderUnlockedBlock(float x, float y, float z, Block block) {

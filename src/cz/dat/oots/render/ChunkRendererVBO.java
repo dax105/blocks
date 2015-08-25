@@ -42,13 +42,28 @@ public class ChunkRendererVBO implements IChunkRenderer {
 		this.reset();
 	}
 
+	public static int total = 0;
+	public static int sum = 0;
+	
 	@Override
 	public void end() {
 		this.drawBuffer.flip();
-		this.handle = GL15.glGenBuffers();
+		
+		this.handle = GL15.glGenBuffers();	
+
+		long s = System.nanoTime();
 		
 	    GL15.glBindBuffer(GL15.GL_ARRAY_BUFFER, this.handle);
 	    GL15.glBufferData(GL15.GL_ARRAY_BUFFER, this.drawBuffer, GL15.GL_STATIC_DRAW);
+	    
+		long e = System.nanoTime();
+	    
+	    //System.out.println("Uploaded buffer with " + this.vertices + " vertices (" + this.vertices*4*8/1024f + "KB), took " + (e-s)/1000000f + "ms");
+	    
+	    sum += this.vertices*32;
+	    total++;
+	    
+	    //System.out.println("Avg mesh size: " + (sum/total)/1024f + "kB");
 	    
 		this.vertexCounts.put(this.handle, this.vertices);
 	}
@@ -132,8 +147,6 @@ public class ChunkRendererVBO implements IChunkRenderer {
 			if (c)
 				ao++;
 		}
-	
-		if (ao == 1) ao += 0.5f;
 		
 		float aom = ao * Settings.getInstance().aoIntensity.getValue();
 	

@@ -3,6 +3,7 @@ package cz.dat.oots.render;
 public class ChunkMesh {
 
 	private int[] handles = new int[RenderPass.TOTAL_PASSES];
+	private int[] vertices = new int[RenderPass.TOTAL_PASSES];
 	private boolean[] present = new boolean[RenderPass.TOTAL_PASSES];
 	private IChunkRenderer renderer;
 	
@@ -12,9 +13,20 @@ public class ChunkMesh {
 		this.renderer = renderer;
 	}
 
-	public void setHandle(int pass, int id) {
+	public void setHandle(int pass, int id, int vertices) {
 		this.present[pass] = true;
 		this.handles[pass] = id;
+		this.vertices[pass] = vertices;
+	}
+	
+	public int getTotalVertices() {
+		int total = 0;
+		
+		for (int i = 0; i < RenderPass.TOTAL_PASSES; i++) {
+			total += this.vertices[i];
+		}
+		
+		return total;
 	}
 
 	public int getHandle(int pass) {

@@ -10,6 +10,13 @@ public class AABB {
    public float y1;
    public float z1;
    
+   public int lastX0;
+   public int lastY0;
+   public int lastZ0;
+   public int lastX1;
+   public int lastY1;
+   public int lastZ1;
+   
    public float offsetX = 0;
    public float offsetY = 0;
    public float offsetZ = 0;
@@ -51,6 +58,14 @@ public class AABB {
       this.x1 = x1;
       this.y1 = y1;
       this.z1 = z1;
+      
+      this.lastX0 = (int) (x0+99999);
+      this.lastY0 = (int) (y0+99999);
+      this.lastZ0 = (int) (z0+99999);
+      
+      this.lastX1 = (int) (x0+99999);
+      this.lastY1 = (int) (y0+99999);
+      this.lastZ1 = (int) (z0+99999);
    }
 
    public AABB expand(float xa, float ya, float za) {

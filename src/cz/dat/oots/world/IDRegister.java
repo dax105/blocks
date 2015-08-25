@@ -17,6 +17,7 @@ import cz.dat.oots.block.BlockBasic;
 import cz.dat.oots.block.BlockFluid;
 import cz.dat.oots.block.BlockPlant;
 import cz.dat.oots.block.BlockSand;
+import cz.dat.oots.block.BlockSlab;
 import cz.dat.oots.block.BlockStone;
 import cz.dat.oots.item.Item;
 import cz.dat.oots.item.ItemImaginaryChocolate;
@@ -55,6 +56,7 @@ public class IDRegister {
 	public static Block flower1;
 	public static Block flower2;
 	public static Block flower3;
+	public static Block slab;
 
 	public static Item itemImaginaryChocolate;
 	
@@ -133,6 +135,7 @@ public class IDRegister {
 					this).setAllTextures(17));
 			IDRegister.flower3 = registerBlock(new BlockPlant("oots/plantFlowerWhite",
 					this).setAllTextures(18));
+			IDRegister.slab = registerBlock(new BlockSlab("oots/slab", this));
 		} catch (RegisterException e) {
 			e.printStackTrace();
 		}

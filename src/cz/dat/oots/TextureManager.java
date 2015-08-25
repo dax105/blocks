@@ -22,11 +22,7 @@ public class TextureManager {
 	public static Texture menuBg;
 	public static Texture clouds;
 	
-	public static Texture skybox_back;
 	public static Texture skybox_bottom;
-	public static Texture skybox_front;
-	public static Texture skybox_left;
-	public static Texture skybox_right;
 	public static Texture skybox_top;
 	public static Texture skybox_side;
 	
@@ -65,11 +61,7 @@ public class TextureManager {
 		TextureManager.menuBg = TextureManager.loadTex("cz/dat/oots/res/textures/menubg.png");
 		TextureManager.clouds = TextureManager.loadTex("cz/dat/oots/res/textures/clouds.png");
 		
-		TextureManager.skybox_back = TextureManager.loadTex("cz/dat/oots/res/textures/skybox_back.png");
 		TextureManager.skybox_bottom = TextureManager.loadTex("cz/dat/oots/res/textures/skybox_bottom.png");
-		TextureManager.skybox_front = TextureManager.loadTex("cz/dat/oots/res/textures/skybox_front.png");
-		TextureManager.skybox_left = TextureManager.loadTex("cz/dat/oots/res/textures/skybox_left.png");
-		TextureManager.skybox_right = TextureManager.loadTex("cz/dat/oots/res/textures/skybox_right.png");
 		TextureManager.skybox_top = TextureManager.loadTex("cz/dat/oots/res/textures/skybox_top.png");
 		TextureManager.skybox_side = TextureManager.loadTex("cz/dat/oots/res/textures/skybox_side.png");
 		
@@ -77,19 +69,7 @@ public class TextureManager {
 		TextureManager.life_zero = TextureManager.loadTex("cz/dat/oots/res/textures/life_null.png");
 		TextureManager.imaginary_chocolate = TextureManager.loadTex("cz/dat/oots/res/textures/items/im_choc.png");
 		
-		TextureManager.skybox_back.bind();
-		GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_WRAP_S, GL12.GL_CLAMP_TO_EDGE);
-		GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_WRAP_T, GL12.GL_CLAMP_TO_EDGE);
 		TextureManager.skybox_bottom.bind();
-		GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_WRAP_S, GL12.GL_CLAMP_TO_EDGE);
-		GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_WRAP_T, GL12.GL_CLAMP_TO_EDGE);
-		TextureManager.skybox_front.bind();
-		GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_WRAP_S, GL12.GL_CLAMP_TO_EDGE);
-		GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_WRAP_T, GL12.GL_CLAMP_TO_EDGE);
-		TextureManager.skybox_left.bind();
-		GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_WRAP_S, GL12.GL_CLAMP_TO_EDGE);
-		GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_WRAP_T, GL12.GL_CLAMP_TO_EDGE);
-		TextureManager.skybox_right.bind();
 		GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_WRAP_S, GL12.GL_CLAMP_TO_EDGE);
 		GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_WRAP_T, GL12.GL_CLAMP_TO_EDGE);
 		TextureManager.skybox_top.bind();

@@ -1,43 +1,44 @@
 #version 120
+#define MAX_COLOR_RANGE 48.0
 
-//======================
-//= EDITABLE VARIABLES =
-//======================
-
-#define ENABLE_FOG
-#define FOG_RAMP 30.0
-
-//=============================
-//= END OF EDITABLE VARIABLES =
-//=============================
-
-varying vec4 color;
-varying vec4 vposition;
-varying float vdist;
-
-uniform sampler2D sampler;
-
+uniform sampler2D sampler_base;
+uniform sampler2D sampler_rain;
 uniform float time;
-uniform float fog;
-uniform float texture;
-uniform float fogDist;
+
+vec4 hejl(vec4 color) {
+	vec4 x = max(vec4(0.0), color - vec4(0.004));
+	return (x * (6.2 * x + 0.5)) / (x * (6.2 * x + 1.7) + 0.06);
+}
+
+float A = 0.15;
+float B = 0.2;
+float C = 0.1;
+float D = 0.2;
+float E = 0.02;
+float F = 0.3;
+float W = MAX_COLOR_RANGE;
+
+vec3 Uncharted2Tonemap(vec3 x) {
+	return ((x*(A*x+C*B)+D*E)/(x*(A*x+B)+D*F))-E/F;
+}
 
 void main() {
 
-    if (texture > 0) {
-    	gl_FragColor = color * texture2D(sampler, gl_TexCoord[0].st);
-    } else {
-    	gl_FragColor = color;
-    }	
-    
-    #ifdef ENABLE_FOG
-    
-    if (fog > 0) {    
-    	float depth = vdist;
-    	float fogFactor = smoothstep(fogDist-FOG_RAMP, fogDist, depth);
-    	gl_FragColor = mix(gl_FragColor, vec4(gl_FragColor.rgb, mix(gl_FragColor.a, 0.0, fogFactor)), fogFactor);
-    }	
-    
-    #endif
-    
+	const float pi = 3.14159265359;
+	
+	vec2 texcoord = gl_TexCoord[0].st;	
+
+	vec2 newTC = texcoord.st;
+	vec3 color = pow(texture2D(sampler_base, newTC).rgb*vec3(0.48),vec3(2.2))*MAX_COLOR_RANGE;
+	
+	vec3 curr = Uncharted2Tonemap(color);
+	vec3 whiteScale = 1.0f/Uncharted2Tonemap(vec3(W));
+	
+	color = curr*whiteScale; 
+	color = (((color - color.rgb )*1.04)+color.rgb) ;
+	color /= 1.04;
+
+	color = pow(color,vec3(1.0/1.85));
+	
+	gl_FragColor = vec4(color, 1.0);
 }

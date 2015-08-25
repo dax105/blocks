@@ -132,6 +132,11 @@ public abstract class Block {
 		this.aabb.resetOffset();
 		return this.aabb;
 	}
+	
+	public void setAABB(AABB bb) {
+		this.aabb = bb;
+	}
+	
 	public AABB getOffsetAABB(float x, float y, float z) {
 		this.aabb.resetOffset();
 		this.aabb.setOffset(x, y, z);

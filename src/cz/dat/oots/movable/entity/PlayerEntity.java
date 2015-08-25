@@ -4,6 +4,7 @@ import java.util.Random;
 
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
+import org.newdawn.slick.opengl.TextureImpl;
 
 import cz.dat.oots.block.Block;
 import cz.dat.oots.collisions.AABB;
@@ -89,6 +90,13 @@ public class PlayerEntity extends Entity implements IOverlayRenderer {
 			if(this.hasSelected) {
 				Explosion.explode(this.world, this.lookingAtX, this.lookingAtY,
 						this.lookingAtZ);
+			}
+		}
+		
+		if(Keyboard.isKeyDown(Keyboard.KEY_R)) {
+			if(this.hasSelected) {
+				Explosion.fill(this.world, this.lookingAtX, this.lookingAtY,
+						this.lookingAtZ, IDRegister.leaves.getID());
 			}
 		}
 
@@ -189,7 +197,7 @@ public class PlayerEntity extends Entity implements IOverlayRenderer {
 		}
 
 		if(!this.alive && !Settings.getInstance().peacefulMode.getValue()) {
-			this.world.getGame().getWorldsManager().exitWorld();
+			//this.world.getGame().getWorldsManager().exitWorld();
 		}
 
 		this.updateOverlay();
@@ -283,8 +291,7 @@ public class PlayerEntity extends Entity implements IOverlayRenderer {
 
 		if(this.lifesOverlay == null) {
 			this.lifesOverlay = new BasicLifesOverlay(this, heartsX, heartsY);
-			this.world.getGame().getOverlayManager()
-					.addOverlay(this.lifesOverlay);
+			//this.world.getGame().getOverlayManager().addOverlay(this.lifesOverlay);
 		} else {
 			this.lifesOverlay.setPosition(heartsX, heartsY);
 		}
@@ -292,6 +299,7 @@ public class PlayerEntity extends Entity implements IOverlayRenderer {
 
 	@Override
 	public void renderOverlay(float ptt) {
+		TextureImpl.bindNone();
 		this.inHand.renderGUITexture(25,
 				Settings.getInstance().windowHeight.getValue() - 75, 50, 50);
 	}
@@ -505,11 +513,11 @@ public class PlayerEntity extends Entity implements IOverlayRenderer {
 		if(wh > 0) {
 			int newSelectedBlock = this.inHand.getItemID() + 1;
 
-			if(newSelectedBlock == 18) {
+			/*if(newSelectedBlock == 19) {
 				this.inHand = new BasicItemStack(
 						IDRegister.itemImaginaryChocolate, 1);
 				return;
-			}
+			}*/
 
 			if(newSelectedBlock > (world.getRegister().getBlockCount())) {
 				newSelectedBlock = 1;

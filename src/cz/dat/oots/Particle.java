@@ -15,7 +15,8 @@ public class Particle implements ITickListener, IWorldRenderer {
 	public static final float BOUNCE_MIN = 0.1f;
 	public static final float FRICTION_AIR = 0.985f;
 	public static final float FRICTION_GROUND = 0.75f;
-	public static final float PARTICLE_SIZE = 0.2f;
+	public static final float PARTICLE_SIZE = 0.5f;
+	public static final float BOUNDING_BOX_SIZE = 0.01f;
 	
 	public final float r;
 	public final float g;
@@ -57,12 +58,12 @@ public class Particle implements ITickListener, IWorldRenderer {
 		this.dead = false;
 		this.ground = false;
 		this.aabb = new AABB(
-				this.x - Particle.PARTICLE_SIZE * 0.5f, 
-				this.y - Particle.PARTICLE_SIZE * 0.5f, 
-				this.z - Particle.PARTICLE_SIZE * 0.5f, 
-				this.x + Particle.PARTICLE_SIZE * 0.5f, 
-				this.y + Particle.PARTICLE_SIZE * 0.5f, 
-				this.z + Particle.PARTICLE_SIZE * 0.5f
+				this.x - Particle.BOUNDING_BOX_SIZE * 0.5f, 
+				this.y - Particle.BOUNDING_BOX_SIZE * 0.5f, 
+				this.z - Particle.BOUNDING_BOX_SIZE * 0.5f, 
+				this.x + Particle.BOUNDING_BOX_SIZE * 0.5f, 
+				this.y + Particle.BOUNDING_BOX_SIZE * 0.5f, 
+				this.z + Particle.BOUNDING_BOX_SIZE * 0.5f
 		);
 		this.r = r;
 		this.g = g;
@@ -111,9 +112,7 @@ public class Particle implements ITickListener, IWorldRenderer {
 		boolean collidedY = false;
 		boolean collidedZ = false;
 		
-		this.x = this.aabb.x0 + Particle.PARTICLE_SIZE / 2;
-		this.y = this.aabb.y0 + Particle.PARTICLE_SIZE / 2;
-		this.z = this.aabb.z0 + Particle.PARTICLE_SIZE / 2;
+
 		
 		if(maxVelX != this.velX) {
 			collidedX = true;
@@ -149,6 +148,11 @@ public class Particle implements ITickListener, IWorldRenderer {
 				this.velZ = (float) (-this.velZ * (BOUNCE_MIN + rand.nextFloat() * (BOUNCE_MAX - BOUNCE_MIN)));
 			}
 		}
+		
+
+		this.x = this.aabb.x0 + Particle.PARTICLE_SIZE / 2;
+		this.y = this.aabb.y0 + Particle.PARTICLE_SIZE / 2;
+		this.z = this.aabb.z0 + Particle.PARTICLE_SIZE / 2;
 		
 	}
 	

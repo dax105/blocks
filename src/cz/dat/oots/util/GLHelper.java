@@ -13,6 +13,7 @@ import org.lwjgl.util.glu.GLU;
 import org.newdawn.slick.Color;
 import org.newdawn.slick.opengl.Texture;
 
+import cz.dat.oots.Game;
 import cz.dat.oots.TextureManager;
 import cz.dat.oots.settings.Settings;
 

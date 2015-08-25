@@ -8,6 +8,7 @@ import org.lwjgl.Sys;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
 import org.lwjgl.openal.AL;
+import org.lwjgl.opengl.ContextAttribs;
 import org.lwjgl.opengl.Display;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.util.glu.GLU;
@@ -34,6 +35,7 @@ import cz.dat.oots.world.World;
 import cz.dat.oots.world.loading.WorldManager;
 
 public class Game implements Runnable {
+	
 	public static final String TITLE = Start.GAME_NAME + " v"
 			+ Start.GAME_VERSION;
 

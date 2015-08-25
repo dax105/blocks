@@ -113,7 +113,7 @@ public class ChunkMeshBuilder {
 				if (renderer.getVertexCount() == 0) {
 					renderer.delete(renderer.getHandle());
 				} else {
-					cm.setHandle(RenderPass.OPAQUE, renderer.getHandle());
+					cm.setHandle(RenderPass.OPAQUE, renderer.getHandle(), renderer.getVertexCount());
 				}
 				
 			}
@@ -151,7 +151,7 @@ public class ChunkMeshBuilder {
 				if (renderer.getVertexCount() == 0) {
 					renderer.delete(renderer.getHandle());
 				} else {
-					cm.setHandle(RenderPass.TRANSLUCENT, renderer.getHandle());
+					cm.setHandle(RenderPass.TRANSLUCENT, renderer.getHandle(), renderer.getVertexCount());
 				}
 				
 			}
