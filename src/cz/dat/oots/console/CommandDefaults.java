@@ -1,8 +1,6 @@
 package cz.dat.oots.console;
 
-import cz.dat.oots.settings.Settings;
-
-public class CommandDefaults extends Command{
+public class CommandDefaults extends Command {
 
 	public CommandDefaults(Console console) {
 		super(console);
@@ -20,12 +18,10 @@ public class CommandDefaults extends Command{
 
 	@Override
 	public boolean execute(String[] args) {
-		Settings.getInstance().reset();
+		this.console.getGame().resetSettings();
 		this.console.out("Settings were reset to defaults!");
-		
+
 		return true;
 	}
 
-	
-	
 }

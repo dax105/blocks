@@ -25,43 +25,44 @@ public class ModelManager {
 		if(ModelManager.instance == null) {
 			ModelManager.instance = new ModelManager();
 		}
-		
+
 		return ModelManager.instance;
 	}
-	
+
 	private ModelManager() {
 		this.models = new HashMap<>();
 	}
-	
+
 	public void load() {
-		this.models.put("char", this.loadModel("cz/dat/oots/res/models/char.zip"));
-		
+		this.models.put("char",
+				this.loadModel("cz/dat/oots/res/models/char.zip"));
+
 		for(Model m : this.models.values())
 			m.generateDisplayList();
 	}
-	
+
 	public Model getModel(String name) {
 		return models.get(name);
 	}
-	
+
 	private Model loadModel(String path) {
 		try {
 			Model m = new Model();
 			Map<String, byte[]> streams = new HashMap<String, byte[]>();
 			InputStream in = ResourceLoader.getResourceAsStream(path);
 			ZipInputStream zin = new ZipInputStream(in);
-			ZipEntry e;	
-			
+			ZipEntry e;
+
 			while((e = zin.getNextEntry()) != null) {
 				ByteArrayOutputStream bout = new ByteArrayOutputStream();
 
 				byte[] data = new byte[this.BUFFER];
-				
+
 				int count;
 				while((count = zin.read(data, 0, this.BUFFER)) != -1) {
-				    bout.write(data, 0, count);
+					bout.write(data, 0, count);
 				}
-				
+
 				streams.put(e.getName(), bout.toByteArray());
 				zin.closeEntry();
 			}
@@ -84,11 +85,12 @@ public class ModelManager {
 
 			for(int i = 0; i <= maxl; i++) {
 				BufferedImage img;
-				
-				InputStream bain = new ByteArrayInputStream(streams.get("layer" + i + ".png")); 
-				
+
+				InputStream bain = new ByteArrayInputStream(streams.get("layer"
+						+ i + ".png"));
+
 				img = ImageIO.read(bain);
-				
+
 				if(i == 0) {
 					m.setWidth(img.getWidth() + 1);
 					m.setHeight(img.getHeight() + 1);
@@ -104,7 +106,10 @@ public class ModelManager {
 						Color color = new Color(col, true);
 
 						if(color.getAlpha() > 0) {
-							m.voxels[img.getWidth() - x][img.getHeight() - y][i] = new Voxel(color.getRed() / 255f, color.getGreen() / 255f, color.getBlue() / 255f);
+							m.voxels[img.getWidth() - x][img.getHeight() - y][i] = new Voxel(
+									color.getRed() / 255f,
+									color.getGreen() / 255f,
+									color.getBlue() / 255f);
 						}
 					}
 				}
@@ -112,7 +117,7 @@ public class ModelManager {
 			}
 
 			return m;
-		} catch (Exception e) {
+		} catch(Exception e) {
 			e.printStackTrace();
 			return null;
 		}

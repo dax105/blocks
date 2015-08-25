@@ -5,12 +5,12 @@ public class User {
 	private String password;
 	private String token;
 	private boolean authenticated;
-	
+
 	public User(String userName, String password) {
 		this.setUserName(userName);
 		this.setPassword(password);
 	}
-	
+
 	public String getUserName() {
 		return this.userName;
 	}
@@ -45,7 +45,7 @@ public class User {
 	public void setAuthenticated() {
 		this.authenticated = true;
 	}
-	
+
 	public void setUnauthenticated() {
 		this.authenticated = false;
 	}

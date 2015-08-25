@@ -13,7 +13,7 @@ public class GuiObjectSettingsBooleanButton extends GuiObjectButton {
 		super(x1, y1, x2, y2, font, object.getRepresentation(), id, parent);
 		this.object = object;
 	}
-	
+
 	@Override
 	protected void onClick() {
 		this.object.setValue(!this.object.getValue());

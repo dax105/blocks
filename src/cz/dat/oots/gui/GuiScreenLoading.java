@@ -3,7 +3,6 @@ package cz.dat.oots.gui;
 import org.lwjgl.opengl.Display;
 
 import cz.dat.oots.Game;
-import cz.dat.oots.settings.Settings;
 
 public class GuiScreenLoading extends GuiScreen {
 
@@ -14,23 +13,20 @@ public class GuiScreenLoading extends GuiScreen {
 
 	public GuiScreenLoading(Game game, String text) {
 		super(game);
-		this.objects.add(new GuiObjectRectangle(
-					(Settings.getInstance().windowWidth.getValue() - width - overflow) / 2, 
-					(Settings.getInstance().windowHeight.getValue() - height - overflow) / 2, 
-					(Settings.getInstance().windowWidth.getValue() + width + overflow) / 2, 
-					(Settings.getInstance().windowHeight.getValue() + height + overflow) / 2, 
-					0xA0000000)
-		);
+		this.objects.add(new GuiObjectRectangle((game.s().windowWidth
+				.getValue() - width - overflow) / 2, (game.s().windowHeight
+				.getValue() - height - overflow) / 2, (game.s().windowWidth
+				.getValue() + width + overflow) / 2, (game.s().windowHeight
+				.getValue() + height + overflow) / 2, 0xA0000000));
 
 		this.titleBar = new GuiObjectTitleBar(
-				(Settings.getInstance().windowWidth.getValue() - width) / 2, 
-				(Settings.getInstance().windowHeight.getValue() - height) / 2, 
-				(Settings.getInstance().windowWidth.getValue() + width) / 2, 
-				((Settings.getInstance().windowHeight.getValue() - height) / 2) + 30, 
-				this.f, text
-		);
+				(game.s().windowWidth.getValue() - width) / 2,
+				(game.s().windowHeight.getValue() - height) / 2,
+				(game.s().windowWidth.getValue() + width) / 2,
+				((game.s().windowHeight.getValue() - height) / 2) + 30, this.f,
+				text);
 	}
-	
+
 	public GuiScreenLoading(Game game) {
 		this(game, "Loading...");
 	}
@@ -40,17 +36,17 @@ public class GuiScreenLoading extends GuiScreen {
 		this.game.render(0);
 		Display.update();
 	}
-	
+
 	@Override
 	public void buttonPress(GuiObjectButton button) {
 
 	}
-	
+
 	@Override
 	public void sliderUpdate(GuiObjectSlider slider) {
 
 	}
-	
+
 	@Override
 	public void render() {
 		super.render();
@@ -59,12 +55,11 @@ public class GuiScreenLoading extends GuiScreen {
 
 	@Override
 	public void buttonChanged(GuiObjectChangingButton button, int line) {
-		
-		
+
 	}
 
 	@Override
-	public void onClosing() {	
+	public void onClosing() {
 	}
 
 	@Override

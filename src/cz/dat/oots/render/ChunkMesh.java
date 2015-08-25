@@ -6,7 +6,7 @@ public class ChunkMesh {
 	private int[] vertices = new int[RenderPass.TOTAL_PASSES];
 	private boolean[] present = new boolean[RenderPass.TOTAL_PASSES];
 	private IChunkRenderer renderer;
-	
+
 	public int minX, minY, minZ, maxX, maxY, maxZ;
 
 	public ChunkMesh(IChunkRenderer renderer) {
@@ -40,12 +40,13 @@ public class ChunkMesh {
 	public void render(int pass) {
 		this.renderer.render(handles[pass]);
 	}
-	
-	public void setBounds(int minX, int minY, int minZ, int maxX, int maxY, int maxZ) {
+
+	public void setBounds(int minX, int minY, int minZ, int maxX, int maxY,
+			int maxZ) {
 		this.minX = minX;
 		this.minY = minY;
 		this.minZ = minZ;
-		
+
 		this.maxX = maxX;
 		this.maxY = maxY;
 		this.maxZ = maxZ;
@@ -62,7 +63,7 @@ public class ChunkMesh {
 
 	public boolean isEmpty() {
 		for(int i = 0; i < RenderPass.TOTAL_PASSES; i++)
-			if(this.present[i]) 
+			if(this.present[i])
 				return false;
 		return true;
 	}

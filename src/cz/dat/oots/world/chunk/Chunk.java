@@ -10,7 +10,7 @@ public class Chunk {
 
 	public boolean changed = false;
 	public boolean populated = false;
-	
+
 	public static final int CHUNK_SIZE = 16;
 	public static final int CHUNK_HEIGHT = 128;
 
@@ -18,7 +18,7 @@ public class Chunk {
 	public int z;
 
 	public World world;
-	
+
 	public RenderChunk[] renderChunks = new RenderChunk[8];
 
 	public ShortBuffer blocksBuffer;
@@ -28,7 +28,7 @@ public class Chunk {
 			this.renderChunks[y].setDirty(true);
 		}
 	}
-	
+
 	public void setAllDirty() {
 		for(RenderChunk r : this.renderChunks) {
 			r.setDirty(true);
@@ -39,15 +39,18 @@ public class Chunk {
 		float pX = this.world.getPlayer().getPosX();
 		float pZ = this.world.getPlayer().getPosZ();
 
-		float dX = Math.abs(pX - this.x * Chunk.CHUNK_SIZE - Chunk.CHUNK_SIZE / 2);
-		float dZ = Math.abs(pZ - this.z * Chunk.CHUNK_SIZE - Chunk.CHUNK_SIZE / 2);
+		float dX = Math.abs(pX - this.x * Chunk.CHUNK_SIZE - Chunk.CHUNK_SIZE
+				/ 2);
+		float dZ = Math.abs(pZ - this.z * Chunk.CHUNK_SIZE - Chunk.CHUNK_SIZE
+				/ 2);
 
 		return (float) Math.sqrt(dX * dX + dZ * dZ);
 	}
 
 	public void setBlock(int x, int y, int z, int id, boolean rebuild) {
 		if(y < Chunk.CHUNK_HEIGHT && y >= 0) {
-			blocksBuffer.put(x + Chunk.CHUNK_SIZE * (y + Chunk.CHUNK_HEIGHT * z), (short) id);
+			blocksBuffer.put(x + Chunk.CHUNK_SIZE
+					* (y + Chunk.CHUNK_HEIGHT * z), (short) id);
 			int meshY = y / Chunk.CHUNK_SIZE;
 			if(rebuild) {
 				this.setDirty(meshY);
@@ -61,25 +64,29 @@ public class Chunk {
 				}
 
 				if(x == Chunk.CHUNK_SIZE - 1) {
-					if(this.world.getBlock(this.x * Chunk.CHUNK_SIZE + x + 1, y, this.z * Chunk.CHUNK_SIZE + z) > 0) {
+					if(this.world.getBlock(this.x * Chunk.CHUNK_SIZE + x + 1,
+							y, this.z * Chunk.CHUNK_SIZE + z) > 0) {
 						this.world.setChunkDirty(this.x + 1, meshY, this.z);
 					}
 				}
 
 				if(x == 0) {
-					if(this.world.getBlock(this.x * Chunk.CHUNK_SIZE + x - 1, y, this.z * Chunk.CHUNK_SIZE + z) > 0) {
+					if(this.world.getBlock(this.x * Chunk.CHUNK_SIZE + x - 1,
+							y, this.z * Chunk.CHUNK_SIZE + z) > 0) {
 						this.world.setChunkDirty(this.x - 1, meshY, this.z);
 					}
 				}
 
 				if(z == Chunk.CHUNK_SIZE - 1) {
-					if(this.world.getBlock(this.x * Chunk.CHUNK_SIZE + x, y, this.z * Chunk.CHUNK_SIZE + z + 1) > 0) {
+					if(this.world.getBlock(this.x * Chunk.CHUNK_SIZE + x, y,
+							this.z * Chunk.CHUNK_SIZE + z + 1) > 0) {
 						this.world.setChunkDirty(this.x, meshY, this.z + 1);
 					}
 				}
 
 				if(z == 0) {
-					if(this.world.getBlock(this.x * Chunk.CHUNK_SIZE + x, y, this.z * Chunk.CHUNK_SIZE + z - 1) > 0) {
+					if(this.world.getBlock(this.x * Chunk.CHUNK_SIZE + x, y,
+							this.z * Chunk.CHUNK_SIZE + z - 1) > 0) {
 						this.world.setChunkDirty(this.x, meshY, this.z - 1);
 					}
 				}
@@ -92,7 +99,8 @@ public class Chunk {
 			return 0;
 		}
 
-		return this.blocksBuffer.get(x + Chunk.CHUNK_SIZE * (y + Chunk.CHUNK_HEIGHT * z));
+		return this.blocksBuffer.get(x + Chunk.CHUNK_SIZE
+				* (y + Chunk.CHUNK_HEIGHT * z));
 	}
 
 	public void deleteAllRenderChunks() {
@@ -102,18 +110,19 @@ public class Chunk {
 	}
 
 	public void deleteRenderChunk(int y) {
-		if(this.renderChunks[y].isBuilt()) { 
+		if(this.renderChunks[y].isBuilt()) {
 			this.renderChunks[y].clear();
 		}
 	}
 
 	public void rebuild(int y) {
 		if(y > 0 || y < this.renderChunks.length) {
-			
+
 			if(this.renderChunks[y].isBuilt()) {
 				this.deleteRenderChunk(y);
-			}		
-			this.renderChunks[y].setCm(ChunkMeshBuilder.generateMesh(world.getGame(), this, y));
+			}
+			this.renderChunks[y].setCm(ChunkMeshBuilder.generateMesh(
+					world.getGame(), this, y));
 		}
 	}
 
@@ -124,14 +133,15 @@ public class Chunk {
 	}
 
 	public Chunk(int cX, int cZ, World world) {
-		this.blocksBuffer = ShortBuffer.allocate(Chunk.CHUNK_SIZE * Chunk.CHUNK_SIZE * Chunk.CHUNK_HEIGHT);
+		this.blocksBuffer = ShortBuffer.allocate(Chunk.CHUNK_SIZE
+				* Chunk.CHUNK_SIZE * Chunk.CHUNK_HEIGHT);
 		this.world = world;
 		this.x = cX;
 		this.z = cZ;
-		
+
 		for(int y = 0; y < 8; y++) {
 			this.renderChunks[y] = new RenderChunk(cX, y, cZ);
 		}
-		
+
 	}
 }

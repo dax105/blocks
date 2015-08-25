@@ -11,16 +11,15 @@ public class ApplierAO extends Applier {
 
 	@Override
 	public boolean apply(Object val) {
-		this.game.displayLoadingScreen();
 		ModelManager.getInstance().load();
-		this.game.closeGuiScreen();
-		
+		this.game.chunkRenderer.setAOIntensity((Float)val);
+
 		if(this.game.getWorldsManager().isInGame()) {
 			String wName = this.game.getCurrentWorld().name;
 			this.game.getWorldsManager().exitWorld();
 			this.game.getWorldsManager().startWorld(wName);
 		}
-		
+
 		return true;
 	}
 

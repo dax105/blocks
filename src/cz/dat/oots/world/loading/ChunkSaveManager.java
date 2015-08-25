@@ -23,50 +23,51 @@ public class ChunkSaveManager {
 	private World world;
 	private ChunkProvider provider;
 	private String name;
-	
+
 	public void tryToLoadWorld(Game game) {
-			File dir = new File(WorldManager.SAVES_DIR, this.name);
-			
-			if(!dir.exists()) {
-				dir.mkdir();
-			}	
+		File dir = new File(WorldManager.SAVES_DIR, this.name);
 
-			File bdf = new File(dir, "bdf");
-			File idf = new File(dir, "idf");
-			this.world.createDataManagers(bdf, idf);
-			
-			File file = new File(dir, "world" + ".txt");
+		if(!dir.exists()) {
+			dir.mkdir();
+		}
 
-			if(!file.exists()) {
-				game.getConsole().println("World save not found!");
-				return;
+		File bdf = new File(dir, "bdf");
+		File idf = new File(dir, "idf");
+		this.world.createDataManagers(bdf, idf);
+
+		File file = new File(dir, "world" + ".txt");
+
+		if(!file.exists()) {
+			game.getConsole().println("World save not found!");
+			return;
+		}
+
+		WorldInfo i = game.getWorldsManager().getWorld(name);
+		WorldUpdateResolver r = new WorldUpdateResolver(i);
+
+		this.world.getPlayer().setPosition(i.getPlayerX(), i.getPlayerY(),
+				i.getPlayerZ());
+		this.world.getPlayer().setTilt(i.getPlayerTilt());
+		this.world.getPlayer().setHeading(i.getPlayerHeading());
+		this.provider.seed = i.getWorldSeed();
+
+		try {
+			if(r.resolveData(bdf, idf)) {
+				this.world.createDataManagers(bdf, idf);
 			}
+		} catch(IOException e) {
+			game.getConsole().println("Could not resolve data file problems.");
+		}
 
-			WorldInfo i = game.getWorldsManager().getWorld(name);
-			WorldUpdateResolver r = new WorldUpdateResolver(i);
-			
-			this.world.getPlayer().setPosition(i.getPlayerX(), i.getPlayerY(), i.getPlayerZ());
-			this.world.getPlayer().setTilt(i.getPlayerTilt());
-			this.world.getPlayer().setHeading(i.getPlayerHeading());
-			this.provider.seed = i.getWorldSeed();
-			
-			try {
-				if(r.resolveData(bdf, idf)) {
-					this.world.createDataManagers(bdf, idf);
-				}
-			} catch(IOException e) {
-				game.getConsole().println("Could not resolve data file problems.");
-			}
-			
-			game.getConsole().println("World info sucessfully loaded!");
+		game.getConsole().println("World info sucessfully loaded!");
 	}
-	
+
 	public ChunkSaveManager(ChunkProvider provider, String saveName) {
 		this.provider = provider;
 		this.world = provider.world;
 		this.name = saveName;
 	}
-	
+
 	public boolean isChunkSaved(int cx, int cz) {
 		File dir = new File(WorldManager.SAVES_DIR, this.name);
 
@@ -81,7 +82,8 @@ public class ChunkSaveManager {
 
 	public void saveAll(Game game) {
 		game.displayLoadingScreen("Saving...");
-		Iterator<Entry<Coord2D, Chunk>> it = provider.loadedChunks.entrySet().iterator();
+		Iterator<Entry<Coord2D, Chunk>> it = provider.loadedChunks.entrySet()
+				.iterator();
 		while(it.hasNext()) {
 			Entry<Coord2D, Chunk> pairs = it.next();
 			Chunk c = (Chunk) pairs.getValue();
@@ -92,8 +94,9 @@ public class ChunkSaveManager {
 		}
 
 		WorldInfo i = game.getWorldsManager().getWorld(this.name);
-		if(i == null) i = new WorldInfo(this.name);
-		
+		if(i == null)
+			i = new WorldInfo(this.name);
+
 		i.setPlayerX(this.world.getPlayer().getPosX());
 		i.setPlayerY(this.world.getPlayer().getPosY());
 		i.setPlayerZ(this.world.getPlayer().getPosZ());
@@ -101,12 +104,12 @@ public class ChunkSaveManager {
 		i.setPlayerHeading(this.world.getPlayer().getHeading());
 		i.setWorldSeed(this.provider.seed);
 		i.setWorldVersion("" + WorldManager.CURRENT_VERSION);
-		
+
 		i.saveWorldInfo();
-		
+
 		try {
 			this.world.getBlockDataManager().save();
-		} catch (IOException e) {
+		} catch(IOException e) {
 			Logger.getGlobal().warning("Can't save data file!");
 		}
 
@@ -121,16 +124,16 @@ public class ChunkSaveManager {
 			DataInputStream dis = new DataInputStream(new FileInputStream(file));
 			dis.readFully(fileData);
 			dis.close();
-		} catch (FileNotFoundException e) {
+		} catch(FileNotFoundException e) {
 			e.printStackTrace();
-		} catch (IOException e) {
+		} catch(IOException e) {
 			e.printStackTrace();
 		}
 
 		Chunk c = new Chunk(cx, cz, this.world);
 		try {
 			c.blocksBuffer.put(Snappy.uncompressShortArray(fileData));
-		} catch (IOException e) {
+		} catch(IOException e) {
 			e.printStackTrace();
 		}
 
@@ -158,9 +161,9 @@ public class ChunkSaveManager {
 			} finally {
 				stream.close();
 			}
-		} catch (FileNotFoundException e) {
+		} catch(FileNotFoundException e) {
 			e.printStackTrace();
-		} catch (IOException e) {
+		} catch(IOException e) {
 			e.printStackTrace();
 		}
 	}

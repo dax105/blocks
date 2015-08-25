@@ -17,6 +17,7 @@ public class SliderControl extends Control {
 	private int sliderSize = 0;
 	private Rectangle sliderRectangle;
 	private ISliderUpdateCallback callback;
+	private int ticks = 0;
 
 	// Creates default vertical slider
 	public SliderControl(ISliderUpdateCallback iSliderUpdateCallback,
@@ -43,6 +44,39 @@ public class SliderControl extends Control {
 		this.actualValue = 0.5f;
 		this.sliderSize = sliderSize;
 		this.callback = updateCallback;
+	}
+
+	@Override
+	public void onRenderTick(float ptt) {
+		super.onRenderTick(ptt);
+		int mouseX = Mouse.getX();
+		int mouseY = CoordUtil.getProperMouseY(Mouse.getY());
+
+		if(super.rectangle.isInRectangle(new Coord2D(mouseX, mouseY))) {
+			this.updateMouse(mouseX, mouseY);
+		}
+
+		this.updateSliderRectangle();
+	}
+
+	@Override
+	public void render() {
+		GLHelper.drawRectangle(this.backgroundColor.r, this.backgroundColor.g,
+				this.backgroundColor.b, this.backgroundColor.a,
+				super.rectangle.getX(), super.rectangle.getTopRight(),
+				super.rectangle.getY(), super.rectangle.getBottomLeft());
+
+		GLHelper.drawRectangle(this.sliderColor.r, this.sliderColor.g,
+				this.sliderColor.b, this.sliderColor.a,
+				this.sliderRectangle.getX(),
+				this.sliderRectangle.getTopRight(),
+				this.sliderRectangle.getY(),
+				this.sliderRectangle.getBottomLeft());
+	}
+
+	@Override
+	public void onParentOpened() {
+		this.ticks = 0;
 	}
 
 	public void setUpdateCallback(ISliderUpdateCallback c) {
@@ -87,38 +121,10 @@ public class SliderControl extends Control {
 		return this.actualValue;
 	}
 
-	@Override
-	public void onRenderTick(float ptt) {
-		super.onRenderTick(ptt);
-		int mouseX = Mouse.getX();
-		int mouseY = CoordUtil.getProperMouseY(Mouse.getY());
-
-		if(super.rectangle.isInRectangle(new Coord2D(mouseX, mouseY))) {
-			this.updateMouse(mouseX, mouseY);
-		}
-		this.updateSliderRectangle();
-	}
-
-	@Override
-	public void render() {
-		GLHelper.drawRectangle(this.backgroundColor.r, this.backgroundColor.g,
-				this.backgroundColor.b, this.backgroundColor.a,
-				super.rectangle.getX(), super.rectangle.getTopRight(),
-				super.rectangle.getY(), super.rectangle.getBottomLeft());
-
-		GLHelper.drawRectangle(this.sliderColor.r, this.sliderColor.g,
-				this.sliderColor.b, this.sliderColor.a,
-				this.sliderRectangle.getX(),
-				this.sliderRectangle.getTopRight(),
-				this.sliderRectangle.getY(),
-				this.sliderRectangle.getBottomLeft());
-	}
-
 	private void updateMouse(int mX, int mY) {
-		boolean mouseDown = Mouse.isButtonDown(0);
+		boolean mouseDown = Mouse.isButtonDown(0) && this.ticks >= 20;
 		float newValue = this.actualValue;
-		
-		
+
 		if(mouseDown) {
 
 			if(this.horizontal) {
@@ -126,15 +132,13 @@ public class SliderControl extends Control {
 				int clickedX = mX - super.rectangle.getX() - this.sliderSize
 						/ 2 + 1;
 				newValue = ((float) (clickedX) / (float) width);
-				newValue = (float) (0.01 * Math
-						.floor(newValue * 100.0));
+				newValue = (float) (0.01 * Math.floor(newValue * 100.0));
 			} else {
 				int width = super.rectangle.getHeight() - this.sliderSize;
 				int clickedY = mY - super.rectangle.getY() - this.sliderSize
 						/ 2 + 1;
 				newValue = ((float) (clickedY / (float) width));
-				newValue = ((float) (0.01 * Math
-						.floor(newValue * 100.0)));
+				newValue = ((float) (0.01 * Math.floor(newValue * 100.0)));
 			}
 
 			if(newValue > 1) {
@@ -150,7 +154,7 @@ public class SliderControl extends Control {
 
 		if(super.rectangle.isInRectangle(new Coord2D(mX, mY))) {
 			int wh = Mouse.getDWheel();
-			
+
 			if(wh < 0 && this.actualValue <= 0.95) {
 				this.setValue(this.actualValue + 0.05f, true);
 			} else if(wh < 0 && this.actualValue > 0.95) {
@@ -160,6 +164,10 @@ public class SliderControl extends Control {
 			} else if(wh > 0 && this.actualValue < 0.05f) {
 				this.setValue(0, this.actualValue != 0);
 			}
+		}
+
+		if(this.ticks < 20) {
+			this.ticks++;
 		}
 	}
 

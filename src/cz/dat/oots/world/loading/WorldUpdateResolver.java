@@ -24,11 +24,11 @@ public class WorldUpdateResolver {
 				if(itemConfig.exists()) {
 					itemConfig.delete();
 				}
-				
+
 				return true;
 			}
 		}
-		
+
 		return false;
 	}
 

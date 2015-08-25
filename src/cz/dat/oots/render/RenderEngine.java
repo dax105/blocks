@@ -217,7 +217,7 @@ public class RenderEngine {
 		GL11.glDisable(GL11.GL_TEXTURE_2D);
 
 		this.updateRenderables(ptt);
-		
+
 		this.renderWorld.getParticleEngine().onRenderTick(ptt);
 
 		GL20.glUseProgram(this.worldShader.getProgramID());
@@ -225,7 +225,7 @@ public class RenderEngine {
 		// Render chunks
 		this.renderChunks(ptt);
 
-		if(Settings.getInstance().clouds.getValue()) {
+		if(this.renderWorld.getGame().s().clouds.getValue()) {
 			renderClouds(this.renderWorld.getPlayer().getPosXPartial(),
 					this.renderWorld.getPlayer().getPosZPartial());
 		}
@@ -262,7 +262,7 @@ public class RenderEngine {
 
 		List<Chunk> visibleChunks = this.renderWorld.getChunkProvider()
 				.getChunksInRadius(pcx, pcz,
-						Settings.getInstance().drawDistance.getValue());
+						this.renderWorld.getGame().s().drawDistance.getValue());
 
 		for(Iterator<Chunk> iter = visibleChunks.iterator(); iter.hasNext();) {
 			Chunk c = iter.next();
@@ -284,7 +284,7 @@ public class RenderEngine {
 			if(c != null) {
 				for(int y = 0; y < 8; y++) {
 
-					if(generatedMeshes >= Settings.getInstance().rebuildsPerFrame
+					if(generatedMeshes >= this.renderWorld.getGame().s().rebuildsPerFrame
 							.getValue()) {
 						this.building = true;
 						break;
@@ -306,7 +306,7 @@ public class RenderEngine {
 				}
 			}
 
-			if(generatedMeshes >= Settings.getInstance().rebuildsPerFrame
+			if(generatedMeshes >= this.renderWorld.getGame().s().rebuildsPerFrame
 					.getValue()) {
 				this.building = true;
 				break;
@@ -333,13 +333,13 @@ public class RenderEngine {
 
 		List<RenderChunk> culledRenderChunks = ChunkCull.cull(
 				builtRenderChunks, this.frustum,
-				Settings.getInstance().frustumCulling.getValue(),
-				Settings.getInstance().advancedCulling.getValue());
+				this.renderWorld.getGame().s().frustumCulling.getValue(),
+				this.renderWorld.getGame().s().advancedCulling.getValue());
 
 		chunkRenderer.beforeRendering();
 
 		GL11.glEnable(GL11.GL_ALPHA_TEST);
-		
+
 		this.vertices = 0;
 		
 		for(RenderChunk r : culledRenderChunks) {
@@ -353,7 +353,7 @@ public class RenderEngine {
 
 		GL11.glDisable(GL11.GL_ALPHA_TEST);
 
-		if(Settings.getInstance().twoPassTranslucent.getValue()) {
+		if(this.renderWorld.getGame().s().twoPassTranslucent.getValue()) {
 			GL11.glColorMask(false, false, false, false);
 			for(RenderChunk r : culledRenderChunks) {
 				if(r.getCm().isPresent(RenderPass.TRANSLUCENT)) {
@@ -550,11 +550,11 @@ public class RenderEngine {
 	}
 
 	public void registerNewRenderable(IWorldRenderer r) {
-			this.renderablesToAdd.add(r);		
+		this.renderablesToAdd.add(r);
 	}
 
 	public void removeRenderable(IWorldRenderer r) {
-			this.renderablesToRemove.add(r);
+		this.renderablesToRemove.add(r);
 	}
 
 	public void updateRenderables(float ptt) {
@@ -582,7 +582,7 @@ public class RenderEngine {
 	public float[] getUpModelviewVec() {
 		return upModelviewVec;
 	}
-	
+
 	public void cleanup() {
 
 	}

@@ -30,9 +30,10 @@ public abstract class GuiScreen implements ITickListener, IOverlayRenderer {
 	public GuiScreen(int width, int height, float r, float g, float b, float a,
 			GuiManager guiManager) {
 		this(0, 0, width, height, r, g, b, a, guiManager);
-		
+
 		this.isInCenter = true;
-		this.updateCenteredPosition(this.guiManager.getScreenWidth(), this.guiManager.getScreenHeight());
+		this.updateCenteredPosition(this.guiManager.getScreenWidth(),
+				this.guiManager.getScreenHeight());
 	}
 
 	public GuiScreen(int x, int y, int width, int height, float r, float g,
@@ -49,39 +50,39 @@ public abstract class GuiScreen implements ITickListener, IOverlayRenderer {
 	public abstract void onOpening();
 
 	public abstract void onClosing();
-	
+
 	public void addControl(Control c) {
 		this.controls.add(c);
 	}
-	
+
 	public void removeControl(Control c) {
 		this.controls.remove(c);
 	}
-	
+
 	public List<Control> getControls() {
 		return this.controls;
 	}
-	
+
 	@Override
 	public void onTick() {
 		for(Control c : this.controls) {
 			c.onTick();
 		}
 	}
-	
+
 	@Override
 	public void onRenderTick(float ptt) {
 		for(Control c : this.controls) {
 			c.onRenderTick(ptt);
 		}
 	}
-	
+
 	@Override
 	public void renderOverlay(float partialTickTime) {
 		GLHelper.drawRectangle(this.backColor.r, this.backColor.g,
-				this.backColor.b, this.backColor.a, this.x, this.x + this.width,
-				this.y, this.y + this.height);
-		
+				this.backColor.b, this.backColor.a, this.x,
+				this.x + this.width, this.y, this.y + this.height);
+
 		for(Control c : this.controls) {
 			c.render();
 		}
@@ -96,9 +97,9 @@ public abstract class GuiScreen implements ITickListener, IOverlayRenderer {
 	}
 
 	public void updateCenteredPosition(int width, int height) {
-		if (this.isCentered()) {
-			Coord2D c = CoordUtil.getCenteredRectanglePosition(this.width, this.height,
-					width, height);
+		if(this.isCentered()) {
+			Coord2D c = CoordUtil.getCenteredRectanglePosition(this.width,
+					this.height, width, height);
 			this.setPosition(c.x, c.y);
 		}
 	}
@@ -127,11 +128,11 @@ public abstract class GuiScreen implements ITickListener, IOverlayRenderer {
 	public void setColor(float r, float g, float b) {
 		this.backColor = new Color(r, g, b, 1f);
 	}
-	
+
 	public void setColor(int color) {
 		this.backColor = new Color(color);
 	}
-	
+
 	public Color getColor() {
 		return this.backColor;
 	}

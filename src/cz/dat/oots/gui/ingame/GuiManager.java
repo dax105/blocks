@@ -4,28 +4,28 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.lwjgl.input.Mouse;
+import org.lwjgl.opengl.Display;
 
 import cz.dat.oots.Game;
 import cz.dat.oots.render.ITickListener;
-import cz.dat.oots.settings.Settings;
 
 public class GuiManager implements ITickListener {
 	GuiScreen currentGuiScreen;
 	List<GuiScreen> screenList;
 	boolean isScreenOpened = false;
 	private Game game;
-	
+
 	public GuiManager(Game game) {
 		this.screenList = new ArrayList<>();
 		this.game = game;
 	}
-	
+
 	public int getScreenWidth() {
-		return Settings.getInstance().windowWidth.getValue();
+		return Display.getWidth();
 	}
-	
+
 	public int getScreenHeight() {
-		return Settings.getInstance().windowHeight.getValue();
+		return Display.getHeight();
 	}
 
 	public int registerNewScreen(GuiScreen screen) {
@@ -36,14 +36,14 @@ public class GuiManager implements ITickListener {
 			return -1;
 		}
 	}
-	
+
 	public void setCurrentScreen(int s) {
 		GuiScreen gScreen = this.screenList.get(s);
 		if(gScreen != null) {
 			this.currentGuiScreen = gScreen;
 		}
 	}
-	
+
 	public void openScreen() {
 		if(this.currentGuiScreen != null && !this.isOpened()) {
 			Mouse.setGrabbed(false);
@@ -52,7 +52,7 @@ public class GuiManager implements ITickListener {
 			this.game.getOverlayManager().addOverlay(this.currentGuiScreen);
 		}
 	}
-	
+
 	public void closeScreen() {
 		if(this.currentGuiScreen != null && this.isOpened()) {
 			Mouse.setGrabbed(true);
@@ -61,29 +61,31 @@ public class GuiManager implements ITickListener {
 			this.isScreenOpened = false;
 		}
 	}
-	
+
 	public GuiScreen getCurrentScreen() {
 		return this.currentGuiScreen;
 	}
-	
+
 	public boolean isOpened() {
 		return this.isScreenOpened;
 	}
-	
+
 	public void checkMouseClosing() {
 		int x = Mouse.getX();
 		int y = this.getScreenHeight() - Mouse.getY();
-		
-		boolean left  = (x < this.currentGuiScreen.getX());
-		boolean right = (x > (this.currentGuiScreen.getX() + this.currentGuiScreen.getWidth()));
+
+		boolean left = (x < this.currentGuiScreen.getX());
+		boolean right = (x > (this.currentGuiScreen.getX() + this.currentGuiScreen
+				.getWidth()));
 		boolean top = (y < this.currentGuiScreen.getY());
-		boolean bottom = (y > (this.currentGuiScreen.getY() + this.currentGuiScreen.getHeight()));
-		
+		boolean bottom = (y > (this.currentGuiScreen.getY() + this.currentGuiScreen
+				.getHeight()));
+
 		if(left || right || top || bottom) {
 			this.closeScreen();
 		}
 	}
-	
+
 	@Override
 	public void onTick() {
 		if(this.isOpened())

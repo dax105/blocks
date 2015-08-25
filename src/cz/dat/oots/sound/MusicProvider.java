@@ -40,20 +40,20 @@ public class MusicProvider {
 	private void sortMusic() {
 		this.gameMusic = new String[] { "music1", "music2", "music3" };
 		this.gameQueue = new String[this.gameMusic.length];
-		for (String music : this.gameMusic) {
+		for(String music : this.gameMusic) {
 			this.addMusicToField(this.gameQueue, music);
 		}
 
 		this.menuMusic = new String[] { "menu1", "menu2" };
 		this.menuQueue = new String[this.menuMusic.length];
-		for (String music : this.menuMusic) {
+		for(String music : this.menuMusic) {
 			this.addMusicToField(this.menuQueue, music);
 		}
 	}
 
 	private void addMusicToField(String[] queue, String name) {
 		int i = this.rand.nextInt(queue.length);
-		if (queue[i] != null) {
+		if(queue[i] != null) {
 			this.addMusicToField(queue, name);
 		} else {
 			queue[i] = name;

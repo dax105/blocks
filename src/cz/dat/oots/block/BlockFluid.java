@@ -31,7 +31,6 @@ public class BlockFluid extends BlockBasic {
 				return;
 			}
 
-
 			if(world.getBlock(x, y - 1, z) == 0) {
 				world.setBlock(x, y - 1, z, IDRegister.water.getID(), true,
 						true);

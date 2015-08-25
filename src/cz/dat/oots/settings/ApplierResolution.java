@@ -11,16 +11,16 @@ public class ApplierResolution extends Applier {
 
 	@Override
 	public boolean apply(Object val) {
-		int w = Settings.getInstance().windowWidth.getValue();
-		int h = Settings.getInstance().windowHeight.getValue();
+		int w = this.settings.windowWidth.getValue();
+		int h = this.settings.windowHeight.getValue();
 
-		if(this.applyingObject == Settings.getInstance().windowWidth) {
+		if(this.applyingObject == this.settings.windowWidth) {
 			w = (Integer) val;
 			this.changeBoth((Integer) val, h);
-		} else if(this.applyingObject == Settings.getInstance().windowHeight) {
+		} else if(this.applyingObject == this.settings.windowHeight) {
 			h = (Integer) val;
 			this.changeBoth(w, (Integer) val);
-		} else if(this.applyingObject == Settings.getInstance().resolution) {
+		} else if(this.applyingObject == this.settings.resolution) {
 			String[] parts = val.toString().split("x");
 			if(parts.length == 2) {
 				try {
@@ -50,8 +50,8 @@ public class ApplierResolution extends Applier {
 	}
 
 	private void changeBoth(int w, int h) {
-		GLHelper.setDisplayMode(w, h,
-				Settings.getInstance().fullscreen.getValue());
+		GLHelper.setDisplayMode(w, h, this.settings.aaSamples.getValue(),
+				this.settings.fullscreen.getValue());
 	}
 
 	@Override

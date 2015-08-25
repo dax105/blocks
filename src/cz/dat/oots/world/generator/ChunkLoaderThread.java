@@ -18,7 +18,7 @@ public class ChunkLoaderThread implements Runnable {
 	public void stop() {
 		this.running = false;
 	}
-	
+
 	@Override
 	public void run() {
 		while(this.running) {

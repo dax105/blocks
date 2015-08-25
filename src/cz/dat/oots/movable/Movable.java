@@ -2,21 +2,20 @@ package cz.dat.oots.movable;
 
 import cz.dat.oots.render.ITickListener;
 
-
 public abstract class Movable implements ITickListener {
 
 	protected float posX;
 	protected float posY;
 	protected float posZ;
-	
+
 	protected float posXPartial;
 	protected float posYPartial;
 	protected float posZPartial;
-	
+
 	protected float velX;
 	protected float velY;
 	protected float velZ;
-	
+
 	protected float lastPosX;
 	protected float lastPosY;
 	protected float lastPosZ;
@@ -25,15 +24,14 @@ public abstract class Movable implements ITickListener {
 		this.lastPosX = posX;
 		this.lastPosY = posY;
 		this.lastPosZ = posZ;
-		
+
 		this.updatePosition();
 	}
-	
+
 	@Override
 	public void onRenderTick(float partialTickTime) {
 		this.updateRenderPosition(partialTickTime);
 	}
-
 
 	public Movable(float x, float y, float z) {
 		this(x, y, z, 0, 0, 0);
@@ -53,13 +51,13 @@ public abstract class Movable implements ITickListener {
 
 	private void updateRenderPosition(float ptt) {
 		float deltaX = this.posX - this.lastPosX;
-		this.posXPartial = this.lastPosX + deltaX*ptt;
-		
+		this.posXPartial = this.lastPosX + deltaX * ptt;
+
 		float deltaY = this.posY - this.lastPosY;
-		this.posYPartial = this.lastPosY + deltaY*ptt;
-		
+		this.posYPartial = this.lastPosY + deltaY * ptt;
+
 		float deltaZ = this.posZ - this.lastPosZ;
-		this.posZPartial = this.lastPosZ + deltaZ*ptt;
+		this.posZPartial = this.lastPosZ + deltaZ * ptt;
 	}
 
 	public float getVelX() {
@@ -111,39 +109,39 @@ public abstract class Movable implements ITickListener {
 	}
 
 	public abstract void updatePosition();
-	
+
 	public float getPosX() {
 		return this.posX;
 	}
-	
+
 	public float getPosY() {
 		return this.posY;
 	}
-	
+
 	public float getPosZ() {
 		return this.posZ;
 	}
-	
+
 	public void setPosX(float posX) {
 		this.posX = posX;
 	}
-	
+
 	public void setPosY(float posY) {
 		this.posY = posY;
 	}
-	
+
 	public void setPosZ(float posZ) {
 		this.posZ = posZ;
 	}
-	
+
 	public float getPosXPartial() {
 		return this.posXPartial;
 	}
-	
+
 	public float getPosYPartial() {
 		return this.posYPartial;
 	}
-	
+
 	public float getPosZPartial() {
 		return this.posZPartial;
 	}

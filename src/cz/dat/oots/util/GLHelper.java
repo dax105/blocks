@@ -15,7 +15,6 @@ import org.newdawn.slick.opengl.Texture;
 
 import cz.dat.oots.Game;
 import cz.dat.oots.TextureManager;
-import cz.dat.oots.settings.Settings;
 
 public class GLHelper {
 
@@ -29,12 +28,11 @@ public class GLHelper {
 		GL11.glDisable(GL11.GL_CULL_FACE);
 		GL11.glDisable(GL11.GL_DEPTH_TEST);
 	}
-	
-	public static void setPerspective(int width, int height) {
+
+	public static void setPerspective(int width, int height, float fov) {
 		GL11.glMatrixMode(GL11.GL_PROJECTION);
 		GL11.glLoadIdentity();
-		GLU.gluPerspective(Settings.getInstance().fov.getValue(), (float) width
-				/ (float) height, 0.05F, 1000);
+		GLU.gluPerspective(fov, (float) width / (float) height, 0.05F, 1000);
 		GL11.glViewport(0, 0, width, height);
 		GL11.glMatrixMode(GL11.GL_MODELVIEW);
 
@@ -42,10 +40,10 @@ public class GLHelper {
 		GL11.glEnable(GL11.GL_CULL_FACE);
 		GL11.glEnable(GL11.GL_DEPTH_TEST);
 	}
-	
-	public static void initGL(int width, int height) {
+
+	public static void initGL(int width, int height, float fov) {
 		// Set perspective matrix
-		GLHelper.setPerspective(width, height);
+		GLHelper.setPerspective(width, height, fov);
 
 		// Enable depth test
 		GL11.glEnable(GL11.GL_DEPTH_TEST);
@@ -96,9 +94,10 @@ public class GLHelper {
 		// Nicest perspective correction
 		GL11.glHint(GL11.GL_PERSPECTIVE_CORRECTION_HINT, GL11.GL_NICEST);
 	}
-	
-	public static void setDisplayMode(int width, int height, boolean fullscreen) {
-		if (Display.isCreated()
+
+	public static void setDisplayMode(int width, int height, int aaSamples,
+			boolean fullscreen) {
+		if(Display.isCreated()
 				&& (Display.getDisplayMode().getWidth() == width)
 				&& (Display.getDisplayMode().getHeight() == height)
 				&& (Display.isFullscreen() == fullscreen)) {
@@ -108,18 +107,18 @@ public class GLHelper {
 		try {
 			DisplayMode targetDisplayMode = null;
 
-			if (fullscreen) {
+			if(fullscreen) {
 				DisplayMode[] modes = Display.getAvailableDisplayModes();
 				int freq = 0;
 
-				for (int i = 0; i < modes.length; i++) {
+				for(int i = 0; i < modes.length; i++) {
 					DisplayMode current = modes[i];
 
-					if ((current.getWidth() == width)
+					if((current.getWidth() == width)
 							&& (current.getHeight() == height)) {
-						if ((targetDisplayMode == null)
+						if((targetDisplayMode == null)
 								|| (current.getFrequency() >= freq)) {
-							if ((targetDisplayMode == null)
+							if((targetDisplayMode == null)
 									|| (current.getBitsPerPixel() > targetDisplayMode
 											.getBitsPerPixel())) {
 								targetDisplayMode = current;
@@ -127,7 +126,7 @@ public class GLHelper {
 							}
 						}
 
-						if ((current.getBitsPerPixel() == Display
+						if((current.getBitsPerPixel() == Display
 								.getDesktopDisplayMode().getBitsPerPixel())
 								&& (current.getFrequency() == Display
 										.getDesktopDisplayMode().getFrequency())) {
@@ -140,7 +139,7 @@ public class GLHelper {
 				targetDisplayMode = new DisplayMode(width, height);
 			}
 
-			if (targetDisplayMode == null) {
+			if(targetDisplayMode == null) {
 				System.out.println("Failed to find value mode: " + width + "x"
 						+ height + " fs=" + fullscreen);
 				return;
@@ -149,24 +148,23 @@ public class GLHelper {
 			Display.setDisplayMode(targetDisplayMode);
 			Display.setFullscreen(fullscreen);
 
-			if (!Display.isCreated()) {
+			if(!Display.isCreated()) {
 				;
 				try {
-					Display.create(new PixelFormat(8, 8, 0, Settings.getInstance().aaSamples
-							.getValue()));
+					Display.create(new PixelFormat(8, 8, 0, aaSamples));
 					System.out.println("Display created!");
 					// Display.create();
-				} catch (LWJGLException e) {
+				} catch(LWJGLException e) {
 					e.printStackTrace();
 				}
 			}
 
-		} catch (LWJGLException e) {
+		} catch(LWJGLException e) {
 			System.out.println("Unable to setup mode " + width + "x" + height
 					+ " fullscreen=" + fullscreen + e);
 		}
 	}
-	
+
 	public static void drawTexture(Texture texture, float textureX1,
 			float textureX2, float textureY1, float textureY2, float x1,
 			float x2, float y1, float y2) {
@@ -194,39 +192,45 @@ public class GLHelper {
 	}
 
 	public static void drawTexture(Texture texture, float x, float y) {
-		GLHelper.drawTexture(texture, 0, texture.getWidth(), 0, texture.getHeight(), x,
-				x + texture.getImageWidth(), y, y + texture.getImageHeight());
+		GLHelper.drawTexture(texture, 0, texture.getWidth(), 0,
+				texture.getHeight(), x, x + texture.getImageWidth(), y, y
+						+ texture.getImageHeight());
 	}
 
 	public static void drawTexture(Texture texture, float textureX1,
 			float textureX2, float textureY1, float textureY2, float x, float y) {
-		GLHelper.drawTexture(texture, textureX1, textureX2, textureY1, textureY2, x, x
-				+ texture.getImageWidth(), y, y + texture.getImageHeight());
+		GLHelper.drawTexture(texture, textureX1, textureX2, textureY1,
+				textureY2, x, x + texture.getImageWidth(), y,
+				y + texture.getImageHeight());
 	}
 
-	public static void drawTexture(Texture texture, float x1, float x2, float y1, float y2) {
-		GLHelper.drawTexture(texture, 0, texture.getWidth(), 0, texture.getHeight(), x1, x2, y1, y2);
+	public static void drawTexture(Texture texture, float x1, float x2,
+			float y1, float y2) {
+		GLHelper.drawTexture(texture, 0, texture.getWidth(), 0,
+				texture.getHeight(), x1, x2, y1, y2);
 	}
-	
+
 	public static void drawTextureCropped(Texture texture, float x, float y,
 			float cropXPercent, float cropYPercent) {
 		GLHelper.drawTexture(texture, 0, texture.getWidth() * cropXPercent, 0,
-				texture.getHeight() * cropYPercent, x, x + texture.getImageWidth()
-						* cropXPercent, y, y + texture.getImageHeight() * cropYPercent);
+				texture.getHeight() * cropYPercent, x,
+				x + texture.getImageWidth() * cropXPercent, y,
+				y + texture.getImageHeight() * cropYPercent);
 	}
 
 	public static void drawFromAtlas(int id, float x, float y) {
 		GLHelper.drawFromAtlas(id, x, x + 16, y, y + 16);
 	}
-	
-	public static void drawFromAtlas(int id, float x1, float x2, float y1, float y2) {
+
+	public static void drawFromAtlas(int id, float x1, float x2, float y1,
+			float y2) {
 		GLHelper.drawTexture(TextureManager.atlas, TextureManager.getX1(id),
 				TextureManager.getX2(id), TextureManager.getY1(id),
 				TextureManager.getY2(id), x1, x2, y1, y2);
 	}
-	
-	public static void drawRectangle(float r, float g, float b, float a, float x1, 
-			float x2, float y1, float y2) {
+
+	public static void drawRectangle(float r, float g, float b, float a,
+			float x1, float x2, float y1, float y2) {
 		GL11.glColor4f(r, g, b, a);
 
 		GL11.glDisable(GL11.GL_TEXTURE_2D);
@@ -243,16 +247,18 @@ public class GLHelper {
 
 		GL11.glEnd();
 	}
-	
-	public static void drawRectangle(float r, float g, float b, float x1, float x2, 
-			float y1, float y2) {
+
+	public static void drawRectangle(float r, float g, float b, float x1,
+			float x2, float y1, float y2) {
 		GLHelper.drawRectangle(r, g, b, 1, x1, x2, y1, y2);
 	}
-	
-	public static void drawRectangle(Color color, float x1, float x2, float y1, float y2) {
-		GLHelper.drawRectangle(color.r, color.g, color.b, color.a, x1, x2, y1, y2);
+
+	public static void drawRectangle(Color color, float x1, float x2, float y1,
+			float y2) {
+		GLHelper.drawRectangle(color.r, color.g, color.b, color.a, x1, x2, y1,
+				y2);
 	}
-	
+
 	public static void updateFiltering(boolean linear) {
 		TextureManager.atlas.bind();
 		if(linear) {
@@ -268,20 +274,21 @@ public class GLHelper {
 		}
 	}
 
-	public static void drawLine(float x1, float x2, float y1, float y2, int thickness, 
-			float r, float g, float b, float a) {
+	public static void drawLine(float x1, float x2, float y1, float y2,
+			int thickness, float r, float g, float b, float a) {
 		GL11.glColor4f(r, g, b, a);
 		GL11.glLineWidth(thickness);
-		
+
 		GL11.glBegin(GL11.GL_LINES);
-		
+
 		GL11.glVertex2f(x1, y1);
 		GL11.glVertex2f(x2, y2);
-		
+
 		GL11.glEnd();
 	}
-	
-	public static void drawLine(float x1, float x2, float y1, float y2, int thickness) {
+
+	public static void drawLine(float x1, float x2, float y1, float y2,
+			int thickness) {
 		GLHelper.drawLine(x1, x2, y1, y2, thickness, 1, 1, 1, 1);
 	}
 

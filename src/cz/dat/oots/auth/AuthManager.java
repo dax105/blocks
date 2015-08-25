@@ -14,7 +14,7 @@ public class AuthManager {
 	public enum AuthStatus {
 		ERROR_TIMEOUT, ERROR_BAD, ERROR_UNLOGGED, ERROR_OTHER, FINE
 	}
-	
+
 	private final String AUTHSERVICE_URL = "http://ondryasondra.aspone.cz/tokengen.ashx";
 	private final String CHECKSERVICE_URL = "http://ondryasondra.aspone.cz/tokencheck.ashx";
 
@@ -22,19 +22,21 @@ public class AuthManager {
 
 	public AuthManager() {
 	}
-	
+
 	public AuthManager(String userName, String password, String token) {
 		this.currentUser = new User(userName, password);
 		this.currentUser.setToken(token);
-		
+
 		AuthStatus a = isAuthorized();
 		if(a == AuthStatus.FINE) {
 			this.currentUser.setAuthenticated();
 		} else {
-			Logger.getGlobal().info("User " + userName + " is not authenticated! -- " + a.toString());
+			Logger.getGlobal().info(
+					"User " + userName + " is not authenticated! -- "
+							+ a.toString());
 		}
 	}
-	
+
 	public void setDummyName(String name) {
 		if(this.currentUser == null)
 			this.currentUser = new User(name, "badpassword");
@@ -42,37 +44,37 @@ public class AuthManager {
 			this.currentUser.setUserName(name);
 		}
 	}
-	
+
 	public String getUserName() {
 		if(currentUser == null)
 			return "Player";
-		
+
 		return currentUser.getUserName();
 	}
 
 	public String getToken() {
 		if(this.currentUser == null || !this.currentUser.isAuthenticated())
 			return null;
-		
+
 		return this.currentUser.getToken();
 	}
-	
+
 	public AuthStatus authenticate(String userName, String password) {
 		String par;
-		
+
 		try {
-			par = "username=" + URLEncoder.encode(userName, "UTF-8") +
-			"&password=" + URLEncoder.encode(password, "UTF-8");
-		} catch (UnsupportedEncodingException e1) {
+			par = "username=" + URLEncoder.encode(userName, "UTF-8")
+					+ "&password=" + URLEncoder.encode(password, "UTF-8");
+		} catch(UnsupportedEncodingException e1) {
 			e1.printStackTrace();
 			return AuthStatus.ERROR_OTHER;
 		}
-		
+
 		String result = this.excutePost(AUTHSERVICE_URL, par);
-		
+
 		if(result == null || result.isEmpty())
 			return AuthStatus.ERROR_OTHER;
-		
+
 		try {
 			return AuthStatus.valueOf(result.trim());
 		} catch(Exception e) {
@@ -86,41 +88,41 @@ public class AuthManager {
 	public AuthStatus isAuthorized() {
 		if(currentUser == null)
 			return AuthStatus.ERROR_UNLOGGED;
-		
+
 		String par;
-		
+
 		try {
-			par = "username=" + URLEncoder.encode(currentUser.getUserName(), "UTF-8") +
-			"&token=" + URLEncoder.encode(currentUser.getToken(), "UTF-8");
-		} catch (UnsupportedEncodingException e1) {
+			par = "username="
+					+ URLEncoder.encode(currentUser.getUserName(), "UTF-8")
+					+ "&token="
+					+ URLEncoder.encode(currentUser.getToken(), "UTF-8");
+		} catch(UnsupportedEncodingException e1) {
 			e1.printStackTrace();
 			return AuthStatus.ERROR_OTHER;
 		}
-		
-		
+
 		String result = this.excutePost(CHECKSERVICE_URL, par);
-		
+
 		if(result == null)
 			return AuthStatus.ERROR_OTHER;
-		
+
 		try {
 			return AuthStatus.valueOf(result.trim());
 		} catch(Exception e) {
 			return AuthStatus.ERROR_OTHER;
 		}
 	}
-	
+
 	public boolean isAuthenticated() {
 		return currentUser.isAuthenticated();
 	}
-	
 
-	/*private String excutePost(String url, String params) {
-		Logger.getGlobal().info("POST: " + url + ", params " + params);
-		return "FINE";
-	}*/
+	/*
+	 * private String excutePost(String url, String params) {
+	 * Logger.getGlobal().info("POST: " + url + ", params " + params); return
+	 * "FINE"; }
+	 */
 
-	
 	private String excutePost(String targetURL, String urlParameters) {
 		URL url;
 		HttpURLConnection connection = null;
@@ -159,7 +161,7 @@ public class AuthManager {
 			rd.close();
 			return response.toString();
 
-		} catch (Exception e) {
+		} catch(Exception e) {
 
 			e.printStackTrace();
 			return null;
