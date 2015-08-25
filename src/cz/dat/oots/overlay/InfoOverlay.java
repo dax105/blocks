@@ -163,12 +163,12 @@ public class InfoOverlay implements IOverlayRenderer {
 				font.getHeight(), chunks);
 		String vertices = "Vertices: " + (world.getRenderEngine().vertices + world.getParticleEngine().getVertexCount());
 		font.drawString(
-				Settings.getInstance().windowWidth.getValue()
+				this.game.getSettings().windowWidth.getValue()
 						- font.getWidth(vertices) - 2, font.getHeight()*3, vertices);
 		
 		String particles = "Particles: " + world.getParticleEngine().getVertexCount();
 		font.drawString(
-				Settings.getInstance().windowWidth.getValue()
+				this.game.getSettings().windowWidth.getValue()
 						- font.getWidth(particles) - 2, font.getHeight()*4, particles);
 
 		if(world.getChunkProvider().loading) {

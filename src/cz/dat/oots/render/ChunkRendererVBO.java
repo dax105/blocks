@@ -151,7 +151,7 @@ public class ChunkRendererVBO implements IChunkRenderer {
 				ao++;
 		}
 		
-		float aom = ao * Settings.getInstance().aoIntensity.getValue();
+		float aom = ao * 0.2f;
 	
 		this.color(r - aom, g - aom, b - aom);
 		this.vertex(x, y, z);

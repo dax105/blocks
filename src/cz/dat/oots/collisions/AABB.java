@@ -68,45 +68,6 @@ public class AABB {
       this.lastZ1 = (int) (z0+99999);
    }
 
-	public void setOffset(float x, float y, float z) {
-		this.offsetX = x;
-		this.offsetY = y;
-		this.offsetZ = z;
-
-		this.x0 += offsetX;
-		this.x1 += offsetX;
-
-		this.y0 += offsetY;
-		this.y1 += offsetY;
-
-		this.z0 += offsetZ;
-		this.z1 += offsetZ;
-	}
-
-	public void resetOffset() {
-		this.x0 -= offsetX;
-		this.x1 -= offsetX;
-
-		this.y0 -= offsetY;
-		this.y1 -= offsetY;
-
-		this.z0 -= offsetZ;
-		this.z1 -= offsetZ;
-
-		this.offsetX = 0;
-		this.offsetY = 0;
-		this.offsetZ = 0;
-	}
-
-	public AABB(float x0, float y0, float z0, float x1, float y1, float z1) {
-		this.x0 = x0;
-		this.y0 = y0;
-		this.z0 = z0;
-		this.x1 = x1;
-		this.y1 = y1;
-		this.z1 = z1;
-	}
-
 	public AABB expand(float xa, float ya, float za) {
 		float _x0 = this.x0;
 		float _y0 = this.y0;

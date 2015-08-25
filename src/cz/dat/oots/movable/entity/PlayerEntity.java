@@ -4,6 +4,7 @@ import java.util.Random;
 
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
+import org.lwjgl.opengl.Display;
 import org.newdawn.slick.opengl.TextureImpl;
 
 import cz.dat.oots.block.Block;
@@ -299,8 +300,8 @@ public class PlayerEntity extends Entity implements IOverlayRenderer {
 	@Override
 	public void renderOverlay(float ptt) {
 		TextureImpl.bindNone();
-		this.inHand.renderGUITexture(25,
-				Settings.getInstance().windowHeight.getValue() - 75, 50, 50);
+		this.inHand.getRenderer().render(ptt, 25, Display.getHeight() - 75, 50,
+				50, this.world);
 	}
 
 	@Override

@@ -96,7 +96,7 @@ public class World implements ITickListener {
 
 		this.chunkProvider.updateLoadedChunksInRadius(
 				(int) this.player.getPosX(), (int) this.player.getPosZ(),
-				Settings.getInstance().drawDistance.getValue());
+				game.getSettings().drawDistance.getValue());
 	}
 
 	public RenderEngine getRenderEngine() {
@@ -267,7 +267,7 @@ public class World implements ITickListener {
 		this.chunkProvider.updateLoadedChunksInRadius(
 				((int) Math.floor(this.player.getPosX())) >> 4,
 				((int) Math.floor(this.player.getPosZ())) >> 4,
-				Settings.getInstance().drawDistance.getValue() + 1);
+				this.game.getSettings().drawDistance.getValue() + 1);
 	}
 
 	public void setChunkDirty(int x, int y, int z) {
@@ -687,7 +687,7 @@ public class World implements ITickListener {
 		this.chunkProvider.updateLoadedChunksInRadius(
 				((int) Math.floor(this.player.getPosX())) >> 4,
 				((int) Math.floor(this.player.getPosZ())) >> 4,
-				Settings.getInstance().drawDistance.getValue() + 1);
+				this.game.getSettings().drawDistance.getValue() + 1);
 
 	}
 

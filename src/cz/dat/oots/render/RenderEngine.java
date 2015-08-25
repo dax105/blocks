@@ -184,7 +184,7 @@ public class RenderEngine {
 		ARBShaderObjects.glUseProgramObjectARB(this.worldShader.getProgramID());
 
 		this.worldShader.setUniform1f("time", System.nanoTime() / 1000000000f);
-		this.worldShader.setUniform1f("fogDist", Settings.getInstance().drawDistance.getValue() * 16 - 8);
+		this.worldShader.setUniform1f("fogDist", this.game.getSettings().drawDistance.getValue() * 16 - 8);
 
 		this.ptt = ptt;
 		
@@ -379,10 +379,10 @@ public class RenderEngine {
 		GL11.glDisable(GL11.GL_TEXTURE_2D);
 		TextureImpl.bindNone();
 		
-		GLHelper.drawLine(Settings.getInstance().windowWidth.getValue() / 2,
-				Settings.getInstance().windowWidth.getValue() / 2,
-				(Settings.getInstance().windowHeight.getValue() / 2) - 10,
-				(Settings.getInstance().windowHeight.getValue() / 2) + 10, 2,
+		GLHelper.drawLine(this.game.getSettings().windowWidth.getValue() / 2,
+				this.game.getSettings().windowWidth.getValue() / 2,
+				(this.game.getSettings().windowHeight.getValue() / 2) - 10,
+				(this.game.getSettings().windowHeight.getValue() / 2) + 10, 2,
 				0, 0, 0, 0.5f);
 		GL11.glColor4f(1, 1, 1, 1);
 	}
