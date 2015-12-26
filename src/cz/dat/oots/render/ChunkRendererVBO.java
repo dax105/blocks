@@ -59,7 +59,7 @@ public class ChunkRendererVBO implements IChunkRenderer {
 	    
 		long e = System.nanoTime();
 	    
-	    //System.out.println("Uploaded buffer with " + this.vertices + " vertices (" + this.vertices*4*8/1024f + "KB), took " + (e-s)/1000000f + "ms");
+	    System.out.println("Uploaded buffer with " + this.vertices + " vertices (" + this.vertices*4*8/1024f + "KB), took " + (e-s)/1000000f + "ms");
 	    
 	    sum += this.vertices*32;
 	    total++;
