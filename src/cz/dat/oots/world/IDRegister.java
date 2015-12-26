@@ -51,6 +51,7 @@ public class IDRegister {
 	public static Block log;
 	public static Block glass;
 	public static Block water;
+	public static Block lava;
 	public static Block ice;
 	public static Block tallGrass;
 	public static Block flower1;
@@ -127,7 +128,12 @@ public class IDRegister {
 					.setFallSound("fall_hard"));
 			IDRegister.water = registerBlock(new BlockFluid("oots/fluidWater",
 					this).setAllTextures(13).setCullSame(true)
-					.setOccluder(false).setOpaque(false).setDensity(1.175f));
+					.setOccluder(true).setOpaque(false).setDensity(1.175f));
+			
+			IDRegister.lava = registerBlock(new BlockFluid("oots/fluidLava",
+					this).setAllTextures(20).setCullSame(true)
+					.setOccluder(false).setOpaque(false).setDensity(2.55f));
+			
 			IDRegister.ice = registerBlock(new BlockBasic("oots/blockIce", this)
 					.setAllTextures(14).setOpaque(false).setCullSame(true)
 					.setRenderPass(RenderPass.TRANSLUCENT));

@@ -138,6 +138,8 @@ public class TextureManager {
 				.loadImage("cz/dat/oots/res/textures/blocks/flower_w.png"));
 		ab.addTexture(TextureManager
 				.loadImage("cz/dat/oots/res/textures/blocks/leaves_opaque.png"));
+		ab.addTexture(TextureManager
+				.loadImage("cz/dat/oots/res/textures/blocks/lava.png"));
 
 		TextureManager.atlas = ab.buildAtlas(true);
 
