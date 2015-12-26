@@ -19,7 +19,7 @@ public abstract class GuiScreen {
 	public GuiScreen(Game game) {
 		if(game.getWorldsManager().isInGame()) {
 			this.objects.add(new GuiObjectRectangle(0, 0, Display.getWidth(),
-					Display.getHeight(), 0xA0000000));
+					Display.getHeight(), 0xF0000000));
 		}
 		this.game = game;
 		this.parent = null;

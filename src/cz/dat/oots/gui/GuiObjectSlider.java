@@ -34,10 +34,10 @@ public class GuiObjectSlider extends GuiObject {
 	protected boolean wasPressed = false;
 	protected boolean lock = false;
 
-	protected Color c1 = new Color(0xFF8C8C8C);
-	protected Color c2 = new Color(0xFF404040);
-	protected Color c3 = new Color(0xFF6E6E6E);
-	protected Color c4 = new Color(0xA0FFFFFF);
+	protected Color c1 = new Color(0x40202020);
+	//protected Color c2 = new Color(0xFF404040);
+	protected Color c3 = new Color(0x20FFFFFF);
+	protected Color c4 = new Color(0x20FFFFFF);
 
 	public GuiObjectSlider(int x1, int y1, int x2, int y2, Font font,
 			String formatString, int id, GuiScreen parent, float minVal,
@@ -58,8 +58,8 @@ public class GuiObjectSlider extends GuiObject {
 	@Override
 	public void render() {
 		GLHelper.drawRectangle(this.c1, this.x1, this.x2, this.y1, this.y2);
-		GLHelper.drawRectangle(this.c2, this.x1 + 2, this.x2 - 2, this.y1 + 2,
-				this.y2 - 2);
+		/*GLHelper.drawRectangle(this.c2, this.x1 + 2, this.x2 - 2, this.y1 + 2,
+				this.y2 - 2);*/
 
 		int x = this.x1
 				+ GuiObjectSlider.SLIDER_WIDTH

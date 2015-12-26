@@ -16,7 +16,7 @@ public class GuiObjectTitleBar extends GuiObject {
 
 	private Font font;
 
-	private Color c = new Color(0xFF004FA3);
+	//private Color c = new Color(0x40000000);
 
 	public void setText(String text) {
 		this.text = text;
@@ -34,7 +34,7 @@ public class GuiObjectTitleBar extends GuiObject {
 
 	@Override
 	public void render() {
-		GLHelper.drawRectangle(this.c, this.x1, this.x2, this.y1, this.y2);
+		//GLHelper.drawRectangle(this.c, this.x1, this.x2, this.y1, this.y2);
 		GL11.glEnable(GL11.GL_TEXTURE_2D);
 		this.font.drawString(
 				this.x1 + (this.x2 - this.x1) / 2

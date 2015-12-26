@@ -21,8 +21,8 @@ public class GuiObjectSettingsIntegerSlider extends GuiObjectSlider {
 	@Override
 	public void render() {
 		GLHelper.drawRectangle(this.c1, this.x1, this.x2, this.y1, this.y2);
-		GLHelper.drawRectangle(this.c2, this.x1 + 2, this.x2 - 2, this.y1 + 2,
-				this.y2 - 2);
+		//GLHelper.drawRectangle(this.c2, this.x1 + 2, this.x2 - 2, this.y1 + 2,
+		//		this.y2 - 2);
 
 		int x = this.x1
 				+ GuiObjectSlider.SLIDER_WIDTH

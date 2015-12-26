@@ -14,13 +14,13 @@ public class GuiScreenSettings extends GuiScreen {
 		this.ingame = this.game.getWorldsManager().isInGame();
 
 		// Rectangle
-		this.objects
+		/*this.objects
 				.add(new GuiObjectRectangle(
 						(parent.game.s().windowWidth.getValue() - width - overflow) / 2,
 						(parent.game.s().windowHeight.getValue() - height - overflow) / 2,
 						(parent.game.s().windowWidth.getValue() + width + overflow) / 2,
 						(parent.game.s().windowHeight.getValue() + height + overflow) / 2,
-						0xA0000000));
+						0xA0000000));*/
 		this.objects.add(new GuiObjectTitleBar((parent.game.s().windowWidth
 				.getValue() - width) / 2, (parent.game.s().windowHeight
 				.getValue() - height) / 2, (parent.game.s().windowWidth

@@ -24,9 +24,9 @@ public class GuiObjectButton extends GuiObject {
 
 	protected boolean hover = false;
 
-	Color c1 = new Color(0xFF8C8C8C);
-	Color c2 = new Color(0xFF6E6E6E);
-	Color c3 = new Color(0xA0FFFFFF);
+	Color c1 = new Color(0x40202020);
+	Color c2 = new Color(0x20FFFFFF);
+	//Color c3 = new Color(0xA0FFFFFF);
 
 	public GuiObjectButton(int x1, int y1, int x2, int y2, Font font,
 			String text, int id, GuiScreen parent) {
@@ -43,7 +43,7 @@ public class GuiObjectButton extends GuiObject {
 	@Override
 	public void render() {
 		GLHelper.drawRectangle(c1, x1, x2, y1, y2);
-		GLHelper.drawRectangle(c2, x1 + 2, x2 - 2, y1 + 2, y2 - 2);
+		//GLHelper.drawRectangle(c2, x1 + 2, x2 - 2, y1 + 2, y2 - 2);
 
 		GL11.glEnable(GL11.GL_TEXTURE_2D);
 		this.font.drawString(x1 + (x2 - x1) / 2 - this.font.getWidth(text) / 2,
@@ -51,7 +51,7 @@ public class GuiObjectButton extends GuiObject {
 		GL11.glDisable(GL11.GL_TEXTURE_2D);
 
 		if(this.hover) {
-			GLHelper.drawRectangle(c3, x1, x2, y1, y2);
+			GLHelper.drawRectangle(c2, x1, x2, y1, y2);
 		}
 	}
 

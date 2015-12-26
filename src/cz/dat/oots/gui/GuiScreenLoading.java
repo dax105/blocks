@@ -13,11 +13,11 @@ public class GuiScreenLoading extends GuiScreen {
 
 	public GuiScreenLoading(Game game, String text) {
 		super(game);
-		this.objects.add(new GuiObjectRectangle((game.s().windowWidth
+		/*this.objects.add(new GuiObjectRectangle((game.s().windowWidth
 				.getValue() - width - overflow) / 2, (game.s().windowHeight
 				.getValue() - height - overflow) / 2, (game.s().windowWidth
 				.getValue() + width + overflow) / 2, (game.s().windowHeight
-				.getValue() + height + overflow) / 2, 0xA0000000));
+				.getValue() + height + overflow) / 2, 0xA0000000));*/
 
 		this.titleBar = new GuiObjectTitleBar(
 				(game.s().windowWidth.getValue() - width) / 2,

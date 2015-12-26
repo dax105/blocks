@@ -10,11 +10,11 @@ public class GuiScreenExit extends GuiScreen {
 
 	public GuiScreenExit(GuiScreen parent) {
 		super(parent);
-		this.objects.add(new GuiObjectRectangle(
+		/*this.objects.add(new GuiObjectRectangle(
 				(Display.getWidth() - width - overflow) / 2, (Display
 						.getHeight() - height - overflow) / 2, (Display
 						.getWidth() + width + overflow) / 2, (Display
-						.getHeight() + height + overflow) / 2, 0xA0000000));
+						.getHeight() + height + overflow) / 2, 0xA0000000));*/
 
 		this.objects.add(new GuiObjectTitleBar(
 				(Display.getWidth() - width) / 2,
