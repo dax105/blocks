@@ -32,6 +32,8 @@ public class ChunkProvider {
 
 	private static final int SAMPLE_RATE_HORIZONTAL = 8;
 	private static final int SAMPLE_RATE_VERTICAL = 4;
+	
+	private static final int GEN_LAVA_HEIGHT = 12;
 
 	public boolean loading = false;
 
@@ -419,7 +421,8 @@ public class ChunkProvider {
 	}
 
 	public Biome getBiomeAtLocation(int x, int z) {
-		float noise = (float) this.simplex2D_rainfall.getNoise(x, z);
+		float noise = (float) this.simplex2D_rainfall.getNoise(x, z) + (float) this.simplex2D_temperature.getNoise(x, z);
+		noise *= 0.5f;
 		return noise > 0 ? Biome.mountains : Biome.plains;
 	}
 
@@ -461,6 +464,10 @@ public class ChunkProvider {
 			for(int z = 0; z < Chunk.CHUNK_SIZE; z++) {
 				int depth = 0;
 
+				int bedrockHeight = Math.abs((((xc + x) ^ 0x5218CFAF * z) * ((zc + z) ^ 0x558802E3 * x))) % 5;
+				
+				//System.out.println(bedrockHeight);
+				
 				for(int y = 127; y >= 0; y--) {
 					double density = densityMap[x][y][z];
 					boolean cave = caveMap[x][y][z] > (0.3 + 1 / (8.0 + depth / 2));
@@ -525,9 +532,11 @@ public class ChunkProvider {
 						}
 					}
 
-					if(y == 0) {
+					if(y <= bedrockHeight) {
 						chunk.setBlock(x, y, z, IDRegister.bedrock.getID(),
 								false);
+					} else if (y <= GEN_LAVA_HEIGHT && cave) {
+						chunk.setBlock(x, y, z, IDRegister.lava.getID(), false);
 					}
 				}
 			}
