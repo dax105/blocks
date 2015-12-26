@@ -48,7 +48,7 @@ public class Explosion {
 	
 	public static void fill(World world, float ex, float ey, float ez, int id) {
 		int radius = world.getGame().getSettings().explosionRadius.getValue();
-		float fuzzyness = 1.5f;
+		float fuzzyness = 0f;
 
 		SoundManager.getInstance().playSound("explosion", 0.8f + Explosion.rand.nextFloat() * 0.4f);
 
