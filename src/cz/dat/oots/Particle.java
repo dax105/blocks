@@ -48,9 +48,9 @@ public class Particle implements ITickListener, IWorldRenderer {
 	public Particle(World world, float x, float y, float z, float velX,
 			float velY, float velZ, int lifetime, float r, float g, float b) {
 		this.world = world;
-		this.x = x;
-		this.y = y;
-		this.z = z;
+		this.x = this.lastX = x;
+		this.y = this.lastY = y;
+		this.z = this.lastZ = z;
 		this.velX = velX;
 		this.velY = velY;
 		this.velZ = velZ;
