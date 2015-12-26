@@ -8,6 +8,7 @@ import org.lwjgl.opengl.Display;
 import org.newdawn.slick.opengl.TextureImpl;
 
 import cz.dat.oots.block.Block;
+import cz.dat.oots.block.BlockFluid;
 import cz.dat.oots.collisions.AABB;
 import cz.dat.oots.inventory.BasicBlockStack;
 import cz.dat.oots.inventory.BasicItemStack;
@@ -96,7 +97,7 @@ public class PlayerEntity extends Entity implements IOverlayRenderer {
 		if(Keyboard.isKeyDown(Keyboard.KEY_R)) {
 			if(this.hasSelected) {
 				Explosion.fill(this.world, this.lookingAtX, this.lookingAtY,
-						this.lookingAtZ, IDRegister.leaves.getID());
+						this.lookingAtZ, IDRegister.dirt.getID());
 			}
 		}
 
@@ -392,8 +393,8 @@ public class PlayerEntity extends Entity implements IOverlayRenderer {
 		int blockPosZ = (int) Math.floor(this.posZ);
 
 		boolean inWater = ((this.world.getBlockObject(blockPosX, blockPosY,
-				blockPosZ) == IDRegister.water) || (this.world.getBlockObject(
-				blockPosX, blockPosY + 1, blockPosZ) == IDRegister.water));
+				blockPosZ) instanceof BlockFluid) || (this.world.getBlockObject(
+				blockPosX, blockPosY + 1, blockPosZ) instanceof BlockFluid));
 
 		float d0 = this.world.getBlockObject(blockPosX, blockPosY, blockPosZ) != null ? this.world
 				.getBlockObject(blockPosX, blockPosY, blockPosZ).getDensity()
