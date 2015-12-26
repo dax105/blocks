@@ -8,6 +8,7 @@ public abstract class Biome {
 
 	public static final Biome mountains = new BiomeMountains();
 	public static final Biome plains = new BiomePlains();
+	public static final Biome extraMountains = new BiomeExtraMountains();
 
 	private double[] tempOffsets = new double[129];
 
