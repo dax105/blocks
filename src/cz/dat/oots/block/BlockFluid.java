@@ -8,8 +8,13 @@ import cz.dat.oots.world.World;
 
 public class BlockFluid extends BlockBasic {
 	
-	public BlockFluid(String name, IDRegister r) {
+	private int flowRate;
+	
+	public BlockFluid(String name, IDRegister r, int flowRate) {
 		super(name, r);
+		
+		this.flowRate = flowRate;
+		
 		this.setCullSame(true);
 		this.setOpaque(false);
 		this.setOccluder(false);
@@ -20,12 +25,12 @@ public class BlockFluid extends BlockBasic {
 
 	@Override
 	public void onNeighbourUpdate(int x, int y, int z, World world) {
-		world.scheduleUpdate(x, y, z, 4, UpdateType.WATER_FLOW);
+		world.scheduleUpdate(x, y, z, this.flowRate, UpdateType.FLUID_FLOW);
 	}
 
 	@Override
 	public void onUpdate(int x, int y, int z, int type, World world) {
-		if(type == UpdateType.WATER_FLOW) {
+		if(type == UpdateType.FLUID_FLOW) {
 
 			if(world.getBlockObject(x, y - 1, z) == this) {
 				return;

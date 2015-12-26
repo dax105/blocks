@@ -127,11 +127,11 @@ public class IDRegister {
 					.setFootStepSound(SoundManager.footstep_stone)
 					.setFallSound("fall_hard"));
 			IDRegister.water = registerBlock(new BlockFluid("oots/fluidWater",
-					this).setAllTextures(13).setCullSame(true)
+					this, 3).setAllTextures(13).setCullSame(true)
 					.setOccluder(true).setOpaque(false).setDensity(1.175f));
 			
 			IDRegister.lava = registerBlock(new BlockFluid("oots/fluidLava",
-					this).setAllTextures(20).setCullSame(true)
+					this, 8).setAllTextures(20).setCullSame(true)
 					.setOccluder(false).setOpaque(false).setDensity(2.55f));
 			
 			IDRegister.ice = registerBlock(new BlockBasic("oots/blockIce", this)
