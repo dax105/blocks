@@ -35,7 +35,7 @@ import cz.dat.oots.world.chunk.ChunkProvider;
 public class World implements ITickListener {
 
 	public static final float GRAVITY = 0.06f;
-	public static final int MAX_PARTICLES = 10000;
+	public static final int MAX_PARTICLES = 100000;
 
 	private Map<Coord3D, ScheduledUpdate> scheduledUpdates;
 	private Map<Coord3D, ScheduledUpdate> newlyScheduledUpdates;

@@ -7,6 +7,7 @@ import cz.dat.oots.render.ITickListener;
 import cz.dat.oots.render.IWorldRenderer;
 import cz.dat.oots.render.RenderEngine;
 import cz.dat.oots.util.GameMath;
+import cz.dat.oots.world.ParticleEngine;
 import cz.dat.oots.world.World;
 
 public class Particle implements ITickListener, IWorldRenderer {
@@ -18,9 +19,7 @@ public class Particle implements ITickListener, IWorldRenderer {
 	public static final float PARTICLE_SIZE = 0.5f;
 	public static final float BOUNDING_BOX_SIZE = 0.01f;
 
-	public final float r;
-	public final float g;
-	public final float b;
+	public final float color;
 
 	private static Random rand = new Random();
 
@@ -65,9 +64,12 @@ public class Particle implements ITickListener, IWorldRenderer {
 				this.y + Particle.BOUNDING_BOX_SIZE * 0.5f, 
 				this.z + Particle.BOUNDING_BOX_SIZE * 0.5f
 		);
-		this.r = r;
-		this.g = g;
-		this.b = b;
+		
+		this.color = ParticleEngine.packColor((int)(r * 255), (int)(g * 255), (int)(b * 255), 255);
+		
+		//this.r = r;
+		//this.g = g;
+		//this.b = b;
 	}
 
 	public float getPartialX(float ptt) {

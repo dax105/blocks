@@ -58,6 +58,10 @@ public class ParticleEngine implements ITickListener {
 		//this.particleMap.put(key++, p);
 		this.particles.add(p);
 	}
+	
+    public static float packColor(int r, int g, int b, int a) {
+        return Float.intBitsToFloat(((a & 0xFF) << 24) | ((r & 0xFF) << 16) | ((g & 0xFF) << 8)  | ((b & 0xFF) << 0));
+    }
 
 	@Override
 	public void onTick() {
@@ -92,7 +96,7 @@ public class ParticleEngine implements ITickListener {
 			while(it.hasNext()) {
 				Particle p = it.next();
 
-				GL11.glColor4f(p.r, p.g, p.b, 1);
+				//GL11.glColor4f(p.r, p.g, p.b, 1);
 
 				float h = Particle.PARTICLE_SIZE / 2;
 				float sizemultipler = (h / 1);
@@ -137,7 +141,7 @@ public class ParticleEngine implements ITickListener {
 				float py = p.getPartialY(partialTickTime);
 				float pz = p.getPartialZ(partialTickTime) - p.PARTICLE_SIZE/2f;
 				
-				this.drawBuffer.put(px).put(py).put(pz).put(p.r).put(p.g).put(p.b)/*.put(0).put(0)*/;
+				this.drawBuffer.put(px).put(py).put(pz).put(p.color)/*.put(0).put(0)*/;
 
 			}
 			this.drawBuffer.flip();
@@ -150,10 +154,10 @@ public class ParticleEngine implements ITickListener {
 			GL15.glBindBuffer(GL15.GL_ARRAY_BUFFER, this.handle);
 			GL15.glBufferData(GL15.GL_ARRAY_BUFFER, this.drawBuffer, GL15.GL_STATIC_DRAW);
 
-			int stride = 6 << 2;
+			int stride = 4 << 2;
 
 			GL11.glVertexPointer(3, GL11.GL_FLOAT, stride, 0);
-			GL11.glColorPointer(3, GL11.GL_FLOAT, stride, 3 << 2);
+			GL11.glColorPointer(3, GL11.GL_UNSIGNED_BYTE, stride, 3 << 2);
 			//GL11.glTexCoordPointer(2, GL11.GL_FLOAT, stride, 6 << 2);
 
 			GL11.glDrawArrays(GL11.GL_POINTS, 0, this.particles.size());
