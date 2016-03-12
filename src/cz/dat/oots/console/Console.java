@@ -119,6 +119,7 @@ public class Console {
                 this.offsetUp();
             } else {
                 this.memUp();
+                this.curPos = this.currentCommand.length();
             }
 
         }
@@ -129,6 +130,7 @@ public class Console {
                 this.offsetDown();
             } else {
                 this.memDown();
+                this.curPos = this.currentCommand.length();
             }
         }
 
