@@ -405,13 +405,18 @@ public class Game implements Runnable {
             GLHelper.drawRectangle(this.consoleC1, 0, Display.getWidth(), 0,
                     cHeight);
 
-            GLHelper.drawRectangle(this.consoleC2, 0, Display.getHeight(),
+            GLHelper.drawRectangle(this.consoleC2, 0, Display.getWidth(),
                     cHeight - this.font.getLineHeight(), cHeight);
 
             GL11.glEnable(GL11.GL_TEXTURE_2D);
-            String cursor = (this.ticks % Game.TPS >= Game.TPS / 2) ? "_" : "";
-            this.font.drawString(0, cHeight - this.font.getLineHeight(), "> "
-                    + this.console.currentCommand + cursor);
+            String text = "> " + this.console.getCurrentCommand();
+            this.font.drawString(0, cHeight - this.font.getLineHeight(), text);
+
+            if(this.ticks % Game.TPS >= Game.TPS / 2) {
+                this.font.drawString(this.font.getWidth(text.substring(0, this.console.getCursorPos() + 2)) - 1,
+                        cHeight - this.font.getLineHeight(), "|");
+            }
+
             String info = Game.TITLE;
             this.font.drawString(Display.getWidth() - this.font.getWidth(info)
                             - 2, cHeight - this.font.getLineHeight() * 2, info,

@@ -17,11 +17,12 @@ public class Console {
     public List<String> lines = new ArrayList<String>();
     public List<String> memory = new ArrayList<String>();
 
-    public CommandManager manager;
-    public String currentCommand = "";
-    public int memPos = 0;
-    public boolean memUsed = false;
-    public int displayOffset = 0;
+    private CommandManager manager;
+    private String currentCommand = "";
+    private int memPos = 0;
+    private boolean memUsed = false;
+    private int displayOffset = 0;
+    private int curPos;
     private Game game;
     private Date now = new Date();
     private String characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789._-!,=%()[]{}<>#&@* ";
@@ -96,10 +97,19 @@ public class Console {
         return -FontManager.getFont().getLineHeight() * this.displayOffset;
     }
 
+    public String getCurrentCommand() {
+        return this.currentCommand;
+    }
+
+    public int getCursorPos() {
+        return this.curPos;
+    }
+
     public void charTyped(char c, int key) {
         if (this.characters.contains("" + c)) {
-            this.currentCommand += c;
+            this.currentCommand = new StringBuilder(this.currentCommand).insert(this.curPos, c).toString();
             this.displayOffset = 0;
+            this.curPos++;
         }
 
         if (Keyboard.KEY_UP == key) {
@@ -122,21 +132,30 @@ public class Console {
             }
         }
 
-        if (Keyboard.KEY_BACK == key && this.currentCommand.length() > 0) {
-            this.currentCommand = this.currentCommand.substring(0,
-                    this.currentCommand.length() - 1);
+        if (Keyboard.KEY_BACK == key && this.currentCommand.length() > 0 && this.curPos != 0) {
+            this.curPos--;
+            this.currentCommand = new StringBuilder(this.currentCommand).deleteCharAt(this.curPos).toString();
         }
+
+        if(Keyboard.KEY_HOME == key) {
+            this.curPos = 0;
+        }
+
+        if(Keyboard.KEY_END == key)
+            this.curPos = this.currentCommand.length();
 
         if (Keyboard.KEY_RETURN == key && this.currentCommand != "") {
             this.executeCommand();
         }
 
         if (Keyboard.KEY_LEFT == key) {
-
+            if (this.curPos != 0)
+                this.curPos--;
         }
 
         if (Keyboard.KEY_RIGHT == key) {
-
+            if (this.curPos != this.currentCommand.length())
+                this.curPos++;
         }
     }
 
@@ -146,6 +165,7 @@ public class Console {
         this.out("> " + this.currentCommand);
         String[] words = this.currentCommand.split(" ");
         String[] args = Arrays.copyOfRange(words, 1, words.length);
+        this.curPos = 0;
         this.clearInput();
 
         if (words.length > 0) {
@@ -161,6 +181,10 @@ public class Console {
                 }
             }
         }
+    }
+
+    public CommandManager getManager() {
+        return this.manager;
     }
 
     public Game getGame() {

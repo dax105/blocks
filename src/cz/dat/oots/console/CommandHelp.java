@@ -23,7 +23,7 @@ public class CommandHelp extends Command {
 
         this.console.println("List of available commands:");
 
-        for (Entry<String, Command> e : this.console.manager.commands.entrySet()) {
+        for (Entry<String, Command> e : this.console.getManager().commands.entrySet()) {
             this.console.println(e.getValue().getName());
         }
 
