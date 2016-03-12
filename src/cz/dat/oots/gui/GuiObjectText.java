@@ -5,42 +5,42 @@ import org.newdawn.slick.Font;
 
 public class GuiObjectText extends GuiObject {
 
-	private String text;
+    private String text;
 
-	private int x1;
-	private int y1;
-	private int x2;
-	private int y2;
+    private int x1;
+    private int y1;
+    private int x2;
+    private int y2;
 
-	private Font font;
+    private Font font;
 
-	public void setText(String text) {
-		this.text = text;
-	}
+    public GuiObjectText(int x1, int y1, int x2, int y2, Font font, String text) {
+        this.x1 = x1;
+        this.y1 = y1;
+        this.x2 = x2;
+        this.y2 = y2;
+        this.text = text;
+        this.font = font;
+    }
 
-	public GuiObjectText(int x1, int y1, int x2, int y2, Font font, String text) {
-		this.x1 = x1;
-		this.y1 = y1;
-		this.x2 = x2;
-		this.y2 = y2;
-		this.text = text;
-		this.font = font;
-	}
+    public void setText(String text) {
+        this.text = text;
+    }
 
-	@Override
-	public void render() {
-		GL11.glEnable(GL11.GL_TEXTURE_2D);
-		this.font.drawString(
-				this.x1 + (this.x2 - this.x1) / 2
-						- this.font.getWidth(this.text) / 2,
-				this.y1 + (this.y2 - this.y1) / 2
-						- this.font.getHeight(this.text) / 2, this.text);
-		GL11.glDisable(GL11.GL_TEXTURE_2D);
-	}
+    @Override
+    public void render() {
+        GL11.glEnable(GL11.GL_TEXTURE_2D);
+        this.font.drawString(
+                this.x1 + (this.x2 - this.x1) / 2
+                        - this.font.getWidth(this.text) / 2,
+                this.y1 + (this.y2 - this.y1) / 2
+                        - this.font.getHeight(this.text) / 2, this.text);
+        GL11.glDisable(GL11.GL_TEXTURE_2D);
+    }
 
-	@Override
-	public void update() {
+    @Override
+    public void update() {
 
-	}
+    }
 
 }

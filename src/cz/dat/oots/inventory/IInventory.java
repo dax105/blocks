@@ -1,17 +1,17 @@
 package cz.dat.oots.inventory;
 
 public interface IInventory {
-	public void init(int maxItems);
+    public void init(int maxItems);
 
-	public int getMaxItems();
+    public int getMaxItems();
 
-	public void putStack(int position, IObjectStack stack);
+    public void putStack(int position, IObjectStack stack);
 
-	public void moveStack(int position, int newPosition);
+    public void moveStack(int position, int newPosition);
 
-	public int getItemCount();
+    public int getItemCount();
 
-	public IObjectStack getItem(int position);
+    public IObjectStack getItem(int position);
 
-	public void removeItem(int position);
+    public void removeItem(int position);
 }

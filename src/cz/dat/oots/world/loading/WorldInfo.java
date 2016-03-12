@@ -7,153 +7,153 @@ import java.util.Scanner;
 
 public class WorldInfo {
 
-	private String worldName;
-	private String worldDirectory;
-	private String worldVersion;
-	private int worldSeed;
-	private float playerX;
-	private float playerY;
-	private float playerZ;
-	private float playerTilt;
-	private float playerHeading;
+    private String worldName;
+    private String worldDirectory;
+    private String worldVersion;
+    private int worldSeed;
+    private float playerX;
+    private float playerY;
+    private float playerZ;
+    private float playerTilt;
+    private float playerHeading;
 
-	public static WorldInfo constructFromFile(File f)
-			throws FileNotFoundException {
-		WorldInfo w = new WorldInfo(f.getParentFile().getName());
-		w.setWorldDirectory(f.getParent());
+    public WorldInfo(String worldName) {
+        this.worldName = worldName;
+    }
 
-		Scanner s = new Scanner(f);
-		while(s.hasNextLine()) {
-			String l = s.nextLine();
-			String[] words = l.split(" ");
+    public static WorldInfo constructFromFile(File f)
+            throws FileNotFoundException {
+        WorldInfo w = new WorldInfo(f.getParentFile().getName());
+        w.setWorldDirectory(f.getParent());
 
-			if(words.length >= 2) {
-				if(words[0].equals("seed")) {
-					w.worldSeed = Integer.parseInt(words[1]);
-				} else if(words[0].equals("playerx")) {
-					w.playerX = Float.parseFloat(words[1]);
-				} else if(words[0].equals("playery")) {
-					w.playerY = Float.parseFloat(words[1]) + 1f;
-				} else if(words[0].equals("playerz")) {
-					w.playerZ = Float.parseFloat(words[1]);
-				} else if(words[0].equals("playertilt")) {
-					w.playerTilt = Float.parseFloat(words[1]);
-				} else if(words[0].equals("playerheading")) {
-					w.playerHeading = Float.parseFloat(words[1]);
-				} else if(words[0].equals("version")) {
-					w.worldVersion = words[1];
-				}
-			}
+        Scanner s = new Scanner(f);
+        while (s.hasNextLine()) {
+            String l = s.nextLine();
+            String[] words = l.split(" ");
 
-		}
+            if (words.length >= 2) {
+                if (words[0].equals("seed")) {
+                    w.worldSeed = Integer.parseInt(words[1]);
+                } else if (words[0].equals("playerx")) {
+                    w.playerX = Float.parseFloat(words[1]);
+                } else if (words[0].equals("playery")) {
+                    w.playerY = Float.parseFloat(words[1]) + 1f;
+                } else if (words[0].equals("playerz")) {
+                    w.playerZ = Float.parseFloat(words[1]);
+                } else if (words[0].equals("playertilt")) {
+                    w.playerTilt = Float.parseFloat(words[1]);
+                } else if (words[0].equals("playerheading")) {
+                    w.playerHeading = Float.parseFloat(words[1]);
+                } else if (words[0].equals("version")) {
+                    w.worldVersion = words[1];
+                }
+            }
 
-		s.close();
-		return w;
-	}
+        }
 
-	public void saveWorldInfo() {
-		try {
-			File dir = new File(WorldManager.SAVES_DIR, this.worldName);
+        s.close();
+        return w;
+    }
 
-			if(!dir.exists()) {
-				dir.mkdir();
-			}
+    public void saveWorldInfo() {
+        try {
+            File dir = new File(WorldManager.SAVES_DIR, this.worldName);
 
-			File file = new File(dir, "world" + ".txt");
+            if (!dir.exists()) {
+                dir.mkdir();
+            }
 
-			PrintWriter pw = new PrintWriter(file);
+            File file = new File(dir, "world" + ".txt");
 
-			pw.println("version " + this.worldVersion);
+            PrintWriter pw = new PrintWriter(file);
 
-			pw.println("seed " + this.worldSeed);
+            pw.println("version " + this.worldVersion);
 
-			pw.println("playerx " + this.playerX);
-			pw.println("playery " + this.playerY);
-			pw.println("playerz " + this.playerZ);
+            pw.println("seed " + this.worldSeed);
 
-			pw.println("playertilt " + this.playerTilt);
-			pw.println("playerheading " + this.playerHeading);
+            pw.println("playerx " + this.playerX);
+            pw.println("playery " + this.playerY);
+            pw.println("playerz " + this.playerZ);
 
-			pw.close();
+            pw.println("playertilt " + this.playerTilt);
+            pw.println("playerheading " + this.playerHeading);
 
-		} catch(FileNotFoundException e) {
-			e.printStackTrace();
-		}
-	}
+            pw.close();
 
-	public String getWorldName() {
-		return this.worldName;
-	}
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+    }
 
-	public void setWorldName(String worldName) {
-		this.worldName = worldName;
-	}
+    public String getWorldName() {
+        return this.worldName;
+    }
 
-	public String getWorldDirectory() {
-		return this.worldDirectory;
-	}
+    public void setWorldName(String worldName) {
+        this.worldName = worldName;
+    }
 
-	public void setWorldDirectory(String worldDirectory) {
-		this.worldDirectory = worldDirectory;
-	}
+    public String getWorldDirectory() {
+        return this.worldDirectory;
+    }
 
-	public String getWorldVersion() {
-		return this.worldVersion;
-	}
+    public void setWorldDirectory(String worldDirectory) {
+        this.worldDirectory = worldDirectory;
+    }
 
-	public void setWorldVersion(String worldVersion) {
-		this.worldVersion = worldVersion;
-	}
+    public String getWorldVersion() {
+        return this.worldVersion;
+    }
 
-	public int getWorldSeed() {
-		return this.worldSeed;
-	}
+    public void setWorldVersion(String worldVersion) {
+        this.worldVersion = worldVersion;
+    }
 
-	public void setWorldSeed(int worldSeed) {
-		this.worldSeed = worldSeed;
-	}
+    public int getWorldSeed() {
+        return this.worldSeed;
+    }
 
-	public float getPlayerX() {
-		return this.playerX;
-	}
+    public void setWorldSeed(int worldSeed) {
+        this.worldSeed = worldSeed;
+    }
 
-	public void setPlayerX(float playerX) {
-		this.playerX = playerX;
-	}
+    public float getPlayerX() {
+        return this.playerX;
+    }
 
-	public float getPlayerY() {
-		return this.playerY;
-	}
+    public void setPlayerX(float playerX) {
+        this.playerX = playerX;
+    }
 
-	public void setPlayerY(float playerY) {
-		this.playerY = playerY;
-	}
+    public float getPlayerY() {
+        return this.playerY;
+    }
 
-	public float getPlayerZ() {
-		return this.playerZ;
-	}
+    public void setPlayerY(float playerY) {
+        this.playerY = playerY;
+    }
 
-	public void setPlayerZ(float playerZ) {
-		this.playerZ = playerZ;
-	}
+    public float getPlayerZ() {
+        return this.playerZ;
+    }
 
-	public float getPlayerTilt() {
-		return this.playerTilt;
-	}
+    public void setPlayerZ(float playerZ) {
+        this.playerZ = playerZ;
+    }
 
-	public void setPlayerTilt(float playerTilt) {
-		this.playerTilt = playerTilt;
-	}
+    public float getPlayerTilt() {
+        return this.playerTilt;
+    }
 
-	public float getPlayerHeading() {
-		return this.playerHeading;
-	}
+    public void setPlayerTilt(float playerTilt) {
+        this.playerTilt = playerTilt;
+    }
 
-	public void setPlayerHeading(float playerHeading) {
-		this.playerHeading = playerHeading;
-	}
+    public float getPlayerHeading() {
+        return this.playerHeading;
+    }
 
-	public WorldInfo(String worldName) {
-		this.worldName = worldName;
-	}
+    public void setPlayerHeading(float playerHeading) {
+        this.playerHeading = playerHeading;
+    }
 }

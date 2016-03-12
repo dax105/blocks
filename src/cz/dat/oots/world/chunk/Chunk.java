@@ -1,147 +1,145 @@
 package cz.dat.oots.world.chunk;
 
-import java.nio.ShortBuffer;
-
 import cz.dat.oots.render.ChunkMeshBuilder;
 import cz.dat.oots.render.RenderChunk;
 import cz.dat.oots.world.World;
 
+import java.nio.ShortBuffer;
+
 public class Chunk {
 
-	public boolean changed = false;
-	public boolean populated = false;
+    public static final int CHUNK_SIZE = 16;
+    public static final int CHUNK_HEIGHT = 128;
+    public boolean changed = false;
+    public boolean populated = false;
+    public int x;
+    public int z;
 
-	public static final int CHUNK_SIZE = 16;
-	public static final int CHUNK_HEIGHT = 128;
+    public World world;
 
-	public int x;
-	public int z;
+    public RenderChunk[] renderChunks = new RenderChunk[8];
 
-	public World world;
+    public ShortBuffer blocksBuffer;
 
-	public RenderChunk[] renderChunks = new RenderChunk[8];
+    public Chunk(int cX, int cZ, World world) {
+        this.blocksBuffer = ShortBuffer.allocate(Chunk.CHUNK_SIZE
+                * Chunk.CHUNK_SIZE * Chunk.CHUNK_HEIGHT);
+        this.world = world;
+        this.x = cX;
+        this.z = cZ;
 
-	public ShortBuffer blocksBuffer;
+        for (int y = 0; y < 8; y++) {
+            this.renderChunks[y] = new RenderChunk(cX, y, cZ);
+        }
 
-	public void setDirty(int y) {
-		if(y >= 0 && y < 8) {
-			this.renderChunks[y].setDirty(true);
-		}
-	}
+    }
 
-	public void setAllDirty() {
-		for(RenderChunk r : this.renderChunks) {
-			r.setDirty(true);
-		}
-	}
+    public void setDirty(int y) {
+        if (y >= 0 && y < 8) {
+            this.renderChunks[y].setDirty(true);
+        }
+    }
 
-	public float getDistanceToPlayer() {
-		float pX = this.world.getPlayer().getPosX();
-		float pZ = this.world.getPlayer().getPosZ();
+    public void setAllDirty() {
+        for (RenderChunk r : this.renderChunks) {
+            r.setDirty(true);
+        }
+    }
 
-		float dX = Math.abs(pX - this.x * Chunk.CHUNK_SIZE - Chunk.CHUNK_SIZE
-				/ 2);
-		float dZ = Math.abs(pZ - this.z * Chunk.CHUNK_SIZE - Chunk.CHUNK_SIZE
-				/ 2);
+    public float getDistanceToPlayer() {
+        float pX = this.world.getPlayer().getPosX();
+        float pZ = this.world.getPlayer().getPosZ();
 
-		return (float) Math.sqrt(dX * dX + dZ * dZ);
-	}
+        float dX = Math.abs(pX - this.x * Chunk.CHUNK_SIZE - Chunk.CHUNK_SIZE
+                / 2);
+        float dZ = Math.abs(pZ - this.z * Chunk.CHUNK_SIZE - Chunk.CHUNK_SIZE
+                / 2);
 
-	public void setBlock(int x, int y, int z, int id, boolean rebuild) {
-		if(y < Chunk.CHUNK_HEIGHT && y >= 0) {
-			blocksBuffer.put(x + Chunk.CHUNK_SIZE
-					* (y + Chunk.CHUNK_HEIGHT * z), (short) id);
-			int meshY = y / Chunk.CHUNK_SIZE;
-			if(rebuild) {
-				this.setDirty(meshY);
+        return (float) Math.sqrt(dX * dX + dZ * dZ);
+    }
 
-				if(y % Chunk.CHUNK_SIZE == 0) {
-					this.setDirty(meshY - 1);
-				}
+    public void setBlock(int x, int y, int z, int id, boolean rebuild) {
+        if (y < Chunk.CHUNK_HEIGHT && y >= 0) {
+            blocksBuffer.put(x + Chunk.CHUNK_SIZE
+                    * (y + Chunk.CHUNK_HEIGHT * z), (short) id);
+            int meshY = y / Chunk.CHUNK_SIZE;
+            if (rebuild) {
+                this.setDirty(meshY);
 
-				if(y % 16 == Chunk.CHUNK_SIZE - 1) {
-					this.setDirty(meshY + 1);
-				}
+                if (y % Chunk.CHUNK_SIZE == 0) {
+                    this.setDirty(meshY - 1);
+                }
 
-				if(x == Chunk.CHUNK_SIZE - 1) {
-					if(this.world.getBlock(this.x * Chunk.CHUNK_SIZE + x + 1,
-							y, this.z * Chunk.CHUNK_SIZE + z) > 0) {
-						this.world.setChunkDirty(this.x + 1, meshY, this.z);
-					}
-				}
+                if (y % 16 == Chunk.CHUNK_SIZE - 1) {
+                    this.setDirty(meshY + 1);
+                }
 
-				if(x == 0) {
-					if(this.world.getBlock(this.x * Chunk.CHUNK_SIZE + x - 1,
-							y, this.z * Chunk.CHUNK_SIZE + z) > 0) {
-						this.world.setChunkDirty(this.x - 1, meshY, this.z);
-					}
-				}
+                if (x == Chunk.CHUNK_SIZE - 1) {
+                    if (this.world.getBlock(this.x * Chunk.CHUNK_SIZE + x + 1,
+                            y, this.z * Chunk.CHUNK_SIZE + z) > 0) {
+                        this.world.setChunkDirty(this.x + 1, meshY, this.z);
+                    }
+                }
 
-				if(z == Chunk.CHUNK_SIZE - 1) {
-					if(this.world.getBlock(this.x * Chunk.CHUNK_SIZE + x, y,
-							this.z * Chunk.CHUNK_SIZE + z + 1) > 0) {
-						this.world.setChunkDirty(this.x, meshY, this.z + 1);
-					}
-				}
+                if (x == 0) {
+                    if (this.world.getBlock(this.x * Chunk.CHUNK_SIZE + x - 1,
+                            y, this.z * Chunk.CHUNK_SIZE + z) > 0) {
+                        this.world.setChunkDirty(this.x - 1, meshY, this.z);
+                    }
+                }
 
-				if(z == 0) {
-					if(this.world.getBlock(this.x * Chunk.CHUNK_SIZE + x, y,
-							this.z * Chunk.CHUNK_SIZE + z - 1) > 0) {
-						this.world.setChunkDirty(this.x, meshY, this.z - 1);
-					}
-				}
-			}
-		}
-	}
+                if (z == Chunk.CHUNK_SIZE - 1) {
+                    if (this.world.getBlock(this.x * Chunk.CHUNK_SIZE + x, y,
+                            this.z * Chunk.CHUNK_SIZE + z + 1) > 0) {
+                        this.world.setChunkDirty(this.x, meshY, this.z + 1);
+                    }
+                }
 
-	public int getBlock(int x, int y, int z) {
-		if(y < 0 || y >= 128) {
-			return 0;
-		}
+                if (z == 0) {
+                    if (this.world.getBlock(this.x * Chunk.CHUNK_SIZE + x, y,
+                            this.z * Chunk.CHUNK_SIZE + z - 1) > 0) {
+                        this.world.setChunkDirty(this.x, meshY, this.z - 1);
+                    }
+                }
+            }
+        }
+    }
 
-		return this.blocksBuffer.get(x + Chunk.CHUNK_SIZE
-				* (y + Chunk.CHUNK_HEIGHT * z));
-	}
+    public int getBlock(int x, int y, int z) {
+        if (y < 0 || y >= 128) {
+            return 0;
+        }
 
-	public void deleteAllRenderChunks() {
-		for(int y = 0; y < this.renderChunks.length; y++) {
-			this.deleteRenderChunk(y);
-		}
-	}
+        return this.blocksBuffer.get(x + Chunk.CHUNK_SIZE
+                * (y + Chunk.CHUNK_HEIGHT * z));
+    }
 
-	public void deleteRenderChunk(int y) {
-		if(this.renderChunks[y].isBuilt()) {
-			this.renderChunks[y].clear();
-		}
-	}
+    public void deleteAllRenderChunks() {
+        for (int y = 0; y < this.renderChunks.length; y++) {
+            this.deleteRenderChunk(y);
+        }
+    }
 
-	public void rebuild(int y) {
-		if(y > 0 || y < this.renderChunks.length) {
+    public void deleteRenderChunk(int y) {
+        if (this.renderChunks[y].isBuilt()) {
+            this.renderChunks[y].clear();
+        }
+    }
 
-			if(this.renderChunks[y].isBuilt()) {
-				this.deleteRenderChunk(y);
-			}
-			this.renderChunks[y].setCm(ChunkMeshBuilder.generateMesh(
-					world.getGame(), this, y));
-		}
-	}
+    public void rebuild(int y) {
+        if (y > 0 || y < this.renderChunks.length) {
 
-	public void rebuildEntireChunk() {
-		for(int y = 0; y < 8; y++) {
-			this.rebuild(y);
-		}
-	}
+            if (this.renderChunks[y].isBuilt()) {
+                this.deleteRenderChunk(y);
+            }
+            this.renderChunks[y].setCm(ChunkMeshBuilder.generateMesh(
+                    world.getGame(), this, y));
+        }
+    }
 
-	public Chunk(int cX, int cZ, World world) {
-		this.blocksBuffer = ShortBuffer.allocate(Chunk.CHUNK_SIZE
-				* Chunk.CHUNK_SIZE * Chunk.CHUNK_HEIGHT);
-		this.world = world;
-		this.x = cX;
-		this.z = cZ;
-
-		for(int y = 0; y < 8; y++) {
-			this.renderChunks[y] = new RenderChunk(cX, y, cZ);
-		}
-
-	}
+    public void rebuildEntireChunk() {
+        for (int y = 0; y < 8; y++) {
+            this.rebuild(y);
+        }
+    }
 }

@@ -5,26 +5,26 @@ import cz.dat.oots.model.ModelManager;
 
 public class ApplierAO extends Applier {
 
-	public ApplierAO(Game game) {
-		super(game);
-	}
+    public ApplierAO(Game game) {
+        super(game);
+    }
 
-	@Override
-	public boolean apply(Object val) {
-		ModelManager.getInstance().load();
-		this.game.chunkRenderer.setAOIntensity((Float)val);
+    @Override
+    public boolean apply(Object val) {
+        ModelManager.getInstance().load();
+        this.game.chunkRenderer.setAOIntensity((Float) val);
 
-		if(this.game.getWorldsManager().isInGame()) {
-			String wName = this.game.getCurrentWorld().name;
-			this.game.getWorldsManager().exitWorld();
-			this.game.getWorldsManager().startWorld(wName);
-		}
+        if (this.game.getWorldsManager().isInGame()) {
+            String wName = this.game.getCurrentWorld().name;
+            this.game.getWorldsManager().exitWorld();
+            this.game.getWorldsManager().startWorld(wName);
+        }
 
-		return true;
-	}
+        return true;
+    }
 
-	@Override
-	public void afterApplying() {
-	}
+    @Override
+    public void afterApplying() {
+    }
 
 }

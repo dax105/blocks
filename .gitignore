@@ -10,7 +10,9 @@ saved.png
 .gradle/
 build.gradle
 build/
+out/
 libs/
+lib/
 .vim.custom
 *.swp
 
@@ -20,3 +22,5 @@ libs/
 *.ear
 
 *.ccf
+
+.idea/

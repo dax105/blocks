@@ -1,0 +1,1150 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ChangeListManager">
+    <list default="true" id="c6c8cebd-27d4-4ce1-b1fd-e94447e03c25" name="Default" comment="">
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.gitignore" afterPath="$PROJECT_DIR$/.gitignore" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/cz/dat/oots/AtlasBuilder.java" afterPath="$PROJECT_DIR$/src/cz/dat/oots/AtlasBuilder.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/cz/dat/oots/FontManager.java" afterPath="$PROJECT_DIR$/src/cz/dat/oots/FontManager.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/cz/dat/oots/Game.java" afterPath="$PROJECT_DIR$/src/cz/dat/oots/Game.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/cz/dat/oots/Particle.java" afterPath="$PROJECT_DIR$/src/cz/dat/oots/Particle.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/cz/dat/oots/Start.java" afterPath="$PROJECT_DIR$/src/cz/dat/oots/Start.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/cz/dat/oots/TextureManager.java" afterPath="$PROJECT_DIR$/src/cz/dat/oots/TextureManager.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/cz/dat/oots/auth/AuthManager.java" afterPath="$PROJECT_DIR$/src/cz/dat/oots/auth/AuthManager.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/cz/dat/oots/auth/User.java" afterPath="$PROJECT_DIR$/src/cz/dat/oots/auth/User.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/cz/dat/oots/block/Block.java" afterPath="$PROJECT_DIR$/src/cz/dat/oots/block/Block.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/cz/dat/oots/block/BlockBasic.java" afterPath="$PROJECT_DIR$/src/cz/dat/oots/block/BlockBasic.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/cz/dat/oots/block/BlockFluid.java" afterPath="$PROJECT_DIR$/src/cz/dat/oots/block/BlockFluid.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/cz/dat/oots/block/BlockPlant.java" afterPath="$PROJECT_DIR$/src/cz/dat/oots/block/BlockPlant.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/cz/dat/oots/block/BlockSand.java" afterPath="$PROJECT_DIR$/src/cz/dat/oots/block/BlockSand.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/cz/dat/oots/block/BlockSlab.java" afterPath="$PROJECT_DIR$/src/cz/dat/oots/block/BlockSlab.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/cz/dat/oots/block/BlockStone.java" afterPath="$PROJECT_DIR$/src/cz/dat/oots/block/BlockStone.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/cz/dat/oots/block/renderer/BlockRendererBasic.java" afterPath="$PROJECT_DIR$/src/cz/dat/oots/block/renderer/BlockRendererBasic.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/cz/dat/oots/block/renderer/BlockRendererFluid.java" afterPath="$PROJECT_DIR$/src/cz/dat/oots/block/renderer/BlockRendererFluid.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/cz/dat/oots/block/renderer/BlockRendererPlant.java" afterPath="$PROJECT_DIR$/src/cz/dat/oots/block/renderer/BlockRendererPlant.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/cz/dat/oots/block/renderer/BlockRendererSlab.java" afterPath="$PROJECT_DIR$/src/cz/dat/oots/block/renderer/BlockRendererSlab.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/cz/dat/oots/block/renderer/IBlockRenderer.java" afterPath="$PROJECT_DIR$/src/cz/dat/oots/block/renderer/IBlockRenderer.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/cz/dat/oots/collisions/AABB.java" afterPath="$PROJECT_DIR$/src/cz/dat/oots/collisions/AABB.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/cz/dat/oots/console/Command.java" afterPath="$PROJECT_DIR$/src/cz/dat/oots/console/Command.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/cz/dat/oots/console/CommandCullLock.java" afterPath="$PROJECT_DIR$/src/cz/dat/oots/console/CommandCullLock.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/cz/dat/oots/console/CommandDefaults.java" afterPath="$PROJECT_DIR$/src/cz/dat/oots/console/CommandDefaults.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/cz/dat/oots/console/CommandDeleteWorld.java" afterPath="$PROJECT_DIR$/src/cz/dat/oots/console/CommandDeleteWorld.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/cz/dat/oots/console/CommandGet.java" afterPath="$PROJECT_DIR$/src/cz/dat/oots/console/CommandGet.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/cz/dat/oots/console/CommandHelp.java" afterPath="$PROJECT_DIR$/src/cz/dat/oots/console/CommandHelp.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/cz/dat/oots/console/CommandManager.java" afterPath="$PROJECT_DIR$/src/cz/dat/oots/console/CommandManager.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/cz/dat/oots/console/CommandReload.java" afterPath="$PROJECT_DIR$/src/cz/dat/oots/console/CommandReload.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/cz/dat/oots/console/CommandSet.java" afterPath="$PROJECT_DIR$/src/cz/dat/oots/console/CommandSet.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/cz/dat/oots/console/CommandTele.java" afterPath="$PROJECT_DIR$/src/cz/dat/oots/console/CommandTele.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/cz/dat/oots/console/CommandVariables.java" afterPath="$PROJECT_DIR$/src/cz/dat/oots/console/CommandVariables.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/cz/dat/oots/console/Console.java" afterPath="$PROJECT_DIR$/src/cz/dat/oots/console/Console.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/cz/dat/oots/data/BlockDataManager.java" afterPath="$PROJECT_DIR$/src/cz/dat/oots/data/BlockDataManager.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/cz/dat/oots/data/DataManager.java" afterPath="$PROJECT_DIR$/src/cz/dat/oots/data/DataManager.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/cz/dat/oots/data/IBlockDataManager.java" afterPath="$PROJECT_DIR$/src/cz/dat/oots/data/IBlockDataManager.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/cz/dat/oots/data/IDataObject.java" afterPath="$PROJECT_DIR$/src/cz/dat/oots/data/IDataObject.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/cz/dat/oots/data/IItemDataManager.java" afterPath="$PROJECT_DIR$/src/cz/dat/oots/data/IItemDataManager.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/cz/dat/oots/data/ItemDataManager.java" afterPath="$PROJECT_DIR$/src/cz/dat/oots/data/ItemDataManager.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/cz/dat/oots/data/block/PlantDataObject.java" afterPath="$PROJECT_DIR$/src/cz/dat/oots/data/block/PlantDataObject.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/cz/dat/oots/data/block/StoneDataObject.java" afterPath="$PROJECT_DIR$/src/cz/dat/oots/data/block/StoneDataObject.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/cz/dat/oots/gui/GuiObject.java" afterPath="$PROJECT_DIR$/src/cz/dat/oots/gui/GuiObject.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/cz/dat/oots/gui/GuiObjectButton.java" afterPath="$PROJECT_DIR$/src/cz/dat/oots/gui/GuiObjectButton.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/cz/dat/oots/gui/GuiObjectChangingButton.java" afterPath="$PROJECT_DIR$/src/cz/dat/oots/gui/GuiObjectChangingButton.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/cz/dat/oots/gui/GuiObjectRectangle.java" afterPath="$PROJECT_DIR$/src/cz/dat/oots/gui/GuiObjectRectangle.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/cz/dat/oots/gui/GuiObjectSettingsBooleanButton.java" afterPath="$PROJECT_DIR$/src/cz/dat/oots/gui/GuiObjectSettingsBooleanButton.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/cz/dat/oots/gui/GuiObjectSettingsFloatSlider.java" afterPath="$PROJECT_DIR$/src/cz/dat/oots/gui/GuiObjectSettingsFloatSlider.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/cz/dat/oots/gui/GuiObjectSettingsIntegerSlider.java" afterPath="$PROJECT_DIR$/src/cz/dat/oots/gui/GuiObjectSettingsIntegerSlider.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/cz/dat/oots/gui/GuiObjectSlider.java" afterPath="$PROJECT_DIR$/src/cz/dat/oots/gui/GuiObjectSlider.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/cz/dat/oots/gui/GuiObjectText.java" afterPath="$PROJECT_DIR$/src/cz/dat/oots/gui/GuiObjectText.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/cz/dat/oots/gui/GuiObjectTitleBar.java" afterPath="$PROJECT_DIR$/src/cz/dat/oots/gui/GuiObjectTitleBar.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/cz/dat/oots/gui/GuiScreen.java" afterPath="$PROJECT_DIR$/src/cz/dat/oots/gui/GuiScreen.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/cz/dat/oots/gui/GuiScreenExit.java" afterPath="$PROJECT_DIR$/src/cz/dat/oots/gui/GuiScreenExit.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/cz/dat/oots/gui/GuiScreenLoading.java" afterPath="$PROJECT_DIR$/src/cz/dat/oots/gui/GuiScreenLoading.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/cz/dat/oots/gui/GuiScreenMainMenu.java" afterPath="$PROJECT_DIR$/src/cz/dat/oots/gui/GuiScreenMainMenu.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/cz/dat/oots/gui/GuiScreenMenu.java" afterPath="$PROJECT_DIR$/src/cz/dat/oots/gui/GuiScreenMenu.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/cz/dat/oots/gui/GuiScreenSettings.java" afterPath="$PROJECT_DIR$/src/cz/dat/oots/gui/GuiScreenSettings.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/cz/dat/oots/gui/GuiScreenSplash.java" afterPath="$PROJECT_DIR$/src/cz/dat/oots/gui/GuiScreenSplash.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/cz/dat/oots/gui/ingame/ColorScreen.java" afterPath="$PROJECT_DIR$/src/cz/dat/oots/gui/ingame/ColorScreen.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/cz/dat/oots/gui/ingame/Control.java" afterPath="$PROJECT_DIR$/src/cz/dat/oots/gui/ingame/Control.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/cz/dat/oots/gui/ingame/GuiManager.java" afterPath="$PROJECT_DIR$/src/cz/dat/oots/gui/ingame/GuiManager.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/cz/dat/oots/gui/ingame/GuiScreen.java" afterPath="$PROJECT_DIR$/src/cz/dat/oots/gui/ingame/GuiScreen.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/cz/dat/oots/gui/ingame/IColorChangeCallback.java" afterPath="$PROJECT_DIR$/src/cz/dat/oots/gui/ingame/IColorChangeCallback.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/cz/dat/oots/gui/ingame/ISliderUpdateCallback.java" afterPath="$PROJECT_DIR$/src/cz/dat/oots/gui/ingame/ISliderUpdateCallback.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/cz/dat/oots/gui/ingame/InventoryScreen.java" afterPath="$PROJECT_DIR$/src/cz/dat/oots/gui/ingame/InventoryScreen.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/cz/dat/oots/gui/ingame/SliderControl.java" afterPath="$PROJECT_DIR$/src/cz/dat/oots/gui/ingame/SliderControl.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/cz/dat/oots/gui/ingame/TextControl.java" afterPath="$PROJECT_DIR$/src/cz/dat/oots/gui/ingame/TextControl.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/cz/dat/oots/inventory/BasicBlockStack.java" afterPath="$PROJECT_DIR$/src/cz/dat/oots/inventory/BasicBlockStack.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/cz/dat/oots/inventory/BasicInventory.java" afterPath="$PROJECT_DIR$/src/cz/dat/oots/inventory/BasicInventory.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/cz/dat/oots/inventory/BasicItemStack.java" afterPath="$PROJECT_DIR$/src/cz/dat/oots/inventory/BasicItemStack.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/cz/dat/oots/inventory/IInventory.java" afterPath="$PROJECT_DIR$/src/cz/dat/oots/inventory/IInventory.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/cz/dat/oots/inventory/IObjectStack.java" afterPath="$PROJECT_DIR$/src/cz/dat/oots/inventory/IObjectStack.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/cz/dat/oots/inventory/renderer/BasicBlockRenderer.java" afterPath="$PROJECT_DIR$/src/cz/dat/oots/inventory/renderer/BasicBlockRenderer.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/cz/dat/oots/inventory/renderer/BasicItemRenderer.java" afterPath="$PROJECT_DIR$/src/cz/dat/oots/inventory/renderer/BasicItemRenderer.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/cz/dat/oots/inventory/renderer/IObjectStackRenderer.java" afterPath="$PROJECT_DIR$/src/cz/dat/oots/inventory/renderer/IObjectStackRenderer.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/cz/dat/oots/item/Item.java" afterPath="$PROJECT_DIR$/src/cz/dat/oots/item/Item.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/cz/dat/oots/item/ItemImaginaryChocolate.java" afterPath="$PROJECT_DIR$/src/cz/dat/oots/item/ItemImaginaryChocolate.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/cz/dat/oots/model/Model.java" afterPath="$PROJECT_DIR$/src/cz/dat/oots/model/Model.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/cz/dat/oots/model/ModelManager.java" afterPath="$PROJECT_DIR$/src/cz/dat/oots/model/ModelManager.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/cz/dat/oots/model/Voxel.java" afterPath="$PROJECT_DIR$/src/cz/dat/oots/model/Voxel.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/cz/dat/oots/movable/Movable.java" afterPath="$PROJECT_DIR$/src/cz/dat/oots/movable/Movable.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/cz/dat/oots/movable/entity/Entity.java" afterPath="$PROJECT_DIR$/src/cz/dat/oots/movable/entity/Entity.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/cz/dat/oots/movable/entity/PlayerEntity.java" afterPath="$PROJECT_DIR$/src/cz/dat/oots/movable/entity/PlayerEntity.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/cz/dat/oots/overlay/BasicLifesOverlay.java" afterPath="$PROJECT_DIR$/src/cz/dat/oots/overlay/BasicLifesOverlay.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/cz/dat/oots/overlay/InfoOverlay.java" afterPath="$PROJECT_DIR$/src/cz/dat/oots/overlay/InfoOverlay.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/cz/dat/oots/overlay/OverlayManager.java" afterPath="$PROJECT_DIR$/src/cz/dat/oots/overlay/OverlayManager.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/cz/dat/oots/profiler/Profiler.java" afterPath="$PROJECT_DIR$/src/cz/dat/oots/profiler/Profiler.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/cz/dat/oots/profiler/Section.java" afterPath="$PROJECT_DIR$/src/cz/dat/oots/profiler/Section.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/cz/dat/oots/render/ChunkCull.java" afterPath="$PROJECT_DIR$/src/cz/dat/oots/render/ChunkCull.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/cz/dat/oots/render/ChunkMesh.java" afterPath="$PROJECT_DIR$/src/cz/dat/oots/render/ChunkMesh.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/cz/dat/oots/render/ChunkMeshBuilder.java" afterPath="$PROJECT_DIR$/src/cz/dat/oots/render/ChunkMeshBuilder.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/cz/dat/oots/render/ChunkRendererDisplayList.java" afterPath="$PROJECT_DIR$/src/cz/dat/oots/render/ChunkRendererDisplayList.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/cz/dat/oots/render/ChunkRendererMappedVBO.java" afterPath="$PROJECT_DIR$/src/cz/dat/oots/render/ChunkRendererMappedVBO.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/cz/dat/oots/render/ChunkRendererVBO.java" afterPath="$PROJECT_DIR$/src/cz/dat/oots/render/ChunkRendererVBO.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/cz/dat/oots/render/Frustum.java" afterPath="$PROJECT_DIR$/src/cz/dat/oots/render/Frustum.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/cz/dat/oots/render/IChunkRenderer.java" afterPath="$PROJECT_DIR$/src/cz/dat/oots/render/IChunkRenderer.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/cz/dat/oots/render/IOverlayRenderer.java" afterPath="$PROJECT_DIR$/src/cz/dat/oots/render/IOverlayRenderer.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/cz/dat/oots/render/ITickListener.java" afterPath="$PROJECT_DIR$/src/cz/dat/oots/render/ITickListener.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/cz/dat/oots/render/IWorldRenderer.java" afterPath="$PROJECT_DIR$/src/cz/dat/oots/render/IWorldRenderer.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/cz/dat/oots/render/RenderChunk.java" afterPath="$PROJECT_DIR$/src/cz/dat/oots/render/RenderChunk.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/cz/dat/oots/render/RenderEngine.java" afterPath="$PROJECT_DIR$/src/cz/dat/oots/render/RenderEngine.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/cz/dat/oots/render/RenderPass.java" afterPath="$PROJECT_DIR$/src/cz/dat/oots/render/RenderPass.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/cz/dat/oots/render/shader/AutoUniformAssigner.java" afterPath="$PROJECT_DIR$/src/cz/dat/oots/render/shader/AutoUniformAssigner.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/cz/dat/oots/render/shader/ShaderProgram.java" afterPath="$PROJECT_DIR$/src/cz/dat/oots/render/shader/ShaderProgram.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/cz/dat/oots/settings/Applier.java" afterPath="$PROJECT_DIR$/src/cz/dat/oots/settings/Applier.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/cz/dat/oots/settings/ApplierAA.java" afterPath="$PROJECT_DIR$/src/cz/dat/oots/settings/ApplierAA.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/cz/dat/oots/settings/ApplierAO.java" afterPath="$PROJECT_DIR$/src/cz/dat/oots/settings/ApplierAO.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/cz/dat/oots/settings/ApplierFullscreen.java" afterPath="$PROJECT_DIR$/src/cz/dat/oots/settings/ApplierFullscreen.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/cz/dat/oots/settings/ApplierLeaves.java" afterPath="$PROJECT_DIR$/src/cz/dat/oots/settings/ApplierLeaves.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/cz/dat/oots/settings/ApplierResolution.java" afterPath="$PROJECT_DIR$/src/cz/dat/oots/settings/ApplierResolution.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/cz/dat/oots/settings/ApplierSound.java" afterPath="$PROJECT_DIR$/src/cz/dat/oots/settings/ApplierSound.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/cz/dat/oots/settings/IKeyconfigLoader.java" afterPath="$PROJECT_DIR$/src/cz/dat/oots/settings/IKeyconfigLoader.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/cz/dat/oots/settings/Keyconfig.java" afterPath="$PROJECT_DIR$/src/cz/dat/oots/settings/Keyconfig.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/cz/dat/oots/settings/ObjectType.java" afterPath="$PROJECT_DIR$/src/cz/dat/oots/settings/ObjectType.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/cz/dat/oots/settings/Settings.java" afterPath="$PROJECT_DIR$/src/cz/dat/oots/settings/Settings.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/cz/dat/oots/settings/SettingsObject.java" afterPath="$PROJECT_DIR$/src/cz/dat/oots/settings/SettingsObject.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/cz/dat/oots/sound/MusicProvider.java" afterPath="$PROJECT_DIR$/src/cz/dat/oots/sound/MusicProvider.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/cz/dat/oots/sound/SoundManager.java" afterPath="$PROJECT_DIR$/src/cz/dat/oots/sound/SoundManager.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/cz/dat/oots/util/Coord2D.java" afterPath="$PROJECT_DIR$/src/cz/dat/oots/util/Coord2D.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/cz/dat/oots/util/Coord3D.java" afterPath="$PROJECT_DIR$/src/cz/dat/oots/util/Coord3D.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/cz/dat/oots/util/CoordUtil.java" afterPath="$PROJECT_DIR$/src/cz/dat/oots/util/CoordUtil.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/cz/dat/oots/util/GLHelper.java" afterPath="$PROJECT_DIR$/src/cz/dat/oots/util/GLHelper.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/cz/dat/oots/util/GameMath.java" afterPath="$PROJECT_DIR$/src/cz/dat/oots/util/GameMath.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/cz/dat/oots/util/GameUtil.java" afterPath="$PROJECT_DIR$/src/cz/dat/oots/util/GameUtil.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/cz/dat/oots/util/Rectangle.java" afterPath="$PROJECT_DIR$/src/cz/dat/oots/util/Rectangle.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/cz/dat/oots/util/RegisterException.java" afterPath="$PROJECT_DIR$/src/cz/dat/oots/util/RegisterException.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/cz/dat/oots/util/gl/FramebufferObject.java" afterPath="$PROJECT_DIR$/src/cz/dat/oots/util/gl/FramebufferObject.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/cz/dat/oots/util/gl/RenderbufferObject.java" afterPath="$PROJECT_DIR$/src/cz/dat/oots/util/gl/RenderbufferObject.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/cz/dat/oots/util/gl/Texture2D.java" afterPath="$PROJECT_DIR$/src/cz/dat/oots/util/gl/Texture2D.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/cz/dat/oots/world/ChunkDistanceComparator.java" afterPath="$PROJECT_DIR$/src/cz/dat/oots/world/ChunkDistanceComparator.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/cz/dat/oots/world/CoordDistanceComparator.java" afterPath="$PROJECT_DIR$/src/cz/dat/oots/world/CoordDistanceComparator.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/cz/dat/oots/world/Explosion.java" afterPath="$PROJECT_DIR$/src/cz/dat/oots/world/Explosion.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/cz/dat/oots/world/IDRegister.java" afterPath="$PROJECT_DIR$/src/cz/dat/oots/world/IDRegister.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/cz/dat/oots/world/ParticleEngine.java" afterPath="$PROJECT_DIR$/src/cz/dat/oots/world/ParticleEngine.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/cz/dat/oots/world/ScheduledUpdate.java" afterPath="$PROJECT_DIR$/src/cz/dat/oots/world/ScheduledUpdate.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/cz/dat/oots/world/UpdateType.java" afterPath="$PROJECT_DIR$/src/cz/dat/oots/world/UpdateType.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/cz/dat/oots/world/World.java" afterPath="$PROJECT_DIR$/src/cz/dat/oots/world/World.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/cz/dat/oots/world/chunk/Chunk.java" afterPath="$PROJECT_DIR$/src/cz/dat/oots/world/chunk/Chunk.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/cz/dat/oots/world/chunk/ChunkProvider.java" afterPath="$PROJECT_DIR$/src/cz/dat/oots/world/chunk/ChunkProvider.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/cz/dat/oots/world/generator/Biome.java" afterPath="$PROJECT_DIR$/src/cz/dat/oots/world/generator/Biome.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/cz/dat/oots/world/generator/BiomeExtraMountains.java" afterPath="$PROJECT_DIR$/src/cz/dat/oots/world/generator/BiomeExtraMountains.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/cz/dat/oots/world/generator/BiomeMountains.java" afterPath="$PROJECT_DIR$/src/cz/dat/oots/world/generator/BiomeMountains.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/cz/dat/oots/world/generator/BiomePlains.java" afterPath="$PROJECT_DIR$/src/cz/dat/oots/world/generator/BiomePlains.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/cz/dat/oots/world/generator/ChunkLoaderThread.java" afterPath="$PROJECT_DIR$/src/cz/dat/oots/world/generator/ChunkLoaderThread.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/cz/dat/oots/world/generator/SimplexNoise.java" afterPath="$PROJECT_DIR$/src/cz/dat/oots/world/generator/SimplexNoise.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/cz/dat/oots/world/generator/SimplexNoiseOctave.java" afterPath="$PROJECT_DIR$/src/cz/dat/oots/world/generator/SimplexNoiseOctave.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/cz/dat/oots/world/generator/TreeGenerator.java" afterPath="$PROJECT_DIR$/src/cz/dat/oots/world/generator/TreeGenerator.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/cz/dat/oots/world/loading/ChunkSaveManager.java" afterPath="$PROJECT_DIR$/src/cz/dat/oots/world/loading/ChunkSaveManager.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/cz/dat/oots/world/loading/WorldInfo.java" afterPath="$PROJECT_DIR$/src/cz/dat/oots/world/loading/WorldInfo.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/cz/dat/oots/world/loading/WorldManager.java" afterPath="$PROJECT_DIR$/src/cz/dat/oots/world/loading/WorldManager.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/cz/dat/oots/world/loading/WorldUpdateResolver.java" afterPath="$PROJECT_DIR$/src/cz/dat/oots/world/loading/WorldUpdateResolver.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/test/Test.java" afterPath="$PROJECT_DIR$/src/test/Test.java" />
+    </list>
+    <ignored path="blocks.iws" />
+    <ignored path=".idea/workspace.xml" />
+    <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
+    <option name="TRACKING_ENABLED" value="true" />
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="ChangesViewManager" flattened_view="true" show_ignored="false" />
+  <component name="CreatePatchCommitExecutor">
+    <option name="PATCH_PATH" value="" />
+  </component>
+  <component name="ExecutionTargetManager" SELECTED_TARGET="default_target" />
+  <component name="FavoritesManager">
+    <favorites_list name="blocks" />
+  </component>
+  <component name="FileEditorManager">
+    <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
+      <file leaf-file-name="Entity.java" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/cz/dat/oots/movable/entity/Entity.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="0.0">
+              <caret line="6" column="22" selection-start-line="6" selection-start-column="22" selection-end-line="6" selection-end-column="22" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="PlayerEntity.java" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/cz/dat/oots/movable/entity/PlayerEntity.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="0.0">
+              <caret line="520" column="45" selection-start-line="520" selection-start-column="45" selection-end-line="520" selection-end-column="45" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="IDRegister.java" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/cz/dat/oots/world/IDRegister.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="0.0">
+              <caret line="136" column="32" selection-start-line="136" selection-start-column="32" selection-end-line="136" selection-end-column="32" />
+              <folding>
+                <element signature="imports" expanded="false" />
+                <element signature="e#7605#7606#0" expanded="false" />
+                <element signature="e#7638#7639#0" expanded="false" />
+                <element signature="e#7673#7674#0" expanded="false" />
+                <element signature="e#7705#7706#0" expanded="false" />
+                <element signature="e#8706#8707#0" expanded="false" />
+                <element signature="e#8744#8745#0" expanded="false" />
+                <element signature="e#8777#8778#0" expanded="false" />
+                <element signature="e#8814#8815#0" expanded="false" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="Command.java" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/cz/dat/oots/console/Command.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="0.0">
+              <caret line="2" column="22" selection-start-line="2" selection-start-column="22" selection-end-line="2" selection-end-column="22" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="CommandTele.java" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/cz/dat/oots/console/CommandTele.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="0.0">
+              <caret line="4" column="13" selection-start-line="4" selection-start-column="13" selection-end-line="4" selection-end-column="13" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="Console.java" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/cz/dat/oots/console/Console.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="0.0">
+              <caret line="123" column="0" selection-start-line="123" selection-start-column="0" selection-end-line="123" selection-end-column="0" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name=".gitignore" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/.gitignore">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="0.3942486">
+              <caret line="25" column="6" selection-start-line="25" selection-start-column="6" selection-end-line="25" selection-end-column="6" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="ItemImaginaryChocolate.java" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/cz/dat/oots/item/ItemImaginaryChocolate.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="0.0">
+              <caret line="10" column="13" selection-start-line="10" selection-start-column="13" selection-end-line="10" selection-end-column="13" />
+              <folding>
+                <element signature="imports" expanded="false" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="Item.java" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/cz/dat/oots/item/Item.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="0.0">
+              <caret line="7" column="22" selection-start-line="7" selection-start-column="22" selection-end-line="7" selection-end-column="22" />
+              <folding>
+                <element signature="imports" expanded="false" />
+                <element signature="e#889#890#0" expanded="false" />
+                <element signature="e#916#917#0" expanded="false" />
+                <element signature="e#942#943#0" expanded="false" />
+                <element signature="e#972#973#0" expanded="false" />
+                <element signature="e#1003#1004#0" expanded="false" />
+                <element signature="e#1035#1036#0" expanded="false" />
+                <element signature="e#1070#1071#0" expanded="false" />
+                <element signature="e#1105#1106#0" expanded="false" />
+                <element signature="e#1248#1249#0" expanded="false" />
+                <element signature="e#1286#1287#0" expanded="false" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="Movable.java" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/cz/dat/oots/movable/Movable.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="0.0">
+              <caret line="4" column="22" selection-start-line="4" selection-start-column="22" selection-end-line="4" selection-end-column="22" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+    </leaf>
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="GradleLocalSettings">
+    <option name="externalProjectsViewState">
+      <projects_view />
+    </option>
+  </component>
+  <component name="IdeDocumentHistory">
+    <option name="CHANGED_PATHS">
+      <list>
+        <option value="$PROJECT_DIR$/src/cz/dat/oots/console/Console.java" />
+        <option value="$PROJECT_DIR$/.gitignore" />
+      </list>
+    </option>
+  </component>
+  <component name="ProjectFrameBounds">
+    <option name="x" value="59" />
+    <option name="y" value="-8" />
+    <option name="width" value="1549" />
+    <option name="height" value="1216" />
+  </component>
+  <component name="ProjectLevelVcsManager" settingsEditedManually="false">
+    <OptionsSetting value="true" id="Add" />
+    <OptionsSetting value="true" id="Remove" />
+    <OptionsSetting value="true" id="Checkout" />
+    <OptionsSetting value="true" id="Update" />
+    <OptionsSetting value="true" id="Status" />
+    <OptionsSetting value="true" id="Edit" />
+    <ConfirmationsSetting value="0" id="Add" />
+    <ConfirmationsSetting value="0" id="Remove" />
+  </component>
+  <component name="ProjectView">
+    <navigator currentView="ProjectPane" proportions="" version="1">
+      <flattenPackages />
+      <showMembers />
+      <showModules />
+      <showLibraryContents />
+      <hideEmptyPackages />
+      <abbreviatePackageNames />
+      <autoscrollToSource />
+      <autoscrollFromSource />
+      <sortByType />
+      <manualOrder />
+      <foldersAlwaysOnTop value="true" />
+    </navigator>
+    <panes>
+      <pane id="PackagesPane" />
+      <pane id="Scratches" />
+      <pane id="Scope" />
+      <pane id="ProjectPane">
+        <subPane>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="blocks" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="External Libraries" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ExternalLibrariesNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="blocks" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="blocks" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="blocks" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="blocks" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="src" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="blocks" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="blocks" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="src" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="oots" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="blocks" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="blocks" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="src" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="oots" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="movable" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="blocks" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="blocks" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="src" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="oots" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="movable" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="entity" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="blocks" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="blocks" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="src" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="oots" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="console" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+        </subPane>
+      </pane>
+    </panes>
+  </component>
+  <component name="PropertiesComponent">
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/lib/snappy-java-1.1.2-RC3.jar!/" />
+    <property name="project.structure.last.edited" value="Project" />
+    <property name="project.structure.proportion" value="0.15" />
+    <property name="project.structure.side.proportion" value="0.2" />
+    <property name="settings.editor.selected.configurable" value="preferences.sourceCode" />
+    <property name="settings.editor.splitter.proportion" value="0.2" />
+  </component>
+  <component name="RunManager" selected="Application.Start">
+    <configuration default="false" name="Start" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <extension name="coverage" enabled="false" merge="false" sample_coverage="true" runner="idea">
+        <pattern>
+          <option name="PATTERN" value="cz.dat.oots.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <option name="MAIN_CLASS_NAME" value="cz.dat.oots.Start" />
+      <option name="VM_PARAMETERS" />
+      <option name="PROGRAM_PARAMETERS" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
+      <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
+      <option name="ALTERNATIVE_JRE_PATH" />
+      <option name="ENABLE_SWING_INSPECTOR" value="false" />
+      <option name="ENV_VARIABLES" />
+      <option name="PASS_PARENT_ENVS" value="true" />
+      <module name="blocks" />
+      <envs />
+      <method />
+    </configuration>
+    <configuration default="true" type="Applet" factoryName="Applet">
+      <option name="HTML_USED" value="false" />
+      <option name="WIDTH" value="400" />
+      <option name="HEIGHT" value="300" />
+      <option name="POLICY_FILE" value="$APPLICATION_HOME_DIR$/bin/appletviewer.policy" />
+      <module />
+      <method />
+    </configuration>
+    <configuration default="true" type="Application" factoryName="Application">
+      <extension name="coverage" enabled="false" merge="false" sample_coverage="true" runner="idea" />
+      <option name="MAIN_CLASS_NAME" />
+      <option name="VM_PARAMETERS" />
+      <option name="PROGRAM_PARAMETERS" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
+      <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
+      <option name="ALTERNATIVE_JRE_PATH" />
+      <option name="ENABLE_SWING_INSPECTOR" value="false" />
+      <option name="ENV_VARIABLES" />
+      <option name="PASS_PARENT_ENVS" value="true" />
+      <module name="" />
+      <envs />
+      <method />
+    </configuration>
+    <configuration default="true" type="DartCommandLineRunConfigurationType" factoryName="Dart Command Line Application">
+      <method />
+    </configuration>
+    <configuration default="true" type="GradleRunConfiguration" factoryName="Gradle">
+      <ExternalSystemSettings>
+        <option name="executionName" />
+        <option name="externalProjectPath" />
+        <option name="externalSystemIdString" value="GRADLE" />
+        <option name="scriptParameters" />
+        <option name="taskDescriptions">
+          <list />
+        </option>
+        <option name="taskNames">
+          <list />
+        </option>
+        <option name="vmOptions" />
+      </ExternalSystemSettings>
+      <method />
+    </configuration>
+    <configuration default="true" type="JUnit" factoryName="JUnit">
+      <extension name="coverage" enabled="false" merge="false" sample_coverage="true" runner="idea" />
+      <module name="" />
+      <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
+      <option name="ALTERNATIVE_JRE_PATH" />
+      <option name="PACKAGE_NAME" />
+      <option name="MAIN_CLASS_NAME" />
+      <option name="METHOD_NAME" />
+      <option name="TEST_OBJECT" value="class" />
+      <option name="VM_PARAMETERS" value="-ea" />
+      <option name="PARAMETERS" />
+      <option name="WORKING_DIRECTORY" value="$MODULE_DIR$" />
+      <option name="ENV_VARIABLES" />
+      <option name="PASS_PARENT_ENVS" value="true" />
+      <option name="TEST_SEARCH_SCOPE">
+        <value defaultName="singleModule" />
+      </option>
+      <envs />
+      <patterns />
+      <method />
+    </configuration>
+    <configuration default="true" type="JUnitTestDiscovery" factoryName="JUnit Test Discovery" changeList="All">
+      <extension name="coverage" enabled="false" merge="false" sample_coverage="true" runner="idea" />
+      <module name="" />
+      <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
+      <option name="ALTERNATIVE_JRE_PATH" />
+      <option name="PACKAGE_NAME" />
+      <option name="MAIN_CLASS_NAME" />
+      <option name="METHOD_NAME" />
+      <option name="TEST_OBJECT" value="class" />
+      <option name="VM_PARAMETERS" />
+      <option name="PARAMETERS" />
+      <option name="WORKING_DIRECTORY" />
+      <option name="ENV_VARIABLES" />
+      <option name="PASS_PARENT_ENVS" value="true" />
+      <option name="TEST_SEARCH_SCOPE">
+        <value defaultName="singleModule" />
+      </option>
+      <envs />
+      <patterns />
+      <method />
+    </configuration>
+    <configuration default="true" type="JarApplication" factoryName="JAR Application">
+      <extension name="coverage" enabled="false" merge="false" sample_coverage="true" runner="idea" />
+      <envs />
+      <method />
+    </configuration>
+    <configuration default="true" type="Java Scratch" factoryName="Java Scratch">
+      <extension name="coverage" enabled="false" merge="false" sample_coverage="true" runner="idea" />
+      <option name="SCRATCH_FILE_ID" value="0" />
+      <option name="MAIN_CLASS_NAME" />
+      <option name="VM_PARAMETERS" />
+      <option name="PROGRAM_PARAMETERS" />
+      <option name="WORKING_DIRECTORY" />
+      <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
+      <option name="ALTERNATIVE_JRE_PATH" />
+      <option name="ENABLE_SWING_INSPECTOR" value="false" />
+      <option name="ENV_VARIABLES" />
+      <option name="PASS_PARENT_ENVS" value="true" />
+      <module name="" />
+      <envs />
+      <method />
+    </configuration>
+    <configuration default="true" type="JetRunConfigurationType" factoryName="Kotlin">
+      <extension name="coverage" enabled="false" merge="false" sample_coverage="true" runner="idea" />
+      <option name="MAIN_CLASS_NAME" />
+      <option name="VM_PARAMETERS" />
+      <option name="PROGRAM_PARAMETERS" />
+      <option name="WORKING_DIRECTORY" />
+      <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
+      <option name="ALTERNATIVE_JRE_PATH" />
+      <option name="PASS_PARENT_ENVS" value="true" />
+      <module name="blocks" />
+      <envs />
+      <method />
+    </configuration>
+    <configuration default="true" type="Remote" factoryName="Remote">
+      <option name="USE_SOCKET_TRANSPORT" value="true" />
+      <option name="SERVER_MODE" value="false" />
+      <option name="SHMEM_ADDRESS" value="javadebug" />
+      <option name="HOST" value="localhost" />
+      <option name="PORT" value="5005" />
+      <method />
+    </configuration>
+    <configuration default="true" type="TestNG" factoryName="TestNG">
+      <extension name="coverage" enabled="false" merge="false" sample_coverage="true" runner="idea" />
+      <module name="" />
+      <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
+      <option name="ALTERNATIVE_JRE_PATH" />
+      <option name="SUITE_NAME" />
+      <option name="PACKAGE_NAME" />
+      <option name="MAIN_CLASS_NAME" />
+      <option name="METHOD_NAME" />
+      <option name="GROUP_NAME" />
+      <option name="TEST_OBJECT" value="CLASS" />
+      <option name="VM_PARAMETERS" value="-ea" />
+      <option name="PARAMETERS" />
+      <option name="WORKING_DIRECTORY" value="$MODULE_DIR$" />
+      <option name="OUTPUT_DIRECTORY" />
+      <option name="ANNOTATION_TYPE" />
+      <option name="ENV_VARIABLES" />
+      <option name="PASS_PARENT_ENVS" value="true" />
+      <option name="TEST_SEARCH_SCOPE">
+        <value defaultName="singleModule" />
+      </option>
+      <option name="USE_DEFAULT_REPORTERS" value="false" />
+      <option name="PROPERTIES_FILE" />
+      <envs />
+      <properties />
+      <listeners />
+      <method />
+    </configuration>
+    <configuration default="true" type="TestNGTestDiscovery" factoryName="TestNG Test Discovery" changeList="All">
+      <extension name="coverage" enabled="false" merge="false" sample_coverage="true" runner="idea" />
+      <module name="" />
+      <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
+      <option name="ALTERNATIVE_JRE_PATH" />
+      <option name="SUITE_NAME" />
+      <option name="PACKAGE_NAME" />
+      <option name="MAIN_CLASS_NAME" />
+      <option name="METHOD_NAME" />
+      <option name="GROUP_NAME" />
+      <option name="TEST_OBJECT" value="CLASS" />
+      <option name="VM_PARAMETERS" />
+      <option name="PARAMETERS" />
+      <option name="WORKING_DIRECTORY" />
+      <option name="OUTPUT_DIRECTORY" />
+      <option name="ANNOTATION_TYPE" />
+      <option name="ENV_VARIABLES" />
+      <option name="PASS_PARENT_ENVS" value="true" />
+      <option name="TEST_SEARCH_SCOPE">
+        <value defaultName="singleModule" />
+      </option>
+      <option name="USE_DEFAULT_REPORTERS" value="false" />
+      <option name="PROPERTIES_FILE" />
+      <envs />
+      <properties />
+      <listeners />
+      <method />
+    </configuration>
+    <list size="1">
+      <item index="0" class="java.lang.String" itemvalue="Application.Start" />
+    </list>
+    <recent_temporary>
+      <list size="1">
+        <item index="0" class="java.lang.String" itemvalue="Application.Start" />
+      </list>
+    </recent_temporary>
+    <configuration name="&lt;template&gt;" type="#org.jetbrains.idea.devkit.run.PluginConfigurationType" default="true" selected="false">
+      <option name="VM_PARAMETERS" value="-Xmx512m -Xms256m -XX:MaxPermSize=250m -ea" />
+    </configuration>
+  </component>
+  <component name="ShelveChangesManager" show_recycled="false" />
+  <component name="SvnConfiguration">
+    <configuration />
+  </component>
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="c6c8cebd-27d4-4ce1-b1fd-e94447e03c25" name="Default" comment="" />
+      <created>1457806308792</created>
+      <option name="number" value="Default" />
+      <updated>1457806308792</updated>
+    </task>
+    <servers />
+  </component>
+  <component name="ToolWindowManager">
+    <frame x="59" y="-8" width="1549" height="1216" extended-state="6" />
+    <editor active="true" />
+    <layout>
+      <window_info id="Palette" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
+      <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
+      <window_info id="Palette&#9;" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
+      <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="true" content_ui="tabs" />
+      <window_info id="Maven Projects" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
+      <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Designer" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.24983692" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
+      <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
+      <window_info id="UI Designer" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
+      <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
+      <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
+      <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
+      <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32911393" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="combo" />
+      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32911393" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
+      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
+    </layout>
+  </component>
+  <component name="Vcs.Log.UiProperties">
+    <option name="RECENTLY_FILTERED_USER_GROUPS">
+      <collection />
+    </option>
+    <option name="RECENTLY_FILTERED_BRANCH_GROUPS">
+      <collection />
+    </option>
+  </component>
+  <component name="VcsContentAnnotationSettings">
+    <option name="myLimit" value="2678400000" />
+  </component>
+  <component name="XDebuggerManager">
+    <breakpoint-manager />
+    <watches-manager />
+  </component>
+  <component name="antWorkspaceConfiguration">
+    <option name="IS_AUTOSCROLL_TO_SOURCE" value="false" />
+    <option name="FILTER_TARGETS" value="false" />
+  </component>
+  <component name="editorHistoryManager">
+    <entry file="file://$PROJECT_DIR$/src/cz/dat/oots/movable/entity/Entity.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="6" column="22" selection-start-line="6" selection-start-column="22" selection-end-line="6" selection-end-column="22" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/cz/dat/oots/movable/entity/PlayerEntity.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="520" column="45" selection-start-line="520" selection-start-column="45" selection-end-line="520" selection-end-column="45" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/cz/dat/oots/world/IDRegister.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="136" column="32" selection-start-line="136" selection-start-column="32" selection-end-line="136" selection-end-column="32" />
+          <folding>
+            <element signature="imports" expanded="false" />
+            <element signature="e#7605#7606#0" expanded="false" />
+            <element signature="e#7638#7639#0" expanded="false" />
+            <element signature="e#7673#7674#0" expanded="false" />
+            <element signature="e#7705#7706#0" expanded="false" />
+            <element signature="e#8706#8707#0" expanded="false" />
+            <element signature="e#8744#8745#0" expanded="false" />
+            <element signature="e#8777#8778#0" expanded="false" />
+            <element signature="e#8814#8815#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/cz/dat/oots/console/Command.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="2" column="22" selection-start-line="2" selection-start-column="22" selection-end-line="2" selection-end-column="22" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/cz/dat/oots/console/CommandTele.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="4" column="13" selection-start-line="4" selection-start-column="13" selection-end-line="4" selection-end-column="13" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/cz/dat/oots/console/Console.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="123" column="0" selection-start-line="123" selection-start-column="0" selection-end-line="123" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/.gitignore">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/cz/dat/oots/item/ItemImaginaryChocolate.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="10" column="13" selection-start-line="10" selection-start-column="13" selection-end-line="10" selection-end-column="13" />
+          <folding>
+            <element signature="imports" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/cz/dat/oots/item/Item.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="7" column="22" selection-start-line="7" selection-start-column="22" selection-end-line="7" selection-end-column="22" />
+          <folding>
+            <element signature="imports" expanded="false" />
+            <element signature="e#889#890#0" expanded="false" />
+            <element signature="e#916#917#0" expanded="false" />
+            <element signature="e#942#943#0" expanded="false" />
+            <element signature="e#972#973#0" expanded="false" />
+            <element signature="e#1003#1004#0" expanded="false" />
+            <element signature="e#1035#1036#0" expanded="false" />
+            <element signature="e#1070#1071#0" expanded="false" />
+            <element signature="e#1105#1106#0" expanded="false" />
+            <element signature="e#1248#1249#0" expanded="false" />
+            <element signature="e#1286#1287#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/cz/dat/oots/movable/Movable.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="4" column="22" selection-start-line="4" selection-start-column="22" selection-end-line="4" selection-end-column="22" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/cz/dat/oots/Start.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.21428572">
+          <caret line="9" column="0" selection-start-line="9" selection-start-column="0" selection-end-line="9" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/cz/dat/oots/settings/Applier.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="4" column="22" selection-start-line="4" selection-start-column="22" selection-end-line="4" selection-end-column="22" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/cz/dat/oots/settings/IKeyconfigLoader.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="4" column="17" selection-start-line="4" selection-start-column="17" selection-end-line="4" selection-end-column="17" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/cz/dat/oots/settings/Keyconfig.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="199" column="46" selection-start-line="199" selection-start-column="46" selection-end-line="199" selection-end-column="46" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/cz/dat/oots/settings/ObjectType.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="2" column="12" selection-start-line="2" selection-start-column="12" selection-end-line="2" selection-end-column="12" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/cz/dat/oots/settings/SettingsObject.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="2" column="13" selection-start-line="2" selection-start-column="13" selection-end-line="2" selection-end-column="13" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/cz/dat/oots/settings/ApplierAO.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="5" column="13" selection-start-line="5" selection-start-column="13" selection-end-line="5" selection-end-column="13" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/cz/dat/oots/settings/Settings.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="12" column="13" selection-start-line="12" selection-start-column="13" selection-end-line="12" selection-end-column="13" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/cz/dat/oots/settings/ApplierAA.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="26" column="20" selection-start-line="26" selection-start-column="20" selection-end-line="26" selection-end-column="20" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/cz/dat/oots/overlay/BasicLifesOverlay.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="23" column="26" selection-start-line="23" selection-start-column="26" selection-end-line="23" selection-end-column="26" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/cz/dat/oots/util/GLHelper.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="12" column="13" selection-start-line="12" selection-start-column="13" selection-end-line="12" selection-end-column="13" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/cz/dat/oots/movable/entity/Entity.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="6" column="22" selection-start-line="6" selection-start-column="22" selection-end-line="6" selection-end-column="22" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/cz/dat/oots/movable/Movable.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="4" column="22" selection-start-line="4" selection-start-column="22" selection-end-line="4" selection-end-column="22" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/cz/dat/oots/Game.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.52226347">
+          <caret line="103" column="14" selection-start-line="103" selection-start-column="14" selection-end-line="103" selection-end-column="14" />
+          <folding>
+            <element signature="imports" expanded="false" />
+            <element signature="e#2787#2788#0" expanded="false" />
+            <element signature="e#2823#2824#0" expanded="false" />
+            <element signature="e#2880#2881#0" expanded="false" />
+            <element signature="e#2921#2922#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/cz/dat/oots/item/Item.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="7" column="22" selection-start-line="7" selection-start-column="22" selection-end-line="7" selection-end-column="22" />
+          <folding>
+            <element signature="imports" expanded="false" />
+            <element signature="e#889#890#0" expanded="false" />
+            <element signature="e#916#917#0" expanded="false" />
+            <element signature="e#942#943#0" expanded="false" />
+            <element signature="e#972#973#0" expanded="false" />
+            <element signature="e#1003#1004#0" expanded="false" />
+            <element signature="e#1035#1036#0" expanded="false" />
+            <element signature="e#1070#1071#0" expanded="false" />
+            <element signature="e#1105#1106#0" expanded="false" />
+            <element signature="e#1248#1249#0" expanded="false" />
+            <element signature="e#1286#1287#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/cz/dat/oots/item/ItemImaginaryChocolate.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="10" column="13" selection-start-line="10" selection-start-column="13" selection-end-line="10" selection-end-column="13" />
+          <folding>
+            <element signature="imports" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/cz/dat/oots/world/World.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.3330241">
+          <caret line="105" column="22" selection-start-line="105" selection-start-column="22" selection-end-line="105" selection-end-column="22" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/cz/dat/oots/movable/entity/PlayerEntity.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="520" column="45" selection-start-line="520" selection-start-column="45" selection-end-line="520" selection-end-column="45" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/cz/dat/oots/world/IDRegister.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="136" column="32" selection-start-line="136" selection-start-column="32" selection-end-line="136" selection-end-column="32" />
+          <folding>
+            <element signature="imports" expanded="false" />
+            <element signature="e#7605#7606#0" expanded="false" />
+            <element signature="e#7638#7639#0" expanded="false" />
+            <element signature="e#7673#7674#0" expanded="false" />
+            <element signature="e#7705#7706#0" expanded="false" />
+            <element signature="e#8706#8707#0" expanded="false" />
+            <element signature="e#8744#8745#0" expanded="false" />
+            <element signature="e#8777#8778#0" expanded="false" />
+            <element signature="e#8814#8815#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/cz/dat/oots/console/Command.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="2" column="22" selection-start-line="2" selection-start-column="22" selection-end-line="2" selection-end-column="22" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/cz/dat/oots/console/CommandTele.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="4" column="13" selection-start-line="4" selection-start-column="13" selection-end-line="4" selection-end-column="13" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/cz/dat/oots/console/Console.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="123" column="0" selection-start-line="123" selection-start-column="0" selection-end-line="123" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/.gitignore">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.3942486">
+          <caret line="25" column="6" selection-start-line="25" selection-start-column="6" selection-end-line="25" selection-end-column="6" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+  </component>
+  <component name="masterDetails">
+    <states>
+      <state key="ArtifactsStructureConfigurable.UI">
+        <settings>
+          <artifact-editor />
+          <splitter-proportions>
+            <option name="proportions">
+              <list>
+                <option value="0.2" />
+              </list>
+            </option>
+          </splitter-proportions>
+        </settings>
+      </state>
+      <state key="GlobalLibrariesConfigurable.UI">
+        <settings>
+          <last-edited>Dart SDK</last-edited>
+          <splitter-proportions>
+            <option name="proportions">
+              <list>
+                <option value="0.2" />
+              </list>
+            </option>
+          </splitter-proportions>
+        </settings>
+      </state>
+      <state key="JdkListConfigurable.UI">
+        <settings>
+          <last-edited>1.8</last-edited>
+          <splitter-proportions>
+            <option name="proportions">
+              <list>
+                <option value="0.2" />
+              </list>
+            </option>
+          </splitter-proportions>
+        </settings>
+      </state>
+      <state key="ModuleStructureConfigurable.UI">
+        <settings>
+          <last-edited>blocks</last-edited>
+          <splitter-proportions>
+            <option name="proportions">
+              <list>
+                <option value="0.2" />
+              </list>
+            </option>
+          </splitter-proportions>
+        </settings>
+      </state>
+      <state key="ProjectJDKs.UI">
+        <settings>
+          <last-edited>1.8</last-edited>
+          <splitter-proportions>
+            <option name="proportions">
+              <list>
+                <option value="0.2" />
+              </list>
+            </option>
+          </splitter-proportions>
+        </settings>
+      </state>
+      <state key="ProjectLibrariesConfigurable.UI">
+        <settings>
+          <last-edited>snappy-java-1.1.2-RC3</last-edited>
+          <splitter-proportions>
+            <option name="proportions">
+              <list>
+                <option value="0.2" />
+              </list>
+            </option>
+          </splitter-proportions>
+        </settings>
+      </state>
+    </states>
+  </component>
+</project>
