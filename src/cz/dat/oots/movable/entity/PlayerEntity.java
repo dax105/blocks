@@ -92,16 +92,19 @@ public class PlayerEntity extends Entity implements IOverlayRenderer {
             }
         }
 
-        if (Keyboard.isKeyDown(Keyboard.KEY_R)) {
+        int id = this.inHand.getItemID();
+        boolean sblock = this.world.getRegister().getBlock(id) != null;
+        
+        if (Keyboard.isKeyDown(Keyboard.KEY_R) && sblock) {
             if (this.hasSelected) {
                 Explosion.fill(this.world, this.lookingAtX, this.lookingAtY,
-                        this.lookingAtZ, IDRegister.dirt.getID());
+                        this.lookingAtZ, id);
             }
         }
 
         if (Keyboard.isKeyDown(Keyconfig.particleFirework)) {
             if (this.hasSelected) {
-                for (int i = 0; i < 50; i++) {
+                for (int i = 0; i < 500; i++) {
                     this.world.spawnParticleWithRandomDirectionFast(
                             this.lookingAtX, this.lookingAtY + 1,
                             this.lookingAtZ, this.rand.nextInt(10), 0.3f);
