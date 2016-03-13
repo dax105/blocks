@@ -13,7 +13,7 @@ import java.util.Scanner;
 public class Settings {
 
     public Map<String, SettingsObject<?>> objects;
-    public SettingsObject<Integer> drawDistance, consoleHeight, aaSamples, anisotropic, explosionRadius, rebuildsPerFrame, loadsPerTick, decorationsPerTick, chunkCacheSize, windowWidth, windowHeight, fpsLimit, loaderThreads;
+    public SettingsObject<Integer> maxParticles, drawDistance, consoleHeight, aaSamples, anisotropic, explosionRadius, rebuildsPerFrame, loadsPerTick, decorationsPerTick, chunkCacheSize, windowWidth, windowHeight, fpsLimit, loaderThreads;
     public SettingsObject<Boolean> debug, fullscreen, mipmaps, sound, frustumCulling, advancedCulling, treeGeneration, linearFiltering, shaders, transparentLeaves, twoPassTranslucent, clouds, peacefulMode, noclip;
     public SettingsObject<Float> fov, reach, aoIntensity, soundVolume;
     public SettingsObject<String> resolution;
@@ -97,6 +97,8 @@ public class Settings {
                 "peaceful", false, "What is dead may never die", "%o", null));
         this.noclip = (SettingsObject<Boolean>) registerObject(new SettingsObject<Boolean>(
                 "noclip", false, "Noclip", "%o", null));
+        this.maxParticles = (SettingsObject<Integer>) registerObject(new SettingsObject<Integer>(
+                "max_particles", 16384, "Maximum particle count", null, null));
     }
 
     private SettingsObject<?> registerObject(SettingsObject<?> object) {

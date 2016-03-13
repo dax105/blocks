@@ -2,10 +2,7 @@ package cz.dat.oots.world;
 
 import cz.dat.oots.Particle;
 import cz.dat.oots.render.ITickListener;
-import cz.dat.oots.render.RenderEngine;
 import cz.dat.oots.render.shader.ShaderProgram;
-import org.lwjgl.BufferUtils;
-import org.lwjgl.input.Keyboard;
 import org.lwjgl.opengl.*;
 
 import java.nio.FloatBuffer;
@@ -15,144 +12,114 @@ import java.util.List;
 
 public class ParticleEngine implements ITickListener {
 
-    private static final int MAX_PARTICLES = 100000;
-    private static final int BUFFER_SIZE = MAX_PARTICLES * 8;
-    int key = 0;
-    private List<Particle> particles;
-    // private ParticleComparator sorter;
-    private FloatBuffer drawBuffer;
-    @SuppressWarnings("unused")
-    private World world;
-    private RenderEngine renderEngine;
-    private int handle;
-    private ShaderProgram shader;
+	private static final int BYTES_PER_VERTEX = 16;
 
-    public ParticleEngine(World world) {
-        this.world = world;
-        this.renderEngine = world.getRenderEngine();
-        this.particles = new LinkedList<Particle>();
-        this.drawBuffer = BufferUtils.createFloatBuffer(BUFFER_SIZE);
-        this.handle = GL15.glGenBuffers();
+	private List<Particle> particles;
 
-        this.shader = new ShaderProgram("cz/dat/oots/shaders/particles");
-    }
+	private int handle;
+	private ShaderProgram shader;
+	
+	private World world;
 
-    public static float packColor(int r, int g, int b, int a) {
-        return Float.intBitsToFloat(((a & 0xFF) << 24) | ((r & 0xFF) << 16) | ((g & 0xFF) << 8) | ((b & 0xFF) << 0));
-    }
+	public ParticleEngine(World world) {
+		this.world = world;
+		
+		this.particles = new LinkedList<Particle>();
 
-    public void addParticle(Particle p) {
-        //this.particleMap.put(key++, p);
-        this.particles.add(p);
-    }
+		this.handle = GL15.glGenBuffers();
+		this.shader = new ShaderProgram("cz/dat/oots/shaders/particles");
+	}
 
-    @Override
-    public void onTick() {
-        Iterator<Particle> it = this.particles.iterator();
-        while (it.hasNext()) {
-            Particle p = it.next();
-            if (this.particles.size() > MAX_PARTICLES) {
-                p.dead = true;
-            } else {
-                p.onTick();
-            }
-            if (p.dead) {
-                it.remove();
-            }
-        }
-    }
+	public void addParticle(Particle p) {
+		this.particles.add(p);
+	}
 
-    public int getVertexCount() {
-        return this.particles.size();
-    }
+	@Override
+	public void onTick() {
+		int max = this.world.getGame().s().maxParticles.getValue();
+		Iterator<Particle> it = this.particles.iterator();
+		while(it.hasNext()) {
+			Particle p = it.next();
+			if(this.particles.size() > max) {
+				p.dead = true;
+			} else {
+				p.onTick();
+			}
+			if(p.dead) {
+				it.remove();
+			}
+		}
+	}
 
-    @Override
-    public void onRenderTick(float partialTickTime) {
-        if (Keyboard.isKeyDown(Keyboard.KEY_I)) {
+	@Override
+	public void onRenderTick(float partialTickTime) {
 
-            float[] rightModelviewVec = this.renderEngine
-                    .getRightModelviewVec();
-            float[] upModelviewVec = this.renderEngine.getUpModelviewVec();
+		if(particles.size() > 0) {
 
-            GL11.glBegin(GL11.GL_QUADS);
-            Iterator<Particle> it = this.particles.iterator();
-            while (it.hasNext()) {
-                Particle p = it.next();
+			GL20.glUseProgram(shader.getProgramID());
 
-                //GL11.glColor4f(p.r, p.g, p.b, 1);
+			GL11.glDisable(GL11.GL_BLEND);
 
-                float h = Particle.PARTICLE_SIZE / 2;
-                float sizemultipler = (h / 1);
+			GL11.glEnableClientState(GL11.GL_VERTEX_ARRAY);
+			GL11.glEnableClientState(GL11.GL_COLOR_ARRAY);
+			// GL11.glEnableClientState(GL11.GL_TEXTURE_COORD_ARRAY);
 
-                float rightup0p = (rightModelviewVec[0] + upModelviewVec[0])
-                        * sizemultipler;
-                float rightup1p = (rightModelviewVec[1] + upModelviewVec[1])
-                        * sizemultipler;
-                float rightup2p = (rightModelviewVec[2] + upModelviewVec[2])
-                        * sizemultipler;
-                float rightup0n = (rightModelviewVec[0] - upModelviewVec[0])
-                        * sizemultipler;
-                float rightup1n = (rightModelviewVec[1] - upModelviewVec[1])
-                        * sizemultipler;
-                float rightup2n = (rightModelviewVec[2] - upModelviewVec[2])
-                        * sizemultipler;
+			GL15.glBindBuffer(GL15.GL_ARRAY_BUFFER, this.handle);
 
-                float px = p.getPartialX(partialTickTime) - p.PARTICLE_SIZE / 2f;
-                float py = p.getPartialY(partialTickTime);
-                float pz = p.getPartialZ(partialTickTime) - p.PARTICLE_SIZE / 2f;
+			int bufferSize = this.particles.size() * BYTES_PER_VERTEX;
+			GL15.glBufferData(GL15.GL_ARRAY_BUFFER, bufferSize,
+					GL15.GL_STREAM_DRAW);
+			FloatBuffer mappedBuffer = GL15.glMapBuffer(GL15.GL_ARRAY_BUFFER,
+					GL15.GL_WRITE_ONLY, bufferSize, null).asFloatBuffer();
 
-                GL11.glVertex3f(px - rightup0p, py - rightup1p, pz - rightup2p);
-                GL11.glVertex3f(px + rightup0n, py + rightup1n, pz + rightup2n);
-                GL11.glVertex3f(px + rightup0p, py + rightup1p, pz + rightup2p);
-                GL11.glVertex3f(px - rightup0n, py - rightup1n, pz - rightup2n);
-            }
-            GL11.glEnd();
-        } else {
+			Iterator<Particle> it = this.particles.iterator();
+			while(it.hasNext()) {
+				Particle p = it.next();
 
-            GL20.glUseProgram(shader.getProgramID());
+				float px = p.getPartialX(partialTickTime)
+						- Particle.PARTICLE_SIZE / 2f;
+				float py = p.getPartialY(partialTickTime);
+				float pz = p.getPartialZ(partialTickTime)
+						- Particle.PARTICLE_SIZE / 2f;
 
-            GL11.glEnableClientState(GL11.GL_VERTEX_ARRAY);
-            GL11.glEnableClientState(GL11.GL_COLOR_ARRAY);
-            //GL11.glEnableClientState(GL11.GL_TEXTURE_COORD_ARRAY);
+				mappedBuffer.put(px).put(py).put(pz).put(p.color);
+			}
 
-            this.drawBuffer.clear();
-            Iterator<Particle> it = this.particles.iterator();
-            while (it.hasNext()) {
-                Particle p = it.next();
+			mappedBuffer.flip();
 
-                float px = p.getPartialX(partialTickTime) - p.PARTICLE_SIZE / 2f;
-                float py = p.getPartialY(partialTickTime);
-                float pz = p.getPartialZ(partialTickTime) - p.PARTICLE_SIZE / 2f;
+			GL15.glUnmapBuffer(GL15.GL_ARRAY_BUFFER);
 
-                this.drawBuffer.put(px).put(py).put(pz).put(p.color)/*.put(0).put(0)*/;
+			GL11.glEnable(GL32.GL_PROGRAM_POINT_SIZE);
 
-            }
-            this.drawBuffer.flip();
+			shader.setUniform2f("screenSize", Display.getWidth(),
+					Display.getHeight());
+			shader.setUniform1f("spriteSize", Particle.PARTICLE_SIZE);
 
-            GL11.glEnable(GL32.GL_PROGRAM_POINT_SIZE);
+			int stride = 4 << 2;
 
-            shader.setUniform2f("screenSize", Display.getWidth(), Display.getHeight());
-            shader.setUniform1f("spriteSize", Particle.PARTICLE_SIZE);
+			GL11.glVertexPointer(3, GL11.GL_FLOAT, stride, 0);
+			GL11.glColorPointer(3, GL11.GL_UNSIGNED_BYTE, stride, 3 << 2);
+			// GL11.glTexCoordPointer(2, GL11.GL_FLOAT, stride, 6 << 2);
 
-            GL15.glBindBuffer(GL15.GL_ARRAY_BUFFER, this.handle);
-            GL15.glBufferData(GL15.GL_ARRAY_BUFFER, this.drawBuffer, GL15.GL_STATIC_DRAW);
+			GL11.glDrawArrays(GL11.GL_POINTS, 0, this.particles.size());
 
-            int stride = 4 << 2;
+			GL11.glDisableClientState(GL11.GL_VERTEX_ARRAY);
+			GL11.glDisableClientState(GL11.GL_COLOR_ARRAY);
+			// GL11.glDisableClientState(GL11.GL_TEXTURE_COORD_ARRAY);
 
-            GL11.glVertexPointer(3, GL11.GL_FLOAT, stride, 0);
-            GL11.glColorPointer(3, GL11.GL_UNSIGNED_BYTE, stride, 3 << 2);
-            //GL11.glTexCoordPointer(2, GL11.GL_FLOAT, stride, 6 << 2);
+			GL11.glDisable(GL32.GL_PROGRAM_POINT_SIZE);
 
-            GL11.glDrawArrays(GL11.GL_POINTS, 0, this.particles.size());
+			GL11.glEnable(GL11.GL_BLEND);
+		}
+	}
 
-            GL11.glDisableClientState(GL11.GL_VERTEX_ARRAY);
-            GL11.glDisableClientState(GL11.GL_COLOR_ARRAY);
-            //GL11.glDisableClientState(GL11.GL_TEXTURE_COORD_ARRAY);
+	public int getVertexCount() {
+		return this.particles.size();
+	}
 
-            GL11.glDisable(GL32.GL_PROGRAM_POINT_SIZE);
-
-        }
-
-    }
+	public static float packColor(int r, int g, int b, int a) {
+		return Float.intBitsToFloat(((a & 0xFF) << 24) | ((r & 0xFF) << 16)
+				| ((g & 0xFF) << 8) | ((b & 0xFF) << 0));
+	}
 
 }
