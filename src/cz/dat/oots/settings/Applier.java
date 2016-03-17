@@ -2,8 +2,8 @@ package cz.dat.oots.settings;
 
 import cz.dat.oots.Game;
 
-public abstract class Applier {
-    protected SettingsObject<?> applyingObject;
+public abstract class Applier<T> {
+    protected SettingsObject<T> applyingObject;
     protected Game game;
     protected Settings settings;
 
@@ -12,11 +12,9 @@ public abstract class Applier {
         this.settings = game.getSettings();
     }
 
-    public void setApplyingObject(SettingsObject<?> settingsObject) {
+    public void setApplyingObject(SettingsObject<T> settingsObject) {
         this.applyingObject = settingsObject;
     }
 
-    public abstract boolean apply(Object value);
-
-    public abstract void afterApplying();
+    public abstract boolean apply(T value, ApplyRequestSource source);
 }

@@ -19,10 +19,10 @@ public class GuiScreenLoading extends GuiScreen {
 				.getValue() + height + overflow) / 2, 0xA0000000));*/
 
         this.titleBar = new GuiObjectTitleBar(
-                (game.s().windowWidth.getValue() - width) / 2,
-                (game.s().windowHeight.getValue() - height) / 2,
-                (game.s().windowWidth.getValue() + width) / 2,
-                ((game.s().windowHeight.getValue() - height) / 2) + 30, this.f,
+                (game.s().resolution.width() - width) / 2,
+                (game.s().resolution.height() - height) / 2,
+                (game.s().resolution.width() + width) / 2,
+                ((game.s().resolution.height() - height) / 2) + 30, this.f,
                 text);
     }
 

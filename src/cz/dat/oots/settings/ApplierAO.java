@@ -1,18 +1,16 @@
 package cz.dat.oots.settings;
 
 import cz.dat.oots.Game;
-import cz.dat.oots.model.ModelManager;
 
-public class ApplierAO extends Applier {
+public class ApplierAO extends Applier<Float> {
 
     public ApplierAO(Game game) {
         super(game);
     }
 
     @Override
-    public boolean apply(Object val) {
-        ModelManager.getInstance().load();
-        this.game.chunkRenderer.setAOIntensity((Float) val);
+    public boolean apply(Float value, ApplyRequestSource source) {
+        this.game.chunkRenderer.setAOIntensity(value);
 
         if (this.game.getWorldsManager().isInGame()) {
             String wName = this.game.getCurrentWorld().name;
@@ -21,10 +19,6 @@ public class ApplierAO extends Applier {
         }
 
         return true;
-    }
-
-    @Override
-    public void afterApplying() {
     }
 
 }

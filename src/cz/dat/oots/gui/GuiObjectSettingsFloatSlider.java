@@ -1,5 +1,6 @@
 package cz.dat.oots.gui;
 
+import cz.dat.oots.settings.ApplyRequestSource;
 import cz.dat.oots.settings.SettingsObject;
 import org.newdawn.slick.Font;
 
@@ -19,7 +20,7 @@ public class GuiObjectSettingsFloatSlider extends GuiObjectSlider {
     @Override
     public void update() {
         super.update();
-        this.object.setValue(val);
+        this.object.setValue(val, ApplyRequestSource.GUI);
     }
 
 }

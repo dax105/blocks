@@ -1,5 +1,6 @@
 package cz.dat.oots.gui;
 
+import cz.dat.oots.settings.ApplyRequestSource;
 import cz.dat.oots.settings.SettingsObject;
 import org.newdawn.slick.Font;
 
@@ -15,7 +16,7 @@ public class GuiObjectSettingsBooleanButton extends GuiObjectButton {
 
     @Override
     protected void onClick() {
-        this.object.setValue(!this.object.getValue());
+        this.object.setValue(!this.object.getValue(), ApplyRequestSource.GUI);
         this.text = this.object.getRepresentation();
     }
 }

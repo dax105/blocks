@@ -5,7 +5,7 @@ import cz.dat.oots.util.GLHelper;
 
 import java.awt.*;
 
-public class ApplierFullscreen extends Applier {
+public class ApplierFullscreen extends Applier<Boolean> {
 
     int lastWidth;
     int lastHeight;
@@ -14,28 +14,23 @@ public class ApplierFullscreen extends Applier {
     }
 
     @Override
-    public boolean apply(Object value) {
-        boolean wasFullscreen = (Boolean) this.applyingObject.getValue();
+    public boolean apply(Boolean value, ApplyRequestSource source) {
+        boolean wasFullscreen = this.applyingObject.getValue();
 
-        if (!wasFullscreen && (Boolean) value) {
+        if (!wasFullscreen && value) {
             Toolkit toolkit = Toolkit.getDefaultToolkit();
             Dimension screenSize = toolkit.getScreenSize();
 
-            GLHelper.setDisplayMode(screenSize.width, screenSize.height,
-                    this.settings.aaSamples.getValue(), true);
-        } else if (wasFullscreen && !((Boolean) value)) {
-            GLHelper.setDisplayMode(this.settings.windowWidth.getValue(),
-                    this.settings.windowHeight.getValue(),
-                    this.settings.aaSamples.getValue(), false);
+            this.lastWidth = this.settings.resolution.width();
+            this.lastHeight = this.settings.resolution.height();
+            this.settings.resolution.setValue(screenSize.width, screenSize.height, true);
+        } else if (wasFullscreen && !value) {
+            this.settings.resolution.setValue(this.lastWidth, this.lastHeight, false);
         } else {
             return false;
         }
 
         return true;
-    }
-
-    @Override
-    public void afterApplying() {
     }
 
 }

@@ -162,12 +162,12 @@ public class InfoOverlay implements IOverlayRenderer {
                 font.getHeight(), chunks);
         String vertices = "Vertices: " + (world.getRenderEngine().vertices + world.getParticleEngine().getVertexCount());
         font.drawString(
-                this.game.getSettings().windowWidth.getValue()
+                this.game.getSettings().resolution.width()
                         - font.getWidth(vertices) - 2, font.getHeight() * 3, vertices);
 
         String particles = "Particles: " + world.getParticleEngine().getVertexCount();
         font.drawString(
-                this.game.getSettings().windowWidth.getValue()
+                this.game.getSettings().resolution.width()
                         - font.getWidth(particles) - 2, font.getHeight() * 4, particles);
 
         if (world.getChunkProvider().loading) {

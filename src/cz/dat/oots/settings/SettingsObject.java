@@ -5,12 +5,11 @@ public class SettingsObject<T> {
     private T value;
     private String name;
     private String readableForm;
-    private Applier applier;
+    private Applier<T> applier;
     private String readableName;
-    private boolean inSettings = true;
 
     public SettingsObject(String name, T defaultValue, String readableName,
-                          String readableForm, Applier applier) {
+                          String readableForm, Applier<T> applier) {
         this.name = name;
         this.value = defaultValue;
         this.applier = applier;
@@ -18,7 +17,7 @@ public class SettingsObject<T> {
         this.readableName = readableName;
     }
 
-    public SettingsObject(String name, T defaultValue, Applier applier) {
+    public SettingsObject(String name, T defaultValue, Applier<T> applier) {
         this(name, defaultValue, null, null, applier);
     }
 
@@ -74,23 +73,36 @@ public class SettingsObject<T> {
         return this.getReadableName() + ": " + this.getReadableValue();
     }
 
-    public void setValue(T value, boolean applyApplier) {
-        if (this.applier != null && applyApplier) {
+    public void setValue(T value, ApplyRequestSource source) {
+        if (this.applier != null) {
             this.applier.setApplyingObject(this);
 
-            if (this.applier.apply(value))
+            if (this.applier.apply(value, source))
                 this.value = value;
         } else {
             this.value = value;
         }
     }
 
-    public T getValue() {
-        return this.value;
+    public String getValueSerialized() {
+        return this.getValue().toString();
     }
 
-    public void setValue(T value) {
-        this.setValue(value, true);
+    public void deserializeValue(String value, ApplyRequestSource source) {
+        if(this.value.getClass() == Integer.class)
+            this.setValue((T)(Integer)Integer.parseInt(value), source);
+        else if(this.value.getClass() == Float.class)
+            this.setValue((T)(Float)Float.parseFloat(value), source);
+        else if(this.value.getClass() == Boolean.class)
+            this.setValue((T)(Boolean)Boolean.parseBoolean(value), source);
+        else if(this.value.getClass() == String.class)
+            this.setValue((T)value, source);
+        else
+            throw new UnsupportedOperationException();
+    }
+
+    public T getValue() {
+        return this.value;
     }
 
     public String getName() {
@@ -111,13 +123,5 @@ public class SettingsObject<T> {
 
     public void setReadableName(String readableName) {
         this.readableName = readableName;
-    }
-
-    public boolean isInSettings() {
-        return this.inSettings;
-    }
-
-    public void setInSettings(boolean inSettings) {
-        this.inSettings = inSettings;
     }
 }

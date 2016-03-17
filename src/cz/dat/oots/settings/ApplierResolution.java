@@ -1,60 +1,31 @@
 package cz.dat.oots.settings;
 
 import cz.dat.oots.Game;
+import cz.dat.oots.util.Coord2D;
 import cz.dat.oots.util.GLHelper;
 
-public class ApplierResolution extends Applier {
+public class ApplierResolution extends Applier<Coord2D> {
 
     public ApplierResolution(Game game) {
         super(game);
     }
 
     @Override
-    public boolean apply(Object val) {
-        int w = this.settings.windowWidth.getValue();
-        int h = this.settings.windowHeight.getValue();
+    public boolean apply(Coord2D value, ApplyRequestSource source) {
+        if(value.x > 200 && value.y > 200) {
+            GLHelper.setDisplayMode(value.x, value.y, this.settings.aaSamples.getValue(),
+                    ((SettingsObjectResolution) this.applyingObject).fullScreen());
 
-        if (this.applyingObject == this.settings.windowWidth) {
-            w = (Integer) val;
-            this.changeBoth((Integer) val, h);
-        } else if (this.applyingObject == this.settings.windowHeight) {
-            h = (Integer) val;
-            this.changeBoth(w, (Integer) val);
-        } else if (this.applyingObject == this.settings.resolution) {
-            String[] parts = val.toString().split("x");
-            if (parts.length == 2) {
-                try {
-                    w = Integer.parseInt(parts[0]);
-                    h = Integer.parseInt(parts[1]);
-
-                    this.changeBoth(w, h);
-                } catch (Exception e) {
-                    return false;
-                }
-            } else {
-                return false;
+            if (this.game.getWorldsManager().isInGame()) {
+                String wName = this.game.getCurrentWorld().name;
+                this.game.getWorldsManager().exitWorld();
+                this.game.getWorldsManager().startWorld(wName);
             }
+
+            return true;
         }
 
-        if (this.game.guiScreen != null) {
-            this.game.closeGuiScreen();
-        }
-
-        if (this.game.getCurrentWorld() != null)
-            if (this.game.getCurrentWorld().getGui().getCurrentScreen() != null)
-                this.game.getCurrentWorld().getGui().getCurrentScreen()
-                        .updateCenteredPosition(w, h);
-
-        return true;
-
+        return false;
     }
 
-    private void changeBoth(int w, int h) {
-        GLHelper.setDisplayMode(w, h, this.settings.aaSamples.getValue(),
-                this.settings.fullscreen.getValue());
-    }
-
-    @Override
-    public void afterApplying() {
-    }
 }

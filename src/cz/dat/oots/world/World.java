@@ -309,7 +309,8 @@ public class World implements ITickListener {
                 this.neighbourUpdate(x, y, z);
             }
 
-            this.updateNeighbours(x, y, z);
+            if(notify)
+                this.updateNeighbours(x, y, z);
         }
 
     }

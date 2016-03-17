@@ -8,6 +8,7 @@ import cz.dat.oots.overlay.OverlayManager;
 import cz.dat.oots.profiler.Profiler;
 import cz.dat.oots.render.ChunkRendererVBO;
 import cz.dat.oots.render.IChunkRenderer;
+import cz.dat.oots.settings.ApplyRequestSource;
 import cz.dat.oots.settings.Keyconfig;
 import cz.dat.oots.settings.Settings;
 import cz.dat.oots.sound.SoundManager;
@@ -253,7 +254,7 @@ public class Game implements Runnable {
                 }
 
                 if (Keyboard.getEventKey() == Keyconfig.toggleNoClip) {
-                    this.s().noclip.setValue(!this.s().noclip.getValue());
+                    this.s().noclip.setValue(!this.s().noclip.getValue(), ApplyRequestSource.KEY);
                 }
 
                 if (Keyboard.getEventKey() == Keyconfig.exit) {
@@ -282,11 +283,11 @@ public class Game implements Runnable {
         if (Keyboard.isKeyDown(Keyconfig.zoom)) {
             if (this.lastFov == 0) {
                 this.lastFov = this.s().fov.getValue();
-                this.s().fov.setValue(15f);
+                this.s().fov.setValue(15f, ApplyRequestSource.KEY);
             }
         } else {
             if (this.lastFov > 0) {
-                this.s().fov.setValue(lastFov);
+                this.s().fov.setValue(lastFov, ApplyRequestSource.KEY);
                 this.lastFov = 0;
             }
         }
@@ -497,7 +498,7 @@ public class Game implements Runnable {
     }
 
     public void toggleFullscreen() {
-        this.s().fullscreen.setValue(!this.s().fullscreen.getValue());
+        this.s().fullscreen.setValue(!this.s().fullscreen.getValue(), ApplyRequestSource.KEY);
     }
 
     // .... LOGIN METHODS ....

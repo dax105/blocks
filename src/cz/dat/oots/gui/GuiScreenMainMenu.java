@@ -18,31 +18,31 @@ public class GuiScreenMainMenu extends GuiScreen {
 				.getValue() + height + overflow) / 2, 0xA0000000));*/
 
         this.objects.add(new GuiObjectTitleBar(
-                (game.s().windowWidth.getValue() - width) / 2,
-                (game.s().windowHeight.getValue() - height) / 2,
-                (game.s().windowWidth.getValue() + width) / 2,
-                ((game.s().windowHeight.getValue() - height) / 2) + 30, this.f,
+                (game.s().resolution.width() - width) / 2,
+                (game.s().resolution.height() - height) / 2,
+                (game.s().resolution.width() + width) / 2,
+                ((game.s().resolution.height() - height) / 2) + 30, this.f,
                 "Main menu"));
 
         this.objects.add(new GuiObjectButton(
-                (game.s().windowWidth.getValue() - width) / 2,
-                (game.s().windowHeight.getValue() - height) / 2 + 34,
-                (game.s().windowWidth.getValue() + width) / 2,
-                ((game.s().windowHeight.getValue() - height) / 2) + 58, this.f,
+                (game.s().resolution.width() - width) / 2,
+                (game.s().resolution.height() - height) / 2 + 34,
+                (game.s().resolution.width() + width) / 2,
+                ((game.s().resolution.height() - height) / 2) + 58, this.f,
                 "Start game", 0, this));
 
         this.objects.add(new GuiObjectButton(
-                (game.s().windowWidth.getValue() - width) / 2,
-                (game.s().windowHeight.getValue() - height) / 2 + 62,
-                (game.s().windowWidth.getValue() + width) / 2,
-                ((game.s().windowHeight.getValue() - height) / 2) + 86, this.f,
+                (game.s().resolution.width() - width) / 2,
+                (game.s().resolution.height() - height) / 2 + 62,
+                (game.s().resolution.width() + width) / 2,
+                ((game.s().resolution.height() - height) / 2) + 86, this.f,
                 "Options", 1, this));
 
         this.objects.add(new GuiObjectButton(
-                (game.s().windowWidth.getValue() - width) / 2,
-                (game.s().windowHeight.getValue() - height) / 2 + 90,
-                (game.s().windowWidth.getValue() + width) / 2,
-                ((game.s().windowHeight.getValue() - height) / 2) + 114,
+                (game.s().resolution.width() - width) / 2,
+                (game.s().resolution.height() - height) / 2 + 90,
+                (game.s().resolution.width() + width) / 2,
+                ((game.s().resolution.height() - height) / 2) + 114,
                 this.f, "Exit", 2, this));
     }
 

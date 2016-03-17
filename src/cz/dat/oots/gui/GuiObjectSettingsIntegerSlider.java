@@ -1,5 +1,6 @@
 package cz.dat.oots.gui;
 
+import cz.dat.oots.settings.ApplyRequestSource;
 import cz.dat.oots.settings.SettingsObject;
 import cz.dat.oots.util.GLHelper;
 import org.lwjgl.opengl.GL11;
@@ -55,6 +56,6 @@ public class GuiObjectSettingsIntegerSlider extends GuiObjectSlider {
     public void update() {
         super.update();
 
-        this.object.setValue((int) this.val);
+        this.object.setValue((int) this.val, ApplyRequestSource.GUI);
     }
 }

@@ -358,10 +358,10 @@ public class RenderEngine {
         GL11.glDisable(GL11.GL_TEXTURE_2D);
         TextureImpl.bindNone();
 
-        GLHelper.drawLine(this.game.getSettings().windowWidth.getValue() / 2,
-                this.game.getSettings().windowWidth.getValue() / 2,
-                (this.game.getSettings().windowHeight.getValue() / 2) - 10,
-                (this.game.getSettings().windowHeight.getValue() / 2) + 10, 2,
+        GLHelper.drawLine(this.game.getSettings().resolution.width() / 2,
+                this.game.getSettings().resolution.width() / 2,
+                (this.game.getSettings().resolution.width() / 2) - 10,
+                (this.game.getSettings().resolution.width() / 2) + 10, 2,
                 0, 0, 0, 0.5f);
         GL11.glColor4f(1, 1, 1, 1);
     }
