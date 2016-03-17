@@ -5,38 +5,38 @@ Order of the stone is a voxel game that we make, it's so far pretty similar to M
 Features
 --------------
 * Infinite, randomly generated worlds that are split into chunks of 16x128x16
-* World generation using simplex noise
-* Clever rendering (only visible faces of block are being rendered)
-* Detection of selected block
+* World generation using simplex noise and some magic
+* Clever rendering (only visible block faces are being rendered)
 * Automatic building of texture atlas
 * Placing and breaking blocks
 * Transparent/translucent blocks
-* 65 536 possible blocks (Gotta use 'em all!)
+* 65 536 possible block types (Gotta use 'em all!)
 * Epic secret features included!
 * It can turn itself on (with a little bit of help from [launcher](https://github.com/dax105/launcher))
-* Nearest/Linear texture filtering
-* World loading and saving
-* Sometimes it can shut down on its own
-* Loading and saving all settings
-* Console with many useful commands
-* Fake Ambient Occlusion (blocks shading)
+* Nearest/Linear (broken) texture filtering
+* World loading and saving with on the fly lzma compression
+* Sometimes it can shut down on its own (dunno why)
+* Loading and saving of all settings
+* Console with some useful commands
+* Fake ambient occlusion (block shading)
 * Explosions!
-* Survival (HP)
-* Sounds and background music
-* Basic physics
+* Survival (kinda - only hp implemented)
+* Sounds and background music (well, until the soundengine crashes)
+* Basic, but smooth physics
 * Font managing (we are using Roboto font by Google)
-* [Authentification](https://github.com/dax105/blocks/wiki/Auth-system) (our/default implementation: [Register](http://ondryasondra.aspone.cz/Register.html))
+* [Authentification](https://github.com/dax105/blocks/wiki/Auth-system) ~~(our/default implementation: [Register](http://ondryasondra.aspone.cz/Register.html))~~
 * AABB Collisions
-* Saving custom data for blocks
+* Saving of custom data for blocks
 * Really nice debug graph!
+* Uses the most amazing library known to man - slick-util (it's crap)
 
 WIP
 ---
-* Blocks of different shapes
-* Biomes
-* AA, AF
-* Shaders (mostly unused)
-* Models
+* Blocks of different shapes (slabs!)
+* Biomes (we only have 2 atm)
+* AA, AF (mipmaps)
+* Shaders ~~(mostly unused)~~
+* Voxel models (works but unused)
 
 Controls
 --------
@@ -44,7 +44,7 @@ Controls
 * Shift - boost
 * Ctrl+click - click action on block - try it on stone!
 * Mouse buttons - placing/breaking blocks
-* F - fullscreen toggle
+* F - fullscreen toggle (broken :D)
 * Z - zoom
 * ESC - menu
 * ;/C - console
