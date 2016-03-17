@@ -414,7 +414,8 @@ public class Game implements Runnable {
             this.font.drawString(0, cHeight - this.font.getLineHeight(), text);
 
             if(this.ticks % Game.TPS >= Game.TPS / 2) {
-                this.font.drawString(this.font.getWidth(text.substring(0, this.console.getCursorPos() + 2)) - 1,
+                if(text.length() >= this.console.getCursorPos() + 2)
+                    this.font.drawString(this.font.getWidth(text.substring(0, this.console.getCursorPos() + 2)) - 1,
                         cHeight - this.font.getLineHeight(), "|");
             }
 

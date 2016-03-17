@@ -27,6 +27,9 @@ public class CommandVariables extends Command {
 
         for (Entry<String, SettingsObject<?>> e : this.console.getGame().s().objects
                 .entrySet()) {
+            System.out.println(e.getKey());
+
+
             SettingsObject<?> o = e.getValue();
             super.console.println(SettingsObject.getConsoleRepresentation(o
                     .getObjectType())

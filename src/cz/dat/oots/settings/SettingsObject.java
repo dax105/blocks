@@ -54,7 +54,7 @@ public class SettingsObject<T> {
         if (type == String.class)
             return ObjectType.STRING;
 
-        return null;
+        return ObjectType.OTHER;
     }
 
     public String getReadableValue() {
