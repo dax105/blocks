@@ -61,8 +61,7 @@ public class SimplexNoise {
 
         for (int i = 0; i < this.octaves.length; i++) {
             double frequency = Math.pow(2, i);
-            double amplitude = Math.pow(this.persistence, this.octaves.length
-                    - i);
+            double amplitude = Math.pow(this.persistence, this.octaves.length - i);
 
             result = result
                     + this.octaves[i].noise(x / frequency, y / frequency, z

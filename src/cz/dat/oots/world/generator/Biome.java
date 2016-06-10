@@ -10,10 +10,10 @@ public abstract class Biome {
     public static final Biome plains = new BiomePlains();
     public static final Biome extraMountains = new BiomeExtraMountains();
 
-    private double[] tempOffsets = new double[129];
+    private float[] tempOffsets = new float[129];
 
     private String name;
-    private double[] densityOffsets = new double[129];
+    private float[] densityOffsets = new float[129];
 
     public Biome(String name) {
         this.name = name;
@@ -28,7 +28,7 @@ public abstract class Biome {
         // TODO Do something!
     }
 
-    public double[] getOffsets() {
+    public float[] getOffsets() {
         return this.densityOffsets;
     }
 
@@ -36,7 +36,7 @@ public abstract class Biome {
         return this.name;
     }
 
-    public void setOffset(int h, double val) {
+    public void setOffset(int h, float val) {
         this.tempOffsets[h] = val;
     }
 
