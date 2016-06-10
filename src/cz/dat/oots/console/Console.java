@@ -38,6 +38,7 @@ public class Console {
 
     public void clearInput() {
         this.currentCommand = "";
+        this.curPos = 0;
     }
 
     public void out(String text) {
