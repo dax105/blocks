@@ -14,7 +14,7 @@ public class Settings {
 
     public Map<String, SettingsObject<?>> objects;
     public SettingsObject<Integer> maxParticles, drawDistance, consoleHeight, aaSamples, anisotropic, explosionRadius, rebuildsPerFrame, loadsPerTick, decorationsPerTick, chunkCacheSize, fpsLimit, loaderThreads;
-    public SettingsObject<Boolean> debug, fullscreen, mipmaps, sound, frustumCulling, advancedCulling, treeGeneration, linearFiltering, shaders, transparentLeaves, twoPassTranslucent, clouds, peacefulMode, noclip;
+    public SettingsObject<Boolean> debug, fullscreen, mipmaps, sound, frustumCulling, advancedCulling, treeGeneration, linearFiltering, shaders, transparentLeaves, twoPassTranslucent, clouds, peacefulMode, noclip, explosionParticles;
     public SettingsObject<Float> fov, reach, aoIntensity, soundVolume;
     public SettingsObjectResolution resolution;
     private Game game;
@@ -92,6 +92,8 @@ public class Settings {
                 "noclip", false, "Noclip", "%o", null));
         this.maxParticles = registerObject(new SettingsObject<>(
                 "max_particles", 16384, "Maximum particle count", null, null));
+        this.explosionParticles = registerObject(new SettingsObject<>(
+                "explosion_particles", true, "Explosions spawn particles", "%o", null));
     }
 
     private <T> SettingsObject<T> registerObject(SettingsObject<T> object) {

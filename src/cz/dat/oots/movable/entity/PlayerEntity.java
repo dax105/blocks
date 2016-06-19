@@ -104,7 +104,7 @@ public class PlayerEntity extends Entity implements IOverlayRenderer {
 
         if (Keyboard.isKeyDown(Keyconfig.particleFirework)) {
             if (this.hasSelected) {
-                for (int i = 0; i < 500; i++) {
+                for (int i = 0; i < 2000; i++) {
                     this.world.spawnParticleWithRandomDirectionFast(
                             this.lookingAtX, this.lookingAtY + 1,
                             this.lookingAtZ, this.rand.nextInt(10), 0.3f);
