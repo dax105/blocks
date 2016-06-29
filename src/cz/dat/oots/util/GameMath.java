@@ -38,5 +38,5 @@ public class GameMath {
     public static boolean shouldCareAbout(float f) {
         return (f > 0.001f || f < -0.001f);
     }
-
+    
 }
