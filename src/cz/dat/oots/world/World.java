@@ -288,6 +288,8 @@ public class World implements ITickListener {
 		double stepY = Math.signum(dy);
 		double stepZ = Math.signum(dz);
 		
+		
+		
 		double tDeltaX = Math.abs(1.0d / dx);
 		double tMaxX;
 		
@@ -324,6 +326,12 @@ public class World implements ITickListener {
 		int yi = (int) y;
 		int zi = (int) z;
 		
+		id = getBlock(xi, yi, zi);
+		
+		if (id != 0) {
+			return new BlockHitResult(id, xi, yi, zi, xi, yi, zi);
+		}
+		
 		do {
 			if(tMaxX < tMaxY) {
 				if(tMaxX < tMaxZ) {
@@ -336,7 +344,7 @@ public class World implements ITickListener {
 			} else {
 				if(tMaxY < tMaxZ) {
 					y = y + stepY;
-					if (y < 0 || y > Chunk.CHUNK_HEIGHT) {
+					if (y < (-maxSteps) || y > (Chunk.CHUNK_HEIGHT + maxSteps)) {
 						return new BlockHitResult();
 					}
 					tMaxY = tMaxY + tDeltaY;
@@ -355,7 +363,7 @@ public class World implements ITickListener {
 			yi = (int) y;
 			zi = (int) z;
 			
-			if (maxSteps <= 0) {
+			if (maxSteps < 0) {
 				return new BlockHitResult();
 			}
 			
