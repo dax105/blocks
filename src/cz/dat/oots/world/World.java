@@ -28,7 +28,7 @@ import java.util.logging.Logger;
 public class World implements ITickListener {
 
 	public static final float GRAVITY = 0.06f;
-	public static final int MAX_PARTICLES = 100000;
+
 	public int size;
 	public int sizeBlocks;
 	public String name;
