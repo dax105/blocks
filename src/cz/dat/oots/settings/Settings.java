@@ -13,7 +13,7 @@ import java.util.Scanner;
 public class Settings {
 
     public Map<String, SettingsObject<?>> objects;
-    public SettingsObject<Integer> maxParticles, drawDistance, consoleHeight, aaSamples, anisotropic, explosionRadius, rebuildsPerFrame, loadsPerTick, decorationsPerTick, chunkCacheSize, fpsLimit, loaderThreads;
+    public SettingsObject<Integer> randomtickBlockCount, maxParticles, drawDistance, consoleHeight, aaSamples, anisotropic, explosionRadius, rebuildsPerFrame, loadsPerTick, decorationsPerTick, chunkCacheSize, fpsLimit, loaderThreads;
     public SettingsObject<Boolean> debug, fullscreen, mipmaps, sound, frustumCulling, advancedCulling, treeGeneration, linearFiltering, shaders, transparentLeaves, twoPassTranslucent, clouds, peacefulMode, noclip, explosionParticles;
     public SettingsObject<Float> fov, reach, aoIntensity, soundVolume;
     public SettingsObjectResolution resolution;
@@ -94,6 +94,8 @@ public class Settings {
                 "max_particles", 16384, "Maximum particle count", null, null));
         this.explosionParticles = registerObject(new SettingsObject<>(
                 "explosion_particles", true, "Explosions spawn particles", "%o", null));
+        this.randomtickBlockCount = registerObject(new SettingsObject<>("rt_block_count", 500,
+                "Base random tick block count", "%v blocks", null));
     }
 
     private <T> SettingsObject<T> registerObject(SettingsObject<T> object) {

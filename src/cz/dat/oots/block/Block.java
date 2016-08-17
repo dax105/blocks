@@ -26,6 +26,7 @@ public abstract class Block {
     private boolean collidable = true;
     private boolean requiresRenderTick = false;
     private boolean requiresTick = false;
+    private boolean requiresRandomTick = false;
     private String[] footStepSound;
     private String fallSound;
     private String name;
@@ -44,6 +45,8 @@ public abstract class Block {
         this.footStepSound = SoundManager.footstep_dirt;
         this.fallSound = "fall_hard";
     }
+
+    public void onRandomTick(int x, int y, int z, World world) {}
 
     public abstract void onUpdate(int x, int y, int z, int type, World world);
 
@@ -103,6 +106,8 @@ public abstract class Block {
         return this.requiresRenderTick;
     }
 
+    public boolean isRequiringRandomTick() { return this.requiresRandomTick; }
+
     public Block requireTick() {
         this.requiresTick = true;
         return this;
@@ -110,6 +115,11 @@ public abstract class Block {
 
     public Block requireRenderTick() {
         this.requiresRenderTick = true;
+        return this;
+    }
+
+    public Block requireRandomTick() {
+        this.requiresRandomTick = true;
         return this;
     }
 

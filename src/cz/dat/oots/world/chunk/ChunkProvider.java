@@ -1,5 +1,6 @@
 package cz.dat.oots.world.chunk;
 
+import cz.dat.oots.block.Block;
 import cz.dat.oots.block.BlockPlant;
 import cz.dat.oots.util.Coord2D;
 import cz.dat.oots.util.GameMath;
@@ -45,6 +46,7 @@ public class ChunkProvider {
     //private SimplexNoise simplex2D_temperature;
     private ChunkLoaderThread[] loaders;
     private Thread[] loaderThreads;
+    private Random rnd = new Random();
 
     public ChunkProvider(World world, boolean shouldLoad) {
         this(new Random().nextInt(), world, shouldLoad);
@@ -144,14 +146,16 @@ public class ChunkProvider {
 
         Iterator<Entry<Coord2D, Chunk>> it = loadedChunks.entrySet().iterator();
         while (it.hasNext()) {
-            Map.Entry<Coord2D, Chunk> pairs = (Map.Entry<Coord2D, Chunk>) it
-                    .next();
+            Map.Entry<Coord2D, Chunk> pairs = it.next();
 
-            Chunk c = (Chunk) pairs.getValue();
-            Coord2D coord = (Coord2D) pairs.getKey();
+            Chunk c = pairs.getValue();
+            Coord2D coord = pairs.getKey();
 
             int xdist = Math.abs(x - c.x);
             int ydist = Math.abs(y - c.z);
+
+            float rtFalloff = 1 / (1 + (float)Math.sqrt(xdist * xdist + ydist * ydist));
+            this.makeRandomTicks(c, rtFalloff);
 
             if ((xdist > r || ydist > r) && this.loadedChunks.containsKey(coord)) {
                 // loader.saveChunk(c);
@@ -219,6 +223,21 @@ public class ChunkProvider {
                     }
                 }
 
+            }
+        }
+    }
+
+    private void makeRandomTicks(Chunk c, float falloff) {
+        int blockCount = (int)(this.world.getGame().s().randomtickBlockCount.getValue() * falloff);
+
+        for(int i = 0; i < blockCount; i++) {
+            int x = this.rnd.nextInt(16);
+            int y = this.rnd.nextInt(128);
+            int z = this.rnd.nextInt(16);
+
+            Block b = this.world.getRegister().getBlock(c.getBlock(x, y, z));
+            if(b.isRequiringRandomTick()) {
+                b.onRandomTick(x + c.x * 16, y, z + c.z * 16, world);
             }
         }
     }

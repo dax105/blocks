@@ -115,7 +115,7 @@ public class IDRegister {
 
             IDRegister.lava = registerBlock(new BlockFluid("oots/fluidLava",
                     this, 8).setAllTextures(20).setCullSame(true)
-                    .setOccluder(false).setOpaque(false).setDensity(2.55f).setRenderPass(RenderPass.OPAQUE));
+                    .setOccluder(false).setOpaque(false).setDensity(2.55f).setRenderPass(RenderPass.OPAQUE)).requireRandomTick();
 
             IDRegister.ice = registerBlock(new BlockBasic("oots/blockIce", this)
                     .setAllTextures(14).setOpaque(false).setCullSame(true)

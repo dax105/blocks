@@ -60,4 +60,9 @@ public class BlockFluid extends BlockBasic {
         }
     }
 
+    @Override
+    public void onRandomTick(int x, int y, int z, World world) {
+        world.spawnParticleWithRandomDirectionFast(x + 0.5f, y, z + 0.5f, 0.1f, 0);
+    }
+
 }
