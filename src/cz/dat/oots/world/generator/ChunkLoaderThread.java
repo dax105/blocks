@@ -10,9 +10,12 @@ public class ChunkLoaderThread implements Runnable {
 
     private ChunkProvider provider;
     private boolean running = true;
+    
+    private GenTempStorage storage;
 
     public ChunkLoaderThread(ChunkProvider provider) {
         this.provider = provider;
+        this.storage = new GenTempStorage();
     }
 
     public void stop() {
@@ -25,7 +28,7 @@ public class ChunkLoaderThread implements Runnable {
             Coord2D coord = provider.loadNeeded.poll();
             if (coord != null) {
                 provider.loadingChunks.add(coord);
-                Chunk c = provider.getChunk(coord.x, coord.y);
+                Chunk c = provider.getChunk(this.storage, coord.x, coord.y);
                 if (c != null) {
                     provider.loaded.putIfAbsent(coord, c);
                 }

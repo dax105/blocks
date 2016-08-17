@@ -26,7 +26,7 @@ public class SettingsObject<T> {
     }
 
     public static String getConsoleRepresentation(ObjectType t) {
-        switch (t) {
+    	switch (t) {
             case INTEGER:
                 return "[INT]";
             case FLOAT:
@@ -35,6 +35,7 @@ public class SettingsObject<T> {
                 return "[BOOL]";
             case STRING:
                 return "[STRING]";
+            case OTHER:
             default:
                 return "[?]";
         }

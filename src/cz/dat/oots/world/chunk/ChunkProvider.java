@@ -9,6 +9,7 @@ import cz.dat.oots.world.IDRegister;
 import cz.dat.oots.world.World;
 import cz.dat.oots.world.generator.Biome;
 import cz.dat.oots.world.generator.ChunkLoaderThread;
+import cz.dat.oots.world.generator.GenTempStorage;
 import cz.dat.oots.world.generator.SimplexNoise;
 import cz.dat.oots.world.generator.TreeGenerator;
 import cz.dat.oots.world.loading.ChunkSaveManager;
@@ -37,12 +38,11 @@ public class ChunkProvider {
     private TreeGenerator treeGen;
     private LinkedHashMap<Coord2D, Chunk> cachedChunks;
     private SimplexNoise simplex3D_1;
-    private SimplexNoise simplex3D_2;
+    //private SimplexNoise simplex3D_2;
     private SimplexNoise simplex3D_caves;
     private SimplexNoise simplex2D_rainfall;
     // TODO: Temperature
-    @SuppressWarnings("unused")
-    private SimplexNoise simplex2D_temperature;
+    //private SimplexNoise simplex2D_temperature;
     private ChunkLoaderThread[] loaders;
     private Thread[] loaderThreads;
 
@@ -78,10 +78,10 @@ public class ChunkProvider {
 
         this.treeGen = new TreeGenerator(this.world);
         this.simplex3D_1 = new SimplexNoise(512, 0.425, this.seed);
-        this.simplex3D_2 = new SimplexNoise(512, 0.525, this.seed * 2);
+        //this.simplex3D_2 = new SimplexNoise(512, 0.525, this.seed * 2);
         this.simplex3D_caves = new SimplexNoise(64, 0.55, this.seed * 3);
         this.simplex2D_rainfall = new SimplexNoise(2048, 0.3, this.seed + 1);
-        this.simplex2D_temperature = new SimplexNoise(1024, 0.2, this.seed + 2);
+        //this.simplex2D_temperature = new SimplexNoise(1024, 0.2, this.seed + 2);
 
         for (int i = 0; i < world.getGame().s().loaderThreads.getValue(); i++) {
             this.loaders[i] = new ChunkLoaderThread(this);
@@ -251,51 +251,42 @@ public class ChunkProvider {
         return chunks;
     }
 
-    public void loadChunk(Coord2D coord) {
-        this.loadedChunks.put(coord, getChunk(coord.x, coord.y));
-    }
 
-    public double[][][] getChunkDensityMap(int cx, int cz) {
-        double[][][] densityMap = new double[16 + 1][128 + 1][16 + 1];
 
+    //private double[][][] densityMap = new double[16 + 1][128 + 1][16 + 1];
+    //private double[][][] caveMap = new double[16 + 1][128 + 1][16 + 1];
+    
+    public float[][][] getChunkDensityMap(float[][][] data, int cx, int cz) {
         for (int x = 0; x <= 16; x += ChunkProvider.SAMPLE_RATE_HORIZONTAL) {
             for (int z = 0; z <= 16; z += ChunkProvider.SAMPLE_RATE_HORIZONTAL) {
                 for (int y = 0; y <= 128; y += ChunkProvider.SAMPLE_RATE_VERTICAL) {
-                    double[] densityOffsets = this.getOffsetsAtLocation(cx * 16
-                            + x, cz * 16 + z);
-                    densityMap[x][y][z] = (float) (Math.max(
-                            this.simplex3D_1.getNoise(cx * 16 + x, y, cz * 16
-                                    + z),
-                            this.simplex3D_2.getNoise(cx * 16 + x, y, cz * 16
-                                    + z)))
-                            + densityOffsets[y];
+                    float[] densityOffsets = this.getOffsetsAtLocation(cx * 16 + x, cz * 16 + z);
+                    data[x][y][z] = (float) this.simplex3D_1.getNoise(cx * 16 + x, y, cz * 16 + z) + densityOffsets[y];
                 }
             }
         }
 
-        this.triLerpDensityMap(densityMap);
+        this.triLerpDensityMap(data);
 
-        return densityMap;
+        return data;
     }
 
-    public double[][][] getChunkCaveMap(int cx, int cz) {
-        double[][][] caveMap = new double[16 + 1][128 + 1][16 + 1];
-
+    public float[][][] getChunkCaveMap(float[][][] data, int cx, int cz) {
         for (int x = 0; x <= 16; x += ChunkProvider.SAMPLE_RATE_HORIZONTAL) {
             for (int z = 0; z <= 16; z += ChunkProvider.SAMPLE_RATE_HORIZONTAL) {
                 for (int y = 0; y <= 128; y += ChunkProvider.SAMPLE_RATE_VERTICAL) {
-                    caveMap[x][y][z] = this.simplex3D_caves.getNoise(cx * 16
+                    data[x][y][z] = (float) this.simplex3D_caves.getNoise(cx * 16
                             + x, y, cz * 16 + z);
                 }
             }
         }
 
-        this.triLerpCaveMap(caveMap);
+        this.triLerpDensityMap(data);
 
-        return caveMap;
+        return data;
     }
 
-    private void triLerpDensityMap(double[][][] densityMap) {
+    private void triLerpDensityMap(float[][][] densityMap) {
         for (int x = 0; x < 16; x++) {
             for (int y = 0; y < 128; y++) {
                 for (int z = 0; z < 16; z++) {
@@ -348,66 +339,13 @@ public class ChunkProvider {
         }
     }
 
-    private void triLerpCaveMap(double[][][] caveMap) {
-        for (int x = 0; x < 16; x++) {
-            for (int y = 0; y < 128; y++) {
-                for (int z = 0; z < 16; z++) {
-                    if (!(x % ChunkProvider.SAMPLE_RATE_HORIZONTAL == 0
-                            && y % ChunkProvider.SAMPLE_RATE_VERTICAL == 0 && z
-                            % ChunkProvider.SAMPLE_RATE_HORIZONTAL == 0)) {
-                        int offsetX = (x / ChunkProvider.SAMPLE_RATE_HORIZONTAL)
-                                * ChunkProvider.SAMPLE_RATE_HORIZONTAL;
-                        int offsetY = (y / ChunkProvider.SAMPLE_RATE_VERTICAL)
-                                * ChunkProvider.SAMPLE_RATE_VERTICAL;
-                        int offsetZ = (z / ChunkProvider.SAMPLE_RATE_HORIZONTAL)
-                                * ChunkProvider.SAMPLE_RATE_HORIZONTAL;
-                        caveMap[x][y][z] = GameMath
-                                .triLerp(
-                                        x,
-                                        y,
-                                        z,
-                                        caveMap[offsetX][offsetY][offsetZ],
-                                        caveMap[offsetX][ChunkProvider.SAMPLE_RATE_VERTICAL
-                                                + offsetY][offsetZ],
-                                        caveMap[offsetX][offsetY][offsetZ
-                                                + ChunkProvider.SAMPLE_RATE_HORIZONTAL],
-                                        caveMap[offsetX][offsetY
-                                                + ChunkProvider.SAMPLE_RATE_VERTICAL][offsetZ
-                                                + ChunkProvider.SAMPLE_RATE_HORIZONTAL],
-                                        caveMap[ChunkProvider.SAMPLE_RATE_HORIZONTAL
-                                                + offsetX][offsetY][offsetZ],
-                                        caveMap[ChunkProvider.SAMPLE_RATE_HORIZONTAL
-                                                + offsetX][offsetY
-                                                + ChunkProvider.SAMPLE_RATE_VERTICAL][offsetZ],
-                                        caveMap[ChunkProvider.SAMPLE_RATE_HORIZONTAL
-                                                + offsetX][offsetY][offsetZ
-                                                + ChunkProvider.SAMPLE_RATE_HORIZONTAL],
-                                        caveMap[ChunkProvider.SAMPLE_RATE_HORIZONTAL
-                                                + offsetX][offsetY
-                                                + ChunkProvider.SAMPLE_RATE_VERTICAL][offsetZ
-                                                + ChunkProvider.SAMPLE_RATE_HORIZONTAL],
-                                        offsetX,
-                                        ChunkProvider.SAMPLE_RATE_HORIZONTAL
-                                                + offsetX,
-                                        offsetY,
-                                        ChunkProvider.SAMPLE_RATE_VERTICAL
-                                                + offsetY,
-                                        offsetZ,
-                                        offsetZ
-                                                + ChunkProvider.SAMPLE_RATE_HORIZONTAL);
-                    }
-                }
-            }
-        }
-    }
-
     public Biome getBiomeAtLocation(int x, int z) {
-        float noise = (float) this.simplex2D_rainfall.getNoise(x, z) + (float) this.simplex2D_temperature.getNoise(x, z);
+        float noise = (float) this.simplex2D_rainfall.getNoise(x, z);
         noise *= 0.5f;
         return noise > 0 ? Biome.mountains : Biome.plains;
     }
 
-    private double[] getOffsetsAtLocation(int x, int z) {
+    private float[] getOffsetsAtLocation(int x, int z) {
         float smoothening = 0.025f;
         float noise = (float) this.simplex2D_rainfall.getNoise(x, z);
         float offset = 0 - noise;
@@ -416,13 +354,13 @@ public class ChunkProvider {
         } else if (noise < -smoothening) {
             return Biome.plains.getOffsets();
         } else {
-            double[] interpolated = new double[129];
+            float[] interpolated = new float[129];
 
             for (int i = 0; i < 129; i++) {
                 interpolated[i] = GameMath.lerp(
                         Biome.mountains.getOffsets()[i],
                         Biome.plains.getOffsets()[i], 1 / smoothening / 2
-                                * offset + 0.5); // GameMath.lerp(i,
+                                * offset + 0.5f); // GameMath.lerp(i,
                 // Biome.mountains.getOffsets()[i],
                 // Biome.plains.getOffsets()[i],
                 // smoothening,
@@ -433,11 +371,11 @@ public class ChunkProvider {
         }
     }
 
-    private Chunk generateChunk(int xc, int zc) {
-        Chunk chunk = new Chunk(xc, zc, world);
+    private Chunk generateChunk(GenTempStorage storage, int xc, int zc) {
+    	Chunk chunk = new Chunk(xc, zc, world);
 
-        double[][][] densityMap = this.getChunkDensityMap(xc, zc);
-        double[][][] caveMap = this.getChunkCaveMap(xc, zc);
+    	float[][][] densityMap = this.getChunkDensityMap(storage.getTempStorageT(), xc, zc);
+        float[][][] caveMap = this.getChunkCaveMap(storage.getTempStorageC(), xc, zc);
 
         Random cRand = new Random((xc * 31 + zc) + seed + 1);
 
@@ -447,10 +385,8 @@ public class ChunkProvider {
 
                 int bedrockHeight = Math.abs((((xc + x) ^ 0x5218CFAF * z) * ((zc + z) ^ 0x558802E3 * x))) % 5;
 
-                //System.out.println(bedrockHeight);
-
                 for (int y = 127; y >= 0; y--) {
-                    double density = densityMap[x][y][z];
+                    float density = densityMap[x][y][z];
                     boolean cave = caveMap[x][y][z] > (0.3 + 1 / (8.0 + depth / 2));
 
                     if (!cave && density > 0) {
@@ -489,7 +425,7 @@ public class ChunkProvider {
                                 }
                             }
                         } else if (depth < 4) {
-                            if (y < 52) {
+                            if (y < 52-depth) {
                                 chunk.setBlock(x, y, z,
                                         IDRegister.sand.getID(), false);
                             } else {
@@ -522,6 +458,7 @@ public class ChunkProvider {
                 }
             }
         }
+
         return chunk;
 
     }
@@ -530,7 +467,7 @@ public class ChunkProvider {
         return this.cachedChunks.get(new Coord2D(x, z)) != null;
     }
 
-    public Chunk getChunk(int xc, int zc) {
+    public Chunk getChunk(GenTempStorage storage, int xc, int zc) {
         if (this.isChunkCached(xc, zc)) {
             Coord2D coord = new Coord2D(xc, zc);
             Chunk c = this.cachedChunks.get(coord);
@@ -541,7 +478,7 @@ public class ChunkProvider {
             return this.loader.loadChunk(xc, zc);
 
         } else {
-            return this.generateChunk(xc, zc);
+            return this.generateChunk(storage, xc, zc);
         }
     }
 
